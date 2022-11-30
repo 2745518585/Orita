@@ -1,100 +1,51 @@
-#include <cstdio>
-#include <iostream>
-
+#include<algorithm>
+#include<cstdio>
+#include<cmath>
+#define LD double
+#define LL long long
+#define Vector Point
+#define Re register int
 using namespace std;
-
-const int MAXN = 5e5, MAXM = 1e6;
-const int MOD = 1e9 + 7;
-
-int n, m;
-
-int h[MAXN + 5], nxt[MAXM * 2 + 5], to[MAXM * 2 + 5], vv[MAXN + 5];
-int vs[MAXN + 5], ve[MAXN + 5], vh[MAXN + 5], vnxt[MAXN + 5], vto[MAXN + 5], cnt = 0, tot = 0;
-
-int fa[MAXN + 5], dep[MAXN + 5];
-
-int stk[MAXN + 5], top = 0;
-
-int Dfs(int x)
-{
-    int ret = dep[x];
-    stk[++top] = x;
-    for (int i = h[x]; i; i = nxt[i]) if (to[i] != fa[x])
-    {
-        if (!dep[to[i]])
-        {
-            fa[to[i]] = x;
-            dep[to[i]] = dep[x] + 1;
-            int res = Dfs(to[i]);
-            ret = min(ret, res);
-        }
-        else if (dep[to[i]] < dep[x]) ret = min(ret, dep[to[i]]);
-    }
-    if (ret == dep[x])
-    {
-        ++cnt;
-        while (dep[stk[top]] >= dep[x])
-        {
-            vv[stk[top]] = cnt;
-            ++vs[cnt];
-            for (int i = h[stk[top]]; i; i = nxt[i]) if (dep[to[i]] > dep[stk[top]])
-            {
-                if (vv[to[i]] != vv[stk[top]])
-                {
-                    ++tot;
-                    vto[tot] = vv[to[i]];
-                    vnxt[tot] = vh[cnt];
-                    vh[cnt] = tot;
-                }
-                else ++ve[cnt];
-            }
-            --top;
-        }
-    }
-    return ret;
+const int N=1e5+3;
+const LD eps=1e-8;
+int n;
+inline int dcmp(LD a){return a<-eps?-1:(a>eps?1:0);}
+inline LD Abs(LD a){return a*dcmp(a);}
+struct Point{
+    LD x,y;Point(LD X=0,LD Y=0){x=X,y=Y;}
+    inline void in(){scanf("%lf%lf",&x,&y);}
+}M,P1,P2;
+inline LD Dot(Vector a,Vector b){return a.x*b.x+a.y*b.y;}
+inline LD Cro(Vector a,Vector b){return a.x*b.y-a.y*b.x;}
+inline LD Len(Vector a){return sqrt(Dot(a,a));}
+inline LD Angle(Vector a,Vector b){return acos(Dot(a,b)/Len(a)/Len(b));}
+inline Point operator+(Point a,Vector b){return Point(a.x+b.x,a.y+b.y);}
+inline Vector operator-(Point a,Point b){return Vector(a.x-b.x,a.y-b.y);}
+inline Vector operator*(Vector a,LD x){return Vector(a.x*x,a.y*x);}
+inline bool operator==(Point a,Point b){return !dcmp(a.x-b.x)&&!dcmp(a.y-b.y);}
+struct ANS{Point a;LD dis;ANS(Point A,LD D=0){a=A,dis=D;}};
+inline Point FootPoint(Point p,Point a,Point b){//点P到直线AB的垂足
+    Vector x=p-a,y=p-b,z=b-a;
+    LD len1=Dot(x,z)/Len(z),len2=-1.0*Dot(y,z)/Len(z);//分别计算AP,BP在AB,BA上的投影
+    return a+z*(len1/(len1+len2));//点A加上向量AF
 }
-
-long long p[MAXN + 5];
-int sz[MAXN + 5];
-long long f[MAXN + 5];
-
-void Dp(int x)
-{
-    sz[x] = ve[x];
-    f[x] = p[ve[x]] * p[vs[x]] % MOD;
-    for (int i = vh[x]; i; i = vnxt[i])
-    {
-        Dp(vto[i]);
-        sz[x] += sz[vto[i]] + 1;
-        f[x] = f[x] * (p[sz[vto[i]]] + f[vto[i]]) % MOD;
+inline Point dis_PL(Point p,Point a,Point b){//点P到线段AB距离
+    if(a==b)return a;//AB重合
+    Vector x=p-a,y=p-b,z=b-a;
+    if(dcmp(Dot(x,z))<0)return a;//P距离A更近
+    if(dcmp(Dot(y,z))>0)return b;//P距离B更近
+    return FootPoint(p,a,b);//返回垂足
+}
+int main(){
+//  freopen("123.txt","r",stdin);
+    while(~scanf("%lf%lf",&M.x,&M.y)){
+        scanf("%d",&n),P1.in();
+        Point ans=P1;
+        while(n--){
+            P2.in();Point tmp=dis_PL(M,P1,P2);
+            if(dcmp(Len(M-tmp)-Len(M-ans))<0)ans=tmp;
+            P1=P2;
+        }
+        printf("%.4lf\n%.4lf\n",ans.x,ans.y);
     }
-} 
-
-long long Ans = 0;
-
-int main()
-{
-    // freopen("data.in", "r", stdin);
-    // freopen("run.out","w",stdout);
-    scanf("%d%d", &n, &m);
-    for (int i = 1; i <= m; ++i)
-    {
-        scanf("%d%d", &to[i * 2], &to[i * 2 - 1]);
-        nxt[i * 2 - 1] = h[to[i * 2]];
-        h[to[i * 2]] = i * 2 - 1;
-        nxt[i * 2] = h[to[i * 2 - 1]];
-        h[to[i * 2 - 1]] = i * 2;
-    }
-
-    dep[1] = 1;
-    Dfs(1);
-    p[0] = 1;
-    for (int i = 1; i <= m; ++i) p[i] = (p[i - 1] << 1) % MOD;
-
-    Dp(cnt);
-
-    for (int i = 1; i <= cnt; ++i) Ans = (Ans + (f[i] - p[sz[i]]) * p[m - sz[i] - (i != cnt)] % MOD) % MOD;
-    printf("%lld\n", (Ans + MOD) % MOD);
-
-    return 0;
 }
