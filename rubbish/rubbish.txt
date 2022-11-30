@@ -1,3 +1,0 @@
-正在比较文件 DATA\data.out 和 DATA\RUN.OUT
-FC: 找不到差异
-
