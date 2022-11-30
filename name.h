@@ -10,14 +10,14 @@ namespace Name
     FILE *file=NULL;
     void add_name(int num,char *name)
     {
-        sprintf(files,"name\\name%d.txt",num);
+        sprintf(files,"%s\\run\\name\\name%d.txt",getenv("appdata"),num);
         file=fopen(files,"w");
         fprintf(file,"%s",name);
         fclose(file);
     }
     char *get_name(int num)
     {
-        sprintf(files,"name\\name%d.txt",num);
+        sprintf(files,"%s\\run\\name\\name%d.txt",getenv("appdata"),num);
         file=fopen(files,"r");
         fscanf(file,"%s",name[num]);
         fclose(file);

@@ -8,7 +8,7 @@ namespace Copy
     char instruct[N];
     int copy(char name[])
     {
-        sprintf(instruct,"copy %s.cpp \"E:\\1.C++\\code\\run\\source\\\" > \"E:\\1.C++\\code\\run\\rubbish\\rubbish.txt\"",name);
+        sprintf(instruct,"copy %s.cpp %s\\run\\source\\ > %s\\run\\rubbish\\rubbish.txt",name,getenv("appdata"),getenv("appdata"));
         return system(instruct);
     }
 }

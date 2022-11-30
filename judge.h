@@ -18,13 +18,13 @@ namespace Judge
     int judge(int name_num,bool if_compile)
     {
         if(if_compile) if(compile(name_num)) return result=5;
-        sprintf(instruct,"source\\%s.exe < data\\data.in > data\\run.out",get_name(name_num));
+        sprintf(instruct,"%s\\run\\source\\%s.exe < %s\\run\\data\\data.in > %s\\run\\data\\run.out",getenv("appdata"),get_name(name_num),getenv("appdata"),getenv("appdata"));
         begin_time=clock();
         if(system(instruct)) return result=2;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         if(time>get_time_limit()) result=3;
         else result=0;
-        if(system("fc data\\data.out data\\run.out > rubbish\\rubbish.txt")) return ++result;
+        if(system("fc %appdata%\\run\\data\\data.out %appdata%\\run\\data\\run.out > %appdata%\\run\\rubbish\\rubbish.txt")) return ++result;
         return result;
     }
     void print_judge(int name_num,bool if_compile)
@@ -56,8 +56,8 @@ namespace Judge
             }
         }
         if(!find_task(name_num)) return;
-        system("taskkill /f /pid start_run.exe > rubbish\\rubbish.txt");
-        sprintf(instruct,"taskkill /f /pid %s.exe > rubbish\\rubbish.txt",get_name(name_num));
+        system("taskkill /f /pid start_run.exe > %appdata%\\run\\rubbish\\rubbish.txt");
+        sprintf(instruct,"taskkill /f /pid %s.exe > %s\\run\\rubbish\\rubbish.txt",get_name(name_num),getenv("appdata"));
         system(instruct);
         change_color(1,0,0,1);
         printf("\nTime Limit Error\nover %dms\n\n",time_limit*2);

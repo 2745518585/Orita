@@ -1,14 +1,14 @@
 #include<bits/stdc++.h>
 #include<windows.h>
 #include "copy.h"
-#include "name.h"
+#include "..\name.h"
 #include "..\parameter.h"
 using namespace std;
 const int N=1001;
 char instruct[N];
 int main(int argc,char **argv)
 {
-    system("del /Q \"E:\\1.C++\\code\\run\\source\\*\" > \"E:\\1.C++\\code\\run\\rubbish\\rubbish.txt\"");
+    system("del /Q %appdata%\\run\\source\\* > %appdata%\\run\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
     if(copy(input_name(11,parameter['f'][1])))
     {
