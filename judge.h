@@ -15,17 +15,20 @@ namespace Judge
     int result,time,time_limit;
     clock_t begin_time;
     FILE *file=NULL;
+    bool if_end;
     int judge(int name_num,bool if_compile)
     {
-        if(if_compile) if(compile(name_num)) return result=5;
+        if(if_compile) if(compile(name_num)) return if_end=true,result=5;
         sprintf(instruct,"%s\\run\\source\\%s.exe < %s\\run\\data\\data.in > %s\\run\\data\\run.out",getenv("appdata"),get_name(name_num),getenv("appdata"),getenv("appdata"));
         begin_time=clock();
-        if(system(instruct)) return result=2;
+        if(system(instruct)) return if_end=true,result=2;
+        if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        if(time>get_time_limit()) result=3;
-        else result=0;
-        if(system("fc %appdata%\\run\\data\\data.out %appdata%\\run\\data\\run.out > %appdata%\\run\\rubbish\\rubbish.txt")) return ++result;
-        return result;
+        int temp_result;
+        if(time>get_time_limit()) temp_result=3;
+        else temp_result=0;
+        if(system("fc %appdata%\\run\\data\\data.out %appdata%\\run\\data\\run.out > %appdata%\\run\\rubbish\\rubbish.txt")) return result=temp_result+1;
+        return result=temp_result;
     }
     void print_judge(int name_num,bool if_compile)
     {
@@ -42,23 +45,23 @@ namespace Judge
                 return;
             }
         }
-        sprintf(instruct,"start /b start_run.exe %d",name_num);
-        system(instruct);
+        if_end=false;
+        result=-1;
         time_limit=get_time_limit();
-        Sleep(100);
-        for(int i=1;i<=time_limit/50;++i)
+        thread(judge,name_num,false).detach();
+        clock_t start_time=clock();
+        while((double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
-            Sleep(100);
-            if(!find_task(name_num))
+            if(if_end)
             {
-                Sleep(50);
+                while(result==-1) Sleep(5);
+                print_result(result,time);
                 return;
             }
         }
-        if(!find_task(name_num)) return;
-        system("taskkill /f /pid start_run.exe > %appdata%\\run\\rubbish\\rubbish.txt");
-        sprintf(instruct,"taskkill /f /pid %s.exe > %s\\run\\rubbish\\rubbish.txt",get_name(name_num),getenv("appdata"));
+        sprintf(instruct,"taskkill /f /pid %s.exe > %s\\run\\rubbish\\rubbish2.txt",get_name(name_num),getenv("appdata"));
         system(instruct);
+        result=4;
         change_color(1,0,0,1);
         printf("\nTime Limit Error\nover %dms\n\n",time_limit*2);
         change_color(1,1,1,1);

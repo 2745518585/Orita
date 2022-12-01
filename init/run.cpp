@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "copy.h"
+#include "..\copy.h"
 #include "..\name.h"
 #include "..\parameter.h"
 using namespace std;
@@ -10,7 +10,7 @@ int main(int argc,char **argv)
 {
     system("del /Q %appdata%\\run\\source\\");
     init_parameter(argc,argv);
-    if(copy(input_name(1,parameter['f'][1])))
+    if(copy_source(input_name(1,parameter['f'][1])))
     {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),11);
         printf("\nNo such file\n\n");
