@@ -17,7 +17,9 @@ void copy(int num)
 int main(int argc,char **argv)
 {
     srand(time(NULL));
-    system("del /Q ..\\data\\* > %appdata%\\run\\rubbish\\rubbish.txt");
+    system("del /Q ..\\data\\*.in > %appdata%\\run\\rubbish\\rubbish.txt");
+    system("del /Q ..\\data\\*.out > %appdata%\\run\\rubbish\\rubbish.txt");
+    system("del /Q ..\\data\\*.ans > %appdata%\\run\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
     input_name(11,parameter['f'][1]);
     input_name(12,parameter['f'][2]);

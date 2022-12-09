@@ -8,8 +8,13 @@ const int N=1001;
 char instruct[N];
 int main(int argc,char **argv)
 {
-    system("del /Q %appdata%\\run\\source\\* > %appdata%\\run\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
+    if(num_parameter['n']==0)
+    {
+        printf("\nERROR: Invalid syntax. No /n specified.\n\n");
+        return 0;
+    }
+    system("del /Q %appdata%\\run\\source\\* > %appdata%\\run\\rubbish\\rubbish.txt");
     if(copy_source(input_name(11,parameter['f'][1])))
     {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),11);
