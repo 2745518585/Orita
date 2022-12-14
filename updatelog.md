@@ -17,3 +17,7 @@
 ## 2022-12-09
 
 调用 `check` 时没有 `/n` 参数将返回 `ERROR: Invalid syntax. No /n specified.`
+
+## 2022-12-14
+
+修复了 `task\` 目录未放入 AppData 的 bug

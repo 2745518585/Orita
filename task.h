@@ -7,7 +7,7 @@ using namespace std;
 namespace Task
 {
     const int N=1001;
-    char *name,task[N],instruct[N];
+    char *name,task[N],instruct[N],files[N];
     FILE* file=NULL;
     bool check()
     {
@@ -19,9 +19,10 @@ namespace Task
     int find_task(int name_num)
     {
         name=get_name(name_num);
-        sprintf(instruct,"tasklist /NH /FI \"IMAGENAME eq %s.exe\" > task\\task.txt",name);
+        sprintf(instruct,"tasklist /NH /FI \"IMAGENAME eq %s.exe\" > %s\\run\\task\\task.txt",name,getenv("appdata"));
         system(instruct);
-        file=fopen("task\\task.txt","r");
+        sprintf(files,"%s\\run\\task\\task.txt",getenv("appdata"));
+        file=fopen(files,"r");
         while(fgets(task,1000,file))
         {
             if(check())
