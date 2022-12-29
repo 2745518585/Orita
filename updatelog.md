@@ -20,4 +20,8 @@
 
 ## 2022-12-14
 
-修复了 `task\` 目录未放入 AppData 的 bug
+修复了 `task\` 目录未放入 AppData 的 bug。
+
+## 2022-12-29
+
+添加了 `change_time_limit` 功能。
