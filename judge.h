@@ -19,7 +19,7 @@ namespace Judge
     int judge(int name_num,bool if_compile)
     {
         if(if_compile) if(compile(name_num)) return if_end=true,result=5;
-        sprintf(instruct,"%s\\run\\source\\%s.exe < %s\\run\\data\\data.in > %s\\run\\data\\run.out",getenv("appdata"),get_name(name_num),getenv("appdata"),getenv("appdata"));
+        sprintf(instruct,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\run.out",get_name(name_num));
         begin_time=clock();
         if(system(instruct)) return if_end=true,result=2;
         if_end=true;
@@ -59,7 +59,7 @@ namespace Judge
                 return;
             }
         }
-        sprintf(instruct,"taskkill /f /pid %s.exe > %s\\run\\rubbish\\rubbish2.txt",get_name(name_num),getenv("appdata"));
+        sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\run\\rubbish\\rubbish2.txt",get_name(name_num));
         system(instruct);
         result=4;
         change_color(1,0,0,1);

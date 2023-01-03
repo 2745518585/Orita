@@ -15,10 +15,10 @@ namespace Compile
         name=get_name(name_num);
         if(find_task(name_num))
         {
-            sprintf(instruct,"taskkill /f /pid %s.exe > %s\\run\\rubbish\\rubbish.txt",name,getenv("appdata"));
+            sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
             system(instruct);
         }
-        sprintf(instruct,"g++ %s\\run\\source\\%s.cpp -o %s\\run\\source\\%s.exe %s",getenv("appdata"),name,getenv("appdata"),name,parameter);
+        sprintf(instruct,"g++ %%appdata%%\\run\\source\\%s.cpp -o %%appdata%%\\run\\source\\%s.exe %s",name,name,parameter);
         return system(instruct)!=0;
     }
 }

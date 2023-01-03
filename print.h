@@ -11,6 +11,12 @@ namespace Print
     }
     void print_result(int result,int time)
     {
+        if(result==-1)
+        {
+            change_color(1,0,1,1);
+            printf("\nNo such file\n\n");
+            change_color(1,1,1,1);
+        }
         if(result==0)
         {
             change_color(1,0,1,0);
@@ -63,4 +69,5 @@ namespace Print
 }
 void change_color(int intensity,int red,int green,int blue) {Print::change_color(intensity,red,green,blue);}
 void print_result(int result,int time) {Print::print_result(result,time);}
+void print_result(int result) {Print::print_result(result,0);}
 #endif

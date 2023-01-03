@@ -1,8 +1,0 @@
-0 Accepted
-1 Wrong Answer
-2 Runtime Error
-3 Time Limit Error, Correct Answer
-4 Time Limit Error, Wrong Answer
-5 Compile Error
-15 data_maker Compile Error
-25 std Compile Error

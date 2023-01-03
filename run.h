@@ -7,4 +7,5 @@
 #include "judge.h"
 #include "task.h"
 #include "parameter.h"
+#include "copy.h"
 #endif

@@ -10,11 +10,11 @@ int main(int argc,char **argv)
     input_name(1,parameter['f'][1]);
     if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
     print_judge2(1,1);
-    sprintf(instruct,"copy %s\\run\\data\\data.in ..\\data\\ > %s\\run\\rubbish\\rubbish.txt",getenv("appdata"),getenv("appdata"));
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.in ..\\data\\ > %%appdata%%\\run\\rubbish\\rubbish.txt");
     system(instruct);
-    sprintf(instruct,"copy %s\\run\\data\\data.out ..\\data\\ > %s\\run\\rubbish\\rubbish.txt",getenv("appdata"),getenv("appdata"));
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.out ..\\data\\ > %%appdata%%\\run\\rubbish\\rubbish.txt");
     system(instruct);
-    sprintf(instruct,"copy %s\\run\\data\\run.out ..\\data\\ > %s\\run\\rubbish\\rubbish.txt",getenv("appdata"),getenv("appdata"));
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\run.out ..\\data\\ > %%appdata%%\\run\\rubbish\\rubbish.txt");
     system(instruct);
     return 0;
 }

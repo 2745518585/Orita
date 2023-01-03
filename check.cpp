@@ -7,11 +7,11 @@ int a[M];
 char instruct[N],instruct1[N],instruct2[N],instruct3[N];
 void copy(int num)
 {
-    sprintf(instruct,"copy %s\\run\\data\\data.in ..\\data\\%d.in > %s\\run\\rubbish\\rubbish.txt",getenv("appdata"),num,getenv("appdata"));
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.in ..\\data\\%d.in > %%appdata%%\\run\\rubbish\\rubbish.txt",NUMA_NO_PREFERRED_NODE);
     system(instruct);
-    sprintf(instruct,"copy %s\\run\\data\\data.out ..\\data\\%d.out > %s\\run\\rubbish\\rubbish.txt",getenv("appdata"),num,getenv("appdata"));
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.out ..\\data\\%d.out > %%appdata%%\\run\\rubbish\\rubbish.txt",NUMA_NO_PREFERRED_NODE);
     system(instruct);
-    sprintf(instruct,"copy %s\\run\\data\\run.out ..\\data\\%d.ans > %s\\run\\rubbish\\rubbish.txt",getenv("appdata"),num,getenv("appdata"));
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\run.out ..\\data\\%d.ans > %%appdata%%\\run\\rubbish\\rubbish.txt",NUMA_NO_PREFERRED_NODE);
     system(instruct);
 }
 int main(int argc,char **argv)
@@ -42,8 +42,8 @@ int main(int argc,char **argv)
     int n=1e9;
     if(num_parameter['n']>=1) n=atoi(parameter['n'][1]);
     if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
-    sprintf(instruct1,"%s\\run\\source\\%s.exe > %s\\run\\data\\data.in",getenv("appdata"),get_name(11),getenv("appdata"));
-    sprintf(instruct2,"%s\\run\\source\\%s.exe < %s\\run\\data\\data.in > %s\\run\\data\\data.out",getenv("appdata"),get_name(12),getenv("appdata"),getenv("appdata"));
+    sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in",get_name(11));
+    sprintf(instruct2,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\data.out",get_name(12));
     int s=0;
     for(int i=1;i<=n;++i)
     {
@@ -55,7 +55,7 @@ int main(int argc,char **argv)
             change_color(1,1,1,1);
         }
         printf("\n");
-        sprintf(instruct1,"%s\\run\\source\\%s.exe > %s\\run\\data\\data.in %d",getenv("appdata"),get_name(11),getenv("appdata"),i);
+        sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in %d",get_name(11),i);
         system(instruct1);
         system(instruct2);
         print_judge(13,0);

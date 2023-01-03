@@ -8,17 +8,17 @@ namespace Copy
     char instruct[N];
     int copy_source(char name[])
     {
-        sprintf(instruct,"copy %s.cpp %s\\run\\source\\ > %s\\run\\rubbish\\rubbish.txt",name,getenv("appdata"),getenv("appdata"));
+        sprintf(instruct,"copy %s.cpp %%appdata%%\\run\\source\\ > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
         return system(instruct);
     }
     int copy_data_in(char name[])
     {
-        sprintf(instruct,"copy %s.in %s\\run\\data\\data.in > %s\\run\\rubbish\\rubbish.txt",name,getenv("appdata"),getenv("appdata"));
+        sprintf(instruct,"copy %s.in %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
         return system(instruct);
     }
     int copy_data_out(char name[])
     {
-        sprintf(instruct,"copy %s.out %s\\run\\data\\data.out > %s\\run\\rubbish\\rubbish.txt",name,getenv("appdata"),getenv("appdata"));
+        sprintf(instruct,"copy %s.out %%appdata%%\\run\\data\\data.out > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
         return system(instruct);
     }
 }
