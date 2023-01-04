@@ -6,7 +6,7 @@ char files[N],instruct[N];
 FILE *file=NULL;
 int main()
 {
-    system("dir /b /s /d ..\\ > files.txt");
+    system("dir /b /s > files.txt");
     file=fopen("files.txt","r");
     while(~fscanf(file,"%s",files))
     {
