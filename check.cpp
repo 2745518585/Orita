@@ -39,11 +39,10 @@ int main(int argc,char **argv)
         print_result(5,0);
         return 0;
     }
-    int n=1e9;
-    if(num_parameter['n']>=1) n=atoi(parameter['n'][1]);
+    int n=atoi(parameter['n'][1]);
     if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
-    sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in",get_name(11));
-    sprintf(instruct2,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\data.out",get_name(12));
+    sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in",get_name_pre(11));
+    sprintf(instruct2,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\data.out",get_name_pre(12));
     int s=0;
     for(int i=1;i<=n;++i)
     {
@@ -55,7 +54,7 @@ int main(int argc,char **argv)
             change_color(1,1,1,1);
         }
         printf("\n");
-        sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in %d",get_name(11),i);
+        sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in %d",get_name_pre(11),i);
         system(instruct1);
         system(instruct2);
         print_judge(13,0);

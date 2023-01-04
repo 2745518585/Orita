@@ -8,11 +8,12 @@ int main(int argc,char **argv)
 {
     system("del /Q %appdata%\\run\\source\\");
     init_parameter(argc,argv);
-    if(copy_source(input_name(1,parameter['f'][1])))
+    input_name(1,parameter['f'][1],".cpp");
+    if(copy_source(get_name(1)))
     {
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),11);
+        change_color(1,0,1,1);
         printf("\nNo such file\n\n");
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),15);
+        change_color(1,1,1,1);
         return 0;
     }
     sprintf(instruct,"start /b /d E:\\1.C++\\code\\run /wait E:\\1.C++\\code\\run\\run.exe ");

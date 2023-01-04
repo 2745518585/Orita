@@ -7,7 +7,7 @@ char instruct[N];
 int main(int argc,char **argv)
 {
     init_parameter(argc,argv);
-    input_name(1,parameter['f'][1]);
+    input_name(1,parameter['f'][1],".cpp");
     if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
     print_judge2(1,1);
     sprintf(instruct,"copy %%appdata%%\\run\\data\\data.in ..\\data\\ > %%appdata%%\\run\\rubbish\\rubbish.txt");

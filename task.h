@@ -18,7 +18,7 @@ namespace Task
     }
     int find_task(int name_num)
     {
-        name=get_name(name_num);
+        name=get_name_pre(name_num);
         sprintf(instruct,"tasklist /NH /FI \"IMAGENAME eq %s.exe\" > %s\\run\\task\\task.txt",name,getenv("appdata"));
         system(instruct);
         sprintf(files,"%s\\run\\task\\task.txt",getenv("appdata"));
