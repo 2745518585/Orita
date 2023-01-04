@@ -66,7 +66,7 @@ namespace Name
         if(name==NULL) return;
         add_name(num,name);
     };
-    void input_name(int num,char *name,char *name_suf)
+    void input_name(int num,char *name,const char *name_suf)
     {
         if(name==NULL) return;
         int length_name=strlen(name),length_name_suf=strlen(name_suf);
@@ -88,5 +88,5 @@ char *get_name(int num) {return Name::get_name(num);}
 char *get_name_pre(int num) {return Name::get_name_pre(num);}
 char *get_name_suf(int num) {return Name::get_name_suf(num);}
 void input_name(int num,char *name) {Name::input_name(num,name);}
-void input_name(int num,char *name,char *name_suf) {Name::input_name(num,name,name_suf);}
+void input_name(int num,char *name,const char *name_suf) {Name::input_name(num,name,name_suf);}
 #endif

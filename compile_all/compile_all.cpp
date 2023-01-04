@@ -18,5 +18,7 @@ int main()
             system(instruct);
         }
     }
+    fclose(file);
+    system("del /Q files.txt");
     return 0;
 }
