@@ -18,17 +18,23 @@ namespace Judge
     bool if_end;
     int judge(int name_num,bool if_compile)
     {
-        if(if_compile) if(compile(name_num)) return if_end=true,result=5;
+        if(if_compile) if(compile(name_num)) return if_end=true,result=Compile_Error;
         sprintf(instruct,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\run.out",get_name_pre(name_num));
         begin_time=clock();
-        if(system(instruct)) return if_end=true,result=2;
+        if(system(instruct)) return if_end=true,result=Runtime_Error;
         if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        int temp_result;
-        if(time>get_time_limit()) temp_result=3;
-        else temp_result=0;
-        if(system("fc %appdata%\\run\\data\\data.out %appdata%\\run\\data\\run.out > %appdata%\\run\\rubbish\\rubbish.txt")) return result=temp_result+1;
-        return result=temp_result;
+        if(system("fc %appdata%\\run\\data\\data.out %appdata%\\run\\data\\run.out > %appdata%\\run\\rubbish\\rubbish.txt"))
+        {
+            if(time>get_time_limit()) result=Time_Limit_Error_Wrong_Answer;
+            else result=Wrong_Answer;
+        }
+        else
+        {
+            if(time>get_time_limit()) result=Time_Limit_Error_Correct_Answer;
+            else result=Accepted;
+        }
+        return result;
     }
     void print_judge(int name_num,bool if_compile)
     {
@@ -41,16 +47,16 @@ namespace Judge
         {
             if(compile(name_num))
             {
-                print_result(5,0);
+                print_result(Compile_Error);
                 return;
             }
         }
         if_end=false;
         result=-1;
         time_limit=get_time_limit();
+        begin_time=-1;
         thread(judge,name_num,false).detach();
-        clock_t start_time=clock();
-        while((double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
+        while(begin_time==-1||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
             if(if_end)
             {
@@ -61,10 +67,8 @@ namespace Judge
         }
         sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\run\\rubbish\\rubbish2.txt",get_name_pre(name_num));
         system(instruct);
-        result=4;
-        change_color(1,0,0,1);
-        printf("\nTime Limit Error\nover %dms\n\n",time_limit*2);
-        change_color(1,1,1,1);
+        result=Time_Limit_Error_over;
+        print_result(result,time_limit*2);
     }
 }
 int judge(int name_num,bool if_compile) {return Judge::judge(name_num,if_compile);}

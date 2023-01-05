@@ -7,11 +7,11 @@ int a[M];
 char instruct[N],instruct1[N],instruct2[N],instruct3[N];
 void copy(int num)
 {
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.in ..\\data\\%d.in > %%appdata%%\\run\\rubbish\\rubbish.txt",NUMA_NO_PREFERRED_NODE);
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.in ..\\data\\%d.in > %%appdata%%\\run\\rubbish\\rubbish.txt",num);
     system(instruct);
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.out ..\\data\\%d.out > %%appdata%%\\run\\rubbish\\rubbish.txt",NUMA_NO_PREFERRED_NODE);
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.out ..\\data\\%d.out > %%appdata%%\\run\\rubbish\\rubbish.txt",num);
     system(instruct);
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\run.out ..\\data\\%d.ans > %%appdata%%\\run\\rubbish\\rubbish.txt",NUMA_NO_PREFERRED_NODE);
+    sprintf(instruct,"copy %%appdata%%\\run\\data\\run.out ..\\data\\%d.ans > %%appdata%%\\run\\rubbish\\rubbish.txt",num);
     system(instruct);
 }
 int main(int argc,char **argv)
@@ -21,28 +21,28 @@ int main(int argc,char **argv)
     system("del /Q ..\\data\\*.out > %appdata%\\run\\rubbish\\rubbish.txt");
     system("del /Q ..\\data\\*.ans > %appdata%\\run\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
-    input_name(11,parameter['f'][1]);
-    input_name(12,parameter['f'][2]);
-    input_name(13,parameter['f'][3]);
-    if(compile(11))
+    input_name(check_data_maker,parameter['f'][1]);
+    input_name(check_std,parameter['f'][2]);
+    input_name(check_run,parameter['f'][3]);
+    if(compile(check_data_maker))
     {
-        print_result(15,0);
+        print_result(data_maker_Compile_Error,0);
         return 0;
     }
-    if(compile(12))
+    if(compile(check_std))
     {
-        print_result(25,0);
+        print_result(std_Compile_Error,0);
         return 0;
     }
-    if(compile(13))
+    if(compile(check_run))
     {
-        print_result(5,0);
+        print_result(Compile_Error,0);
         return 0;
     }
     int n=atoi(parameter['n'][1]);
     if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
-    sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in",get_name_pre(11));
-    sprintf(instruct2,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\data.out",get_name_pre(12));
+    sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in",get_name_pre(check_data_maker));
+    sprintf(instruct2,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\data.out",get_name_pre(check_std));
     int s=0;
     for(int i=1;i<=n;++i)
     {
@@ -54,10 +54,10 @@ int main(int argc,char **argv)
             change_color(1,1,1,1);
         }
         printf("\n");
-        sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in %d",get_name_pre(11),i);
+        sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in %d",get_name_pre(check_data_maker),i);
         system(instruct1);
         system(instruct2);
-        print_judge(13,0);
+        print_judge2(check_run,0);
         a[i]=Judge::result;
         if(a[i]!=0) copy(i);
         else ++s;

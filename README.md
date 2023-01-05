@@ -71,3 +71,7 @@
 ### check
 
 `check /n num [/f data_maker_file std_file test_file] [/t time]`
+
+#### 描述
+
+给定数据生成器、标准代码和源代码，进行对拍。

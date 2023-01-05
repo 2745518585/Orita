@@ -13,22 +13,22 @@ int main(int argc,char **argv)
         printf("\nERROR: Invalid syntax. No /n specified.\n\n");
         return 0;
     }
-    input_name(11,parameter['f'][1],".cpp");
-    input_name(12,parameter['f'][2],".cpp");
-    input_name(13,parameter['f'][3],".cpp");
-    if(copy_source(get_name(11)))
+    input_name(check_data_maker,parameter['f'][1],".cpp");
+    input_name(check_std,parameter['f'][2],".cpp");
+    input_name(check_run,parameter['f'][3],".cpp");
+    if(copy_source(get_name(check_data_maker)))
     {
-        print_result(-1);
+        print_result(No_such_file);
         return 0;
     }
-    if(copy_source(get_name(12)))
+    if(copy_source(get_name(check_std)))
     {
-        print_result(-1);
+        print_result(No_such_file);
         return 0;
     }
-    if(copy_source(get_name(13)))
+    if(copy_source(get_name(check_run)))
     {
-        print_result(-1);
+        print_result(No_such_file);
         return 0;
     }
     sprintf(instruct,"start /b /d E:\\1.C++\\code\\run /wait E:\\1.C++\\code\\run\\check.exe ");

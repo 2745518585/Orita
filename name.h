@@ -3,6 +3,10 @@
 #include<bits/stdc++.h>
 #include<windows.h>
 using namespace std;
+#define run_run 1
+#define check_data_maker 11
+#define check_std 12
+#define check_run 13
 namespace Name
 {
     const int N=1001;
