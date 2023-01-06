@@ -9,7 +9,7 @@ using namespace std;
 namespace Compile
 {
     const int N=1001;
-    char instruct[N],*name,parameter[N]="-std=c++14 -O2 -Wl,--stack=2147483647";
+    char instruct[N],*name,compile_parameter[N]="-std=c++14 -O2 -Wl,--stack=2147483647";
     FILE *file=NULL;
     int compile(int name_num)
     {
@@ -27,7 +27,7 @@ namespace Compile
             sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
             system(instruct);
         }
-        sprintf(instruct,"g++ %%appdata%%\\run\\source\\%s.cpp -o %%appdata%%\\run\\source\\%s.exe %s",name,name,parameter);
+        sprintf(instruct,"g++ %%appdata%%\\run\\source\\%s.cpp -o %%appdata%%\\run\\source\\%s.exe %s",name,name,compile_parameter);
         return system(instruct)!=0;
     }
 }
