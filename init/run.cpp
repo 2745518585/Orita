@@ -8,7 +8,7 @@ int main(int argc,char **argv)
 {
     system("del /Q %appdata%\\run\\source\\");
     init_parameter(argc,argv);
-    input_name(run_run,parameter['f'][1],".cpp");
+    if(num_parameter['f']>=1) add_name(run_run,parameter['f'][1],".cpp");
     if(copy_source(get_name(run_run)))
     {
         print_result(No_such_file);

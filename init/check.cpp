@@ -13,9 +13,12 @@ int main(int argc,char **argv)
         printf("\nERROR: Invalid syntax. No /n specified.\n\n");
         return 0;
     }
-    input_name(check_data_maker,parameter['f'][1],".cpp");
-    input_name(check_std,parameter['f'][2],".cpp");
-    input_name(check_run,parameter['f'][3],".cpp");
+    if(num_parameter['f']>=3)
+    {
+        add_name(check_data_maker,parameter['f'][1],".cpp");
+        add_name(check_std,parameter['f'][2],".cpp");
+        add_name(check_run,parameter['f'][3],".cpp");
+    }
     if(copy_source(get_name(check_data_maker)))
     {
         print_result(No_such_file);

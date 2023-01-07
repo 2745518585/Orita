@@ -21,9 +21,12 @@ int main(int argc,char **argv)
     system("del /Q ..\\data\\*.out > %appdata%\\run\\rubbish\\rubbish.txt");
     system("del /Q ..\\data\\*.ans > %appdata%\\run\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
-    input_name(check_data_maker,parameter['f'][1]);
-    input_name(check_std,parameter['f'][2]);
-    input_name(check_run,parameter['f'][3]);
+    if(num_parameter['f'])
+    {
+        add_name(check_data_maker,parameter['f'][1]);
+        add_name(check_std,parameter['f'][2]);
+        add_name(check_run,parameter['f'][3]);
+    }
     if(compile(check_data_maker))
     {
         print_result(data_maker_Compile_Error,0);
