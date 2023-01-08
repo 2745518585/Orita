@@ -21,7 +21,7 @@ int main(int argc,char **argv)
     system("del /Q ..\\data\\*.out > %appdata%\\run\\rubbish\\rubbish.txt");
     system("del /Q ..\\data\\*.ans > %appdata%\\run\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
-    if(num_parameter['f'])
+    if(num_parameter['f']>=3)
     {
         add_name(check_data_maker,parameter['f'][1]);
         add_name(check_std,parameter['f'][2]);
