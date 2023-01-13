@@ -72,7 +72,7 @@
 
 ### check
 
-`check /n num [/f data_maker_file std_file test_file] [/t time]`
+`check [/n num] [/f data_maker_file std_file test_file] [/t time]`
 
 #### 描述
 
@@ -80,7 +80,7 @@
 
 #### 参数列表
 
-`/n`    对拍次数。此参数必须存在。
+`/n`    对拍次数。如无此参数不会开始对拍，仅视为设置参数。
 
 `/f`    `data_maker_file`    `std_file`    `test_file`    指定源文件名（如果无 `.cpp` 后缀或后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件名为准。
 
