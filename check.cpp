@@ -27,6 +27,11 @@ int main(int argc,char **argv)
         add_name(check_std,parameter['f'][2]);
         add_name(check_run,parameter['f'][3]);
     }
+    if(num_parameter['n']<=0)
+    {
+        printf("\nERROR: Invalid syntax. No /n specified.\n\n");
+        return 0;
+    }
     if(compile(check_data_maker))
     {
         print_result(data_maker_Compile_Error,0);

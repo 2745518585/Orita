@@ -8,11 +8,6 @@ int main(int argc,char **argv)
 {
     system("del /Q %appdata%\\run\\source\\* > %appdata%\\run\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
-    if(num_parameter['n']<=0)
-    {
-        printf("\nERROR: Invalid syntax. No /n specified.\n\n");
-        return 0;
-    }
     if(num_parameter['f']>=3)
     {
         add_name(check_data_maker,parameter['f'][1],".cpp");
