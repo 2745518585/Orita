@@ -41,7 +41,7 @@ namespace Judge
         judge(name_num,if_compile);
         print_result(result,time);
     }
-    void print_judge2(int name_num,bool if_compile)
+    void print_judge_complete(int name_num,bool if_compile)
     {
         if(if_compile)
         {
@@ -73,5 +73,5 @@ namespace Judge
 }
 int judge(int name_num,bool if_compile) {return Judge::judge(name_num,if_compile);}
 void print_judge(int name_num,bool if_compile) {Judge::print_judge(name_num,if_compile);}
-void print_judge2(int name_num,bool if_compile) {Judge::print_judge2(name_num,if_compile);}
+void print_judge_complete(int name_num,bool if_compile) {Judge::print_judge_complete(name_num,if_compile);}
 #endif

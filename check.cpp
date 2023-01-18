@@ -61,7 +61,7 @@ int main(int argc,char **argv)
         sprintf(instruct1,"%%appdata%%\\Orata\\source\\%s.exe > %%appdata%%\\Orata\\data\\data.in %d",get_name_pre(check_data_maker),i);
         system(instruct1);
         system(instruct2);
-        print_judge2(check_run,0);
+        print_judge_complete(check_run,0);
         a[i]=Judge::result;
         if(a[i]!=0) copy(i);
         else ++s;

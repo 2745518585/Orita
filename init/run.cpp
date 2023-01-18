@@ -8,7 +8,11 @@ int main(int argc,char **argv)
 {
     system("del /Q %appdata%\\Orita\\source\\");
     init_parameter(argc,argv);
-    if(num_parameter['f']>=1) add_name(run_run,parameter['f'][1],".cpp");
+    if(num_parameter['f']>=1)
+    {
+        add_name(run_run,parameter['f'][1],".cpp");
+        add_running_address(run_run);
+    }
     if(copy_source(get_name(run_run)))
     {
         print_result(No_such_file);
