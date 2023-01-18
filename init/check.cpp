@@ -6,7 +6,7 @@ const int N=1001;
 char instruct[N];
 int main(int argc,char **argv)
 {
-    system("del /Q %appdata%\\run\\source\\* > %appdata%\\run\\rubbish\\rubbish.txt");
+    system("del /Q %appdata%\\Orita\\source\\* > %appdata%\\Orita\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
     if(num_parameter['f']>=3)
     {
@@ -29,7 +29,7 @@ int main(int argc,char **argv)
         print_result(No_such_file);
         return 0;
     }
-    sprintf(instruct,"start /b /d E:\\1.C++\\code\\run /wait E:\\1.C++\\code\\run\\check.exe ");
+    sprintf(instruct,"start /b /d E:\\1.C++\\code\\Orita /wait E:\\1.C++\\code\\Orita\\check.exe ");
     for(int i=1;i<=argc-1;++i)
     {
         sprintf(instruct,"%s %s",instruct,argv[i]);

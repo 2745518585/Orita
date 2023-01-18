@@ -7,19 +7,19 @@ int a[M];
 char instruct[N],instruct1[N],instruct2[N],instruct3[N];
 void copy(int num)
 {
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.in ..\\data\\%d.in > %%appdata%%\\run\\rubbish\\rubbish.txt",num);
+    sprintf(instruct,"copy %%appdata%%\\Orata\\data\\data.in ..\\data\\%d.in > %%appdata%%\\Orata\\rubbish\\rubbish.txt",num);
     system(instruct);
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.out ..\\data\\%d.out > %%appdata%%\\run\\rubbish\\rubbish.txt",num);
+    sprintf(instruct,"copy %%appdata%%\\Orata\\data\\data.out ..\\data\\%d.out > %%appdata%%\\Orata\\rubbish\\rubbish.txt",num);
     system(instruct);
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\run.out ..\\data\\%d.ans > %%appdata%%\\run\\rubbish\\rubbish.txt",num);
+    sprintf(instruct,"copy %%appdata%%\\Orata\\data\\run.out ..\\data\\%d.ans > %%appdata%%\\Orata\\rubbish\\rubbish.txt",num);
     system(instruct);
 }
 int main(int argc,char **argv)
 {
     srand(time(NULL));
-    system("del /Q ..\\data\\*.in > %appdata%\\run\\rubbish\\rubbish.txt");
-    system("del /Q ..\\data\\*.out > %appdata%\\run\\rubbish\\rubbish.txt");
-    system("del /Q ..\\data\\*.ans > %appdata%\\run\\rubbish\\rubbish.txt");
+    system("del /Q ..\\data\\*.in > %appdata%\\Orata\\rubbish\\rubbish.txt");
+    system("del /Q ..\\data\\*.out > %appdata%\\Orata\\rubbish\\rubbish.txt");
+    system("del /Q ..\\data\\*.ans > %appdata%\\Orata\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
     if(num_parameter['f']>=3)
     {
@@ -45,8 +45,8 @@ int main(int argc,char **argv)
     }
     int n=atoi(parameter['n'][1]);
     if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
-    sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in",get_name_pre(check_data_maker));
-    sprintf(instruct2,"%%appdata%%\\run\\source\\%s.exe < %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\data\\data.out",get_name_pre(check_std));
+    sprintf(instruct1,"%%appdata%%\\Orata\\source\\%s.exe > %%appdata%%\\Orata\\data\\data.in",get_name_pre(check_data_maker));
+    sprintf(instruct2,"%%appdata%%\\Orata\\source\\%s.exe < %%appdata%%\\Orata\\data\\data.in > %%appdata%%\\Orata\\data\\data.out",get_name_pre(check_std));
     int s=0;
     for(int i=1;i<=n;++i)
     {
@@ -58,7 +58,7 @@ int main(int argc,char **argv)
             change_color(1,1,1,1);
         }
         printf("\n");
-        sprintf(instruct1,"%%appdata%%\\run\\source\\%s.exe > %%appdata%%\\run\\data\\data.in %d",get_name_pre(check_data_maker),i);
+        sprintf(instruct1,"%%appdata%%\\Orata\\source\\%s.exe > %%appdata%%\\Orata\\data\\data.in %d",get_name_pre(check_data_maker),i);
         system(instruct1);
         system(instruct2);
         print_judge2(check_run,0);

@@ -24,11 +24,11 @@ int main(int argc,char **argv)
     else if(num_parameter['s']!=-1)
     {
         char x;
-        sprintf(files,"%s\\run\\data\\data.in",getenv("appdata"));
+        sprintf(files,"%s\\Orita\\data\\data.in",getenv("appdata"));
         file=fopen(files,"w");
         x=getchar();
         while(x!=EOF) fputc(x,file),x=getchar();
-        sprintf(files,"%s\\run\\data\\data.out",getenv("appdata"));
+        sprintf(files,"%s\\Orita\\data\\data.out",getenv("appdata"));
         file=fopen(files,"w");
         x=getchar();
         while(x!=EOF) fputc(x,file),x=getchar();

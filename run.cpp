@@ -10,11 +10,11 @@ int main(int argc,char **argv)
     if(num_parameter['f']>=1) add_name(run_run,parameter['f'][1],".cpp");
     if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
     print_judge2(run_run,1);
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.in ..\\data\\ > %%appdata%%\\run\\rubbish\\rubbish.txt");
+    sprintf(instruct,"copy %%appdata%%\\Orita\\data\\data.in ..\\data\\ > %%appdata%%\\Orita\\rubbish\\rubbish.txt");
     system(instruct);
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\data.out ..\\data\\ > %%appdata%%\\run\\rubbish\\rubbish.txt");
+    sprintf(instruct,"copy %%appdata%%\\Orita\\data\\data.out ..\\data\\ > %%appdata%%\\Orita\\rubbish\\rubbish.txt");
     system(instruct);
-    sprintf(instruct,"copy %%appdata%%\\run\\data\\run.out ..\\data\\ > %%appdata%%\\run\\rubbish\\rubbish.txt");
+    sprintf(instruct,"copy %%appdata%%\\Orita\\data\\run.out ..\\data\\ > %%appdata%%\\Orita\\rubbish\\rubbish.txt");
     system(instruct);
     return 0;
 }

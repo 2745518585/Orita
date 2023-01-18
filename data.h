@@ -11,14 +11,14 @@ namespace Data
     FILE *file=NULL;
     void change_time_limit(int time)
     {
-        sprintf(files,"%s\\run\\data\\time.txt",getenv("appdata"));
+        sprintf(files,"%s\\Orita\\data\\time.txt",getenv("appdata"));
         file=fopen(files,"w");
         fprintf(file,"%d",time);
         fclose(file);
     }
     int get_time_limit()
     {
-        sprintf(files,"%s\\run\\data\\time.txt",getenv("appdata"));
+        sprintf(files,"%s\\Orita\\data\\time.txt",getenv("appdata"));
         file=fopen(files,"r");
         fscanf(file,"%d",&time);
         fclose(file);

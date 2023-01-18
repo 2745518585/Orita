@@ -14,7 +14,7 @@ namespace Name
     FILE *file=NULL;
     void add_name(int num,char *name)
     {
-        sprintf(files,"%s\\run\\name\\name%d.txt",getenv("appdata"),num);
+        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
         file=fopen(files,"w");
         fprintf(file,"%s",name);
         fclose(file);
@@ -36,7 +36,7 @@ namespace Name
     };
     char *get_name(int num)
     {
-        sprintf(files,"%s\\run\\name\\name%d.txt",getenv("appdata"),num);
+        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
         file=fopen(files,"r");
         fscanf(file,"%s",name[num]);
         fclose(file);
@@ -44,7 +44,7 @@ namespace Name
     }
     char *get_name_pre(int num)
     {
-        sprintf(files,"%s\\run\\name\\name%d.txt",getenv("appdata"),num);
+        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
         file=fopen(files,"r");
         fscanf(file,"%s",name_pre[num]);
         fclose(file);
@@ -61,7 +61,7 @@ namespace Name
     }
     char *get_name_suf(int num)
     {
-        sprintf(files,"%s\\run\\name\\name%d.txt",getenv("appdata"),num);
+        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
         file=fopen(files,"r");
         fscanf(file,"%s",name_suf[num]);
         fclose(file);

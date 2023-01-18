@@ -8,17 +8,17 @@ namespace Copy
     char instruct[N];
     int copy_source(char *name)
     {
-        sprintf(instruct,"copy %s %%appdata%%\\run\\source\\ > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
+        sprintf(instruct,"copy %s %%appdata%%\\Orita\\source\\ > %%appdata%%\\Orita\\rubbish\\rubbish.txt",name);
         return system(instruct);
     }
     int copy_data_in(char *name)
     {
-        sprintf(instruct,"copy %s %%appdata%%\\run\\data\\data.in > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
+        sprintf(instruct,"copy %s %%appdata%%\\Orita\\data\\data.in > %%appdata%%\\Orita\\rubbish\\rubbish.txt",name);
         return system(instruct);
     }
     int copy_data_out(char *name)
     {
-        sprintf(instruct,"copy %s %%appdata%%\\run\\data\\data.out > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
+        sprintf(instruct,"copy %s %%appdata%%\\Orita\\data\\data.out > %%appdata%%\\Orita\\rubbish\\rubbish.txt",name);
         return system(instruct);
     }
 }

@@ -24,10 +24,10 @@ namespace Compile
         name=get_name_pre(name_num);
         if(find_task(name_num))
         {
-            sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\run\\rubbish\\rubbish.txt",name);
+            sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\Orita\\rubbish\\rubbish.txt",name);
             system(instruct);
         }
-        sprintf(instruct,"g++ %%appdata%%\\run\\source\\%s.cpp -o %%appdata%%\\run\\source\\%s.exe %s",name,name,compile_parameter);
+        sprintf(instruct,"g++ %%appdata%%\\Orita\\source\\%s.cpp -o %%appdata%%\\Orita\\source\\%s.exe %s",name,name,compile_parameter);
         return system(instruct)!=0;
     }
 }
