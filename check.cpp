@@ -8,44 +8,43 @@ char files[N],instruct1[N],instruct2[N],instruct3[N];
 void copy(int num)
 {
     sprintf(files,"%d.in",num);
-    copy_result("data.in",files);
+    copy_result("data","data.in","data",files);
     sprintf(files,"%d.out",num);
-    copy_result("data.out",files);
+    copy_result("data","data.out","data",files);
     sprintf(files,"%d.ans",num);
-    copy_result("run.out",files);
+    copy_result("data","data.ans","data",files);
 }
-int main(int argc,char **argv)
+int main(int argc,const char **argv)
 {
     srand(time(NULL));
-    system("del /Q data\\*.in > %appdata%\\Orita\\rubbish\\rubbish.txt");
-    system("del /Q data\\*.out > %appdata%\\Orita\\rubbish\\rubbish.txt");
-    system("del /Q data\\*.ans > %appdata%\\Orita\\rubbish\\rubbish.txt");
     init_parameter(argc,argv);
-    if(num_parameter['f']>=3)
+    if(get_sum_parameter("f")>=3)
     {
-        add_name(check_data_maker,parameter['f'][1],".cpp");
+        add_name(check_data_maker,get_parameter("f",1),".cpp");
         add_running_address(check_data_maker);
-        add_name(check_std,parameter['f'][2],".cpp");
+        add_name(check_std,get_parameter("f",2),".cpp");
         add_running_address(check_std);
-        add_name(check_run,parameter['f'][3],".cpp");
+        add_name(check_run,get_parameter("f",3),".cpp");
         add_running_address(check_run);
     }
-    if(copy_source(check_data_maker))
+    if(copy_source(get_address(check_data_maker),get_name(check_data_maker),"source",get_name(check_data_maker)))
     {
         print_result(No_such_file);
         return 0;
     }
-    if(copy_source(check_std))
+    if(copy_source(get_address(check_std),get_name(check_std),"source",get_name(check_std)))
     {
         print_result(No_such_file);
         return 0;
     }
-    if(copy_source(check_run))
+    if(copy_source(get_address(check_std),get_name(check_std),"source",get_name(check_std)))
     {
         print_result(No_such_file);
         return 0;
     }
-    if(num_parameter['n']<=0) return 0;
+    if(get_sum_parameter("n")<1) return 0;
+    if(system("dir data > \"%appdata%\\Orita\\rubbish\\rubbish.txt\"")) system("md data");
+    system("del /Q data\\* > %appdata%\\Orita\\rubbish\\rubbish.txt");
     if(compile(check_data_maker))
     {
         print_result(data_maker_Compile_Error);
@@ -61,8 +60,8 @@ int main(int argc,char **argv)
         print_result(Compile_Error);
         return 0;
     }
-    int n=atoi(parameter['n'][1]);
-    if(num_parameter['t']>=1) change_time_limit(atoi(parameter['t'][1]));
+    int n=atoi(get_parameter("n",1));
+    if(get_sum_parameter("t")>=1) change_time_limit(atoi(get_parameter("t",1)));
     sprintf(instruct1,"%%appdata%%\\Orita\\source\\%s.exe > %%appdata%%\\Orita\\data\\data.in",get_name_pre(check_data_maker));
     sprintf(instruct2,"%%appdata%%\\Orita\\source\\%s.exe < %%appdata%%\\Orita\\data\\data.in > %%appdata%%\\Orita\\data\\data.out",get_name_pre(check_std));
     int s=0;

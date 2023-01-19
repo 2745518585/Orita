@@ -5,23 +5,23 @@ using namespace std;
 const int N=1001;
 char files[N];
 FILE *file=NULL;
-int main(int argc,char **argv)
+int main(int argc,const char **argv)
 {
     init_parameter(argc,argv);
-    if(num_parameter['f']>=2)
+    if(get_sum_parameter("f")>=2)
     {
-        if(copy_data(parameter['f'][1],"data.in"))
+        if(copy_source(".\\",get_parameter("f",1),"data","data.in"))
         {
-            print_result(-1);
+            print_result(No_such_file);
             return 0;
         }
-        if(copy_data(parameter['f'][2],"data.out"))
+        if(copy_source(".\\",get_parameter("f",1),"data","data.in"))
         {
-            print_result(-1);
+            print_result(No_such_file);
             return 0;
         }
     }
-    else if(num_parameter['s']!=-1)
+    else if(get_sum_parameter("s")!=-1)
     {
         char x;
         sprintf(files,"%s\\Orita\\data\\data.in",getenv("appdata"));
@@ -33,9 +33,9 @@ int main(int argc,char **argv)
         x=getchar();
         while(x!=EOF) fputc(x,file),x=getchar();
     }
-    if(num_parameter['t']>=1)
+    if(get_sum_parameter("t")>=1)
     {
-        change_time_limit(atoi(parameter['t'][1]));
+        change_time_limit(atoi(get_parameter("t",1)));
     }
     change_color(1,0,1,0);
     printf("\nSuccess\n\n");

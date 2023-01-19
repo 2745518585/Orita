@@ -38,7 +38,7 @@
 
 #### 数据及源代码输出
 
-数据与源代码输出会在程序运行完成后存放至 `data\data.in` `data\data.out` `data\run.out`。
+数据与源代码输出会在程序运行完成后存放至 `data\data.in` `data\data.out` `data\data.ans`。
 
 #### 编译参数
 

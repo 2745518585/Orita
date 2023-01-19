@@ -19,12 +19,12 @@ namespace Judge
     int judge(int name_num,bool if_compile)
     {
         if(if_compile) if(compile(name_num)) return if_end=true,result=Compile_Error;
-        sprintf(instruct,"%%appdata%%\\Orita\\source\\%s.exe < %%appdata%%\\Orita\\data\\data.in > %%appdata%%\\Orita\\data\\run.out",get_name_pre(name_num));
+        sprintf(instruct,"%%appdata%%\\Orita\\source\\%s.exe < %%appdata%%\\Orita\\data\\data.in > %%appdata%%\\Orita\\data\\data.ans",get_name_pre(name_num));
         begin_time=clock();
         if(system(instruct)) return if_end=true,result=Runtime_Error;
         if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\run.out > %appdata%\\Orita\\rubbish\\rubbish.txt"))
+        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans > %appdata%\\Orita\\rubbish\\rubbish.txt"))
         {
             if(time>get_time_limit()) result=Time_Limit_Error_Wrong_Answer;
             else result=Wrong_Answer;

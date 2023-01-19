@@ -4,7 +4,7 @@
 using namespace std;
 const int N=1001;
 char instruct[N],compile_parameter[N]="-std=c++14 -O2 -Wl,--stack=2147483647";
-int main(int argc,char **argv)
+int main(int argc,const char **argv)
 {
     sprintf(instruct,"taskkill /f /pid %s.exe",argv[1]);
     system(instruct);
