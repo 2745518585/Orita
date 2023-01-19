@@ -19,7 +19,7 @@ namespace Print
     {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),(8*intensity)|(4*red)|(2*green)|(blue));
     }
-    void print_result(int result,int time)
+    void print_result(int result,int information)
     {
         if(result==No_such_file)
         {
@@ -30,37 +30,37 @@ namespace Print
         if(result==Accepted)
         {
             change_color(1,0,1,0);
-            printf("\nAccepted\n%dms\n\n",time);
+            printf("\nAccepted\n%dms\n\n",information);
             change_color(1,1,1,1);
         }
         else if(result==Wrong_Answer)
         {
             change_color(1,1,0,0);
-            printf("\nWrong Answer\n%dms\n\n",time);
+            printf("\nWrong Answer\n%dms\n\n",information);
             change_color(1,1,1,1);
         }
         else if(result==Runtime_Error)
         {
             change_color(1,1,0,1);
-            printf("\nRuntime Error\n\n");
+            printf("\nRuntime Error\nexit with code %d\n\n",information);
             change_color(1,1,1,1);
         }
         else if(result==Time_Limit_Error_Correct_Answer)
         {
             change_color(1,0,0,1);
-            printf("\nTime Limit Error\n%dms\n\nCorrect Answer\n\n",time);
+            printf("\nTime Limit Error\n%dms\n\nCorrect Answer\n\n",information);
             change_color(1,1,1,1);
         }
         else if(result==Time_Limit_Error_Wrong_Answer)
         {
             change_color(1,0,0,1);
-            printf("\nTime Limit Error\n%dms\n\nWrong Answer\n\n",time);
+            printf("\nTime Limit Error\n%dms\n\nWrong Answer\n\n",information);
             change_color(1,1,1,1);
         }
         else if(result==Time_Limit_Error_over)
         {
             change_color(1,0,0,1);
-            printf("\nTime Limit Error\nover %dms\n\n",time);
+            printf("\nTime Limit Error\nover %dms\n\n",information);
             change_color(1,1,1,1);
         }
         else if(result==Compile_Error)
@@ -84,6 +84,6 @@ namespace Print
     }
 }
 void change_color(int intensity,int red,int green,int blue) {Print::change_color(intensity,red,green,blue);}
-void print_result(int result,int time) {Print::print_result(result,time);}
+void print_result(int result,int information) {Print::print_result(result,information);}
 void print_result(int result) {Print::print_result(result,0);}
 #endif

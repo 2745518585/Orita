@@ -12,7 +12,7 @@ namespace Judge
 {
     const int N=1001;
     char instruct[N];
-    int result,time,time_limit;
+    int result,time,time_limit,exit_code;
     clock_t begin_time;
     FILE *file=NULL;
     bool if_end;
@@ -21,7 +21,7 @@ namespace Judge
         if(if_compile) if(compile(name_num)) return if_end=true,result=Compile_Error;
         sprintf(instruct,"%%appdata%%\\Orita\\source\\%s.exe < %%appdata%%\\Orita\\data\\data.in > %%appdata%%\\Orita\\data\\data.ans",get_name_pre(name_num));
         begin_time=clock();
-        if(system(instruct)) return if_end=true,result=Runtime_Error;
+        if(exit_code=system(instruct)) return if_end=true,result=Runtime_Error;
         if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans > %appdata%\\Orita\\rubbish\\rubbish.txt"))
@@ -61,7 +61,8 @@ namespace Judge
             if(if_end)
             {
                 while(result==-1) Sleep(5);
-                print_result(result,time);
+                if(result==Runtime_Error) print_result(result,exit_code);
+                else print_result(result,time);
                 return;
             }
         }
