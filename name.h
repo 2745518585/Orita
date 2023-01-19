@@ -12,14 +12,14 @@ namespace Name
     const int N=1001;
     char files[N],instruct[N],name[N][N],name_pre[N][N],name_suf[N][N],address[N][N];
     FILE *file=NULL;
-    void add_name(int num,char *name)
+    void add_name(int num,const char *name)
     {
         sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
         file=fopen(files,"w");
         fprintf(file,"%s",name);
         fclose(file);
     }
-    void add_name(int num,char *name,const char *name_suf)
+    void add_name(int num,const char *name,const char *name_suf)
     {
         int length_name=strlen(name),length_name_suf=strlen(name_suf);
         bool if_name_suf=true;
@@ -31,8 +31,11 @@ namespace Name
                 break;
             }
         }
-        if(if_name_suf==false) sprintf(name,"%s%s",name,name_suf);
-        add_name(num,name);
+        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
+        file=fopen(files,"w");
+        if(if_name_suf==false) fprintf(file,"%s%s",name,name_suf);
+        else fprintf(file,"%s",name);
+        fclose(file);
     };
     char *get_name(int num)
     {
@@ -80,7 +83,7 @@ namespace Name
         if(if_find==false) name_suf[num][0]='\0';
         return name_suf[num];
     }
-    void add_address(int num,char *address)
+    void add_address(int num,const char *address)
     {
         sprintf(files,"%s\\Orita\\name\\address%d.txt",getenv("appdata"),num);
         file=fopen(files,"w");
@@ -101,12 +104,12 @@ namespace Name
         return address[num];
     }
 }
-void add_name(int num,char *name) {Name::add_name(num,name);}
-void add_name(int num,char *name,const char *name_suf) {Name::add_name(num,name,name_suf);}
+void add_name(int num,const char *name) {Name::add_name(num,name);}
+void add_name(int num,const char *name,const char *name_suf) {Name::add_name(num,name,name_suf);}
 char *get_name(int num) {return Name::get_name(num);}
 char *get_name_pre(int num) {return Name::get_name_pre(num);}
 char *get_name_suf(int num) {return Name::get_name_suf(num);}
-void add_address(int num,char *address) {Name::add_address(num,address);}
+void add_address(int num,const char *address) {Name::add_address(num,address);}
 void add_running_address(int num) {Name::add_running_address(num);}
 char *get_address(int num) {return Name::get_address(num);}
 #endif

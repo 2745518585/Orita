@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "..\run.h"
+#include "run.h"
 using namespace std;
 const int N=1001;
 char instruct[N],compile_parameter[N]="-std=c++14 -O2 -Wl,--stack=2147483647";
