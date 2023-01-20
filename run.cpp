@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "run.h"
+#include "run.hpp"
 using namespace std;
 const int N=1001;
 char instruct[N];

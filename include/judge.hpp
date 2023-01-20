@@ -2,11 +2,11 @@
 #define JUDGE JUDGE
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "name.h"
-#include "compile.h"
-#include "data.h"
-#include "print.h"
-#include "task.h"
+#include "name.hpp"
+#include "compile.hpp"
+#include "data.hpp"
+#include "print.hpp"
+#include "task.hpp"
 using namespace std;
 namespace Judge
 {

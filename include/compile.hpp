@@ -2,9 +2,9 @@
 #define COMPILE COMPILE
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "name.h"
-#include "task.h"
-#include "print.h"
+#include "name.hpp"
+#include "task.hpp"
+#include "print.hpp"
 using namespace std;
 namespace Compile
 {

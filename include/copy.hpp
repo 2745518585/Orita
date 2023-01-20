@@ -2,7 +2,7 @@
 #define COPY COPY
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "name.h"
+#include "name.hpp"
 namespace Copy
 {
     const int N=1001;
