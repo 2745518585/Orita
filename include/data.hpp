@@ -5,23 +5,18 @@
 using namespace std;
 namespace Data
 {
-    const int N=1001;
-    int time;
-    char files[N];
-    FILE *file=NULL;
     void change_time_limit(int time)
     {
-        sprintf(files,"%s\\Orita\\data\\time.txt",getenv("appdata"));
-        file=fopen(files,"w");
-        fprintf(file,"%d",time);
-        fclose(file);
+        ofstream file(string(getenv("appdata"))+"\\Orita\\data\\time.txt");
+        file<<time;
+        file.close();
     }
     int get_time_limit()
     {
-        sprintf(files,"%s\\Orita\\data\\time.txt",getenv("appdata"));
-        file=fopen(files,"r");
-        fscanf(file,"%d",&time);
-        fclose(file);
+        ifstream file(string(getenv("appdata"))+"\\Orita\\data\\time.txt");
+        int time;
+        file>>time;
+        file.close();
         return time;
     }
 }

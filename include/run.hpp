@@ -5,7 +5,6 @@
 #include "data.hpp"
 #include "print.hpp"
 #include "judge.hpp"
-#include "task.hpp"
 #include "parameter.hpp"
 #include "copy.hpp"
 #endif

@@ -6,11 +6,11 @@ using namespace std;
 namespace Parameter
 {
     const int N=1001;
-    const char *parameter[N][N],*name_parameter[N];
+    string parameter[N][N],name_parameter[N];
     int tot,sum_parameter[N];
-    void init_parameter(int argc,const char **argv)
+    void init_parameter(int argc,char **argv)
     {
-        for(int i=0;i<=1000;++i) sum_parameter[i]=-1;
+        for(int i=0;i<=N-1;++i) sum_parameter[i]=-1;
         for(int i=1;i<=argc-1;++i)
         {
             if(argv[i][0]=='/')
@@ -27,26 +27,26 @@ namespace Parameter
             }
         }
     }
-    const char *get_parameter(const char *name,int next_num)
+    string get_parameter(string name,int num2)
     {
         int num=0;
         for(int i=1;i<=tot;++i)
         {
-            if(strcmp(name,name_parameter[i])==0)
+            if(name==name_parameter[i])
             {
                 num=i;
                 break;
             }
         }
-        if(num==0||next_num>sum_parameter[num]) return NULL;
-        return parameter[num][next_num];
+        if(num==0||num2>sum_parameter[num]) return NULL;
+        return parameter[num][num2];
     }
-    int get_sum_parameter(const char *name)
+    int get_sum_parameter(string name)
     {
         int num=0;
         for(int i=1;i<=tot;++i)
         {
-            if(strcmp(name,name_parameter[i])==0)
+            if(name==name_parameter[i])
             {
                 num=i;
                 break;
@@ -56,7 +56,7 @@ namespace Parameter
         return sum_parameter[num];
     }
 }
-void init_parameter(int argc,const char **argv) {Parameter::init_parameter(argc,argv);}
-const char *get_parameter(const char *name,int next_num) {return Parameter::get_parameter(name,next_num);}
-int get_sum_parameter(const char *name) {return Parameter::get_sum_parameter(name);}
+void init_parameter(int argc,char **argv) {Parameter::init_parameter(argc,argv);}
+string get_parameter(string name,int num2) {return Parameter::get_parameter(name,num2);}
+int get_sum_parameter(string name) {return Parameter::get_sum_parameter(name);}
 #endif

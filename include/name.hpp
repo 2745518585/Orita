@@ -9,19 +9,15 @@ using namespace std;
 #define check_run 13
 namespace Name
 {
-    const int N=1001;
-    char files[N],instruct[N],name[N][N],name_pre[N][N],name_suf[N][N],address[N][N];
-    FILE *file=NULL;
-    void add_name(int num,const char *name)
+    void add_name(int num,string name)
     {
-        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
-        file=fopen(files,"w");
-        fprintf(file,"%s",name);
-        fclose(file);
+        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
+        file<<name;
+        file.close();
     }
-    void add_name(int num,const char *name,const char *name_suf)
+    void add_name(int num,string name,string name_suf)
     {
-        int length_name=strlen(name),length_name_suf=strlen(name_suf);
+        int length_name=name.size(),length_name_suf=name_suf.size();
         bool if_name_suf=true;
         for(int i=0;i<length_name_suf;++i)
         {
@@ -31,85 +27,80 @@ namespace Name
                 break;
             }
         }
-        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
-        file=fopen(files,"w");
-        if(if_name_suf==false) fprintf(file,"%s%s",name,name_suf);
-        else fprintf(file,"%s",name);
-        fclose(file);
+        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
+        if(if_name_suf==false) file<<name<<name_suf;
+        else file<<name;
+        file.close();
     };
-    char *get_name(int num)
+    string get_name(int num)
     {
-        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
-        file=fopen(files,"r");
-        fscanf(file,"%s",name[num]);
-        fclose(file);
-        return name[num];
+        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
+        string name;
+        file>>name;
+        file.close();
+        return name;
     }
-    char *get_name_pre(int num)
+    string get_name_pre(int num)
     {
-        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
-        file=fopen(files,"r");
-        fscanf(file,"%s",name_pre[num]);
-        fclose(file);
-        int length=strlen(name_pre[num]);
+        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
+        string name;
+        file>>name;
+        file.close();
+        int length=name.size();
         for(int i=length-1;i>=0;--i)
         {
-            if(name_pre[num][i]=='.')
+            if(name[i]=='.')
             {
-                name_pre[num][i]='\0';
+                name=name.substr(0,i);
                 break;
             }
         }
-        return name_pre[num];
+        return name;
     }
-    char *get_name_suf(int num)
+    string get_name_suf(int num)
     {
-        sprintf(files,"%s\\Orita\\name\\name%d.txt",getenv("appdata"),num);
-        file=fopen(files,"r");
-        fscanf(file,"%s",name_suf[num]);
-        fclose(file);
-        int length=strlen(name_suf[num]);
+        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
+        string name;
+        file>>name;
+        file.close();
+        int length=name.size();
         bool if_find=false;
         for(int i=length-1;i>=0;--i)
         {
-            if(name_suf[num][i]=='.')
+            if(name[i]=='.')
             {
-                if_find=true;
-                for(int j=0;j<length-i;++j) name_suf[num][j]=name_suf[num][i+j];
-                name_suf[num][length-i]='\0';
+                name=name.substr(i,length-i);
                 break;
             }
         }
-        if(if_find==false) name_suf[num][0]='\0';
-        return name_suf[num];
+        if(if_find==false) name.substr(0,0);
+        return name;
     }
-    void add_address(int num,const char *address)
+    void add_address(int num,string address)
     {
-        sprintf(files,"%s\\Orita\\name\\address%d.txt",getenv("appdata"),num);
-        file=fopen(files,"w");
-        fprintf(file,"%s",address);
-        fclose(file);
+        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\address"+to_string(num)+".txt");
+        file<<address;
+        file.close();
     }
     void add_running_address(int num)
     {
-        sprintf(instruct,"cd > %%appdata%%\\Orita\\name\\address%d.txt",num);
-        system(instruct);
+        system(("cd > \"%appdata%\\Orita\\name\\address"+to_string(num)+".txt\"").c_str());
     }
-    char *get_address(int num)
+    string get_address(int num)
     {
-        sprintf(files,"%s\\Orita\\name\\address%d.txt",getenv("appdata"),num);
-        file=fopen(files,"r");
-        fscanf(file,"%s",address[num]);
-        fclose(file);
-        return address[num];
+        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\address"+to_string(num)+".txt");
+        string address;
+        file>>address;
+        file.close();
+        return address;
     }
 }
-void add_name(int num,const char *name) {Name::add_name(num,name);}
-void add_name(int num,const char *name,const char *name_suf) {Name::add_name(num,name,name_suf);}
-char *get_name(int num) {return Name::get_name(num);}
-char *get_name_pre(int num) {return Name::get_name_pre(num);}
-char *get_name_suf(int num) {return Name::get_name_suf(num);}
-void add_address(int num,const char *address) {Name::add_address(num,address);}
+void add_name(int num,string name) {Name::add_name(num,name);}
+void add_name(int num,string name,string name_suf) {Name::add_name(num,name,name_suf);}
+string get_name(int num) {return Name::get_name(num);}
+string get_name_pre(int num) {return Name::get_name_pre(num);}
+string get_name_suf(int num) {return Name::get_name_suf(num);}
+void add_address(int num,string address) {Name::add_address(num,address);}
 void add_running_address(int num) {Name::add_running_address(num);}
-char *get_address(int num) {return Name::get_address(num);}
+string get_address(int num) {return Name::get_address(num);}
 #endif

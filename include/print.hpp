@@ -24,61 +24,61 @@ namespace Print
         if(result==No_such_file)
         {
             change_color(1,0,1,1);
-            printf("\nNo such file\n\n");
+            cout<<"\nNo such file\n\n";
             change_color(1,1,1,1);
         }
         if(result==Accepted)
         {
             change_color(1,0,1,0);
-            printf("\nAccepted\n%dms\n\n",information);
+            cout<<"\nAccepted\n"<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
         else if(result==Wrong_Answer)
         {
             change_color(1,1,0,0);
-            printf("\nWrong Answer\n%dms\n\n",information);
+            cout<<"\nWrong Answer\n"<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
         else if(result==Runtime_Error)
         {
             change_color(1,1,0,1);
-            printf("\nRuntime Error\nexit with code %d\n\n",information);
+            cout<<"\nRuntime Error\nexit with code "<<information<<"\n\n";
             change_color(1,1,1,1);
         }
         else if(result==Time_Limit_Error_Correct_Answer)
         {
             change_color(1,0,0,1);
-            printf("\nTime Limit Error\n%dms\n\nCorrect Answer\n\n",information);
+            cout<<"\nTime Limit Error\n"<<information<<"ms\n\nCorrect Answer\n\n";
             change_color(1,1,1,1);
         }
         else if(result==Time_Limit_Error_Wrong_Answer)
         {
             change_color(1,0,0,1);
-            printf("\nTime Limit Error\n%dms\n\nWrong Answer\n\n",information);
+            cout<<"\nTime Limit Error\n"<<information<<"ms\n\nWrong Answer\n\n";
             change_color(1,1,1,1);
         }
         else if(result==Time_Limit_Error_over)
         {
             change_color(1,0,0,1);
-            printf("\nTime Limit Error\nover %dms\n\n",information);
+            cout<<"\nTime Limit Error\nover %dms\n\n",information;
             change_color(1,1,1,1);
         }
         else if(result==Compile_Error)
         {
             change_color(1,1,1,0);
-            printf("\nCompile Error\n\n");
+            cout<<"\nCompile Error\n\n";
             change_color(1,1,1,1);
         }
         else if(result==data_maker_Compile_Error)
         {
             change_color(1,1,1,0);
-            printf("\ndata_maker Compile Error\n\n");
+            cout<<"\ndata_maker Compile Error\n\n";
             change_color(1,1,1,1);
         }
         else if(result==std_Compile_Error)
         {
             change_color(1,1,1,0);
-            printf("\nstd Compile Error\n\n");
+            cout<<"\nstd Compile Error\n\n";
             change_color(1,1,1,1);
         }
     }

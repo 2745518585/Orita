@@ -6,25 +6,20 @@
 #include "compile.hpp"
 #include "data.hpp"
 #include "print.hpp"
-#include "task.hpp"
 using namespace std;
 namespace Judge
 {
-    const int N=1001;
-    char instruct[N];
     int result,time,time_limit,exit_code;
     clock_t begin_time;
-    FILE *file=NULL;
     bool if_end;
     int judge(int name_num,bool if_compile)
     {
         if(if_compile) if(compile(name_num)) return if_end=true,result=Compile_Error;
-        sprintf(instruct,"%%appdata%%\\Orita\\source\\%s.exe < %%appdata%%\\Orita\\data\\data.in > %%appdata%%\\Orita\\data\\data.ans",get_name_pre(name_num));
         begin_time=clock();
-        if(exit_code=system(instruct)) return if_end=true,result=Runtime_Error;
+        if(exit_code=system(("%appdata%\\Orita\\source\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans").c_str())) return if_end=true,result=Runtime_Error;
         if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans > %appdata%\\Orita\\rubbish\\rubbish.txt"))
+        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1"))
         {
             if(time>get_time_limit()) result=Time_Limit_Error_Wrong_Answer;
             else result=Wrong_Answer;
@@ -66,8 +61,7 @@ namespace Judge
                 return;
             }
         }
-        sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\Orita\\rubbish\\rubbish2.txt",get_name_pre(name_num));
-        system(instruct);
+        system(("taskkill /f /pid "+get_name_pre(name_num)+".exe > \"%appdata%\\Orita\\rubbish\\rubbish2.txt\" 2>&1").c_str());
         result=Time_Limit_Error_over;
         print_result(result,time_limit*2);
     }

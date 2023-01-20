@@ -2,22 +2,17 @@
 #include<windows.h>
 #include "run.hpp"
 using namespace std;
-const int N=1001,M=1000001;
-int a[M];
-char files[N],instruct1[N],instruct2[N],instruct3[N];
+const int N=1001;
 void copy(int num)
 {
-    sprintf(files,"%d.in",num);
-    copy_result("data","data.in","data",files);
-    sprintf(files,"%d.out",num);
-    copy_result("data","data.out","data",files);
-    sprintf(files,"%d.ans",num);
-    copy_result("data","data.ans","data",files);
+    copy_result("data","data.in","data",to_string(num)+".in");
+    copy_result("data","data.out","data",to_string(num)+".out");
+    copy_result("data","data.ans","data",to_string(num)+".ans");
 }
-int main(int argc,const char **argv)
+int main(int argc,char **argv)
 {
-    srand(time(NULL));
     init_parameter(argc,argv);
+    system("del /Q \"%appdata%\\Orita\\source\\*\" > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1");
     if(get_sum_parameter("f")>=3)
     {
         add_name(check_data_maker,get_parameter("f",1),".cpp");
@@ -37,14 +32,14 @@ int main(int argc,const char **argv)
         print_result(No_such_file);
         return 0;
     }
-    if(copy_source(get_address(check_std),get_name(check_std),"source",get_name(check_std)))
+    if(copy_source(get_address(check_run),get_name(check_run),"source",get_name(check_run)))
     {
         print_result(No_such_file);
         return 0;
     }
     if(get_sum_parameter("n")<1) return 0;
-    if(system("dir data > \"%appdata%\\Orita\\rubbish\\rubbish.txt\"")) system("md data");
-    system("del /Q data\\* > %appdata%\\Orita\\rubbish\\rubbish.txt");
+    if(system("dir data > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1")) system("md data");
+    system("del /Q data\\* > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1");
     if(compile(check_data_maker))
     {
         print_result(data_maker_Compile_Error);
@@ -60,29 +55,28 @@ int main(int argc,const char **argv)
         print_result(Compile_Error);
         return 0;
     }
-    int n=atoi(get_parameter("n",1));
-    if(get_sum_parameter("t")>=1) change_time_limit(atoi(get_parameter("t",1)));
-    sprintf(instruct1,"%%appdata%%\\Orita\\source\\%s.exe > %%appdata%%\\Orita\\data\\data.in",get_name_pre(check_data_maker));
-    sprintf(instruct2,"%%appdata%%\\Orita\\source\\%s.exe < %%appdata%%\\Orita\\data\\data.in > %%appdata%%\\Orita\\data\\data.out",get_name_pre(check_std));
-    int s=0;
-    for(int i=1;i<=n;++i)
+    int total_sum=stoi(get_parameter("n",1));
+    if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
+    string instruct1="%appdata%\\Orita\\source\\"+get_name_pre(check_data_maker)+".exe > \"%appdata%\\Orita\\data\\data.in\"";
+    string instruct2="%appdata%\\Orita\\source\\"+get_name_pre(check_std)+".exe < \"%appdata%\\Orita\\data\\data.in\" > \"%appdata%\\Orita\\data\\data.out\"";
+    int ac_sum=0;
+    for(int i=1;i<=total_sum;++i)
     {
-        printf("#%d--------------------------------------------------",i);
-        if(i-s-1!=0)
+        cout<<"#"<<i<<"--------------------------------------------------";
+        if(i-ac_sum-1!=0)
         {
             change_color(1,1,0,0);
-            printf(" Unaccepted %d",i-s-1);
+            cout<<" Unaccepted "<<i-ac_sum-1;
             change_color(1,1,1,1);
         }
-        printf("\n");
-        sprintf(instruct1,"%%appdata%%\\Orita\\source\\%s.exe > %%appdata%%\\Orita\\data\\data.in %d",get_name_pre(check_data_maker),i);
-        system(instruct1);
-        system(instruct2);
+        cout<<"\n";
+        system(instruct1.c_str());
+        system(instruct2.c_str());
         print_judge_complete(check_run,0);
-        a[i]=Judge::result;
-        if(a[i]!=0) copy(i);
-        else ++s;
+        int result=Judge::result;
+        if(result!=0) copy(i);
+        else ++ac_sum;
     }
-    printf("\n%d/%d %.2lfpts\n\n",s,n,(double)s*100/n);
+    printf("\n%d/%d %.2lfpts\n\n",ac_sum,total_sum,(double)ac_sum*100/total_sum);
     return 0;
 }

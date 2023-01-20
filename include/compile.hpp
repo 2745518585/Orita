@@ -3,32 +3,23 @@
 #include<bits/stdc++.h>
 #include<windows.h>
 #include "name.hpp"
-#include "task.hpp"
 #include "print.hpp"
 using namespace std;
 namespace Compile
 {
-    const int N=1001;
-    char instruct[N],*name,compile_parameter[N]="-std=c++14 -O2 -Wl,--stack=2147483647";
-    FILE *file=NULL;
+    string compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
     int compile(int name_num)
     {
-        name=get_name_suf(name_num);
-        if(!(name[0]=='.'&&name[1]=='c'&&name[2]=='p'&&name[3]=='p'&&name[4]=='\0'))
+        if(get_name_suf(name_num)!=".cpp")
         {
             change_color(1,0,1,1);
-            printf("\nFile format not recognized\n\n");
+            cout<<"\nFile format not recognized\n\n";
             change_color(1,1,1,1);
             return 1;
         }
-        name=get_name_pre(name_num);
-        if(find_task(name_num))
-        {
-            sprintf(instruct,"taskkill /f /pid %s.exe > %%appdata%%\\Orita\\rubbish\\rubbish.txt",name);
-            system(instruct);
-        }
-        sprintf(instruct,"g++ %%appdata%%\\Orita\\source\\%s.cpp -o %%appdata%%\\Orita\\source\\%s.exe %s",name,name,compile_parameter);
-        return system(instruct)!=0;
+        string name=get_name_pre(name_num);
+        system(("taskkill /f /pid "+name+".exe > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1").c_str());
+        return system(("g++ \"%appdata%\\Orita\\source\\"+name+".cpp\" -o \"%appdata%\\Orita\\source\\"+name+".exe\" "+compile_parameter).c_str())!=0;
     }
 }
 int compile(int name_num) {return Compile::compile(name_num);}

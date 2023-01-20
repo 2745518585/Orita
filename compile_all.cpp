@@ -14,7 +14,7 @@ int main()
         if(files[length-4]=='.'&&files[length-3]=='c'&&files[length-2]=='p'&&files[length-1]=='p')
         {
             files[length-4]='\0';
-            if(system("dir include > \"%appdata%\\Orita\\rubbish\\rubbish.txt\""))
+            if(system("dir include > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1"))
             {
                 sprintf(instruct,"g++ %s.cpp -o %s.exe -std=c++14 -O2 -Wl,--stack=2147483647",files,files);
             }
@@ -26,6 +26,6 @@ int main()
         }
     }
     fclose(file);
-    system("del /Q files.txt");
+    system("del /Q files.txt 2>&1");
     return 0;
 }
