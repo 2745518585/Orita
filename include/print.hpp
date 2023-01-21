@@ -9,8 +9,11 @@
 #define Time_Limit_Error_Wrong_Answer 4
 #define Time_Limit_Error_over 5
 #define Compile_Error 6
-#define data_maker_Compile_Error 15
-#define std_Compile_Error 25
+#define Dangerous_syscalls 7
+#define data_maker_Compile_Error 16
+#define data_maker_Dangerous_syscalls 17
+#define std_Compile_Error 26
+#define std_Dangerous_syscalls 27
 namespace Print
 {
     void change_color(int intensity,int red,int green,int blue)
@@ -67,16 +70,34 @@ namespace Print
             cout<<"\nCompile Error\n\n";
             change_color(1,1,1,1);
         }
+        else if(result==Dangerous_syscalls)
+        {
+            change_color(1,1,1,0);
+            cout<<"\nDangerous syscalls\n\n";
+            change_color(1,1,1,1);
+        }
         else if(result==data_maker_Compile_Error)
         {
             change_color(1,1,1,0);
             cout<<"\ndata_maker Compile Error\n\n";
             change_color(1,1,1,1);
         }
+        else if(result==data_maker_Dangerous_syscalls)
+        {
+            change_color(1,1,1,0);
+            cout<<"\ndata_maker Dangerous syscallsn\n";
+            change_color(1,1,1,1);
+        }
         else if(result==std_Compile_Error)
         {
             change_color(1,1,1,0);
             cout<<"\nstd Compile Error\n\n";
+            change_color(1,1,1,1);
+        }
+        else if(result==std_Dangerous_syscalls)
+        {
+            change_color(1,1,1,0);
+            cout<<"\nstd Dangerous syscalls\n\n";
             change_color(1,1,1,1);
         }
     }

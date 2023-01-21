@@ -12,11 +12,13 @@ namespace Name
     {
         ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
         file>>name_json;
+        file.close();
     }
     void end()
     {
         ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
         file<<setw(4)<<name_json;
+        file.close();
     }
     void add_name(int num,string name)
     {

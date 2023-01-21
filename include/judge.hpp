@@ -11,7 +11,15 @@ namespace Judge
     bool if_end;
     int judge(int name_num,bool if_compile)
     {
-        if(if_compile) if(compile(name_num)) return if_end=true,result=Compile_Error;
+        if(if_compile)
+        {
+            int compile_result;
+            if(compile_result=compile(name_num))
+            {
+                if(compile_result==-1) return if_end=true,result=Dangerous_syscalls;
+                else return if_end=true,result=Compile_Error;
+            }
+        }
         begin_time=clock();
         if(exit_code=system("%appdata%\\Orita\\source\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans"))
         {
@@ -40,9 +48,11 @@ namespace Judge
     {
         if(if_compile)
         {
-            if(compile(name_num))
+            int compile_result;
+            if(compile_result=compile(name_num))
             {
-                print_result(Compile_Error);
+                if(compile_result==-1) print_result(Dangerous_syscalls);
+                else print_result(Compile_Error);
                 return;
             }
         }

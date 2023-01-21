@@ -74,4 +74,4 @@
 
 ### 2023-01-21
 
-将 `name` 写入 `name.json`，弃用文件存储。
+将 `name` 写入 `name.json`，弃用文件存储。查找 `freopen`，`fopen`，`ifsream`，`ofstream`，`system` 关键字，出现即报 `Dangerous syscalls`。

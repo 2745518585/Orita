@@ -40,19 +40,23 @@ int check(int argc,char **argv)
     if(get_sum_parameter("n")<1) return 0;
     system("md data"+system_to_rubbish);
     system("del /Q data\\*"+system_to_rubbish);
-    if(compile(check_data_maker))
+    int compile_result;
+    if(compile_result=compile(check_data_maker))
     {
-        print_result(data_maker_Compile_Error);
+        if(compile_result==-1) print_result(data_maker_Dangerous_syscalls);
+        else print_result(data_maker_Compile_Error);
         return 0;
     }
-    if(compile(check_std))
+    if(compile_result=compile(check_std))
     {
-        print_result(std_Compile_Error);
+        if(compile_result==-1) print_result(std_Dangerous_syscalls);
+        else print_result(std_Compile_Error);
         return 0;
     }
-    if(compile(check_run))
+    if(compile_result=compile(check_run))
     {
-        print_result(Compile_Error);
+        if(compile_result==-1) print_result(Dangerous_syscalls);
+        else print_result(Compile_Error);
         return 0;
     }
     int total_sum=stoi(get_parameter("n",1));
@@ -70,8 +74,8 @@ int check(int argc,char **argv)
             change_color(1,1,1,1);
         }
         cout<<"\n";
-        system(instruct1.c_str());
-        system(instruct2.c_str());
+        system(instruct1+" "+to_string(i));
+        system(instruct2);
         print_judge_complete(check_run,0);
         int result=Judge::result;
         if(result!=0) copy(i);
