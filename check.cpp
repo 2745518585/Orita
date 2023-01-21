@@ -38,7 +38,7 @@ int check(int argc,char **argv)
         return 0;
     }
     if(get_sum_parameter("n")<1) return 0;
-    if(system("dir data > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1")) system("md data");
+    system("md data");
     system("del /Q data\\* > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1");
     if(compile(check_data_maker))
     {

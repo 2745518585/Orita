@@ -12,20 +12,20 @@ using json=nlohmann::json;
 #define check_run 13
 namespace Name
 {
-    json name_list;
+    json name_json;
     void begin()
     {
         ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
-        file>>name_list;
+        file>>name_json;
     }
     void end()
     {
         ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
-        file<<setw(4)<<name_list;
+        file<<setw(4)<<name_json;
     }
     void add_name(int num,string name)
     {
-        name_list["name"+to_string(num)]=name;
+        name_json["name"+to_string(num)]=name;
     }
     void add_name(int num,string name,string name_suf)
     {
@@ -40,15 +40,15 @@ namespace Name
             }
         }
         if(if_name_suf==false) name+=name_suf;
-        name_list["name"+to_string(num)]=name;
+        name_json["name"+to_string(num)]=name;
     };
     string get_name(int num)
     {
-        return name_list["name"+to_string(num)];
+        return name_json["name"+to_string(num)];
     }
     string get_name_pre(int num)
     {
-        string name=name_list["name"+to_string(num)];
+        string name=name_json["name"+to_string(num)];
         int length=name.size();
         for(int i=length-1;i>=0;--i)
         {
@@ -62,7 +62,7 @@ namespace Name
     }
     string get_name_suf(int num)
     {
-        string name=name_list["name"+to_string(num)];
+        string name=name_json["name"+to_string(num)];
         int length=name.size();
         bool if_find=false;
         for(int i=length-1;i>=0;--i)
@@ -78,17 +78,17 @@ namespace Name
     }
     void add_address(int num,string address)
     {
-        name_list["address"+to_string(num)]=address;
+        name_json["address"+to_string(num)]=address;
     }
     void add_running_address(int num)
     {
         char address[1001];
         getcwd(address,1000);
-        name_list["address"+to_string(num)]=address;
+        name_json["address"+to_string(num)]=address;
     }
     string get_address(int num)
     {
-        return name_list["address"+to_string(num)];
+        return name_json["address"+to_string(num)];
     }
 }
 void add_name(int num,string name) {Name::add_name(num,name);}

@@ -10,9 +10,11 @@
 void Begin()
 {
     Name::begin();
+    Data::begin();
 }
 void End()
 {
     Name::end();
+    Data::end();
 }
 #endif

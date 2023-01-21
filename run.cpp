@@ -18,7 +18,7 @@ int run(int argc,char **argv)
         return 0;
     }
     print_judge_complete(run_run,1);
-    if(system("dir data > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1")) system("md data");
+    system("md data");
     copy_result("data","data.in","data","data.in");
     copy_result("data","data.out","data","data.out");
     copy_result("data","data.ans","data","data.ans");
