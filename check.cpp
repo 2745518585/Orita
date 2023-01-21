@@ -19,6 +19,21 @@ int check(int argc,char **argv)
         add_file(check_std,get_parameter("f",2),".cpp");
         add_file(check_run,get_parameter("f",3),".cpp");
     }
+    else
+    {
+        if(get_sum_parameter("if")>=1)
+        {
+            add_file(check_data_maker,get_parameter("if",1),".cpp");
+        }
+        if(get_sum_parameter("of")>=1)
+        {
+            add_file(check_std,get_parameter("of",1),".cpp");
+        }
+        if(get_sum_parameter("af")>=1)
+        {
+            add_file(check_run,get_parameter("af",1),".cpp");
+        }
+    }
     if(copy_source(get_address(check_data_maker),get_name(check_data_maker),"source",get_name(check_data_maker)))
     {
         print_result(No_such_file);

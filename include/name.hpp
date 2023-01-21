@@ -87,28 +87,28 @@ namespace Name
     {
         if(name[0]!=':')
         {
-            add_name(run_run,name);
-            add_running_address(run_run);
+            add_name(num,name);
+            add_running_address(num);
         }
         else
         {
             int name_num=get_custom_num(name);
-            add_name(run_run,get_name(name_num));
-            add_address(run_run,get_address(name_num));
+            add_name(num,get_name(name_num));
+            add_address(num,get_address(name_num));
         }
     }
     void add_file(int num,string name,string name_suf)
     {
         if(name[0]!=':')
         {
-            add_name(run_run,name,name_suf);
-            add_running_address(run_run);
+            add_name(num,name,name_suf);
+            add_running_address(num);
         }
         else
         {
             int name_num=get_custom_num(name);
-            add_name(run_run,get_name(name_num),name_suf);
-            add_address(run_run,get_address(name_num));
+            add_name(num,get_name(name_num),name_suf);
+            add_address(num,get_address(name_num));
         }
     }
 }

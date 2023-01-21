@@ -2,6 +2,12 @@
 
 由 [赵悦岑](https://github.com/2745518585/) 开发的一款 OI 工具，包括评测、对拍、数据生成等，主要由 C++ 语言编写。
 
+## 全局逻辑
+
+### 文件缓存
+
+文件可以用 `:` 和 $1 \sim 100$ 的一个数字表示，如 `:1` 表示存储在位置 $1$ 的文件。
+
 ## 命令
 
 ### run
@@ -22,8 +28,6 @@
 
 `No Such File`    未找到源文件。
 
-`Compile Error`    编译错误。
-
 `Accepted`    答案正确。
 
 `Wrong Answer`    答案错误。
@@ -35,6 +39,10 @@
 `Time Limit Error, Correct Answer`    超出时间限制，答案正确。
 
 `Time Limit Error, Wrong Answer`    超出时间限制，答案错误。
+
+`Compile Error`    编译错误。
+
+`Dangerous syscalls`    危险的系统调用。
 
 #### 数据及源代码输出
 
@@ -68,7 +76,7 @@
 
 ### check
 
-`check [/n num] [/f data_maker_file std_file test_file] [/t time]`
+`check [/n num] [/f data_maker_file std_file run_file] [/t time]`
 
 #### 描述
 
@@ -78,7 +86,7 @@
 
 `/n`    对拍次数。如无此参数不会开始对拍，仅视为设置参数。
 
-`/f`    `data_maker_file`    `std_file`    `test_file`    指定源文件名（如果无 `.cpp` 后缀或后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `data_maker_file`，`std_file`，`test_file` 的文件。如无此参数则以上一次设置的源文件为准。
+`/f`    `data_maker_file`    `std_file`    `run_file`    指定源文件名（如果无 `.cpp` 后缀或后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `data_maker_file`，`std_file`，`run_file` 的文件。如无此参数则以上一次设置的源文件为准。
 
 `/t`    `time`    修改默认运行时间限制（单位 ms）。
 
@@ -86,11 +94,17 @@
 
 `No Such File`    未找到源文件。
 
-`Compile Error`    `test_file` 编译错误。
+`Compile Error`    `run_file` 编译错误。
 
 `data_maker Compile Error`    `data_maker_file` 编译错误。
 
 `std Compile Error`    `std_file` 编译错误。
+
+`Dangerous syscalls`    `run_file` 危险的系统调用。
+
+`data_maker Dangerous syscalls`    `data_maker_file` 危险的系统调用。
+
+`std Dangerous syscalls`    `std_file` 危险的系统调用。
 
 `#i--------------------------------------------------  (Unaccepted p)`    表示第 $i$ 个数据点的信息，当前已经有 $p$ 个数据点错误（没有此项则表示当前无错误）。
 
@@ -115,7 +129,3 @@
 #### 编译参数
 
 `-std=c++14 -O2 -Wl,--stack=2147483647`。
-
-#### 注意事项
-
-程序仅保存上一次设置的源文件名，不保存路径，每次执行均在当前目录下寻找源文件。即不能在与源文件不同的目录下执行，即使是使用上一次的记录。
