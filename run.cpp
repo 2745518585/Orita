@@ -1,8 +1,8 @@
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "run.hpp"
+#include"run.hpp"
 using namespace std;
-int main(int argc,char **argv)
+int run(int argc,char **argv)
 {
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=1)
@@ -23,4 +23,11 @@ int main(int argc,char **argv)
     copy_result("data","data.out","data","data.out");
     copy_result("data","data.ans","data","data.ans");
     return 0;
+}
+int main(int argc,char **argv)
+{
+    Begin();
+    int exit_code=run(argc,argv);
+    End();
+    return exit_code;
 }

@@ -2,18 +2,30 @@
 #define NAME NAME
 #include<bits/stdc++.h>
 #include<windows.h>
+#include<direct.h>
+#include"nlohmann/json.hpp"
 using namespace std;
+using json=nlohmann::json;
 #define run_run 1
 #define check_data_maker 11
 #define check_std 12
 #define check_run 13
 namespace Name
 {
+    json name_list;
+    void begin()
+    {
+        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
+        file>>name_list;
+    }
+    void end()
+    {
+        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
+        file<<setw(4)<<name_list;
+    }
     void add_name(int num,string name)
     {
-        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
-        file<<name;
-        file.close();
+        name_list["name"+to_string(num)]=name;
     }
     void add_name(int num,string name,string name_suf)
     {
@@ -27,25 +39,16 @@ namespace Name
                 break;
             }
         }
-        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
-        if(if_name_suf==false) file<<name<<name_suf;
-        else file<<name;
-        file.close();
+        if(if_name_suf==false) name+=name_suf;
+        name_list["name"+to_string(num)]=name;
     };
     string get_name(int num)
     {
-        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
-        string name;
-        file>>name;
-        file.close();
-        return name;
+        return name_list["name"+to_string(num)];
     }
     string get_name_pre(int num)
     {
-        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
-        string name;
-        file>>name;
-        file.close();
+        string name=name_list["name"+to_string(num)];
         int length=name.size();
         for(int i=length-1;i>=0;--i)
         {
@@ -59,10 +62,7 @@ namespace Name
     }
     string get_name_suf(int num)
     {
-        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name"+to_string(num)+".txt");
-        string name;
-        file>>name;
-        file.close();
+        string name=name_list["name"+to_string(num)];
         int length=name.size();
         bool if_find=false;
         for(int i=length-1;i>=0;--i)
@@ -78,21 +78,17 @@ namespace Name
     }
     void add_address(int num,string address)
     {
-        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\address"+to_string(num)+".txt");
-        file<<address;
-        file.close();
+        name_list["address"+to_string(num)]=address;
     }
     void add_running_address(int num)
     {
-        system(("cd > \"%appdata%\\Orita\\name\\address"+to_string(num)+".txt\"").c_str());
+        char address[1001];
+        getcwd(address,1000);
+        name_list["address"+to_string(num)]=address;
     }
     string get_address(int num)
     {
-        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\address"+to_string(num)+".txt");
-        string address;
-        file>>address;
-        file.close();
-        return address;
+        return name_list["address"+to_string(num)];
     }
 }
 void add_name(int num,string name) {Name::add_name(num,name);}

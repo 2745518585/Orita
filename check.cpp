@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "run.hpp"
+#include"run.hpp"
 using namespace std;
 const int N=1001;
 void copy(int num)
@@ -9,7 +9,7 @@ void copy(int num)
     copy_result("data","data.out","data",to_string(num)+".out");
     copy_result("data","data.ans","data",to_string(num)+".ans");
 }
-int main(int argc,char **argv)
+int check(int argc,char **argv)
 {
     init_parameter(argc,argv);
     system("del /Q \"%appdata%\\Orita\\source\\*\" > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1");
@@ -79,4 +79,11 @@ int main(int argc,char **argv)
     }
     printf("\n%d/%d %.2lfpts\n\n",ac_sum,total_sum,(double)ac_sum*100/total_sum);
     return 0;
+}
+int main(int argc,char **argv)
+{
+    Begin();
+    int exit_code=check(argc,argv);
+    End();
+    return exit_code;
 }

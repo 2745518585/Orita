@@ -2,8 +2,8 @@
 #define COMPILE COMPILE
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "name.hpp"
-#include "print.hpp"
+#include"name.hpp"
+#include"print.hpp"
 using namespace std;
 namespace Compile
 {

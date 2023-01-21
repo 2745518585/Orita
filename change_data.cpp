@@ -1,8 +1,8 @@
 #include<bits/stdc++.h>
 #include<windows.h>
-#include "run.hpp"
+#include"run.hpp"
 using namespace std;
-int main(int argc,char **argv)
+int change_data(int argc,char **argv)
 {
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=2)
@@ -36,4 +36,11 @@ int main(int argc,char **argv)
     cout<<"\nSuccess\n\n";
     change_color(1,1,1,1);
     return 0;
+}
+int main(int argc,char **argv)
+{
+    Begin();
+    int exit_code=change_data(argc,argv);
+    End();
+    return exit_code;
 }
