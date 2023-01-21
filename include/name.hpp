@@ -1,11 +1,6 @@
 #ifndef NAME
 #define NAME NAME
-#include<bits/stdc++.h>
-#include<windows.h>
-#include<direct.h>
-#include"nlohmann/json.hpp"
-using namespace std;
-using json=nlohmann::json;
+#include"init.hpp"
 #define run_run 1
 #define check_data_maker 11
 #define check_std 12

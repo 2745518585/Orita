@@ -12,7 +12,7 @@ void copy(int num)
 int check(int argc,char **argv)
 {
     init_parameter(argc,argv);
-    system("del /Q \"%appdata%\\Orita\\source\\*\" > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1");
+    system("del /Q \"%appdata%\\Orita\\source\\*\")"+system_to_rubbish);
     if(get_sum_parameter("f")>=3)
     {
         add_name(check_data_maker,get_parameter("f",1),".cpp");
@@ -38,8 +38,8 @@ int check(int argc,char **argv)
         return 0;
     }
     if(get_sum_parameter("n")<1) return 0;
-    system("md data");
-    system("del /Q data\\* > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1");
+    system("md data"+system_to_rubbish);
+    system("del /Q data\\*"+system_to_rubbish);
     if(compile(check_data_maker))
     {
         print_result(data_maker_Compile_Error);

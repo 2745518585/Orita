@@ -1,8 +1,6 @@
 #ifndef PARAMETER
 #define PARAMETER PARAMETER
-#include<bits/stdc++.h>
-#include<windows.h>
-using namespace std;
+#include"init.hpp"
 namespace Parameter
 {
     const int N=1001;

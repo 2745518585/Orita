@@ -1,10 +1,7 @@
 #ifndef COMPILE
 #define COMPILE COMPILE
-#include<bits/stdc++.h>
-#include<windows.h>
 #include"name.hpp"
 #include"print.hpp"
-using namespace std;
 namespace Compile
 {
     string compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
@@ -18,8 +15,8 @@ namespace Compile
             return 1;
         }
         string name=get_name_pre(name_num);
-        system(("taskkill /f /pid "+name+".exe > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1").c_str());
-        return system(("g++ \"%appdata%\\Orita\\source\\"+name+".cpp\" -o \"%appdata%\\Orita\\source\\"+name+".exe\" "+compile_parameter).c_str())!=0;
+        system("taskkill /f /pid "+name+".exe"+system_to_rubbish);
+        return system("g++ \"%appdata%\\Orita\\source\\"+name+".cpp\" -o \"%appdata%\\Orita\\source\\"+name+".exe\" "+compile_parameter)!=0;
     }
 }
 int compile(int name_num) {return Compile::compile(name_num);}

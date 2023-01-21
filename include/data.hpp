@@ -1,10 +1,6 @@
 #ifndef DATA
 #define DATA DATA
-#include<bits/stdc++.h>
-#include<windows.h>
-#include<nlohmann/json.hpp>
-using namespace std;
-using json=nlohmann::json;
+#include"init.hpp"
 namespace Data
 {
     json data_json;

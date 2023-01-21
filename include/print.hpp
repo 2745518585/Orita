@@ -1,8 +1,6 @@
 #ifndef PRINT
 #define PRINT PRINT
-#include<bits/stdc++.h>
-#include<windows.h>
-using namespace std;
+#include"init.hpp"
 #define No_such_file -1
 #define Accepted 0
 #define Wrong_Answer 1

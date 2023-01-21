@@ -1,12 +1,9 @@
 #ifndef JUDGE
 #define JUDGE JUDGE
-#include<bits/stdc++.h>
-#include<windows.h>
 #include"name.hpp"
 #include"compile.hpp"
 #include"data.hpp"
 #include"print.hpp"
-using namespace std;
 namespace Judge
 {
     int result,time,time_limit,exit_code;
@@ -16,10 +13,13 @@ namespace Judge
     {
         if(if_compile) if(compile(name_num)) return if_end=true,result=Compile_Error;
         begin_time=clock();
-        if(exit_code=system(("%appdata%\\Orita\\source\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans").c_str())) return if_end=true,result=Runtime_Error;
+        if(exit_code=system("%appdata%\\Orita\\source\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans"))
+        {
+            return if_end=true,result=Runtime_Error;
+        }
         if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans > \"%appdata%\\Orita\\rubbish\\rubbish.txt\" 2>&1"))
+        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans"+system_to_rubbish))
         {
             if(time>get_time_limit()) result=Time_Limit_Error_Wrong_Answer;
             else result=Wrong_Answer;
