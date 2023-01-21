@@ -15,12 +15,9 @@ int check(int argc,char **argv)
     system("del /Q \"%appdata%\\Orita\\source\\*\")"+system_to_rubbish);
     if(get_sum_parameter("f")>=3)
     {
-        add_name(check_data_maker,get_parameter("f",1),".cpp");
-        add_running_address(check_data_maker);
-        add_name(check_std,get_parameter("f",2),".cpp");
-        add_running_address(check_std);
-        add_name(check_run,get_parameter("f",3),".cpp");
-        add_running_address(check_run);
+        add_file(check_data_maker,get_parameter("f",1),".cpp");
+        add_file(check_std,get_parameter("f",2),".cpp");
+        add_file(check_run,get_parameter("f",3),".cpp");
     }
     if(copy_source(get_address(check_data_maker),get_name(check_data_maker),"source",get_name(check_data_maker)))
     {

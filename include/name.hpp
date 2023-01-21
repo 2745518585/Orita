@@ -5,6 +5,7 @@
 #define check_data_maker 11
 #define check_std 12
 #define check_run 13
+#define custom_start 100
 namespace Name
 {
     json name_json;
@@ -27,16 +28,7 @@ namespace Name
     void add_name(int num,string name,string name_suf)
     {
         int length_name=name.size(),length_name_suf=name_suf.size();
-        bool if_name_suf=true;
-        for(int i=0;i<length_name_suf;++i)
-        {
-            if(name[length_name-i-1]!=name_suf[length_name_suf-i-1])
-            {
-                if_name_suf=false;
-                break;
-            }
-        }
-        if(if_name_suf==false) name+=name_suf;
+        if(!(length_name>=length_name_suf&&name.substr(length_name-length_name_suf,length_name_suf)==name_suf)) name+=name_suf;
         name_json["name"+to_string(num)]=name;
     };
     string get_name(int num)
@@ -87,6 +79,38 @@ namespace Name
     {
         return name_json["address"+to_string(num)];
     }
+    int get_custom_num(string name)
+    {
+        return stoi(name.substr(1,name.size()-1))+custom_start;
+    }
+    void add_file(int num,string name)
+    {
+        if(name[0]!=':')
+        {
+            add_name(run_run,name);
+            add_running_address(run_run);
+        }
+        else
+        {
+            int name_num=get_custom_num(name);
+            add_name(run_run,get_name(name_num));
+            add_address(run_run,get_address(name_num));
+        }
+    }
+    void add_file(int num,string name,string name_suf)
+    {
+        if(name[0]!=':')
+        {
+            add_name(run_run,name,name_suf);
+            add_running_address(run_run);
+        }
+        else
+        {
+            int name_num=get_custom_num(name);
+            add_name(run_run,get_name(name_num),name_suf);
+            add_address(run_run,get_address(name_num));
+        }
+    }
 }
 void add_name(int num,string name) {Name::add_name(num,name);}
 void add_name(int num,string name,string name_suf) {Name::add_name(num,name,name_suf);}
@@ -96,4 +120,7 @@ string get_name_suf(int num) {return Name::get_name_suf(num);}
 void add_address(int num,string address) {Name::add_address(num,address);}
 void add_running_address(int num) {Name::add_running_address(num);}
 string get_address(int num) {return Name::get_address(num);}
+void add_file(int num,string name) {Name::add_file(num,name);}
+void add_file(int num,string name,string name_suf) {Name::add_file(num,name,name_suf);}
+int get_custom_num(string name) {return Name::get_custom_num(name);}
 #endif

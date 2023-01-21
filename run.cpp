@@ -7,8 +7,7 @@ int run(int argc,char **argv)
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=1)
     {
-        add_name(run_run,get_parameter("f",1),".cpp");
-        add_running_address(run_run);
+        add_file(run_run,get_parameter("f",1),".cpp");
     }
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
     system("del /Q %appdata%\\Orita\\source\\*"+system_to_rubbish);
