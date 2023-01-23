@@ -20,9 +20,9 @@
 
 #### 参数列表
 
-`/f`    `file`    指定源文件名（如果无 `.cpp` 后缀或后缀不为 `.cpp` 自动添加 `.cpp` 后缀），程序将从当前目录寻找名为 `file` 的文件作为源文件。如无此参数则以上一次设置的源文件为准。
+`/f file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），程序将从当前目录寻找名为 `file` 的文件作为源文件。如无此参数则以上一次设置的源文件为准。
 
-`/t`    `time`    修改默认运行时间限制（单位 ms）。
+`/t time`    修改默认运行时间限制（单位 ms）。
 
 #### 返回值说明
 
@@ -48,7 +48,7 @@
 
 数据与源代码输出会在程序运行完成后存放至 `data\data.in` `data\data.out` `data\data.ans`。
 
-#### 编译参数
+#### 默认编译参数
 
 `-std=c++14 -O2 -Wl,--stack=2147483647`。
 
@@ -62,11 +62,11 @@
 
 #### 参数列表
 
-`/f`     `input_file`    `output_file`   指定输入输出文件名（输入文件自动添加 `.in `后缀，输出文件自动添加 `.out `后缀）。程序将从当前目录下寻找名为 `input_file` 和 `output_file` 的文件。此参数与  `/s `冲突，优先级高于 `/s`。
+`/f input_file output_file`   指定输入输出文件名（输入文件自动添加 `.in `后缀，输出文件自动添加 `.out `后缀）。程序将从当前目录下寻找名为 `input_file` 和 `output_file` 的文件。
 
 `/s`    从 `stdin` 与 `stdout` 中读取，每个文件以 `EOF` 结束。此参数与 `/f` 冲突，优先级低于 `/f`。
 
-`/t`    `time`    修改默认运行时间限制（单位 ms）。
+`/t time`    修改默认运行时间限制（单位 ms）。
 
 #### 返回值说明
 
@@ -76,7 +76,7 @@
 
 ### check
 
-`check [/n num] [/f data_maker_file std_file run_file] [/t time]`
+`check [/n num] [/f in_file out_file ans_file] [/if in_file] [/of out_file] [/af ans_file] [/t time]`
 
 #### 描述
 
@@ -86,25 +86,31 @@
 
 `/n`    对拍次数。如无此参数不会开始对拍，仅视为设置参数。
 
-`/f`    `data_maker_file`    `std_file`    `run_file`    指定源文件名（如果无 `.cpp` 后缀或后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `data_maker_file`，`std_file`，`run_file` 的文件。如无此参数则以上一次设置的源文件为准。
+`/f in_file out_file ans_file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `in_file`，`out_file`，`ans_file` 的文件。如无此参数则以上一次设置的源文件为准。
 
-`/t`    `time`    修改默认运行时间限制（单位 ms）。
+`/t time`    修改默认运行时间限制（单位 ms）。
+
+`/if in_file`    指定 `in` 文件名（后缀不为 `.cpp `自动添加 `.cpp `后缀）。程序将从当前目录下寻找名为 `in_file` 的文件。如无此参数则以上一次设置的 `in` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
+
+`/of out_file`    指定 `out` 文件名（后缀不为 `.cpp `自动添加 `.cpp `后缀）。程序将从当前目录下寻找名为 `out_file` 的文件。如无此参数则以上一次设置的 `out` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
+
+`/af ans_file`    指定 `ans` 文件名（后缀不为 `.cpp `自动添加 `.cpp `后缀）。程序将从当前目录下寻找名为 `ans_file` 的文件。如无此参数则以上一次设置的 `ans` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
 
 #### 返回值说明
 
 `No Such File`    未找到源文件。
 
-`Compile Error`    `run_file` 编译错误。
+`Compile Error`    `ans_file` 编译错误。
 
-`data_maker Compile Error`    `data_maker_file` 编译错误。
+`data_maker Compile Error`    `in_file` 编译错误。
 
-`std Compile Error`    `std_file` 编译错误。
+`std Compile Error`    `out_file` 编译错误。
 
-`Dangerous syscalls`    `run_file` 危险的系统调用。
+`Dangerous syscalls`    `ans_file` 危险的系统调用。
 
-`data_maker Dangerous syscalls`    `data_maker_file` 危险的系统调用。
+`data_maker Dangerous syscalls`    `in_file` 危险的系统调用。
 
-`std Dangerous syscalls`    `std_file` 危险的系统调用。
+`std Dangerous syscalls`    `out_file` 危险的系统调用。
 
 `#i--------------------------------------------------  (Unaccepted p)`    表示第 $i$ 个数据点的信息，当前已经有 $p$ 个数据点错误（没有此项则表示当前无错误）。
 
@@ -120,12 +126,38 @@
 
 `Time Limit Error, Wrong Answer`    超出时间限制，答案错误。
 
-`s/n w pts`    共 $n$ 个测试点，正确 $s$ 个，得分 $w$。
+`ac_sum / total_sum`    共 $total\_sum$ 个测试点，正确 $ac\_sum$ 个。
 
 #### 数据及源代码输出
 
 错误数据点的数据与源代码输出会在当前测试点运行完成后存放至 `data\i.in` `data\i.out` `data\i.ans`。
 
-#### 编译参数
+#### 默认编译参数
+
+`-std=c++14 -O2 -Wl,--stack=2147483647`。
+
+### compile
+
+`compile [/f file1 file2 ...] [/o compile_parameter]`
+
+#### 描述
+
+给定源文件和编译参数，编译源文件。
+
+#### 参数列表
+
+`/f file1 file2 ...`    给定多个编译源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `file` 的文件。如无此参数则编译所在目录下的所有后缀为 `.cpp` 的文件（包括子目录）。
+
+`/o compile_parameter`    给定编译参数。此参数将跟在默认编译参数后，`g++` 会在冲突的参数中选择靠后的参数。
+
+#### 返回值说明
+
+`file`    正在编译 `file` 文件。
+
+`Success`    编译成功。
+
+`Compile Error`    编译错误。
+
+#### 默认编译参数
 
 `-std=c++14 -O2 -Wl,--stack=2147483647`。

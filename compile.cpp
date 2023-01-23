@@ -18,11 +18,11 @@ int compile_main(int argc,char **argv)
         string files;
         while(file>>files)
         {
-            add_complete_address(compile_run,files);
-            if(get_name_suf(compile_run)==".cpp"&&get_name(compile_run)!="compile.cpp")
+            add_complete_address(compile_file,files);
+            if(get_name_suf(compile_file)==".cpp"&&get_name(compile_file)!="compile.cpp")
             {
-                cout<<get_name(compile_run)<<"\n";
-                if(compile(compile_run,compile_parameter)==0) print_result(Success);
+                cout<<get_name(compile_file)<<"\n";
+                if(compile(compile_file,compile_parameter)==0) print_result(Success);
                 else print_result(Compile_Error);
             }
         }
@@ -33,9 +33,9 @@ int compile_main(int argc,char **argv)
     {
         for(int i=1;i<=get_sum_parameter("f");++i)
         {
-            add_file(compile_run,get_parameter("f",i),".cpp");
-            cout<<get_name(compile_run)<<"\n";
-            if(compile(compile_run,compile_parameter)==0) print_result(Success);
+            add_file(compile_file,get_parameter("f",i),".cpp");
+            cout<<get_name(compile_file)<<"\n";
+            if(compile(compile_file,compile_parameter)==0) print_result(Success);
             else print_result(Compile_Error);
         }
     }

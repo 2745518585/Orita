@@ -1,11 +1,11 @@
 #ifndef NAME
 #define NAME NAME
 #include"init.hpp"
-#define run_run 1
-#define check_data_maker 11
-#define check_std 12
-#define check_run 13
-#define compile_run 2
+#define run_ans 1
+#define check_in 11
+#define check_out 12
+#define check_ans 13
+#define compile_file 2
 #define custom_start 100
 #define custom_tot 100
 namespace Name
