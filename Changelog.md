@@ -79,3 +79,9 @@
 查找 `freopen`，`fopen`，`ifsream`，`ofstream`，`system` 关键字，出现即报 `Dangerous syscalls`。
 
 新增 `:i` 代指 `filename`，新增 `set_file` 命令。
+
+### 2023-01-23
+
+添加数据生成器 `data_maker.hpp` 头文件。
+
+将 `system` 的多余输出从 `rubbish.txt` 移至 `nul`。

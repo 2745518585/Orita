@@ -15,7 +15,7 @@ namespace Compile
             return 1;
         }
         string name=get_name_pre(name_num);
-        system("taskkill /f /pid "+name+".exe"+system_to_rubbish);
+        system("taskkill /f /pid "+name+".exe"+system_to_nul);
         string str;
         ifstream infile(string(getenv("appdata"))+"\\Orita\\source\\"+name+".cpp");
         ofstream outfile(string(getenv("appdata"))+"\\Orita\\source\\"+name+"#.cpp");

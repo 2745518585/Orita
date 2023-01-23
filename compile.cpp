@@ -5,9 +5,9 @@ using namespace std;
 string compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
 int main(int argc,char **argv)
 {
-    system((string("taskkill /f /pid ")+argv[1]+".exe 2>&1").c_str());
+    system((string("taskkill /f /pid ")+argv[1]+".exe"+system_to_nul).c_str());
     string instruct=string("g++ ")+argv[1]+".cpp -o "+argv[1]+".exe "+compile_parameter;
-    if(!system("dir include"+system_to_rubbish)) instruct+=" -I include";
+    if(!system("dir include"+system_to_nul)) instruct+=" -I include";
     if(system(instruct.c_str())==0)
     {
         change_color(1,0,1,0);

@@ -27,7 +27,7 @@ namespace Judge
         }
         if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans"+system_to_rubbish))
+        if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans"+system_to_nul))
         {
             if(time>get_time_limit()) result=Time_Limit_Error_Wrong_Answer;
             else result=Wrong_Answer;
@@ -71,7 +71,7 @@ namespace Judge
                 return;
             }
         }
-        system(("taskkill /f /pid "+get_name_pre(name_num)+".exe > \"%appdata%\\Orita\\rubbish\\rubbish2.txt\" 2>&1").c_str());
+        system(("taskkill /f /pid "+get_name_pre(name_num)+".exe"+system_to_nul).c_str());
         result=Time_Limit_Error_over;
         print_result(result,time_limit*2);
     }

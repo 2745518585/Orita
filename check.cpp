@@ -12,7 +12,7 @@ void copy(int num)
 int check(int argc,char **argv)
 {
     init_parameter(argc,argv);
-    system("del /Q \"%appdata%\\Orita\\source\\*\")"+system_to_rubbish);
+    system("del /Q \"%appdata%\\Orita\\source\\*\")"+system_to_nul);
     if(get_sum_parameter("f")>=3)
     {
         add_file(check_data_maker,get_parameter("f",1),".cpp");
@@ -50,8 +50,8 @@ int check(int argc,char **argv)
         return 0;
     }
     if(get_sum_parameter("n")<1) return 0;
-    system("md data"+system_to_rubbish);
-    system("del /Q data\\*"+system_to_rubbish);
+    system("md data"+system_to_nul);
+    system("del /Q data\\*"+system_to_nul);
     int compile_result;
     if(compile_result=compile(check_data_maker))
     {
