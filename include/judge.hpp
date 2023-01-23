@@ -13,15 +13,11 @@ namespace Judge
     {
         if(if_compile)
         {
-            int compile_result;
-            if(compile_result=compile(name_num))
-            {
-                if(compile_result==-1) return if_end=true,result=Dangerous_syscalls;
-                else return if_end=true,result=Compile_Error;
-            }
+            if(find_dangerous_syscalls(name_num)) return if_end=true,result=Dangerous_syscalls;
+            if(compile(name_num)) return if_end=true,result=Compile_Error;
         }
         begin_time=clock();
-        if(exit_code=system("%appdata%\\Orita\\source\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans"))
+        if(exit_code=system(get_address(name_num)+"\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans"))
         {
             return if_end=true,result=Runtime_Error;
         }
@@ -48,11 +44,14 @@ namespace Judge
     {
         if(if_compile)
         {
-            int compile_result;
-            if(compile_result=compile(name_num))
+            if(find_dangerous_syscalls(name_num))
             {
-                if(compile_result==-1) print_result(Dangerous_syscalls);
-                else print_result(Compile_Error);
+                print_result(Dangerous_syscalls);
+                return;
+            }
+            if(compile(name_num))
+            {
+                print_result(Compile_Error);
                 return;
             }
         }

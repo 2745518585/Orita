@@ -4,40 +4,44 @@
 #include"print.hpp"
 namespace Compile
 {
-    string compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
-    int compile(int name_num)
+    string default_compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
+    int compile(int name_num,string compile_parameter)
     {
-        if(get_name_suf(name_num)!=".cpp")
-        {
-            change_color(1,0,1,1);
-            cout<<"\nFile format not recognized\n\n";
-            change_color(1,1,1,1);
-            return 1;
-        }
-        string name=get_name_pre(name_num);
+        if(get_name_suf(name_num)!=".cpp") return -1;
+        string name=get_name_pre(name_num),address=get_address(name_num);
         system("taskkill /f /pid "+name+".exe"+system_to_nul);
+        return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+default_compile_parameter+" "+compile_parameter)!=0;
+    }
+    int find_dangerous_syscalls(int name_num,string compile_parameter)
+    {
+        if(get_name_suf(name_num)!=".cpp") return -1;
+        string name=get_name_pre(name_num),address=get_address(name_num);
+        ifstream infile(address+"\\"+name+".cpp");
+        ofstream outfile(string(getenv("appdata"))+"\\Orita\\source\\"+name+".cpp");
         string str;
-        ifstream infile(string(getenv("appdata"))+"\\Orita\\source\\"+name+".cpp");
-        ofstream outfile(string(getenv("appdata"))+"\\Orita\\source\\"+name+"#.cpp");
         while(getline(infile,str))
         {
             if(str.substr(0,8)!="#include") outfile<<str<<"\n";
         }
         infile.close();
         outfile.close();
-        system("g++ -E \"%appdata%\\Orita\\source\\"+name+"#.cpp\" > \"%appdata%\\Orita\\source\\"+name+".e\" "+compile_parameter);
-        system("del /Q \"%appdata%\\Orita\\source\\"+name+"#.cpp\"");
+        system("g++ -E \"%appdata%\\Orita\\source\\"+name+".cpp\" > \"%appdata%\\Orita\\source\\"+name+".e\" "+default_compile_parameter+" "+compile_parameter);
+        system("del /Q \"%appdata%\\Orita\\source\\"+name+".cpp\"");
         infile.open(string(getenv("appdata"))+"\\Orita\\source\\"+name+".e");
         while(getline(infile,str))
         {
-            if(str.find("fopen(")!=string::npos) return -1;
-            if(str.find("freopen(")!=string::npos) return -1;
-            if(str.find("ifstream(")!=string::npos) return -1;
-            if(str.find("ofstream(")!=string::npos) return -1;
-            if(str.find("system(")!=string::npos) return -1;
+            if(str.find("fopen(")!=string::npos||str.find("freopen(")!=string::npos||str.find("ifstream(")!=string::npos||str.find("ofstream(")!=string::npos||str.find("fstream(")!=string::npos||str.find("system(")!=string::npos)
+            {
+                infile.close();
+                system("del /Q \"%appdata%\\Orita\\source\\"+name+".e\"");
+                return 1;
+            }
         }
-        return system("g++ \"%appdata%\\Orita\\source\\"+name+".cpp\" -o \"%appdata%\\Orita\\source\\"+name+".exe\" "+compile_parameter)!=0;
+        infile.close();
+        system("del /Q \"%appdata%\\Orita\\source\\"+name+".e\"");
+        return 0;
     }
 }
-int compile(int name_num) {return Compile::compile(name_num);}
+int compile(int name_num,string compile_parameter="") {return Compile::compile(name_num,compile_parameter);}
+int find_dangerous_syscalls(int name_num,string compile_parameter="") {return Compile::find_dangerous_syscalls(name_num,compile_parameter);}
 #endif

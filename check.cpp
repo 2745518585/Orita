@@ -3,16 +3,10 @@
 #include"run.hpp"
 using namespace std;
 const int N=1001;
-void copy(int num)
-{
-    copy_result("data","data.in","data",to_string(num)+".in");
-    copy_result("data","data.out","data",to_string(num)+".out");
-    copy_result("data","data.ans","data",to_string(num)+".ans");
-}
-int check(int argc,char **argv)
+int check_main(int argc,char **argv)
 {
     init_parameter(argc,argv);
-    system("del /Q \"%appdata%\\Orita\\source\\*\")"+system_to_nul);
+    system("del /Q \"%appdata%\\Orita\\source\\*.cpp\")"+system_to_nul);
     if(get_sum_parameter("f")>=3)
     {
         add_file(check_data_maker,get_parameter("f",1),".cpp");
@@ -21,60 +15,26 @@ int check(int argc,char **argv)
     }
     else
     {
-        if(get_sum_parameter("if")>=1)
-        {
-            add_file(check_data_maker,get_parameter("if",1),".cpp");
-        }
-        if(get_sum_parameter("of")>=1)
-        {
-            add_file(check_std,get_parameter("of",1),".cpp");
-        }
-        if(get_sum_parameter("af")>=1)
-        {
-            add_file(check_run,get_parameter("af",1),".cpp");
-        }
+        if(get_sum_parameter("if")>=1) add_file(check_data_maker,get_parameter("if",1),".cpp");
+        if(get_sum_parameter("of")>=1) add_file(check_std,get_parameter("of",1),".cpp");
+        if(get_sum_parameter("af")>=1) add_file(check_run,get_parameter("af",1),".cpp");
     }
-    if(copy_source(get_address(check_data_maker),get_name(check_data_maker),"source",get_name(check_data_maker)))
-    {
-        print_result(No_such_file);
-        return 0;
-    }
-    if(copy_source(get_address(check_std),get_name(check_std),"source",get_name(check_std)))
-    {
-        print_result(No_such_file);
-        return 0;
-    }
-    if(copy_source(get_address(check_run),get_name(check_run),"source",get_name(check_run)))
-    {
-        print_result(No_such_file);
-        return 0;
-    }
+    if(find_file(check_data_maker)) {print_result(No_such_file);return 0;}
+    if(find_file(check_std)) {print_result(No_such_file);return 0;}
+    if(find_file(check_run)) {print_result(No_such_file);return 0;}
     if(get_sum_parameter("n")<1) return 0;
     system("md data"+system_to_nul);
     system("del /Q data\\*"+system_to_nul);
-    int compile_result;
-    if(compile_result=compile(check_data_maker))
-    {
-        if(compile_result==-1) print_result(data_maker_Dangerous_syscalls);
-        else print_result(data_maker_Compile_Error);
-        return 0;
-    }
-    if(compile_result=compile(check_std))
-    {
-        if(compile_result==-1) print_result(std_Dangerous_syscalls);
-        else print_result(std_Compile_Error);
-        return 0;
-    }
-    if(compile_result=compile(check_run))
-    {
-        if(compile_result==-1) print_result(Dangerous_syscalls);
-        else print_result(Compile_Error);
-        return 0;
-    }
+    if(find_dangerous_syscalls(check_data_maker)) {print_result(data_maker_Dangerous_syscalls);return 0;}
+    if(find_dangerous_syscalls(check_std)) {print_result(std_Dangerous_syscalls);return 0;}
+    if(find_dangerous_syscalls(check_run)) {print_result(Dangerous_syscalls);return 0;}
+    if(compile(check_data_maker)) {print_result(data_maker_Compile_Error);return 0;}
+    if(compile(check_std)) {print_result(std_Compile_Error);return 0;}
+    if(compile(check_run)) {print_result(Compile_Error);return 0;}
     int total_sum=stoi(get_parameter("n",1));
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
-    string instruct1="%appdata%\\Orita\\source\\"+get_name_pre(check_data_maker)+".exe > \"%appdata%\\Orita\\data\\data.in\"";
-    string instruct2="%appdata%\\Orita\\source\\"+get_name_pre(check_std)+".exe < \"%appdata%\\Orita\\data\\data.in\" > \"%appdata%\\Orita\\data\\data.out\"";
+    string instruct1=get_address(check_data_maker)+"\\"+get_name_pre(check_data_maker)+".exe > \"%appdata%\\Orita\\data\\data.in\"";
+    string instruct2=get_address(check_data_maker)+"\\"+get_name_pre(check_std)+".exe < \"%appdata%\\Orita\\data\\data.in\" > \"%appdata%\\Orita\\data\\data.out\"";
     int ac_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
@@ -90,16 +50,21 @@ int check(int argc,char **argv)
         system(instruct2);
         print_judge_complete(check_run,0);
         int result=Judge::result;
-        if(result!=0) copy(i);
+        if(result!=Accepted)
+        {
+            copy_result("data","data.in","data",to_string(i)+".in");
+            copy_result("data","data.out","data",to_string(i)+".out");
+            copy_result("data","data.ans","data",to_string(i)+".ans");
+        }
         else ++ac_sum;
     }
-    printf("\n%d/%d %.2lfpts\n\n",ac_sum,total_sum,(double)ac_sum*100/total_sum);
+    cout<<"\n"<<ac_sum<<" / "<<total_sum<<"\n\n";
     return 0;
 }
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=check(argc,argv);
+    int exit_code=check_main(argc,argv);
     End();
     return exit_code;
 }

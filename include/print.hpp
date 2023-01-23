@@ -14,6 +14,7 @@
 #define data_maker_Dangerous_syscalls 17
 #define std_Compile_Error 26
 #define std_Dangerous_syscalls 27
+#define Success 50
 namespace Print
 {
     void change_color(int intensity,int red,int green,int blue)
@@ -98,6 +99,12 @@ namespace Print
         {
             change_color(1,1,1,0);
             cout<<"\nstd Dangerous syscalls\n\n";
+            change_color(1,1,1,1);
+        }
+        else if(result==Success)
+        {
+            change_color(1,0,1,0);
+            cout<<"\nSuccess\n\n";
             change_color(1,1,1,1);
         }
     }

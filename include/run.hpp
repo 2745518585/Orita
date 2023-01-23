@@ -6,7 +6,7 @@
 #include"print.hpp"
 #include"judge.hpp"
 #include"parameter.hpp"
-#include"copy.hpp"
+#include"files.hpp"
 void Begin()
 {
     Name::begin();

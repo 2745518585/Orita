@@ -85,3 +85,7 @@
 添加数据生成器 `data_maker.hpp` 头文件。
 
 将 `system` 的多余输出从 `rubbish.txt` 移至 `nul`。
+
+重写 `compile`，整合 `compile_all` 于 `compile` 中。
+
+取消复制文件后操作，将文件在原目录下操作。
