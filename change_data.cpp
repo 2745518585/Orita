@@ -12,7 +12,7 @@ int change_data(int argc,char **argv)
             print_result(No_such_file);
             return 0;
         }
-        if(copy_source(".\\",get_parameter("f",1),"data","data.in"))
+        if(copy_source(".\\",get_parameter("f",1),"data","data.out"))
         {
             print_result(No_such_file);
             return 0;

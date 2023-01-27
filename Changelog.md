@@ -13,3 +13,4 @@ Orita 第一个正式版本。
 #### 修复
 
 - `Time Limit Error, over ... ms` 错误的输出为 `over %dms`。
+- `change_data` 命令从文件读入时无法正确修改输出文件。
