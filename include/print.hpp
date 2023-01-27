@@ -62,7 +62,7 @@ namespace Print
         else if(result==Time_Limit_Error_over)
         {
             change_color(1,0,0,1);
-            cout<<"\nTime Limit Error\nover %dms\n\n",information;
+            cout<<"\nTime Limit Error\nover "<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
         else if(result==Compile_Error)
