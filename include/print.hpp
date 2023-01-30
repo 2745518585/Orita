@@ -86,7 +86,7 @@ namespace Print
         else if(result==data_maker_Dangerous_syscalls)
         {
             change_color(1,1,1,0);
-            cout<<"\ndata_maker Dangerous syscallsn\n";
+            cout<<"\ndata_maker Dangerous syscalls\n\n";
             change_color(1,1,1,1);
         }
         else if(result==std_Compile_Error)
