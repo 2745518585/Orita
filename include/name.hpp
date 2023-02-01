@@ -1,26 +1,28 @@
-#ifndef NAME
-#define NAME NAME
+#ifndef _FILE_NAME
+#define _FILE_NAME _FILE_NAME
 #include"init.hpp"
-#define run_ans 1
-#define check_in 11
-#define check_out 12
-#define check_ans 13
-#define compile_file 2
-#define custom_start 100
-#define custom_tot 100
+#define __NAME__run_ans 1
+#define __NAME__check_in 11
+#define __NAME__check_out 12
+#define __NAME__check_ans 13
+#define __NAME__compile_file 2
+#define __NAME__data_in 21
+#define __NAME__data_out 22
+#define __NAME__custom_start 100
+#define __NAME__custom_tot 100
 namespace Name
 {
-    json name_json;
+    json::value name_json;
     void begin()
     {
         ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
-        file>>name_json;
+        file>>json::wrap(name_json);
         file.close();
     }
     void end()
     {
         ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
-        file<<setw(4)<<name_json;
+        file<<setw(4)<<json::wrap(name_json);
         file.close();
     }
     void add_name(int num,string name)
@@ -88,7 +90,7 @@ namespace Name
     }
     int get_custom_num(string name)
     {
-        return stoi(name.substr(1,name.size()-1))+custom_start;
+        return stoi(name.substr(1,name.size()-1))+__NAME__custom_start;
     }
     void add_file(int num,string name)
     {

@@ -20,3 +20,15 @@ Orita 第一个正式版本。
 #### 修复
 
 - `data_maker Dangerous syscalls` 输出样式错误。
+
+### Dev 0.0.4
+
+#### 代码
+
+- 更换 json 库，支持 Unicode。
+- 修改宏定义的命名。
+
+#### 新增
+
+- 文件地址支持 Unicode。
+- `change_data` 命令支持全局文件替换逻辑。

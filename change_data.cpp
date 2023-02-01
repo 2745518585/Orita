@@ -7,16 +7,15 @@ int change_data(int argc,char **argv)
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=2)
     {
-        if(copy_source(".\\",get_parameter("f",1),"data","data.in"))
+        add_file(__NAME__data_in,get_parameter("f",1));
+        add_file(__NAME__data_out,get_parameter("f",2));
+        if(find_file(__NAME__data_in)||find_file(__NAME__data_out))
         {
-            print_result(No_such_file);
+            print_result(__PRINT__No_such_file);
             return 0;
         }
-        if(copy_source(".\\",get_parameter("f",2),"data","data.out"))
-        {
-            print_result(No_such_file);
-            return 0;
-        }
+        copy_source(get_address(__NAME__data_in),get_name(__NAME__data_in),"data","data.in");
+        copy_source(get_address(__NAME__data_out),get_name(__NAME__data_out),"data","data.out");
     }
     else if(get_sum_parameter("s")!=-1)
     {

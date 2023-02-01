@@ -1,19 +1,19 @@
-#ifndef DATA
-#define DATA DATA
+#ifndef _FILE_DATA
+#define _FILE_DATA _FILE_DATA
 #include"init.hpp"
 namespace Data
 {
-    json data_json;
+    json::value data_json;
     void begin()
     {
         ifstream file(string(getenv("appdata"))+"\\Orita\\data\\data.json");
-        file>>data_json;
+        file>>json::wrap(data_json);
         file.close();
     }
     void end()
     {
         ofstream file(string(getenv("appdata"))+"\\Orita\\data\\data.json");
-        file<<setw(4)<<data_json;
+        file<<setw(4)<<json::wrap(data_json);
         file.close();
     }
     void change_time_limit(int time)

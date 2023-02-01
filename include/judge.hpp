@@ -1,5 +1,5 @@
-#ifndef JUDGE
-#define JUDGE JUDGE
+#ifndef _FILE_JUDGE
+#define _FILE_JUDGE _FILE_JUDGE
 #include"name.hpp"
 #include"compile.hpp"
 #include"data.hpp"
@@ -13,25 +13,23 @@ namespace Judge
     {
         if(if_compile)
         {
-            if(find_dangerous_syscalls(name_num)) return if_end=true,result=Dangerous_syscalls;
-            if(compile(name_num)) return if_end=true,result=Compile_Error;
+            if(find_dangerous_syscalls(name_num)) return if_end=true,result=__PRINT__Dangerous_syscalls;
+            if(compile(name_num)) return if_end=true,result=__PRINT__Compile_Error;
         }
+        string run_instruct=get_address(name_num)+"\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans";
         begin_time=clock();
-        if(exit_code=system(get_address(name_num)+"\\"+get_name_pre(name_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans"))
-        {
-            return if_end=true,result=Runtime_Error;
-        }
+        if(exit_code=system(run_instruct)) return if_end=true,result=__PRINT__Runtime_Error;
         if_end=true;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans"+system_to_nul))
         {
-            if(time>get_time_limit()) result=Time_Limit_Error_Wrong_Answer;
-            else result=Wrong_Answer;
+            if(time>get_time_limit()) result=__PRINT__Time_Limit_Error_Wrong_Answer;
+            else result=__PRINT__Wrong_Answer;
         }
         else
         {
-            if(time>get_time_limit()) result=Time_Limit_Error_Correct_Answer;
-            else result=Accepted;
+            if(time>get_time_limit()) result=__PRINT__Time_Limit_Error_Correct_Answer;
+            else result=__PRINT__Accepted;
         }
         return result;
     }
@@ -46,12 +44,12 @@ namespace Judge
         {
             if(find_dangerous_syscalls(name_num))
             {
-                print_result(Dangerous_syscalls);
+                print_result(__PRINT__Dangerous_syscalls);
                 return;
             }
             if(compile(name_num))
             {
-                print_result(Compile_Error);
+                print_result(__PRINT__Compile_Error);
                 return;
             }
         }
@@ -65,13 +63,13 @@ namespace Judge
             if(if_end)
             {
                 while(result==-1) Sleep(5);
-                if(result==Runtime_Error) print_result(result,exit_code);
+                if(result==__PRINT__Runtime_Error) print_result(result,exit_code);
                 else print_result(result,time);
                 return;
             }
         }
         system(("taskkill /f /pid "+get_name_pre(name_num)+".exe"+system_to_nul).c_str());
-        result=Time_Limit_Error_over;
+        result=__PRINT__Time_Limit_Error_over;
         print_result(result,time_limit*2);
     }
 }
