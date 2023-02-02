@@ -7,8 +7,18 @@ int run_main(int argc,char **argv)
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=1) add_file(__NAME__run_ans,get_parameter("f",1),".cpp");
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
-    if(find_file(__NAME__run_ans)) {print_result(__PRINT__No_such_file);return 0;}
-    print_judge_complete(__NAME__run_ans,1);
+    bool use_checker=false;
+    if(get_sum_parameter("c")!=-1)
+    {
+        use_checker=true;
+        if(get_sum_parameter("c")>=1) add_file(__NAME__run_chk,get_parameter("c",1),".cpp");
+    }
+    if(find_file(__NAME__run_ans)) {print_result(__PRINT__ANS+__PRINT__NF);return 0;}
+    if(use_checker&&find_file(__NAME__run_chk)) {print_result(__PRINT__CHK+__PRINT__NF);return 0;}
+    if(find_dangerous_syscalls(__NAME__run_ans)) {print_result(__PRINT__DS);return 0;}
+    if(compile(__NAME__run_ans)) {print_result(__PRINT__CE);return 0;}
+    if(use_checker&&compile(__NAME__run_chk)) {compile(__PRINT__CHK+__PRINT__CE);return 0;}
+    print_judge_complete(__NAME__run_ans,use_checker?__NAME__run_chk:0);
     system("md data"+system_to_nul);
     copy_result("data","data.in","data","data.in");
     copy_result("data","data.out","data","data.out");

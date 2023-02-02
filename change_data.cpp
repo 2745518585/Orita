@@ -11,7 +11,7 @@ int change_data(int argc,char **argv)
         add_file(__NAME__data_out,get_parameter("f",2));
         if(find_file(__NAME__data_in)||find_file(__NAME__data_out))
         {
-            print_result(__PRINT__No_such_file);
+            print_result(__PRINT__NF);
             return 0;
         }
         copy_source(get_address(__NAME__data_in),get_name(__NAME__data_in),"data","data.in");

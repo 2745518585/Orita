@@ -19,9 +19,19 @@ int check_main(int argc,char **argv)
         if(get_sum_parameter("of")>=1) add_file(__NAME__check_out,get_parameter("of",1),".cpp");
         if(get_sum_parameter("af")>=1) add_file(__NAME__check_ans,get_parameter("af",1),".cpp");
     }
-    if(find_file(__NAME__check_in)) {print_result(__PRINT__No_such_file);return 0;}
-    if(find_file(__NAME__check_out)) {print_result(__PRINT__No_such_file);return 0;}
-    if(find_file(__NAME__check_ans)) {print_result(__PRINT__No_such_file);return 0;}
+    bool use_checker=false;
+    if(get_sum_parameter("c")!=-1)
+    {
+        use_checker=true;
+        if(get_sum_parameter("c")>=1)
+        {
+            add_file(__NAME__check_chk,get_parameter("c",1),".cpp");
+        }
+    }
+    if(find_file(__NAME__check_in)) {print_result(__PRINT__IN+__PRINT__NF);return 0;}
+    if(find_file(__NAME__check_out)) {print_result(__PRINT__OUT+__PRINT__NF);return 0;}
+    if(find_file(__NAME__check_ans)) {print_result(__PRINT__ANS+__PRINT__NF);return 0;}
+    if(use_checker&&find_file(__NAME__check_chk)) {print_result(__PRINT__CHK+__PRINT__NF);return 0;}
     if(get_sum_parameter("n")<1)
     {
         print_result(__PRINT__Success);
@@ -29,12 +39,13 @@ int check_main(int argc,char **argv)
     }
     system("md data"+system_to_nul);
     system("del /Q data\\*"+system_to_nul);
-    if(find_dangerous_syscalls(__NAME__check_in)) {print_result(__PRINT__data_maker_Dangerous_syscalls);return 0;}
-    if(find_dangerous_syscalls(__NAME__check_out)) {print_result(__PRINT__std_Dangerous_syscalls);return 0;}
-    if(find_dangerous_syscalls(__NAME__check_ans)) {print_result(__PRINT__Dangerous_syscalls);return 0;}
-    if(compile(__NAME__check_in)) {print_result(__PRINT__data_maker_Compile_Error);return 0;}
-    if(compile(__NAME__check_out)) {print_result(__PRINT__std_Compile_Error);return 0;}
-    if(compile(__NAME__check_ans)) {print_result(__PRINT__Compile_Error);return 0;}
+    if(find_dangerous_syscalls(__NAME__check_in)) {print_result(__PRINT__IN+__PRINT__DS);return 0;}
+    if(find_dangerous_syscalls(__NAME__check_out)) {print_result(__PRINT__OUT+__PRINT__DS);return 0;}
+    if(find_dangerous_syscalls(__NAME__check_ans)) {print_result(__PRINT__DS);return 0;}
+    if(compile(__NAME__check_in)) {print_result(__PRINT__IN+__PRINT__CE);return 0;}
+    if(compile(__NAME__check_out)) {print_result(__PRINT__OUT+__PRINT__CE);return 0;}
+    if(compile(__NAME__check_ans)) {print_result(__PRINT__CE);return 0;}
+    if(use_checker&&compile(__NAME__check_chk)) {print_result(__PRINT__CHK+__PRINT__CE);return 0;}
     int total_sum=stoi(get_parameter("n",1));
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
     string instruct1=get_address(__NAME__check_in)+"\\"+get_name_pre(__NAME__check_in)+".exe > \"%appdata%\\Orita\\data\\data.in\"";
@@ -52,9 +63,9 @@ int check_main(int argc,char **argv)
         cout<<"\n";
         system(instruct1+" "+to_string(i));
         system(instruct2);
-        print_judge_complete(__NAME__check_ans,0);
+        print_judge_complete(__NAME__check_ans,use_checker?__NAME__check_chk:0);
         int result=Judge::result;
-        if(result!=__PRINT__Accepted)
+        if(result!=__PRINT__AC)
         {
             copy_result("data","data.in","data",to_string(i)+".in");
             copy_result("data","data.out","data",to_string(i)+".out");
