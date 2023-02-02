@@ -30,7 +30,7 @@ namespace Compile
         infile.open(string(getenv("appdata"))+"\\Orita\\source\\"+name+".e");
         while(getline(infile,str))
         {
-            if(str.find("fopen(")!=string::npos||str.find("freopen(")!=string::npos||str.find("ifstream(")!=string::npos||str.find("ofstream(")!=string::npos||str.find("fstream(")!=string::npos||str.find("system(")!=string::npos)
+            if(str.find("fopen")!=string::npos||str.find("freopen")!=string::npos||str.find("ifstream")!=string::npos||str.find("ofstream")!=string::npos||str.find("fstream")!=string::npos||str.find("system")!=string::npos)
             {
                 infile.close();
                 system("del /Q \"%appdata%\\Orita\\source\\"+name+".e\"");
