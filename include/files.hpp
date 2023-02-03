@@ -13,7 +13,7 @@ namespace Files
     }
     int find_file(int name_num)
     {
-        return system("dir \""+get_address(name_num)+"\\"+get_name(name_num)+"\""+system_to_nul);
+        return system("dir \""+get_complete_address(name_num)+"\""+system_to_nul);
     }
     int find_file(string file_address,string file_name)
     {

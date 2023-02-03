@@ -3,13 +3,16 @@
 #include"init.hpp"
 #define __NAME__run_ans 1
 #define __NAME__run_chk 2
+#define __NAME__judge_in 3
+#define __NAME__judge_out 4
+#define __NAME__judge_ans 5
 #define __NAME__check_in 11
 #define __NAME__check_out 12
 #define __NAME__check_ans 13
 #define __NAME__check_chk 14
-#define __NAME__compile_file 10
 #define __NAME__data_in 21
 #define __NAME__data_out 22
+#define __NAME__compile_file 31
 #define __NAME__custom_start 100
 #define __NAME__custom_tot 100
 namespace Name
@@ -85,6 +88,10 @@ namespace Name
     {
         return name_json["address"+to_string(num)];
     }
+    string get_complete_address(int num)
+    {
+        return get_address(num)+"\\"+get_name(num);
+    }
     int get_custom_num(string name)
     {
         return stoi(name.substr(1,name.size()-1))+__NAME__custom_start;
@@ -148,6 +155,7 @@ string get_name_suf(int num) {return Name::get_name_suf(num);}
 void add_address(int num,string address) {Name::add_address(num,address);}
 string get_running_address() {return Name::get_running_address();}
 string get_address(int num) {return Name::get_address(num);}
+string get_complete_address(int num) {return Name::get_complete_address(num);}
 int get_custom_num(string name) {return Name::get_custom_num(name);}
 void add_file(int num,string name) {Name::add_file(num,name);}
 void add_file(int num,string name,string name_suf) {Name::add_file(num,name,name_suf);}

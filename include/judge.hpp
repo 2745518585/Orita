@@ -11,14 +11,15 @@ namespace Judge
     bool if_end;
     int judge(int ans_num,int chk_num)
     {
-        string run_instruct=get_address(ans_num)+"\\"+get_name_pre(ans_num)+".exe < %appdata%\\Orita\\data\\data.in > %appdata%\\Orita\\data\\data.ans";
+        string run_instruct=get_address(ans_num)+"\\"+get_name_pre(ans_num)+".exe < "+get_complete_address(__NAME__judge_in)+" > "+get_complete_address(__NAME__judge_ans);
         begin_time=clock();
         if(exit_code=system(run_instruct)) return if_end=true,result=__PRINT__RE;
         if_end=true;
+        if(result!=-1) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         string check_instruct;
-        if(chk_num!=0) check_instruct=get_address(chk_num)+"\\"+get_name_pre(chk_num)+".exe %appdata%\\Orita\\data\\data.in %appdata%\\Orita\\data\\data.ans %appdata%\\Orita\\data\\data.out";
-        else check_instruct="fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.ans"+system_to_nul;
+        if(chk_num!=0) check_instruct=get_address(chk_num)+"\\"+get_name_pre(chk_num)+".exe "+get_complete_address(__NAME__judge_in)+" "+get_complete_address(__NAME__judge_ans)+" "+get_complete_address(__NAME__judge_out);
+        else check_instruct="fc "+get_complete_address(__NAME__judge_out)+" "+get_complete_address(__NAME__judge_ans)+system_to_nul;
         if(system(check_instruct))
         {
             if(time>get_time_limit()) result=__PRINT__TLE_WA;
@@ -49,9 +50,10 @@ namespace Judge
                 return 0;
             }
         }
-        system("taskkill /f /pid "+get_name_pre(ans_num)+".exe"+system_to_nul);
         result=__PRINT__TLE_O;
+        system("taskkill /f /pid "+get_name_pre(ans_num)+".exe"+system_to_nul);
         print_result(result,time_limit*2);
+        while(if_end==false) Sleep(5);
         return 1;
     }
     void running(int run_num,string parameter)

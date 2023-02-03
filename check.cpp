@@ -50,6 +50,12 @@ int check_main(int argc,char **argv)
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
     bool if_use_monitor=false;
     if(get_sum_parameter("e")!=-1) if_use_monitor=true;
+    add_address(__NAME__judge_in,"%appdata%\\Orita\\data");
+    add_name(__NAME__judge_in,"data.in");
+    add_address(__NAME__judge_out,"%appdata%\\Orita\\data");
+    add_name(__NAME__judge_out,"data.out");
+    add_address(__NAME__judge_ans,"%appdata%\\Orita\\data");
+    add_name(__NAME__judge_ans,"data.ans");
     int ac_sum=0,runned_sum=0;
     for(int i=1;i<=total_sum;++i)
     {

@@ -92,8 +92,27 @@ namespace Print
             change_color(1,1,1,1);
         }
     }
+    string get_short_result(int result)
+    {
+        string file_name="";
+        if(result/100*100==__PRINT__IN) file_name="d:";
+        else if(result/100*100==__PRINT__OUT) file_name="s:";
+        else if(result/100*100==__PRINT__ANS) file_name="a:";
+        else if(result/100*100==__PRINT__CHK) file_name="c:";
+        if(result%100==__PRINT__NF) return file_name+"NF";
+        else if(result%100==__PRINT__AC) return file_name+"AC";
+        else if(result%100==__PRINT__WA) return file_name+"WA";
+        else if(result%100==__PRINT__RE) return file_name+"RE";
+        else if(result%100==__PRINT__TLE_CA) return file_name+"TLE_CA";
+        else if(result%100==__PRINT__TLE_WA) return file_name+"TLE_WA";
+        else if(result%100==__PRINT__TLE_O) return file_name+"TLE_O";
+        else if(result%100==__PRINT__CE) return file_name+"CE";
+        else if(result%100==__PRINT__DS) return file_name+"DS";
+        return "";
+    }
 }
 void change_color(int intensity,int red,int green,int blue) {Print::change_color(intensity,red,green,blue);}
 void print_result(int result,int information) {Print::print_result(result,information);}
 void print_result(int result) {Print::print_result(result,0);}
+string get_short_result(int result) {return Print::get_short_result(result);}
 #endif

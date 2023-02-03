@@ -11,7 +11,7 @@ int compile_main(int argc,char **argv)
         for(int i=1;i<=get_sum_parameter("o");++i) compile_parameter=compile_parameter+" "+get_parameter("o",i);
     }
     if(!system("dir include"+system_to_nul)) compile_parameter+=" -I include";
-    if(get_sum_parameter("f")<1)
+    if(get_sum_parameter("f")==-1)
     {
         system("dir /b /s > files.txt");
         ifstream file("files.txt");
