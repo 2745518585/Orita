@@ -18,7 +18,7 @@ int run_main(int argc,char **argv)
     if(find_dangerous_syscalls(__NAME__run_ans)) {print_result(__PRINT__DS);return 0;}
     if(compile(__NAME__run_ans)) {print_result(__PRINT__CE);return 0;}
     if(use_checker&&compile(__NAME__run_chk)) {compile(__PRINT__CHK+__PRINT__CE);return 0;}
-    print_judge_complete(__NAME__run_ans,use_checker?__NAME__run_chk:0);
+    print_judge_monitor(__NAME__run_ans,use_checker?__NAME__run_chk:0);
     system("md data"+system_to_nul);
     copy_result("data","data.in","data","data.in");
     copy_result("data","data.out","data","data.out");

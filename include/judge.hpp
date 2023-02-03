@@ -31,7 +31,7 @@ namespace Judge
         }
         return result;
     }
-    void print_judge_complete(int ans_num,int chk_num)
+    int print_judge_monitor(int ans_num,int chk_num)
     {
         if_end=false;
         result=-1;
@@ -40,19 +40,41 @@ namespace Judge
         thread(judge,ans_num,chk_num).detach();
         while(begin_time==-1||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
+            Sleep(5);
             if(if_end)
             {
                 while(result==-1) Sleep(5);
                 if(result==__PRINT__RE) print_result(result,exit_code);
                 else print_result(result,time);
-                return;
+                return 0;
             }
         }
-        system(("taskkill /f /pid "+get_name_pre(ans_num)+".exe"+system_to_nul).c_str());
+        system("taskkill /f /pid "+get_name_pre(ans_num)+".exe"+system_to_nul);
         result=__PRINT__TLE_O;
         print_result(result,time_limit*2);
+        return 1;
+    }
+    void running(int run_num,string parameter)
+    {
+        begin_time=clock();
+        exit_code=system(get_address(run_num)+"\\"+get_name_pre(run_num)+".exe "+parameter);
+        if_end=true;
+    }
+    int run_monitor(int run_num,string parameter)
+    {
+        if_end=false;
+        time_limit=get_time_limit();
+        begin_time=-1;
+        thread(running,run_num,parameter).detach();
+        while(begin_time==-1||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
+        {
+            if(if_end) return 0;
+        }
+        system("taskkill /f /pid "+get_name_pre(run_num)+".exe"+system_to_nul);
+        return 1;
     }
 }
 int judge(int name_num,int chk_num) {return Judge::judge(name_num,chk_num);}
-void print_judge_complete(int name_num,int chk_num) {Judge::print_judge_complete(name_num,chk_num);}
+int print_judge_monitor(int name_num,int chk_num) {return Judge::print_judge_monitor(name_num,chk_num);}
+int run_monitor(int run_num,string parameter) {return Judge::run_monitor(run_num,parameter);}
 #endif
