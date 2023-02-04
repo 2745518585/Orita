@@ -9,6 +9,7 @@
 #include"files.hpp"
 void Begin()
 {
+    init();
     Name::begin();
     Data::begin();
 }

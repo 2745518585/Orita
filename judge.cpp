@@ -13,8 +13,8 @@ int judge_main(int argc,char **argv)
         use_checker=true;
         if(get_sum_parameter("c")>=1) add_file(__NAME__run_chk,get_parameter("c",1),".cpp");
     }
-    if(find_file(__NAME__run_ans)) {print_result(__PRINT__ANS+__PRINT__NF);return 0;}
-    if(use_checker&&find_file(__NAME__run_chk)) {print_result(__PRINT__CHK+__PRINT__NF);return 0;}
+    if(find_file(__NAME__run_ans)) {cout<<"\nans:";print_result(__PRINT__NF);return 0;}
+    if(use_checker&&find_file(__NAME__run_chk)) {cout<<"\nchecker:";print_result(__PRINT__NF);return 0;}
     if(get_sum_parameter("n")<1||get_sum_parameter("d")<1)
     {
         print_result(__PRINT__Success);
@@ -22,18 +22,18 @@ int judge_main(int argc,char **argv)
     }
     if(find_dangerous_syscalls(__NAME__run_ans)) {print_result(__PRINT__DS);return 0;}
     if(compile(__NAME__run_ans)) {print_result(__PRINT__CE);return 0;}
-    if(use_checker&&compile(__NAME__run_chk)) {compile(__PRINT__CHK+__PRINT__CE);return 0;}
+    if(use_checker&&compile(__NAME__run_chk)) {compile(__PRINT__CE);return 0;}
     string name_pre=get_parameter("d",1);
-    ofstream file("result.txt");
+    ofstream file(UTF8toGB("result.txt"));
     int total_sum=stoi(get_parameter("n",1)),ac_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
         cout<<"#"<<i<<"--------------------------------------------------"<<"\n";
-        add_address(__NAME__judge_in,get_running_address());
+        add_address(__NAME__judge_in,running_address);
         add_name(__NAME__judge_in,name_pre+to_string(i)+".in");
-        add_address(__NAME__judge_out,get_running_address());
+        add_address(__NAME__judge_out,running_address);
         add_name(__NAME__judge_out,name_pre+to_string(i)+".out");
-        add_address(__NAME__judge_ans,get_running_address());
+        add_address(__NAME__judge_ans,running_address);
         add_name(__NAME__judge_ans,name_pre+to_string(i)+".ans");
         if(find_file(__NAME__judge_in)) {print_result(__PRINT__NF);file<<i<<":\t"<<get_short_result(__PRINT__NF)<<"\n";continue;}
         if(find_file(__NAME__judge_out)) {print_result(__PRINT__NF);file<<i<<":\t"<<get_short_result(__PRINT__NF)<<"\n";continue;}

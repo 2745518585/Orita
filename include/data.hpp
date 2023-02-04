@@ -3,17 +3,17 @@
 #include"init.hpp"
 namespace Data
 {
-    json::value data_json;
+    json data_json;
     void begin()
     {
-        ifstream file(string(getenv("appdata"))+"\\Orita\\data\\data.json");
-        file>>json::wrap(data_json);
+        ifstream file(UTF8toGB(appdata_address+"\\Orita\\data\\data.json"));
+        file>>data_json;
         file.close();
     }
     void end()
     {
-        ofstream file(string(getenv("appdata"))+"\\Orita\\data\\data.json");
-        file<<setw(4)<<json::wrap(data_json);
+        ofstream file((UTF8toGB(appdata_address+"\\Orita\\data\\data.json")));
+        file<<setw(4)<<data_json;
         file.close();
     }
     void change_time_limit(int time)

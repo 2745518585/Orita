@@ -11,16 +11,22 @@ namespace Judge
     bool if_end;
     int judge(int ans_num,int chk_num)
     {
-        string run_instruct=get_address(ans_num)+"\\"+get_name_pre(ans_num)+".exe < "+get_complete_address(__NAME__judge_in)+" > "+get_complete_address(__NAME__judge_ans);
+        string run_inst=get_address(ans_num)+"\\"+get_name_pre(ans_num)+".exe < "+get_complete_address(__NAME__judge_in)+" > "+get_complete_address(__NAME__judge_ans);
         begin_time=clock();
-        if(exit_code=system(run_instruct)) return if_end=true,result=__PRINT__RE;
+        if(exit_code=system(run_inst))
+        {
+            if_end=true;
+            if(result!=-1) return result;
+            return result=__PRINT__RE;
+        }
         if_end=true;
         if(result!=-1) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        string check_instruct;
-        if(chk_num!=0) check_instruct=get_address(chk_num)+"\\"+get_name_pre(chk_num)+".exe "+get_complete_address(__NAME__judge_in)+" "+get_complete_address(__NAME__judge_ans)+" "+get_complete_address(__NAME__judge_out);
-        else check_instruct="fc "+get_complete_address(__NAME__judge_out)+" "+get_complete_address(__NAME__judge_ans)+system_to_nul;
-        if(system(check_instruct))
+        string check_inst;
+        if(chk_num==-1) return result=__PRINT__SR;
+        if(chk_num!=0) check_inst=get_address(chk_num)+"\\"+get_name_pre(chk_num)+".exe "+get_complete_address(__NAME__judge_in)+" "+get_complete_address(__NAME__judge_ans)+" "+get_complete_address(__NAME__judge_out);
+        else check_inst="fc "+get_complete_address(__NAME__judge_out)+" "+get_complete_address(__NAME__judge_ans)+system_to_nul;
+        if(system(check_inst))
         {
             if(time>get_time_limit()) result=__PRINT__TLE_WA;
             else result=__PRINT__WA;

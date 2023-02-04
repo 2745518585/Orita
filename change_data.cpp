@@ -20,10 +20,10 @@ int change_data(int argc,char **argv)
     else if(get_sum_parameter("s")!=-1)
     {
         char x;
-        FILE *file=fopen((string(getenv("appdata"))+"\\Orita\\data\\data.in").c_str(),"w");
+        FILE *file=fopen((appdata_address+"\\Orita\\data\\data.in").c_str(),"w");
         x=getchar();
         while(x!=EOF) fputc(x,file),x=getchar();
-        file=fopen((string(getenv("appdata"))+"\\Orita\\data\\data.out").c_str(),"w");
+        file=fopen((appdata_address+"\\Orita\\data\\data.out").c_str(),"w");
         x=getchar();
         while(x!=EOF) fputc(x,file),x=getchar();
     }

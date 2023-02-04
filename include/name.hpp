@@ -17,17 +17,17 @@
 #define __NAME__custom_tot 100
 namespace Name
 {
-    json::value name_json;
+    json name_json;
     void begin()
     {
-        ifstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
-        file>>json::wrap(name_json);
+        ifstream file(UTF8toGB(appdata_address+"\\Orita\\name\\name.json"));
+        file>>name_json;
         file.close();
     }
     void end()
     {
-        ofstream file(string(getenv("appdata"))+"\\Orita\\name\\name.json");
-        file<<setw(4)<<json::wrap(name_json);
+        ofstream file(UTF8toGB(appdata_address+"\\Orita\\name\\name.json"));
+        file<<setw(4)<<name_json;
         file.close();
     }
     void add_name(int num,string name)
@@ -78,12 +78,6 @@ namespace Name
     {
         name_json["address"+to_string(num)]=address;
     }
-    string get_running_address()
-    {
-        char address[1001];
-        getcwd(address,1000);
-        return address;
-    }
     string get_address(int num)
     {
         return name_json["address"+to_string(num)];
@@ -107,7 +101,7 @@ namespace Name
         }
         string complete_address;
         if(name[1]==':') complete_address=name;
-        else complete_address=get_running_address()+"\\"+name;
+        else complete_address=running_address+"\\"+name;
         int length=complete_address.size();
         for(int i=length-1;i>=0;--i)
         {
@@ -132,7 +126,7 @@ namespace Name
         }
         string complete_address;
         if(name[1]==':') complete_address=name;
-        else complete_address=get_running_address()+"\\"+name;
+        else complete_address=running_address+"\\"+name;
         int length=complete_address.size();
         for(int i=length-1;i>=0;--i)
         {
@@ -153,7 +147,6 @@ string get_name(int num) {return Name::get_name(num);}
 string get_name_pre(int num) {return Name::get_name_pre(num);}
 string get_name_suf(int num) {return Name::get_name_suf(num);}
 void add_address(int num,string address) {Name::add_address(num,address);}
-string get_running_address() {return Name::get_running_address();}
 string get_address(int num) {return Name::get_address(num);}
 string get_complete_address(int num) {return Name::get_complete_address(num);}
 int get_custom_num(string name) {return Name::get_custom_num(name);}

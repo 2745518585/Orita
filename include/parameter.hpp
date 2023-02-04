@@ -14,11 +14,11 @@ namespace Parameter
             if(argv[i][0]=='/')
             {
                 sum_parameter[++tot]=0;
-                name_parameter[tot]=argv[i]+1;
+                name_parameter[tot]=GBtoUTF8(argv[i]+1);
                 int j=1;
                 for(;i+j<=argc-1&&argv[i+j][0]!='/';++j)
                 {
-                    parameter[tot][j]=argv[i+j];
+                    parameter[tot][j]=GBtoUTF8(argv[i+j]);
                     ++sum_parameter[tot];
                 }
                 i+=j-1;

@@ -10,11 +10,10 @@
 #define __PRINT__TLE_O 5
 #define __PRINT__CE 6
 #define __PRINT__DS 7
+#define __PRINT__SR 8
+#define __PRINT__SA 9
+#define __PRINT__DA 10
 #define __PRINT__NF 50
-#define __PRINT__IN 100
-#define __PRINT__OUT 200
-#define __PRINT__ANS 300
-#define __PRINT__CHK 400
 namespace Print
 {
     void change_color(int intensity,int red,int green,int blue)
@@ -25,7 +24,7 @@ namespace Print
     {
         if(result<0)
         {
-            if(result%100==__PRINT__Success)
+            if(result==__PRINT__Success)
             {
                 change_color(1,0,1,0);
                 cout<<"\nSuccess\n\n";
@@ -33,81 +32,94 @@ namespace Print
             }
             return;
         }
-        if(result/100*100==__PRINT__IN) cout<<"\ndata_maker:";
-        else if(result/100*100==__PRINT__OUT) cout<<"\nstd:";
-        else if(result/100*100==__PRINT__ANS) cout<<"\nans:";
-        else if(result/100*100==__PRINT__CHK) cout<<"\nchecker:";
-        if(result%100==__PRINT__NF)
+        if(result==__PRINT__NF)
         {
             change_color(1,0,1,1);
             cout<<"\nNo such file\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__AC)
+        else if(result==__PRINT__AC)
         {
             change_color(1,0,1,0);
             cout<<"\nAccepted\n"<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__WA)
+        else if(result==__PRINT__WA)
         {
             change_color(1,1,0,0);
             cout<<"\nWrong Answer\n"<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__RE)
+        else if(result==__PRINT__RE)
         {
             change_color(1,1,0,1);
             cout<<"\nRuntime Error\nexit with code "<<information<<"\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__TLE_CA)
+        else if(result==__PRINT__TLE_CA)
         {
             change_color(1,0,0,1);
             cout<<"\nTime Limit Error\n"<<information<<"ms\n\nCorrect Answer\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__TLE_WA)
+        else if(result==__PRINT__TLE_WA)
         {
             change_color(1,0,0,1);
             cout<<"\nTime Limit Error\n"<<information<<"ms\n\nWrong Answer\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__TLE_O)
+        else if(result==__PRINT__TLE_O)
         {
             change_color(1,0,0,1);
             cout<<"\nTime Limit Error\nover "<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__CE)
+        else if(result==__PRINT__CE)
         {
             change_color(1,1,1,0);
             cout<<"\nCompile Error\n\n";
             change_color(1,1,1,1);
         }
-        else if(result%100==__PRINT__DS)
+        else if(result==__PRINT__DS)
         {
             change_color(1,1,1,0);
             cout<<"\nDangerous syscalls\n\n";
+            change_color(1,1,1,1);
+        }
+        else if(result==__PRINT__SR)
+        {
+            change_color(1,0,1,0);
+            cout<<"\nSuccess run\n"<<information<<"ms\n\n";
+            change_color(1,1,1,1);
+        }
+        else if(result==__PRINT__SA)
+        {
+            change_color(1,0,1,0);
+            cout<<"\nSame Answer\n\n";
+            change_color(1,1,1,1);
+        }
+        else if(result==__PRINT__DA)
+        {
+            change_color(1,1,0,0);
+            cout<<"\nDifferent Answer\n\n";
             change_color(1,1,1,1);
         }
     }
     string get_short_result(int result)
     {
         string file_name="";
-        if(result/100*100==__PRINT__IN) file_name="d:";
-        else if(result/100*100==__PRINT__OUT) file_name="s:";
-        else if(result/100*100==__PRINT__ANS) file_name="a:";
-        else if(result/100*100==__PRINT__CHK) file_name="c:";
-        if(result%100==__PRINT__NF) return file_name+"NF";
-        else if(result%100==__PRINT__AC) return file_name+"AC";
-        else if(result%100==__PRINT__WA) return file_name+"WA";
-        else if(result%100==__PRINT__RE) return file_name+"RE";
-        else if(result%100==__PRINT__TLE_CA) return file_name+"TLE_CA";
-        else if(result%100==__PRINT__TLE_WA) return file_name+"TLE_WA";
-        else if(result%100==__PRINT__TLE_O) return file_name+"TLE_O";
-        else if(result%100==__PRINT__CE) return file_name+"CE";
-        else if(result%100==__PRINT__DS) return file_name+"DS";
+        if(result==__PRINT__NF) return file_name+"NF";
+        else if(result==__PRINT__AC) return file_name+"AC";
+        else if(result==__PRINT__WA) return file_name+"WA";
+        else if(result==__PRINT__RE) return file_name+"RE";
+        else if(result==__PRINT__TLE_CA) return file_name+"TLE_CA";
+        else if(result==__PRINT__TLE_WA) return file_name+"TLE_WA";
+        else if(result==__PRINT__TLE_O) return file_name+"TLE_O";
+        else if(result==__PRINT__CE) return file_name+"CE";
+        else if(result==__PRINT__DS) return file_name+"DS";
+        else if(result==__PRINT__SR) return file_name+"SR";
+        else if(result==__PRINT__SA) return file_name+"SA";
+        else if(result==__PRINT__DA) return file_name+"DA";
         return "";
     }
 }

@@ -14,7 +14,7 @@ int compile_main(int argc,char **argv)
     if(get_sum_parameter("f")==-1)
     {
         system("dir /b /s > files.txt");
-        ifstream file("files.txt");
+        ifstream file(UTF8toGB("files.txt"));
         string files;
         while(file>>files)
         {

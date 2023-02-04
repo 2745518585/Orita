@@ -16,8 +16,8 @@ namespace Compile
     {
         if(get_name_suf(name_num)!=".cpp") return -1;
         string name=get_name_pre(name_num),address=get_address(name_num);
-        ifstream infile(address+"\\"+name+".cpp");
-        ofstream outfile(string(getenv("appdata"))+"\\Orita\\source\\"+name+".cpp");
+        ifstream infile(UTF8toGB(address+"\\"+name+".cpp"));
+        ofstream outfile(UTF8toGB(appdata_address+"\\Orita\\source\\"+name+".cpp"));
         string str;
         while(getline(infile,str))
         {
@@ -27,7 +27,7 @@ namespace Compile
         outfile.close();
         system("g++ -E \"%appdata%\\Orita\\source\\"+name+".cpp\" > \"%appdata%\\Orita\\source\\"+name+".e\" "+default_compile_parameter+" "+compile_parameter);
         system("del /Q \"%appdata%\\Orita\\source\\"+name+".cpp\"");
-        infile.open(string(getenv("appdata"))+"\\Orita\\source\\"+name+".e");
+        infile.open(UTF8toGB(appdata_address+"\\Orita\\source\\"+name+".e"));
         while(getline(infile,str))
         {
             if(str.find("fopen")!=string::npos||str.find("freopen")!=string::npos||str.find("ifstream")!=string::npos||str.find("ofstream")!=string::npos||str.find("fstream")!=string::npos||str.find("system")!=string::npos)
