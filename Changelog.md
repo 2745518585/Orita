@@ -33,7 +33,7 @@ Orita 第一个正式版本。
 
 #### 代码
 
-- 更换 json 库，支持 Unicode。
+- 更换 json 库，支持 `Unicode`。
 - 修改宏定义的命名。
 
 #### 新增
@@ -63,7 +63,7 @@ Orita 第一个正式版本。
 
 - `judge.hpp` 输入输出答案的文件加入 `name` 系统，可修改文件。
 - 修改 `print` 的逻辑。
-- 换用 `nlohmann/json`，修复支持中文，停止支持 Unicode。
+- 换用 `nlohmann/json`，使用输入输出时 `GB2312` 和 `UTF-8` 相互转换支持中文，停止支持 `Unicode`。
 
 #### 新增
 

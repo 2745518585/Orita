@@ -15,7 +15,7 @@ int judge_main(int argc,char **argv)
     }
     if(find_file(__NAME__run_ans)) {cout<<"\nans:";print_result(__PRINT__NF);return 0;}
     if(use_checker&&find_file(__NAME__run_chk)) {cout<<"\nchecker:";print_result(__PRINT__NF);return 0;}
-    if(get_sum_parameter("n")<1||get_sum_parameter("d")<1)
+    if(get_sum_parameter("d")<2)
     {
         print_result(__PRINT__Success);
         return 0;
@@ -25,7 +25,7 @@ int judge_main(int argc,char **argv)
     if(use_checker&&compile(__NAME__run_chk)) {compile(__PRINT__CE);return 0;}
     string name_pre=get_parameter("d",1);
     ofstream file(UTF8toGB("result.txt"));
-    int total_sum=stoi(get_parameter("n",1)),ac_sum=0;
+    int total_sum=stoi(get_parameter("d",2)),ac_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
         cout<<"#"<<i<<"--------------------------------------------------"<<"\n";

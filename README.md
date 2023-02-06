@@ -30,7 +30,7 @@
 
 ### run
 
-`run [/f file] [/t time]`
+`run [/f file] [/c chk_file] [/t time]`
 
 #### 描述
 
@@ -40,9 +40,15 @@
 
 `/f file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），程序将从当前目录寻找名为 `file` 的文件作为源文件。如无此参数则以上一次设置的源文件为准。
 
+`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件默认为传统评测，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
+
 `/t time`    修改默认运行时间限制（单位 ms）。
 
 #### 返回值说明
+
+`ans:`    `file` 的信息。
+
+`checker:`    `chk_file` 的信息。
 
 `No Such File`    未找到源文件。
 
@@ -94,7 +100,7 @@
 
 ### check
 
-`check [/n num] [/f in_file out_file ans_file] [/if in_file] [/of out_file] [/af ans_file] [/t time]`
+`check [/n sum] [/f in_file out_file ans_file] [/c chk_file] [/e] [/if in_file] [/of out_file] [/af ans_file] [/t time]`
 
 #### 描述
 
@@ -102,9 +108,13 @@
 
 #### 参数列表
 
-`/n`    对拍次数。如无此参数不会开始对拍，仅视为设置参数。
+`/n sum`    对拍次数。如无此参数不会开始对拍，仅视为设置参数。
 
 `/f in_file out_file ans_file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `in_file`，`out_file`，`ans_file` 的文件。如无此参数则以上一次设置的源文件为准。
+
+`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件。默认为传统评测，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
+
+`/e`    开启对 `in_file` 和 `out_file` 的检查。可能降低运行速度。
 
 `/t time`    修改默认运行时间限制（单位 ms）。
 
@@ -116,19 +126,19 @@
 
 #### 返回值说明
 
+`data_maker:`    `in_file` 的信息。
+
+`std:`    `out_file` 的信息。
+
+`ans:`    `ans_file` 的信息。
+
+`checker:`    `chk_file` 的信息。
+
 `No Such File`    未找到源文件。
 
-`Compile Error`    `ans_file` 编译错误。
+`Compile Error`    编译错误。
 
-`data_maker Compile Error`    `in_file` 编译错误。
-
-`std Compile Error`    `out_file` 编译错误。
-
-`Dangerous syscalls`    `ans_file` 危险的系统调用。
-
-`data_maker Dangerous syscalls`    `in_file` 危险的系统调用。
-
-`std Dangerous syscalls`    `out_file` 危险的系统调用。
+`Dangerous syscalls`    危险的系统调用。
 
 `#i--------------------------------------------------  (Unaccepted p)`    表示第 $i$ 个数据点的信息，当前已经有 $p$ 个数据点错误（没有此项则表示当前无错误）。
 
@@ -153,6 +163,46 @@
 #### 默认编译参数
 
 `-std=c++14 -O2 -Wl,--stack=2147483647`。
+
+### judge
+
+`judge [/f file] [/c checker] [/d data_pre sum]`
+
+#### 描述
+
+给定多组数据和源代码，得到源代码的所有结果。
+
+#### 参数列表
+
+`/f file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），程序将从当前目录寻找名为 `file` 的文件作为源文件。如无此参数则以上一次设置的源文件为准。
+
+`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件默认为传统评测，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
+
+`/d data_pre sum`    指定数据点的前缀名和个数。程序将从当前目录下寻找名为 `data_pre` + $i$ + `.in` 的文件作为第 $i$ 组输入文件和 `data_pre` + $i$ + `.out` 作为第 $i$ 组输出文件。如无此参数将不会开始评测，仅视为设置参数。
+
+#### 返回值说明
+
+`No Such File`    未找到源文件。
+
+`Accepted`    答案正确。
+
+`Wrong Answer`    答案错误。
+
+`Runtime Error`    运行时错误。
+
+`Time Limit Error, over ... ms`    超出时间限制（此时会强制杀死源代码进程）。
+
+`Time Limit Error, Correct Answer`    超出时间限制，答案正确。
+
+`Time Limit Error, Wrong Answer`    超出时间限制，答案错误。
+
+`Compile Error`    编译错误。
+
+`Dangerous syscalls`    危险的系统调用。
+
+`ac_sum / total_sum`    共 $total\_sum$ 个测试点，正确 $ac\_sum$ 个。
+
+最后结果会汇总到 `result.txt`。
 
 ### compile
 
