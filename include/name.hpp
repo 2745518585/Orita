@@ -92,7 +92,7 @@ namespace Name
     }
     void add_file(int num,string name)
     {
-        if(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
+        while(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
         if(name[0]==':')
         {
             int name_num=get_custom_num(name);
@@ -118,7 +118,7 @@ namespace Name
     }
     void add_file(int num,string name,string name_suf)
     {
-        if(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
+        while(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
         if(name[0]==':')
         {
             int name_num=get_custom_num(name);
