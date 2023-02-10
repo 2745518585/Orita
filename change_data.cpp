@@ -19,13 +19,13 @@ int change_data(int argc,char **argv)
     }
     else if(get_sum_parameter("s")!=-1)
     {
-        char x;
-        FILE *file=fopen((appdata_address+"\\Orita\\data\\data.in").c_str(),"w");
-        x=getchar();
-        while(x!=EOF) fputc(x,file),x=getchar();
-        file=fopen((appdata_address+"\\Orita\\data\\data.out").c_str(),"w");
-        x=getchar();
-        while(x!=EOF) fputc(x,file),x=getchar();
+        char str;
+        FILE *file=fopen(UTF8toGB(appdata_address+"\\Orita\\data\\data.in").c_str(),"w");
+        str=getchar();
+        while(str!=EOF) fputc(str,file),str=getchar();
+        file=fopen(UTF8toGB(appdata_address+"\\Orita\\data\\data.out").c_str(),"w");
+        str=getchar();
+        while(str!=EOF) fputc(str,file),str=getchar();
     }
     if(get_sum_parameter("t")>=1)
     {

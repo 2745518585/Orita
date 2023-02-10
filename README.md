@@ -1,18 +1,24 @@
 # Orita
 
+[Orita](https://github.com/2745518585/Orita)
+
 由 [赵悦岑](https://github.com/2745518585/) 开发的一款 OI 工具，包括评测、对拍、数据生成等，主要由 C++ 语言编写。
 
 ## 初始化
 
+使用前需要保证环境为 `Windows` 系统，电脑中有支持 `C++14` 的 `g++` 且已加入环境变量（即可以在控制台运行 `g++`）。
+
 首先将 `Orita\` 目录加入环境变量。
+
+在 `Orita\` 目录下使用 `g++ init_Orita.cpp -o init_Orita.exe -std=c++14 -O2 -I include` 编译得到 `init_Orita.exe`。
+
+然后运行 `init_Orita` 命令。
 
 然后在 `Orita\` 目录下使用 `g++ compile.cpp -o compile.exe -std=c++14 -O2 -I include` 编译得到 `complie.exe`。
 
 然后在 `Orita\` 目录下运行 `complie`，编译其它文件。
 
-然后运行 `init_Orita` 命令。
-
-出现奇怪问题需要初始化也可以使用 `init_Orita`，但是会清空配置。
+出现奇怪问题需要初始化也可以使用 `init_Orita` 清空配置。
 
 ## 全局逻辑
 
@@ -154,7 +160,7 @@
 
 `Time Limit Error, Wrong Answer`    超出时间限制，答案错误。
 
-`ac_sum / total_sum`    共 $total\_sum$ 个测试点，正确 $ac\_sum$ 个。
+`ac_sum / total_sum`    共 $total\_ sum$ 个测试点，正确 $ac\_ sum$ 个。
 
 #### 数据及源代码输出
 
@@ -200,7 +206,7 @@
 
 `Dangerous syscalls`    危险的系统调用。
 
-`ac_sum / total_sum`    共 $total\_sum$ 个测试点，正确 $ac\_sum$ 个。
+`ac_sum / total_sum`    共 $total\_ sum$ 个测试点，正确 $ac\_ sum$ 个。
 
 最后结果会汇总到 `result.txt`。
 

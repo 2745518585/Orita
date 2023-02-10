@@ -6,7 +6,7 @@ const int N=1001;
 int check_main(int argc,char **argv)
 {
     init_parameter(argc,argv);
-    system("del /Q \"%appdata%\\Orita\\source\\*.cpp\")"+system_to_nul);
+    system("del /Q \""+appdata_address+"\\Orita\\source\\*.cpp\")"+system_to_nul);
     if(get_sum_parameter("f")>=3)
     {
         add_file(__NAME__check_in,get_parameter("f",1),".cpp");
@@ -50,11 +50,11 @@ int check_main(int argc,char **argv)
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
     bool use_monitor=false;
     if(get_sum_parameter("e")!=-1) use_monitor=true;
-    add_address(__NAME__judge_in,"%appdata%\\Orita\\data");
+    add_address(__NAME__judge_in,appdata_address+"\\Orita\\data");
     add_name(__NAME__judge_in,"data.in");
-    add_address(__NAME__judge_out,"%appdata%\\Orita\\data");
+    add_address(__NAME__judge_out,appdata_address+"\\Orita\\data");
     add_name(__NAME__judge_out,"data.out");
-    add_address(__NAME__judge_ans,"%appdata%\\Orita\\data");
+    add_address(__NAME__judge_ans,appdata_address+"\\Orita\\data");
     add_name(__NAME__judge_ans,"data.ans");
     bool use_compare=false;
     if(get_sum_parameter("p")!=-1) use_compare=true;
@@ -73,16 +73,16 @@ int check_main(int argc,char **argv)
         {
             if(use_monitor)
             {
-                if(run_monitor(__NAME__check_in," > \"%appdata%\\Orita\\data\\data.in\" "+to_string(i))) {cout<<"\ndata_maker:";print_result(__PRINT__TLE_O,get_time_limit()*2);continue;}
+                if(run_monitor(__NAME__check_in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i))) {cout<<"\ndata_maker:";print_result(__PRINT__TLE_O,get_time_limit()*2);continue;}
                 if(Judge::exit_code!=0) {cout<<"\ndata_maker:";print_result(__PRINT__RE,Judge::exit_code);continue;}
             }
-            else system(get_address(__NAME__check_in)+"\\"+get_name_pre(__NAME__check_in)+".exe > \"%appdata%\\Orita\\data\\data.in\" "+to_string(i));
-            add_address(__NAME__judge_ans,"%appdata%\\Orita\\data");
+            else system(get_address(__NAME__check_in)+"\\"+get_name_pre(__NAME__check_in)+".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
+            add_address(__NAME__judge_ans,appdata_address+"\\Orita\\data");
             add_name(__NAME__judge_ans,"data.out");
             cout<<"\nans1:";
             print_judge_monitor(__NAME__check_out,-1);
             int result1=Judge::result;
-            add_address(__NAME__judge_ans,"%appdata%\\Orita\\data");
+            add_address(__NAME__judge_ans,appdata_address+"\\Orita\\data");
             add_name(__NAME__judge_ans,"data.ans");
             cout<<"ans2:";
             print_judge_monitor(__NAME__check_ans,-1);
@@ -90,7 +90,7 @@ int check_main(int argc,char **argv)
             ++runned_sum;
             if(result1==__PRINT__SR&&result2==__PRINT__SR)
             {
-                if(system("fc %appdata%\\Orita\\data\\data.out %appdata%\\Orita\\data\\data.out"+system_to_nul)) print_result(__PRINT__DA);
+                if(system("fc "+appdata_address+"\\Orita\\data\\data.out "+appdata_address+"\\Orita\\data\\data.out"+system_to_nul)) print_result(__PRINT__DA);
                 else print_result(__PRINT__SA),++ac_sum;
             }
         }
@@ -98,16 +98,16 @@ int check_main(int argc,char **argv)
         {
             if(use_monitor)
             {
-                if(run_monitor(__NAME__check_in," > \"%appdata%\\Orita\\data\\data.in\" "+to_string(i))) {cout<<"\ndata_maker:";print_result(__PRINT__TLE_O,get_time_limit()*2);continue;}
+                if(run_monitor(__NAME__check_in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i))) {cout<<"\ndata_maker:";print_result(__PRINT__TLE_O,get_time_limit()*2);continue;}
                 if(Judge::exit_code!=0) {cout<<"\ndata_maker:";print_result(__PRINT__RE,Judge::exit_code);continue;}
-                if(run_monitor(__NAME__check_out," < \"%appdata%\\Orita\\data\\data.in\" > \"%appdata%\\Orita\\data\\data.out\"")) {cout<<"\nstd:";print_result(__PRINT__TLE_O,get_time_limit()*2);continue;}
+                if(run_monitor(__NAME__check_out," < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"")) {cout<<"\nstd:";print_result(__PRINT__TLE_O,get_time_limit()*2);continue;}
                 if(Judge::exit_code!=0) {cout<<"\nstd:";print_result(__PRINT__RE,Judge::exit_code);continue;}
                 ++runned_sum;
             }
             else
             {
-                system(get_address(__NAME__check_in)+"\\"+get_name_pre(__NAME__check_in)+".exe > \"%appdata%\\Orita\\data\\data.in\" "+to_string(i));
-                system(get_address(__NAME__check_out)+"\\"+get_name_pre(__NAME__check_out)+".exe < \"%appdata%\\Orita\\data\\data.in\" > \"%appdata%\\Orita\\data\\data.out\"");
+                system(get_address(__NAME__check_in)+"\\"+get_name_pre(__NAME__check_in)+".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
+                system(get_address(__NAME__check_out)+"\\"+get_name_pre(__NAME__check_out)+".exe < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"");
                 ++runned_sum;
             }
             print_judge_monitor(__NAME__check_ans,use_checker?__NAME__check_chk:0);

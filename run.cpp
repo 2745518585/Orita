@@ -18,11 +18,11 @@ int run_main(int argc,char **argv)
     if(find_dangerous_syscalls(__NAME__run_ans)) {print_result(__PRINT__DS);return 0;}
     if(compile(__NAME__run_ans)) {print_result(__PRINT__CE);return 0;}
     if(use_checker&&compile(__NAME__run_chk)) {cout<<"\nchecker:";compile(__PRINT__CE);return 0;}
-    add_address(__NAME__judge_in,"%appdata%\\Orita\\data");
+    add_address(__NAME__judge_in,appdata_address+"\\Orita\\data");
     add_name(__NAME__judge_in,"data.in");
-    add_address(__NAME__judge_out,"%appdata%\\Orita\\data");
+    add_address(__NAME__judge_out,appdata_address+"\\Orita\\data");
     add_name(__NAME__judge_out,"data.out");
-    add_address(__NAME__judge_ans,"%appdata%\\Orita\\data");
+    add_address(__NAME__judge_ans,appdata_address+"\\Orita\\data");
     add_name(__NAME__judge_ans,"data.ans");
     print_judge_monitor(__NAME__run_ans,use_checker?__NAME__run_chk:0);
     system("md data"+system_to_nul);

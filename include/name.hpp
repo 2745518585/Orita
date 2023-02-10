@@ -47,8 +47,8 @@ namespace Name
     string get_name_pre(int num)
     {
         string name=name_json["name"+to_string(num)];
-        int length=name.size();
-        for(int i=length-1;i>=0;--i)
+        int len=name.size();
+        for(int i=len-1;i>=0;--i)
         {
             if(name[i]=='.')
             {
@@ -61,13 +61,13 @@ namespace Name
     string get_name_suf(int num)
     {
         string name=name_json["name"+to_string(num)];
-        int length=name.size();
+        int len=name.size();
         bool if_find=false;
-        for(int i=length-1;i>=0;--i)
+        for(int i=len-1;i>=0;--i)
         {
             if(name[i]=='.')
             {
-                name=name.substr(i,length-i);
+                name=name.substr(i,len-i);
                 break;
             }
         }
@@ -92,6 +92,7 @@ namespace Name
     }
     void add_file(int num,string name)
     {
+        if(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
         if(name[0]==':')
         {
             int name_num=get_custom_num(name);
@@ -102,12 +103,12 @@ namespace Name
         string complete_address;
         if(name[1]==':') complete_address=name;
         else complete_address=running_address+"\\"+name;
-        int length=complete_address.size();
-        for(int i=length-1;i>=0;--i)
+        int len=complete_address.size();
+        for(int i=len-1;i>=0;--i)
         {
             if(complete_address[i]=='\\')
             {
-                add_name(num,complete_address.substr(i+1,length-(i+1)));
+                add_name(num,complete_address.substr(i+1,len-(i+1)));
                 add_address(num,complete_address.substr(0,i));
                 return;
             }
@@ -117,6 +118,7 @@ namespace Name
     }
     void add_file(int num,string name,string name_suf)
     {
+        if(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
         if(name[0]==':')
         {
             int name_num=get_custom_num(name);
@@ -127,12 +129,12 @@ namespace Name
         string complete_address;
         if(name[1]==':') complete_address=name;
         else complete_address=running_address+"\\"+name;
-        int length=complete_address.size();
-        for(int i=length-1;i>=0;--i)
+        int len=complete_address.size();
+        for(int i=len-1;i>=0;--i)
         {
             if(complete_address[i]=='\\')
             {
-                add_name(num,complete_address.substr(i+1,length-(i+1)),name_suf);
+                add_name(num,complete_address.substr(i+1,len-(i+1)),name_suf);
                 add_address(num,complete_address.substr(0,i));
                 return;
             }
