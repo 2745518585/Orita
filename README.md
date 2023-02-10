@@ -82,7 +82,7 @@
 
 `-std=c++14 -O2 -Wl,--stack=2147483647`。
 
-### change_data
+### chdata
 
 `change_data [/f input_file output_file] [/s] [/t time]`
 

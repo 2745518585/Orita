@@ -2,7 +2,6 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-const int N=1001;
 int check_main(int argc,char **argv)
 {
     init_parameter(argc,argv);

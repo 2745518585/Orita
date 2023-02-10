@@ -2,7 +2,7 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-int change_data(int argc,char **argv)
+int chdata(int argc,char **argv)
 {
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=2)
@@ -39,7 +39,7 @@ int change_data(int argc,char **argv)
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=change_data(argc,argv);
+    int exit_code=chdata(argc,argv);
     End();
     return exit_code;
 }

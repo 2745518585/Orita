@@ -2,7 +2,7 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-int set_file_main(int argc,char **argv)
+int setfile_main(int argc,char **argv)
 {
     init_parameter(argc,argv);
     for(int i=1;i<=__NAME__custom_tot;++i)
@@ -18,7 +18,7 @@ int set_file_main(int argc,char **argv)
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=set_file_main(argc,argv);
+    int exit_code=setfile_main(argc,argv);
     End();
     return exit_code;
 }
