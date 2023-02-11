@@ -153,7 +153,7 @@ void make_scheme(int num)
     {
         string solved_old_name=solve_name(old_name),solved_new_name=solve_name(new_name);
         cout<<solved_old_name<<" -> "<<solved_new_name<<endl;
-        if(system("ren \""+solved_old_name+"\" \""+solved_new_name+"\""+system_to_nul)==0)
+        if(system("copy \""+solved_old_name+"\" \"renamed\\"+solved_new_name+"\""+system_to_nul)==0)
         {
             print_result(__PRINT__Success);
             ++sum;
@@ -186,6 +186,7 @@ int changna_main(int argc,char **argv)
             max_value[i]=stoi(get_parameter(to_string(i),2));
         }
     }
+    system("mkdir renamed"+system_to_nul);
     make_scheme(1);
     return 0;
 }
