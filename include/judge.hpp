@@ -11,7 +11,7 @@ namespace Judge
     bool if_end;
     int compare()
     {
-        ifstream infile1(get_complete_address(__NAME__judge_out)),infile2(get_complete_address(__NAME__judge_ans));
+        ifstream infile1(UTF8toGB(get_complete_address(__NAME__judge_out))),infile2(UTF8toGB(get_complete_address(__NAME__judge_ans)));
         string str1,str2;
         bool empty1=0,empty2=0;
         while(true)
