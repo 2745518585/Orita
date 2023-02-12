@@ -128,7 +128,6 @@ string solve_value(string str)
     while(top2>0) compute();
     if(len_begin==-1) return to_string(sta1[1]);
     char buf[N];
-    cout<<"%."+str.substr(len_begin,str.size()-len_begin)+"d"<<endl;
     sprintf(buf,("%."+str.substr(len_begin,str.size()-len_begin)+"d").c_str(),sta1[1]);
     return buf;
 }

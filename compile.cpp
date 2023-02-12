@@ -18,10 +18,11 @@ int compile_main(int argc,char **argv)
         string files;
         while(file>>files)
         {
+            files=GBtoUTF8(files);
             add_file(__NAME__compile_file,files);
             if(get_name_suf(__NAME__compile_file)==".cpp"&&get_name(__NAME__compile_file)!="compile.cpp")
             {
-                cout<<get_name(__NAME__compile_file)<<":\n";
+                cout<<UTF8toGB(get_name(__NAME__compile_file))<<":\n";
                 if(compile(__NAME__compile_file,compile_parameter)==0) print_result(__PRINT__Success);
                 else print_result(__PRINT__CE);
             }

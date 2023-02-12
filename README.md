@@ -10,13 +10,7 @@
 
 首先将 `Orita\` 目录加入环境变量。
 
-在 `Orita\` 目录下使用 `g++ init_Orita.cpp -o init_Orita.exe -std=c++14 -O2 -I include` 编译得到 `init_Orita.exe`。
-
 然后运行 `init_Orita` 命令。
-
-然后在 `Orita\` 目录下使用 `g++ compile.cpp -o compile.exe -std=c++14 -O2 -I include` 编译得到 `complie.exe`。
-
-然后在 `Orita\` 目录下运行 `complie`，编译其它文件。
 
 出现奇怪问题需要初始化也可以使用 `init_Orita` 清空配置。
 
