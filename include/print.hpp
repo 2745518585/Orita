@@ -1,21 +1,21 @@
 #ifndef _FILE_PRINT
 #define _FILE_PRINT _FILE_PRINT
 #include"init.hpp"
-#define __PRINT__Success -1
-#define __PRINT__Fail -2
-#define __PRINT__AC 0
-#define __PRINT__WA 1
-#define __PRINT__RE 2
-#define __PRINT__TLE_CA 3
-#define __PRINT__TLE_WA 4
-#define __PRINT__TLE_O 5
-#define __PRINT__CE 6
-#define __PRINT__DS 7
-#define __PRINT__SR 8
-#define __PRINT__SA 9
-#define __PRINT__DA 10
-#define __PRINT__NF 50
-#define __PRINT__II 51
+#define _Success -1
+#define _Fail -2
+#define _AC 0
+#define _WA 1
+#define _RE 2
+#define _TLE_CA 3
+#define _TLE_WA 4
+#define _TLE_O 5
+#define _CE 6
+#define _DS 7
+#define _SR 8
+#define _SA 9
+#define _DA 10
+#define _NF 50
+#define _II 51
 namespace Print
 {
     void change_color(int intensity,int red,int green,int blue)
@@ -26,13 +26,13 @@ namespace Print
     {
         if(result<0)
         {
-            if(result==__PRINT__Success)
+            if(result==_Success)
             {
                 change_color(1,0,1,0);
                 cout<<"\nSuccess\n\n";
                 change_color(1,1,1,1);
             }
-            if(result==__PRINT__Fail)
+            if(result==_Fail)
             {
                 change_color(1,1,0,0);
                 cout<<"\nFail\n\n";
@@ -40,79 +40,79 @@ namespace Print
             }
             return;
         }
-        if(result==__PRINT__AC)
+        if(result==_AC)
         {
             change_color(1,0,1,0);
             cout<<"\nAccepted\n"<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__WA)
+        if(result==_WA)
         {
             change_color(1,1,0,0);
             cout<<"\nWrong Answer\n"<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__RE)
+        if(result==_RE)
         {
             change_color(1,1,0,1);
             cout<<"\nRuntime Error\nexit with code "<<information<<"\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__TLE_CA)
+        if(result==_TLE_CA)
         {
             change_color(1,0,0,1);
             cout<<"\nTime Limit Error\n"<<information<<"ms\n\nCorrect Answer\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__TLE_WA)
+        if(result==_TLE_WA)
         {
             change_color(1,0,0,1);
             cout<<"\nTime Limit Error\n"<<information<<"ms\n\nWrong Answer\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__TLE_O)
+        if(result==_TLE_O)
         {
             change_color(1,0,0,1);
             cout<<"\nTime Limit Error\nover "<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__CE)
+        if(result==_CE)
         {
             change_color(1,1,1,0);
             cout<<"\nCompile Error\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__DS)
+        if(result==_DS)
         {
             change_color(1,1,1,0);
             cout<<"\nDangerous syscalls\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__SR)
+        if(result==_SR)
         {
             change_color(1,0,1,0);
             cout<<"\nSuccess run\n"<<information<<"ms\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__SA)
+        if(result==_SA)
         {
             change_color(1,0,1,0);
             cout<<"\nSame Answer\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__DA)
+        if(result==_DA)
         {
             change_color(1,1,0,0);
             cout<<"\nDifferent Answer\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__NF)
+        if(result==_NF)
         {
             change_color(1,0,1,1);
             cout<<"\nNo such file\n\n";
             change_color(1,1,1,1);
         }
-        if(result==__PRINT__II)
+        if(result==_II)
         {
             change_color(1,0,1,1);
             cout<<"\nInvalid input\n\n";
@@ -121,18 +121,18 @@ namespace Print
     }
     string get_short_result(int result)
     {
-        if(result==__PRINT__NF) return "NF";
-        if(result==__PRINT__AC) return "AC";
-        if(result==__PRINT__WA) return "WA";
-        if(result==__PRINT__RE) return "RE";
-        if(result==__PRINT__TLE_CA) return "TLE_CA";
-        if(result==__PRINT__TLE_WA) return "TLE_WA";
-        if(result==__PRINT__TLE_O) return "TLE_O";
-        if(result==__PRINT__CE) return "CE";
-        if(result==__PRINT__DS) return "DS";
-        if(result==__PRINT__SR) return "SR";
-        if(result==__PRINT__SA) return "SA";
-        if(result==__PRINT__DA) return "DA";
+        if(result==_NF) return "NF";
+        if(result==_AC) return "AC";
+        if(result==_WA) return "WA";
+        if(result==_RE) return "RE";
+        if(result==_TLE_CA) return "TLE_CA";
+        if(result==_TLE_WA) return "TLE_WA";
+        if(result==_TLE_O) return "TLE_O";
+        if(result==_CE) return "CE";
+        if(result==_DS) return "DS";
+        if(result==_SR) return "SR";
+        if(result==_SA) return "SA";
+        if(result==_DA) return "DA";
         return "";
     }
 }

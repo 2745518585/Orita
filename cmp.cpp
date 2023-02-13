@@ -6,21 +6,21 @@ int cmp_main(int argc,char **argv)
 {
     init_parameter(argc,argv);
     if(get_sum_parameter("f")<2) return 0;
-    add_file(__NAME__judge_out,get_parameter("f",1));
-    add_file(__NAME__judge_ans,get_parameter("f",2));
-    if(find_file(__NAME__judge_out)||find_file(__NAME__judge_ans))
+    add_file(_judge_out,get_parameter("f",1));
+    add_file(_judge_ans,get_parameter("f",2));
+    if(find_file(_judge_out)||find_file(_judge_ans))
     {
-        print_result(__PRINT__NF);
+        print_result(_NF);
         return 1;
     }
     if(compare())
     {
-        print_result(__PRINT__DA);
+        print_result(_DA);
         return 1;
     }
     else
     {
-        print_result(__PRINT__SA);
+        print_result(_SA);
         return 0;
     }
 }

@@ -1,20 +1,20 @@
 #ifndef _FILE_NAME
 #define _FILE_NAME _FILE_NAME
 #include"init.hpp"
-#define __NAME__run_ans 1
-#define __NAME__run_chk 2
-#define __NAME__judge_in 3
-#define __NAME__judge_out 4
-#define __NAME__judge_ans 5
-#define __NAME__check_in 11
-#define __NAME__check_out 12
-#define __NAME__check_ans 13
-#define __NAME__check_chk 14
-#define __NAME__data_in 21
-#define __NAME__data_out 22
-#define __NAME__compile_file 31
-#define __NAME__custom_start 100
-#define __NAME__custom_tot 100
+#define _run_ans 1
+#define _run_chk 2
+#define _judge_in 3
+#define _judge_out 4
+#define _judge_ans 5
+#define _check_in 11
+#define _check_out 12
+#define _check_ans 13
+#define _check_chk 14
+#define _data_in 21
+#define _data_out 22
+#define _compile_file 31
+#define _custom_start 100
+#define _custom_tot 100
 namespace Name
 {
     json name_json;
@@ -88,7 +88,7 @@ namespace Name
     }
     int get_custom_num(string name)
     {
-        return stoi(name.substr(1,name.size()-1))+__NAME__custom_start;
+        return stoi(name.substr(1,name.size()-1))+_custom_start;
     }
     void add_file(int num,string name)
     {

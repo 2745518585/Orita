@@ -3,8 +3,20 @@
 #include<bits/stdc++.h>
 #include<windows.h>
 using namespace std;
+#define _NEQ1 1
+#define _NEQ2 -1
+#define _LES1 2
+#define _LES2 -2
+#define _GRE1 3
+#define _GRE2 -3
+#define _LOE1 4
+#define _LOE2 -4
+#define _GOE1 5
+#define _GOE2 -5
 namespace Data_maker
 {
+    typedef long long ll;
+    typedef unsigned long long ull;
     unsigned int init_rnd()
     {
         ifstream infile(string(getenv("appdata"))+"\\Orita\\random\\seed.txt");
@@ -18,201 +30,59 @@ namespace Data_maker
         return seed;
     }
     mt19937 rd(init_rnd());
+    ull rnd()
+    {
+        return ((ull)rd()<<32)+rd();
+    }
+    ll rnd(ll lim)
+    {
+        return rnd()%lim;
+    }
+    ll rnd(ll llim,ll ulim)
+    {
+        return rnd(ulim-llim+1)+llim;
+    }
+    void rnd_pair(ll &s1,ll &s2,ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
+    {
+        auto checker=[&](ll s1,ll s2)
+        {
+            if(opra==_NEQ1||opra==_NEQ2) return s1!=s2;
+            if(opra==_LES1||opra==_LES2) return s1<s2;
+            if(opra==_GRE1||opra==_GRE2) return s1>s2;
+            if(opra==_LOE1||opra==_LOE2) return s1<=s2;
+            if(opra==_GOE1||opra==_GOE2) return s1>=s2;
+        };
+        s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
+        while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
+    }
     bool if_pair;
-    long long last_pair;
-    unsigned long long rnd()
+    ll pair_second;
+    ll rnd_pair(ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
     {
-        return ((unsigned long long)rd()<<32)+rd();
-    }
-    long long rnd(long long limit)
-    {
-        return rnd()%limit;
-    }
-    long long rnd(long long Llimit,long long Ulimit)
-    {
-        return rnd(Ulimit-Llimit+1)+Llimit;
-    }
-    long long rnd_neq(long long limit)
-    {
-        long long num;
         if(if_pair==true)
         {
-            num=rnd(limit);
-            while(!(num!=last_pair)) num=rnd(limit);
             if_pair=false;
+            return pair_second;
         }
-        else
+        auto checker=[&](ll s1,ll s2)
         {
-            num=rnd(limit);
-            last_pair=num,if_pair=true;
-        }
-        return num;
-    }
-    long long rnd_gre(long long limit)
-    {
-        long long num;
-        if(if_pair==true)
-        {
-            num=rnd(limit);
-            while(!(num>last_pair)) num=rnd(limit);
-            if_pair=false;
-        }
-        else
-        {
-            num=rnd(limit)+rnd(limit)+1;
-            while(!(num<limit)) num=rnd(limit)+rnd(limit)+1;
-            last_pair=num,if_pair=true;
-        }
-        return num;
-    }
-    long long rnd_les(long long limit)
-    {
-        long long num;
-        if(if_pair==true)
-        {
-            num=rnd(limit);
-            while(!(num<last_pair)) num=rnd(limit);
-            if_pair=false;
-        }
-        else
-        {
-            num=rnd(limit)+rnd(limit)-(limit-1)+1;
-            while(!(num>=0)) num=rnd(limit)+rnd(limit)-(limit-1)-1;
-            last_pair=num,if_pair=true;
-        }
-        return num;
-    }
-    long long rnd_goe(long long limit)
-    {
-        long long num;
-        if(if_pair==true)
-        {
-            num=rnd(limit);
-            while(!(num>=last_pair)) num=rnd(limit);
-            if_pair=false;
-        }
-        else
-        {
-            num=rnd(limit)+rnd(limit);
-            while(!(num<limit)) num=rnd(limit)+rnd(limit);
-            last_pair=num,if_pair=true;
-        }
-        return num;
-    }
-    long long rnd_loe(long long limit)
-    {
-        long long num;
-        if(if_pair==true)
-        {
-            num=rnd(limit);
-            while(!(num<=last_pair)) num=rnd(limit);
-            if_pair=false;
-        }
-        else
-        {
-            num=rnd(limit)+rnd(limit)-(limit-1);
-            while(!(num>=0)) num=rnd(limit)+rnd(limit)-(limit-1);
-            last_pair=num,if_pair=true;
-        }
-        return num;
-    }
-    void print_rnd_neq(long long limit,string mid,string end)
-    {
-        long long num1=rnd_neq(limit),num2=rnd_neq(limit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_gre(long long limit,string mid,string end)
-    {
-        long long num1=rnd_gre(limit),num2=rnd_les(limit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_les(long long limit,string mid,string end)
-    {
-        long long num1=rnd_les(limit),num2=rnd_gre(limit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_goe(long long limit,string mid,string end)
-    {
-        long long num1=rnd_goe(limit),num2=rnd_loe(limit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_loe(long long limit,string mid,string end)
-    {
-        long long num1=rnd_loe(limit),num2=rnd_goe(limit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    long long rnd_neq(long long Llimit,long long Ulimit)
-    {
-        if(Llimit>Ulimit) swap(Llimit,Ulimit);
-        return rnd_neq(Ulimit-Llimit+1)+Llimit;
-    }
-    long long rnd_gre(long long Llimit,long long Ulimit)
-    {
-        if(Llimit>Ulimit) swap(Llimit,Ulimit);
-        return rnd_gre(Ulimit-Llimit+1)+Llimit;
-    }
-    long long rnd_les(long long Llimit,long long Ulimit)
-    {
-        if(Llimit>Ulimit) swap(Llimit,Ulimit);
-        return rnd_les(Ulimit-Llimit+1)+Llimit;
-    }
-    long long rnd_goe(long long Llimit,long long Ulimit)
-    {
-        if(Llimit>Ulimit) swap(Llimit,Ulimit);
-        return rnd_goe(Ulimit-Llimit+1)+Llimit;
-    }
-    long long rnd_loe(long long Llimit,long long Ulimit)
-    {
-        if(Llimit>Ulimit) swap(Llimit,Ulimit);
-        return rnd_loe(Ulimit-Llimit+1)+Llimit;
-    }
-    void print_rnd_neq(long long Llimit,long long Ulimit,string mid,string end)
-    {
-        long long num1=rnd_neq(Llimit,Ulimit),num2=rnd_neq(Llimit,Ulimit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_gre(long long Llimit,long long Ulimit,string mid,string end)
-    {
-        long long num1=rnd_gre(Llimit,Ulimit),num2=rnd_les(Llimit,Ulimit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_les(long long Llimit,long long Ulimit,string mid,string end)
-    {
-        long long num1=rnd_les(Llimit,Ulimit),num2=rnd_gre(Llimit,Ulimit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_goe(long long Llimit,long long Ulimit,string mid,string end)
-    {
-        long long num1=rnd_goe(Llimit,Ulimit),num2=rnd_loe(Llimit,Ulimit);
-        cout<<num1<<mid<<num2<<end;
-    }
-    void print_rnd_loe(long long Llimit,long long Ulimit,string mid,string end)
-    {
-        long long num1=rnd_loe(Llimit,Ulimit),num2=rnd_goe(Llimit,Ulimit);
-        cout<<num1<<mid<<num2<<end;
+            if(opra==_NEQ1||opra==_NEQ2) return s1!=s2;
+            if(opra==_LES1||opra==_LES2) return s1<s2;
+            if(opra==_GRE1||opra==_GRE2) return s1>s2;
+            if(opra==_LOE1||opra==_LOE2) return s1<=s2;
+            if(opra==_GOE1||opra==_GOE2) return s1>=s2;
+        };
+        ll s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
+        while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
+        if_pair=true;
+        if(opra<0) swap(s1,s2);
+        pair_second=s2;
+        return s1;
     }
 }
 long long rnd() {return Data_maker::rnd();}
-long long rnd(long long limit) {return Data_maker::rnd(limit);}
-long long rnd(long long Llimit,long long Ulimit) {return Data_maker::rnd(Llimit,Ulimit);}
-long long rnd_neq(long long limit) {return Data_maker::rnd_neq(limit);}
-long long rnd_gre(long long limit) {return Data_maker::rnd_gre(limit);}
-long long rnd_les(long long limit) {return Data_maker::rnd_les(limit);}
-long long rnd_goe(long long limit) {return Data_maker::rnd_goe(limit);}
-long long rnd_loe(long long limit) {return Data_maker::rnd_loe(limit);}
-void print_rnd_neq(long long limit,string mid,string end) {Data_maker::print_rnd_neq(limit,mid,end);}
-void print_rnd_gre(long long limit,string mid,string end) {Data_maker::print_rnd_gre(limit,mid,end);}
-void print_rnd_les(long long limit,string mid,string end) {Data_maker::print_rnd_les(limit,mid,end);}
-void print_rnd_goe(long long limit,string mid,string end) {Data_maker::print_rnd_goe(limit,mid,end);}
-void print_rnd_loe(long long limit,string mid,string end) {Data_maker::print_rnd_loe(limit,mid,end);}
-long long rnd_neq(long long Llimit,long long Ulimit) {return Data_maker::rnd_neq(Llimit,Ulimit);}
-long long rnd_gre(long long Llimit,long long Ulimit) {return Data_maker::rnd_gre(Llimit,Ulimit);}
-long long rnd_les(long long Llimit,long long Ulimit) {return Data_maker::rnd_les(Llimit,Ulimit);}
-long long rnd_goe(long long Llimit,long long Ulimit) {return Data_maker::rnd_goe(Llimit,Ulimit);}
-long long rnd_loe(long long Llimit,long long Ulimit) {return Data_maker::rnd_loe(Llimit,Ulimit);}
-void print_rnd_neq(long long Llimit,long long Ulimit,string mid,string end) {Data_maker::print_rnd_neq(Llimit,Ulimit,mid,end);}
-void print_rnd_gre(long long Llimit,long long Ulimit,string mid,string end) {Data_maker::print_rnd_gre(Llimit,Ulimit,mid,end);}
-void print_rnd_les(long long Llimit,long long Ulimit,string mid,string end) {Data_maker::print_rnd_les(Llimit,Ulimit,mid,end);}
-void print_rnd_goe(long long Llimit,long long Ulimit,string mid,string end) {Data_maker::print_rnd_goe(Llimit,Ulimit,mid,end);}
-void print_rnd_loe(long long Llimit,long long Ulimit,string mid,string end) {Data_maker::print_rnd_loe(Llimit,Ulimit,mid,end);}
+long long rnd(long long lim) {return Data_maker::rnd(lim);}
+long long rnd(long long llim,long long ulim) {return Data_maker::rnd(llim,ulim);}
+void rnd_pair(long long &s1,long long &s2,long long llim1,long long ulim1,long long llim2,long long ulim2,int opra) {Data_maker::rnd_pair(s1,s2,llim1,ulim1,llim2,ulim2,opra);}
+long long rnd_pair(long long llim1,long long ulim1,long long llim2,long long ulim2,int opra) {return Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,opra);}
 #endif

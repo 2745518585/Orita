@@ -7,15 +7,15 @@ int chdata(int argc,char **argv)
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=2)
     {
-        add_file(__NAME__data_in,get_parameter("f",1));
-        add_file(__NAME__data_out,get_parameter("f",2));
-        if(find_file(__NAME__data_in)||find_file(__NAME__data_out))
+        add_file(_data_in,get_parameter("f",1));
+        add_file(_data_out,get_parameter("f",2));
+        if(find_file(_data_in)||find_file(_data_out))
         {
-            print_result(__PRINT__NF);
+            print_result(_NF);
             return 0;
         }
-        copy_source(get_address(__NAME__data_in),get_name(__NAME__data_in),"data","data.in");
-        copy_source(get_address(__NAME__data_out),get_name(__NAME__data_out),"data","data.out");
+        copy_source(get_address(_data_in),get_name(_data_in),"data","data.in");
+        copy_source(get_address(_data_out),get_name(_data_out),"data","data.out");
     }
     else if(get_sum_parameter("s")!=-1)
     {

@@ -11,7 +11,7 @@ namespace Judge
     bool if_end;
     int compare()
     {
-        ifstream infile1(UTF8toGB(get_complete_address(__NAME__judge_out))),infile2(UTF8toGB(get_complete_address(__NAME__judge_ans)));
+        ifstream infile1(UTF8toGB(get_complete_address(_judge_out))),infile2(UTF8toGB(get_complete_address(_judge_ans)));
         string str1,str2;
         bool empty1=0,empty2=0;
         while(true)
@@ -31,29 +31,29 @@ namespace Judge
     }
     int judge(int ans_num,int chk_num)
     {
-        string run_inst="\""+get_address(ans_num)+"\\"+get_name_pre(ans_num)+".exe\" < \""+get_complete_address(__NAME__judge_in)+"\" > \""+get_complete_address(__NAME__judge_ans)+"\"";
+        string run_inst="\""+get_address(ans_num)+"\\"+get_name_pre(ans_num)+".exe\" < \""+get_complete_address(_judge_in)+"\" > \""+get_complete_address(_judge_ans)+"\"";
         begin_time=clock();
         if(exit_code=system(run_inst))
         {
             if_end=true;
             if(result!=-1) return result;
-            return result=__PRINT__RE;
+            return result=_RE;
         }
         if_end=true;
         if(result!=-1) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         string check_inst;
-        if(chk_num==-1) return result=__PRINT__SR;
-        if(chk_num!=0) check_inst="\""+get_address(chk_num)+"\\"+get_name_pre(chk_num)+".exe\" \""+get_complete_address(__NAME__judge_in)+"\" \""+get_complete_address(__NAME__judge_ans)+"\" \""+get_complete_address(__NAME__judge_out)+"\"";
+        if(chk_num==-1) return result=_SR;
+        if(chk_num!=0) check_inst="\""+get_address(chk_num)+"\\"+get_name_pre(chk_num)+".exe\" \""+get_complete_address(_judge_in)+"\" \""+get_complete_address(_judge_ans)+"\" \""+get_complete_address(_judge_out)+"\"";
         if(chk_num!=0?system(check_inst):compare())
         {
-            if(time>get_time_limit()) result=__PRINT__TLE_WA;
-            else result=__PRINT__WA;
+            if(time>get_time_limit()) result=_TLE_WA;
+            else result=_WA;
         }
         else
         {
-            if(time>get_time_limit()) result=__PRINT__TLE_CA;
-            else result=__PRINT__AC;
+            if(time>get_time_limit()) result=_TLE_CA;
+            else result=_AC;
         }
         return result;
     }
@@ -70,12 +70,12 @@ namespace Judge
             if(if_end)
             {
                 while(result==-1) Sleep(5);
-                if(result==__PRINT__RE) print_result(result,exit_code);
+                if(result==_RE) print_result(result,exit_code);
                 else print_result(result,time);
                 return 0;
             }
         }
-        result=__PRINT__TLE_O;
+        result=_TLE_O;
         system("taskkill /f /pid "+get_name_pre(ans_num)+".exe"+system_to_nul);
         print_result(result,time_limit*2);
         while(if_end==false) Sleep(5);

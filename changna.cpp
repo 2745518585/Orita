@@ -154,10 +154,10 @@ void make_scheme(int num)
         cout<<solved_old_name<<" -> "<<solved_new_name<<endl;
         if(system("copy \""+solved_old_name+"\" \"renamed\\"+solved_new_name+"\""+system_to_nul)==0)
         {
-            print_result(__PRINT__Success);
+            print_result(_Success);
             ++sum;
         }
-        else print_result(__PRINT__Fail);
+        else print_result(_Fail);
         return;
     }
     for(value[num]=min_value[num];value[num]<=max_value[num];++value[num]) make_scheme(num+1);
@@ -167,14 +167,14 @@ int changna_main(int argc,char **argv)
     init_parameter(argc,argv);
     if(get_sum_parameter("f")<2)
     {
-        print_result(__PRINT__II);
+        print_result(_II);
         return 1;
     }
     old_name=get_parameter("f",1);
     new_name=get_parameter("f",2);
     if(check_name(get_parameter("f",1))||check_name(get_parameter("f",2)))
     {
-        print_result(__PRINT__II);
+        print_result(_II);
         return 1;
     }
     for(int i=1;i<=9;++i)

@@ -5,39 +5,39 @@ using namespace std;
 int judge_main(int argc,char **argv)
 {
     init_parameter(argc,argv);
-    if(get_sum_parameter("f")>=1) add_file(__NAME__run_ans,get_parameter("f",1),".cpp");
+    if(get_sum_parameter("f")>=1) add_file(_run_ans,get_parameter("f",1),".cpp");
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
     bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
     {
         use_checker=true;
-        if(get_sum_parameter("c")>=1) add_file(__NAME__run_chk,get_parameter("c",1),".cpp");
+        if(get_sum_parameter("c")>=1) add_file(_run_chk,get_parameter("c",1),".cpp");
     }
-    if(find_file(__NAME__run_ans)) {cout<<"\nans:";print_result(__PRINT__NF);return 0;}
-    if(use_checker&&find_file(__NAME__run_chk)) {cout<<"\nchecker:";print_result(__PRINT__NF);return 0;}
+    if(find_file(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
+    if(use_checker&&find_file(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     if(get_sum_parameter("d")<2)
     {
-        print_result(__PRINT__Success);
+        print_result(_Success);
         return 0;
     }
-    if(find_dangerous_syscalls(__NAME__run_ans)) {print_result(__PRINT__DS);return 0;}
-    if(compile(__NAME__run_ans)) {print_result(__PRINT__CE);return 0;}
-    if(use_checker&&compile(__NAME__run_chk)) {compile(__PRINT__CE);return 0;}
+    if(find_dangerous_syscalls(_run_ans)) {print_result(_DS);return 0;}
+    if(compile(_run_ans)) {print_result(_CE);return 0;}
+    if(use_checker&&compile(_run_chk)) {compile(_CE);return 0;}
     string name_pre=get_parameter("d",1);
     ofstream file(UTF8toGB("result.txt"));
     int total_sum=stoi(get_parameter("d",2)),ac_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
         cout<<"#"<<i<<"--------------------------------------------------"<<"\n";
-        add_address(__NAME__judge_in,running_address);
-        add_name(__NAME__judge_in,name_pre+to_string(i)+".in");
-        add_address(__NAME__judge_out,running_address);
-        add_name(__NAME__judge_out,name_pre+to_string(i)+".out");
-        add_address(__NAME__judge_ans,running_address);
-        add_name(__NAME__judge_ans,name_pre+to_string(i)+".ans");
-        if(find_file(__NAME__judge_in)) {print_result(__PRINT__NF);file<<i<<":\t"<<get_short_result(__PRINT__NF)<<"\n";continue;}
-        if(find_file(__NAME__judge_out)) {print_result(__PRINT__NF);file<<i<<":\t"<<get_short_result(__PRINT__NF)<<"\n";continue;}
-        print_judge_monitor(__NAME__run_ans,use_checker?__NAME__run_chk:0);
+        add_address(_judge_in,running_address);
+        add_name(_judge_in,name_pre+to_string(i)+".in");
+        add_address(_judge_out,running_address);
+        add_name(_judge_out,name_pre+to_string(i)+".out");
+        add_address(_judge_ans,running_address);
+        add_name(_judge_ans,name_pre+to_string(i)+".ans");
+        if(find_file(_judge_in)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
+        if(find_file(_judge_out)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
+        print_judge_monitor(_run_ans,use_checker?_run_chk:0);
         if(Judge::result==0) ++ac_sum;
         file<<i<<":\t"<<get_short_result(Judge::result)<<"\n";
     }
