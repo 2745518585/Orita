@@ -1,0 +1,16 @@
+<mxfile host="65bd71144e">
+    <diagram id="PCUlZCbqkJhh2yZWfRsj" name="第 1 页">
+        <mxGraphModel dx="1119" dy="779" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="13" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.partConcEllipse;startAngle=0.762705336833058;endAngle=0.5931401935198142;arcWidth=0.3;pointerEvents=0;fontFamily=Helvetica;fontSize=12;fontColor=#000000;fillColor=#fa6800;strokeColor=none;gradientColor=#FFB366;gradientDirection=west;shadow=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="240" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.rect;fillColor2=none;strokeWidth=1;size=20;indent=5;pointerEvents=0;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#FF8000;gradientColor=#FFB366;strokeColor=none;gradientDirection=east;shadow=1;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="240" width="30" height="200" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

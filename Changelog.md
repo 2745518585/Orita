@@ -1,4 +1,4 @@
-# Changelog
+# Change Log
 
 ## Dev 0.0
 
