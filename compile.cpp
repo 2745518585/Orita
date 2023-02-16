@@ -35,7 +35,7 @@ int compile_main(int argc,char **argv)
         for(int i=1;i<=get_sum_parameter("f");++i)
         {
             add_file(_compile_file,get_parameter("f",i),".cpp");
-            cout<<get_name(_compile_file)<<"\n";
+            cout<<UTF8toGB(get_name(_compile_file))<<"\n";
             if(compile(_compile_file,compile_parameter)==0) print_result(_Success);
             else print_result(_CE);
         }
