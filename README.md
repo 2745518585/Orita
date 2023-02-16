@@ -229,3 +229,33 @@
 #### 默认编译参数
 
 `-std=c++14 -O2 -Wl,--stack=2147483647`。
+
+### changna
+
+`changna /f old_name new_name /i min_i max_i`
+
+#### 描述
+
+给定文件名表达式，批量重命名。
+
+#### 参数列表
+
+`/f old_name new_name`    指定旧文件名表达式和新文件名表达式。
+
+`/i min_i max_i`    指定参数 $i$ 的值域。
+
+#### 表达式规范
+
+使用形如 `:x1:,format` 的表达式表示一个变量，`,format` 可以省略。$x1$ 表示参数 $i$，会以 `format` 的格式输出（默认为 `%d`）。
+
+形如 `:s:` 的表达式表示当前文件编号，即已经成功重命名的文件个数 $+1$。
+
+#### 返回值说明
+
+`old_name -> new_name` 尝试将 `old_name` 文件重命名为 `new_name`。
+
+`Success` 成功。
+
+`Fail` 失败，一般为未找到文件。
+
+文件输出在 `renamed\` 目录下。

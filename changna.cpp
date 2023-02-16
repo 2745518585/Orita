@@ -8,7 +8,6 @@ string old_name,new_name;
 int check_value(string str)
 {
     int sum_bracket=0;
-    bool end=false;
     auto check_number=[&](int pos)
     {
         if(pos<0||pos>=str.size()) return false;
@@ -16,11 +15,6 @@ int check_value(string str)
     };
     for(int i=0;i<str.size();++i)
     {
-        if(end)
-        {
-            if(str[i]<'0'||str[i]>'9') return 1;
-            continue;
-        }
         if(str[i]>='0'&&str[i]<='9')
         {
             if(str[i+1]=='x'||str[i+1]=='s') return 1;
@@ -54,7 +48,7 @@ int check_value(string str)
             --sum_bracket;
             if(sum_bracket<0) return 1;
         }
-        else if(str[i]==',') end=true;
+        else if(str[i]==',') break;
         else return 1;
     }
     return 0;
@@ -126,9 +120,9 @@ string solve_value(string str)
         if(str[i]==',') len_begin=i+1;
     }
     while(top2>0) compute();
-    if(len_begin==-1) return to_string(sta1[1]);
     char buf[N];
-    sprintf(buf,("%."+str.substr(len_begin,str.size()-len_begin)+"d").c_str(),sta1[1]);
+    if(len_begin==-1) sprintf(buf,"%d",sta1[1]);
+    else sprintf(buf,str.substr(len_begin,str.size()-len_begin).c_str(),sta1[1]);
     return buf;
 }
 string solve_name(string str)
