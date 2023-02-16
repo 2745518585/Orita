@@ -17,6 +17,29 @@ int chdata(int argc,char **argv)
         copy_source(get_address(_data_in),get_name(_data_in),"data","data.in");
         copy_source(get_address(_data_out),get_name(_data_out),"data","data.out");
     }
+    else if(get_sum_parameter("if")>=1||get_sum_parameter("of")>=1)
+    {
+        if(get_sum_parameter("if")>=1)
+        {
+            add_file(_data_in,get_parameter("if",1));
+            if(find_file(_data_in))
+            {
+                print_result(_NF);
+                return 0;
+            }
+        }
+        if(get_sum_parameter("of")>=1)
+        {
+            add_file(_data_out,get_parameter("of",1));
+            if(find_file(_data_out))
+            {
+                print_result(_NF);
+                return 0;
+            }
+        }
+        if(get_sum_parameter("if")>=1) copy_source(get_address(_data_in),get_name(_data_in),"data","data.in");
+        if(get_sum_parameter("of")>=1) copy_source(get_address(_data_out),get_name(_data_out),"data","data.out");
+    }
     else if(get_sum_parameter("s")!=-1)
     {
         char str;
@@ -31,9 +54,7 @@ int chdata(int argc,char **argv)
     {
         change_time_limit(stoi(get_parameter("t",1)));
     }
-    change_color(1,0,1,0);
-    cout<<"\nSuccess\n\n";
-    change_color(1,1,1,1);
+    print_result(_Success);
     return 0;
 }
 int main(int argc,char **argv)
