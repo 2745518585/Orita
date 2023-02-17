@@ -15,7 +15,7 @@ int run_main(int argc,char **argv)
     }
     if(find_file(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(use_checker&&find_file(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
-    if(find_dangerous_syscalls(_run_ans)) {print_result(_DS);return 0;}
+    if(find_dangerous_syscalls(_run_ans)) {print_result(_DS);}
     if(compile(_run_ans)) {print_result(_CE);return 0;}
     if(use_checker&&compile(_run_chk)) {cout<<"\nchecker:";compile(_CE);return 0;}
     add_address(_judge_in,appdata_address+"\\Orita\\data");

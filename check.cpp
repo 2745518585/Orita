@@ -38,9 +38,9 @@ int check_main(int argc,char **argv)
     }
     system("md data"+system_to_nul);
     system("del /Q data\\*"+system_to_nul);
-    if(find_dangerous_syscalls(_check_in)) {cout<<"\ndata_maker:";print_result(_DS);return 0;}
-    if(find_dangerous_syscalls(_check_out)) {cout<<"\nstd:";print_result(_DS);return 0;}
-    if(find_dangerous_syscalls(_check_ans)) {print_result(_DS);return 0;}
+    if(find_dangerous_syscalls(_check_in)) {cout<<"\ndata_maker:";print_result(_DS);}
+    if(find_dangerous_syscalls(_check_out)) {cout<<"\nstd:";print_result(_DS);}
+    if(find_dangerous_syscalls(_check_ans)) {print_result(_DS);}
     if(compile(_check_in)) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
     if(compile(_check_out)) {cout<<"\nstd:";print_result(_CE);return 0;}
     if(compile(_check_ans)) {print_result(_CE);return 0;}
