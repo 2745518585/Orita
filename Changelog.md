@@ -98,3 +98,9 @@ Orita 第一个正式版本。
 
 - 修复了初始化过程的问题。
 - `compile` 的中文显示问题。
+
+### Dev 0.0.8
+
+#### 新增
+
+- `run` 和 `check` 中找到的  `Dangerous syscalls `仅作为 `warning` 输出，不阻止程序运行。
