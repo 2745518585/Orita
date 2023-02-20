@@ -206,7 +206,7 @@
 
 ### compile
 
-`compile [/f file1 file2 ...] [/o compile_parameter]`
+`compile [/f file1 file2 ...] [/r file] [/o compile_parameter]`
 
 #### 描述
 
@@ -215,6 +215,8 @@
 #### 参数列表
 
 `/f file1 file2 ...`    给定多个编译源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `file` 的文件。如无此参数则编译所在目录下的所有后缀为 `.cpp` 的文件（包括子目录）。
+
+`/r file`    给定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），编译并运行。次参数与 `/f` 冲突，优先级低于 `/f`。
 
 `/o compile_parameter`    给定编译参数。此参数将跟在默认编译参数后，`g++` 会在冲突的参数中选择靠后的参数。
 
