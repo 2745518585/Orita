@@ -40,7 +40,7 @@
 
 `/f file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），程序将从当前目录寻找名为 `file` 的文件作为源文件。如无此参数则以上一次设置的源文件为准。
 
-`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件默认为传统评测，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
+`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件。默认比较器为内置比较器，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
 
 `/t time`    修改默认运行时间限制（单位 ms）。
 
@@ -78,7 +78,7 @@
 
 ### chdata
 
-`change_data [/f input_file output_file] [/s] [/t time]`
+`chdata [/f input_file output_file] [/s] [/t time]`
 
 #### 描述
 
@@ -112,7 +112,7 @@
 
 `/f in_file out_file ans_file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `in_file`，`out_file`，`ans_file` 的文件。如无此参数则以上一次设置的源文件为准。
 
-`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件。默认为传统评测，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
+`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件。默认比较器为内置比较器，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
 
 `/e`    开启对 `in_file` 和 `out_file` 的检查。可能降低运行速度。
 
@@ -166,7 +166,7 @@
 
 ### judge
 
-`judge [/f file] [/c checker] [/d data_pre sum]`
+`judge [/f file] [/c checker] [/d data_pre sum] [/t time]`
 
 #### 描述
 
@@ -176,9 +176,11 @@
 
 `/f file`    指定源文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），程序将从当前目录寻找名为 `file` 的文件作为源文件。如无此参数则以上一次设置的源文件为准。
 
-`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件默认为传统评测，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
+`/c chk_file`    指定 `Special judge` 的 `checker` 文件名（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `chk_file` 的文件。默认比较器为内置比较器，添加此参数即可开启 `Special judge`。未指定文件名以上一次设置的源文件为准。
 
 `/d data_pre sum`    指定数据点的前缀名和个数。程序将从当前目录下寻找名为 `data_pre` + $i$ + `.in` 的文件作为第 $i$ 组输入文件和 `data_pre` + $i$ + `.out` 作为第 $i$ 组输出文件。如无此参数将不会开始评测，仅视为设置参数。
+
+`/t time`    修改默认运行时间限制（单位 ms）。
 
 #### 返回值说明
 
@@ -216,7 +218,7 @@
 
 `/f file1 file2 ...`    给定多个编译源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。程序将从当前目录下寻找名为 `file` 的文件。如无此参数则编译所在目录下的所有后缀为 `.cpp` 的文件（包括子目录）。
 
-`/r file`    给定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），编译并运行。次参数与 `/f` 冲突，优先级低于 `/f`。
+`/r file`    给定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），编译并运行。次参数与 `/f` 冲突，优先级低于 `/f`。添加此参数将没有输出。
 
 `/o compile_parameter`    给定编译参数。此参数将跟在默认编译参数后，`g++` 会在冲突的参数中选择靠后的参数。
 
@@ -263,3 +265,23 @@
 `Fail` 失败，一般为未找到文件。
 
 文件输出在 `renamed\` 目录下。
+
+### cmp
+
+`cmp /f file1 file2`
+
+#### 描述
+
+比较两个文件是否相同。
+
+#### 参数列表
+
+`/f file1 file2`    指定比较的两个文件名。默认忽略行末空格与文末换行。
+
+#### 返回值说明
+
+`No such file`    找不到文件。
+
+`Different Answer`    文件不相同。
+
+`Same Answer`    文件相同。
