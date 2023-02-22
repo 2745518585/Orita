@@ -51,6 +51,7 @@ namespace Data_maker
             if(opra==_GRE1||opra==_GRE2) return s1>s2;
             if(opra==_LOE1||opra==_LOE2) return s1<=s2;
             if(opra==_GOE1||opra==_GOE2) return s1>=s2;
+            return false;
         };
         s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
         while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
@@ -71,6 +72,7 @@ namespace Data_maker
             if(opra==_GRE1||opra==_GRE2) return s1>s2;
             if(opra==_LOE1||opra==_LOE2) return s1<=s2;
             if(opra==_GOE1||opra==_GOE2) return s1>=s2;
+            return false;
         };
         ll s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
         while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
