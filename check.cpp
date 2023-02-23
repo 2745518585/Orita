@@ -18,6 +18,9 @@ int check_main(int argc,char **argv)
         if(get_sum_parameter("of")>=1) add_file(_check_out,get_parameter("of",1),".cpp");
         if(get_sum_parameter("af")>=1) add_file(_check_ans,get_parameter("af",1),".cpp");
     }
+    if(find_name(_check_in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
+    if(find_name(_check_out)) {cout<<"\nstd:";print_result(_NF);return 0;}
+    if(find_name(_check_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
     {
@@ -26,6 +29,7 @@ int check_main(int argc,char **argv)
         {
             add_file(_check_chk,get_parameter("c",1),".cpp");
         }
+        if(find_name(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     }
     if(find_file(_check_in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
     if(find_file(_check_out)) {cout<<"\nstd:";print_result(_NF);return 0;}

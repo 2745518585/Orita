@@ -6,12 +6,14 @@ int run_main(int argc,char **argv)
 {
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=1) add_file(_run_ans,get_parameter("f",1),".cpp");
+    if(find_name(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
     bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
     {
         use_checker=true;
         if(get_sum_parameter("c")>=1) add_file(_run_chk,get_parameter("c",1),".cpp");
+        if(find_name(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     }
     if(find_file(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(use_checker&&find_file(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}

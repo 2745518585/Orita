@@ -17,6 +17,7 @@
 #define _custom_tot 100
 namespace Name
 {
+    const int name_length=3;
     json name_json;
     void begin()
     {
@@ -30,23 +31,27 @@ namespace Name
         file<<setw(4)<<name_json;
         file.close();
     }
+    bool find_name(int num)
+    {
+        return (int)name_json["name"+string(name_length-to_string(num).size(),'0')+to_string(num)].type()!=3;
+    }
     void add_name(int num,string name)
     {
-        name_json["name"+to_string(num)]=name;
+        name_json["name"+string(name_length-to_string(num).size(),'0')+to_string(num)]=name;
     }
     void add_name(int num,string name,string name_suf)
     {
         int length_name=name.size(),length_name_suf=name_suf.size();
         if(!(length_name>=length_name_suf&&name.substr(length_name-length_name_suf,length_name_suf)==name_suf)) name+=name_suf;
-        name_json["name"+to_string(num)]=name;
+        name_json["name"+string(name_length-to_string(num).size(),'0')+to_string(num)]=name;
     };
     string get_name(int num)
     {
-        return name_json["name"+to_string(num)];
+        return name_json["name"+string(name_length-to_string(num).size(),'0')+to_string(num)];
     }
     string get_name_pre(int num)
     {
-        string name=name_json["name"+to_string(num)];
+        string name=name_json["name"+string(name_length-to_string(num).size(),'0')+to_string(num)];
         int len=name.size();
         for(int i=len-1;i>=0;--i)
         {
@@ -60,7 +65,7 @@ namespace Name
     }
     string get_name_suf(int num)
     {
-        string name=name_json["name"+to_string(num)];
+        string name=name_json["name"+string(name_length-to_string(num).size(),'0')+to_string(num)];
         int len=name.size();
         bool if_find=false;
         for(int i=len-1;i>=0;--i)
@@ -76,11 +81,11 @@ namespace Name
     }
     void add_address(int num,string address)
     {
-        name_json["address"+to_string(num)]=address;
+        name_json["address"+string(name_length-to_string(num).size(),'0')+to_string(num)]=address;
     }
     string get_address(int num)
     {
-        return name_json["address"+to_string(num)];
+        return name_json["address"+string(name_length-to_string(num).size(),'0')+to_string(num)];
     }
     string get_complete_address(int num)
     {
@@ -143,6 +148,7 @@ namespace Name
         add_address(num,"");
     }
 }
+bool find_name(int num) {return Name::find_name(num);}
 void add_name(int num,string name) {Name::add_name(num,name);}
 void add_name(int num,string name,string name_suf) {Name::add_name(num,name,name_suf);}
 string get_name(int num) {return Name::get_name(num);}
