@@ -101,8 +101,10 @@ Orita 第一个正式版本。
 
 ### Dev 0.0.8
 
+2023-02-17
+
 #### 新增
 
-- `run` 和 `check` 中找到的  `Dangerous syscalls `仅作为 `warning` 输出，不阻止程序运行。
+- `run` 和 `check` 中找到的  `Dangerous syscalls` 仅作为 `warning` 输出，不阻止程序运行。
 - `compile` `/r` 命令，编译并运行文件。
 - 调用上次的文件名之前检查是否存在。
