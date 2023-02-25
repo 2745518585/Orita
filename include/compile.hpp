@@ -17,7 +17,7 @@ namespace Compile
         if(get_name_suf(name_num)!=".cpp") return -1;
         string name=get_name_pre(name_num),address=get_address(name_num);
         ifstream infile(UTF8toGB(address+"\\"+name+".cpp"));
-        ofstream outfile(UTF8toGB(appdata_address+"\\Orita\\source\\"+name+".cpp"));
+        ofstream outfile(UTF8toGB(appdata_address+"\\Orita\\temp\\"+name+".cpp"));
         string str;
         while(getline(infile,str))
         {
@@ -25,20 +25,20 @@ namespace Compile
         }
         infile.close();
         outfile.close();
-        system("g++ -E \""+appdata_address+"\\Orita\\source\\"+name+".cpp\" > \""+appdata_address+"\\Orita\\source\\"+name+".e\" "+default_compile_parameter+" "+compile_parameter);
-        system("del /Q \""+appdata_address+"\\Orita\\source\\"+name+".cpp\"");
-        infile.open(UTF8toGB(appdata_address+"\\Orita\\source\\"+name+".e"));
+        system("g++ -E \""+appdata_address+"\\Orita\\temp\\"+name+".cpp\" > \""+appdata_address+"\\Orita\\temp\\"+name+".e\" "+default_compile_parameter+" "+compile_parameter);
+        system("del /Q \""+appdata_address+"\\Orita\\temp\\"+name+".cpp\"");
+        infile.open(UTF8toGB(appdata_address+"\\Orita\\temp\\"+name+".e"));
         while(getline(infile,str))
         {
             if(str.find("fopen")!=string::npos||str.find("freopen")!=string::npos||str.find("ifstream")!=string::npos||str.find("ofstream")!=string::npos||str.find("fstream")!=string::npos||str.find("system")!=string::npos)
             {
                 infile.close();
-                system("del /Q \""+appdata_address+"\\Orita\\source\\"+name+".e\"");
+                system("del /Q \""+appdata_address+"\\Orita\\temp\\"+name+".e\"");
                 return 1;
             }
         }
         infile.close();
-        system("del /Q \""+appdata_address+"\\Orita\\source\\"+name+".e\"");
+        system("del /Q \""+appdata_address+"\\Orita\\temp\\"+name+".e\"");
         return 0;
     }
 }

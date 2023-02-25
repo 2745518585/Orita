@@ -53,5 +53,7 @@ void init()
     getcwd(temp,1000);
     running_address=GBtoUTF8(temp);
     appdata_address=GBtoUTF8(getenv("appdata"));
+    system("del /Q "+appdata_address+"\\Orita\\source\\*"+system_to_nul);
+    system("del /Q "+appdata_address+"\\Orita\\temp\\*"+system_to_nul);
 }
 #endif
