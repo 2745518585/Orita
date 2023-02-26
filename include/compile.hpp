@@ -7,15 +7,15 @@ namespace Compile
     string default_compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
     int compile(int name_num,string compile_parameter)
     {
-        if(get_name_suf(name_num)!=".cpp") return -1;
-        string name=get_name_pre(name_num),address=get_address(name_num);
+        if(get_namesuf(name_num)!=".cpp") return -1;
+        string name=get_namepre(name_num),address=get_address(name_num);
         system("taskkill /f /pid "+name+".exe"+system_to_nul);
         return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+default_compile_parameter+" "+compile_parameter)!=0;
     }
     int find_dangerous_syscalls(int name_num,string compile_parameter)
     {
-        if(get_name_suf(name_num)!=".cpp") return -1;
-        string name=get_name_pre(name_num),address=get_address(name_num);
+        if(get_namesuf(name_num)!=".cpp") return -1;
+        string name=get_namepre(name_num),address=get_address(name_num);
         ifstream infile(UTF8toGB(address+"\\"+name+".cpp"));
         ofstream outfile(UTF8toGB(appdata_address+"\\Orita\\temp\\"+name+".cpp"));
         string str;

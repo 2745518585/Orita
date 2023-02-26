@@ -56,4 +56,11 @@ void init()
     system("del /Q "+appdata_address+"\\Orita\\source\\*"+system_to_nul);
     system("del /Q "+appdata_address+"\\Orita\\temp\\*"+system_to_nul);
 }
+template<typename T>
+string to_string(T num,int len)
+{
+    string str=to_string(num);
+    if(str.size()>len) return str;
+    return string(len-str.size(),'0')+str;
+}
 #endif

@@ -14,8 +14,8 @@ int chdata(int argc,char **argv)
             print_result(_NF);
             return 0;
         }
-        copy_source(get_address(_data_in),get_name(_data_in),"data","data.in");
-        copy_source(get_address(_data_out),get_name(_data_out),"data","data.out");
+        copy_source(get_address(_data_in),get_filename(_data_in),"data","data.in");
+        copy_source(get_address(_data_out),get_filename(_data_out),"data","data.out");
     }
     else if(get_sum_parameter("if")>=1||get_sum_parameter("of")>=1)
     {
@@ -37,8 +37,8 @@ int chdata(int argc,char **argv)
                 return 0;
             }
         }
-        if(get_sum_parameter("if")>=1) copy_source(get_address(_data_in),get_name(_data_in),"data","data.in");
-        if(get_sum_parameter("of")>=1) copy_source(get_address(_data_out),get_name(_data_out),"data","data.out");
+        if(get_sum_parameter("if")>=1) copy_source(get_address(_data_in),get_filename(_data_in),"data","data.in");
+        if(get_sum_parameter("of")>=1) copy_source(get_address(_data_out),get_filename(_data_out),"data","data.out");
     }
     else if(get_sum_parameter("s")!=-1)
     {

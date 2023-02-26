@@ -11,7 +11,7 @@ namespace Judge
     bool if_end;
     int compare()
     {
-        ifstream infile1(UTF8toGB(get_complete_address(_judge_out))),infile2(UTF8toGB(get_complete_address(_judge_ans)));
+        ifstream infile1(UTF8toGB(get_name(_judge_out))),infile2(UTF8toGB(get_name(_judge_ans)));
         string str1,str2;
         bool empty1=0,empty2=0;
         while(true)
@@ -31,7 +31,7 @@ namespace Judge
     }
     int judge(int ans_num,int chk_num)
     {
-        string run_inst="\""+get_address(ans_num)+"\\"+get_name_pre(ans_num)+".exe\" < \""+get_complete_address(_judge_in)+"\" > \""+get_complete_address(_judge_ans)+"\"";
+        string run_inst="\""+get_address(ans_num)+"\\"+get_namepre(ans_num)+".exe\" < \""+get_name(_judge_in)+"\" > \""+get_name(_judge_ans)+"\"";
         begin_time=clock();
         if(exit_code=system(run_inst))
         {
@@ -44,7 +44,7 @@ namespace Judge
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         string check_inst;
         if(chk_num==-1) return result=_SR;
-        if(chk_num!=0) check_inst="\""+get_address(chk_num)+"\\"+get_name_pre(chk_num)+".exe\" \""+get_complete_address(_judge_in)+"\" \""+get_complete_address(_judge_ans)+"\" \""+get_complete_address(_judge_out)+"\"";
+        if(chk_num!=0) check_inst="\""+get_address(chk_num)+"\\"+get_namepre(chk_num)+".exe\" \""+get_name(_judge_in)+"\" \""+get_name(_judge_ans)+"\" \""+get_name(_judge_out)+"\"";
         if(chk_num!=0?system(check_inst):compare())
         {
             if(time>get_time_limit()) result=_TLE_WA;
@@ -76,7 +76,7 @@ namespace Judge
             }
         }
         result=_TLE_O;
-        system("taskkill /f /pid "+get_name_pre(ans_num)+".exe"+system_to_nul);
+        system("taskkill /f /pid "+get_namepre(ans_num)+".exe"+system_to_nul);
         print_result(result,time_limit*2);
         while(if_end==false) Sleep(5);
         return 1;
@@ -84,7 +84,7 @@ namespace Judge
     void running(int run_num,string parameter)
     {
         begin_time=clock();
-        exit_code=system(get_address(run_num)+"\\"+get_name_pre(run_num)+".exe "+parameter);
+        exit_code=system(get_address(run_num)+"\\"+get_namepre(run_num)+".exe "+parameter);
         if_end=true;
     }
     int run_monitor(int run_num,string parameter)
@@ -97,7 +97,7 @@ namespace Judge
         {
             if(if_end) return 0;
         }
-        system("taskkill /f /pid "+get_name_pre(run_num)+".exe"+system_to_nul);
+        system("taskkill /f /pid "+get_namepre(run_num)+".exe"+system_to_nul);
         return 1;
     }
 }

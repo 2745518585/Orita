@@ -1,7 +1,6 @@
 rmdir /s /Q "%appdata%\Orita" > nul 2>&1
 mkdir "%appdata%\Orita" > nul 2>&1
-mkdir "%appdata%\Orita\name" > nul 2>&1
-echo {} > "%appdata%\Orita\name\name.json"
+echo {} > "%appdata%\Orita\name.json"
 mkdir "%appdata%\Orita\data" > nul 2>&1
 echo {"time":1000} > "%appdata%\Orita\data\data.json"
 echo. > "%appdata%\Orita\data\data.in"
