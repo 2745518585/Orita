@@ -108,3 +108,16 @@ Orita 第一个正式版本。
 - `run` 和 `check` 中找到的  `Dangerous syscalls` 仅作为 `warning` 输出，不阻止程序运行。
 - `compile` `/r` 命令，编译并运行文件。
 - 调用上次的文件名之前检查是否存在。
+
+### Dev 0.0.9
+
+2023-02-26
+
+#### 代码
+
+- 使用 `json` 储存参数。
+- 从主要使用 `name` 传文件变为 `string` 传文件。
+
+#### 新增
+
+- 对于错误参数报 `Invalid input`。

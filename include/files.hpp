@@ -3,25 +3,20 @@
 #include"name.hpp"
 namespace Files
 {
-    int copy_source(string file_address,string file_name,string copy_address,string copy_name)
+    int copy_source(string file,string copy)
     {
-        return system("copy \""+file_address+"\\"+file_name+"\" \""+appdata_address+"\\Orita\\"+copy_address+"\\"+copy_name+"\""+system_to_nul);
+        return system("copy \""+file+"\" \""+appdata_address+"\\Orita\\"+copy+"\""+system_to_nul);
     }
-    int copy_result(string file_address,string file_name,string copy_address,string copy_name)
+    int copy_result(string file,string copy)
     {
-        return system("copy \""+appdata_address+"\\Orita\\"+file_address+"\\"+file_name+"\" \""+copy_address+"\\"+copy_name+"\""+system_to_nul);
+        return system("copy \""+appdata_address+"\\Orita\\"+file+"\" \""+copy+"\""+system_to_nul);
     }
-    int find_file(int name_num)
+    int find_file(string file)
     {
-        return system("dir \""+get_name(name_num)+"\""+system_to_nul);
-    }
-    int find_file(string address)
-    {
-        return system("dir \""+address+"\""+system_to_nul);
+        return system("dir \""+file+"\""+system_to_nul);
     }
 }
-int copy_source(string file_address,string file_name,string copy_address,string copy_name) {return Files::copy_source(file_address,file_name,copy_address,copy_name);}
-int copy_result(string file_address,string file_name,string copy_address,string copy_name) {return Files::copy_result(file_address,file_name,copy_address,copy_name);}
-int find_file(int name_num) {return Files::find_file(name_num);}
-int find_file(string address) {return Files::find_file(address);}
+int copy_source(string file,string copy) {return Files::copy_source(file,copy);}
+int copy_result(string file,string copy) {return Files::copy_result(file,copy);}
+int find_file(string file) {return Files::find_file(file);}
 #endif

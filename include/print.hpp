@@ -119,6 +119,12 @@ namespace Print
             change_color(1,1,1,1);
         }
     }
+    void print_judge_result(int result,int time,int exit_code,int time_limit)
+    {
+        if(result==_RE) print_result(result,exit_code);
+        else if(result==_TLE_O) print_result(result,time_limit*2);
+        else print_result(result,time);
+    }
     string get_short_result(int result)
     {
         if(result==_NF) return "NF";
@@ -139,5 +145,6 @@ namespace Print
 void change_color(int intensity,int red,int green,int blue) {Print::change_color(intensity,red,green,blue);}
 void print_result(int result,int information) {Print::print_result(result,information);}
 void print_result(int result) {Print::print_result(result,0);}
+void print_judge_result(int result,int time,int exit_code,int time_limit) {Print::print_judge_result(result,time,exit_code,time_limit);}
 string get_short_result(int result) {return Print::get_short_result(result);}
 #endif

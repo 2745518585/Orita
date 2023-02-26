@@ -7,22 +7,22 @@ int chdata(int argc,char **argv)
     init_parameter(argc,argv);
     if(get_sum_parameter("f")>=2)
     {
-        add_file(_data_in,get_parameter("f",1));
-        add_file(_data_out,get_parameter("f",2));
-        if(find_file(_data_in)||find_file(_data_out))
+        string in_file=get_file(get_parameter("f",1)),out_file=get_file(get_parameter("f",2));
+        if(find_file(in_file)||find_file(out_file))
         {
             print_result(_NF);
             return 0;
         }
-        copy_source(get_address(_data_in),get_filename(_data_in),"data","data.in");
-        copy_source(get_address(_data_out),get_filename(_data_out),"data","data.out");
+        copy_source(in_file,"data\\data.in");
+        copy_source(out_file,"data\\data.out");
     }
     else if(get_sum_parameter("if")>=1||get_sum_parameter("of")>=1)
     {
+        string in_file,out_file;
         if(get_sum_parameter("if")>=1)
         {
-            add_file(_data_in,get_parameter("if",1));
-            if(find_file(_data_in))
+            in_file=get_file(get_parameter("if",1));
+            if(find_file(in_file))
             {
                 print_result(_NF);
                 return 0;
@@ -30,15 +30,15 @@ int chdata(int argc,char **argv)
         }
         if(get_sum_parameter("of")>=1)
         {
-            add_file(_data_out,get_parameter("of",1));
-            if(find_file(_data_out))
+            out_file=get_file(get_parameter("of",1));
+            if(find_file(out_file))
             {
                 print_result(_NF);
                 return 0;
             }
         }
-        if(get_sum_parameter("if")>=1) copy_source(get_address(_data_in),get_filename(_data_in),"data","data.in");
-        if(get_sum_parameter("of")>=1) copy_source(get_address(_data_out),get_filename(_data_out),"data","data.out");
+        if(get_sum_parameter("if")>=1) copy_source(in_file,"data\\data.in");
+        if(get_sum_parameter("of")>=1) copy_source(out_file,"data\\data.out");
     }
     else if(get_sum_parameter("s")!=-1)
     {

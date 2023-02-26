@@ -9,9 +9,16 @@ namespace Judge
     int result,time,time_limit,exit_code;
     clock_t begin_time;
     bool if_end;
-    int compare()
+    string in_file,out_file,ans_file;
+    void begin()
     {
-        ifstream infile1(UTF8toGB(get_name(_judge_out))),infile2(UTF8toGB(get_name(_judge_ans)));
+        in_file=appdata_address+"\\Orita\\data\\data.in";
+        out_file=appdata_address+"\\Orita\\data\\data.out";
+        ans_file=appdata_address+"\\Orita\\data\\data.ans";
+    }
+    int compare(string file1,string file2)
+    {
+        ifstream infile1(UTF8toGB(file1)),infile2(UTF8toGB(file2));
         string str1,str2;
         bool empty1=0,empty2=0;
         while(true)
@@ -29,9 +36,14 @@ namespace Judge
         }
         return 0;
     }
-    int judge(int ans_num,int chk_num)
+    int check_ans(string chk)
     {
-        string run_inst="\""+get_address(ans_num)+"\\"+get_namepre(ans_num)+".exe\" < \""+get_name(_judge_in)+"\" > \""+get_name(_judge_ans)+"\"";
+        if(chk=="<1>") return compare(out_file,ans_file);
+        else return system("\""+get_address(chk)+"\\"+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\"");
+    }
+    int judge(string ans,string chk)
+    {
+        string run_inst="\""+get_address(ans)+"\\"+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
         begin_time=clock();
         if(exit_code=system(run_inst))
         {
@@ -43,9 +55,8 @@ namespace Judge
         if(result!=-1) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         string check_inst;
-        if(chk_num==-1) return result=_SR;
-        if(chk_num!=0) check_inst="\""+get_address(chk_num)+"\\"+get_namepre(chk_num)+".exe\" \""+get_name(_judge_in)+"\" \""+get_name(_judge_ans)+"\" \""+get_name(_judge_out)+"\"";
-        if(chk_num!=0?system(check_inst):compare())
+        if(chk=="<0>") return result=_SR;
+        if(check_ans(chk))
         {
             if(time>get_time_limit()) result=_TLE_WA;
             else result=_WA;
@@ -57,52 +68,51 @@ namespace Judge
         }
         return result;
     }
-    int print_judge_monitor(int ans_num,int chk_num)
+    int judge_monitor(string ans,string chk)
     {
         if_end=false;
         result=-1;
         time_limit=get_time_limit();
         begin_time=-1;
-        thread(judge,ans_num,chk_num).detach();
+        thread(judge,ans,chk).detach();
         while(begin_time==-1||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
             Sleep(5);
             if(if_end)
             {
                 while(result==-1) Sleep(5);
-                if(result==_RE) print_result(result,exit_code);
-                else print_result(result,time);
                 return 0;
             }
         }
         result=_TLE_O;
-        system("taskkill /f /pid "+get_namepre(ans_num)+".exe"+system_to_nul);
-        print_result(result,time_limit*2);
+        system("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
         while(if_end==false) Sleep(5);
         return 1;
     }
-    void running(int run_num,string parameter)
+    void running(string ans,string parameter)
     {
         begin_time=clock();
-        exit_code=system(get_address(run_num)+"\\"+get_namepre(run_num)+".exe "+parameter);
+        exit_code=system(get_address(ans)+"\\"+get_namepre(ans)+".exe "+parameter);
         if_end=true;
     }
-    int run_monitor(int run_num,string parameter)
+    int run_monitor(string ans,string parameter)
     {
         if_end=false;
         time_limit=get_time_limit();
         begin_time=-1;
-        thread(running,run_num,parameter).detach();
+        thread(running,ans,parameter).detach();
         while(begin_time==-1||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
             if(if_end) return 0;
         }
-        system("taskkill /f /pid "+get_namepre(run_num)+".exe"+system_to_nul);
+        system("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
         return 1;
     }
 }
-int compare() {return Judge::compare();}
-int judge(int name_num,int chk_num) {return Judge::judge(name_num,chk_num);}
-int print_judge_monitor(int name_num,int chk_num) {return Judge::print_judge_monitor(name_num,chk_num);}
-int run_monitor(int run_num,string parameter) {return Judge::run_monitor(run_num,parameter);}
+int compare(string file1,string file2) {return Judge::compare(file1,file2);}
+int check_ans(string chk) {return Judge::check_ans(chk);}
+int judge(string ans,string chk) {return Judge::judge(ans,chk);}
+int judge_monitor(string ans,string chk) {return Judge::judge_monitor(ans,chk);}
+int run_monitor(string ans,string parameter) {return Judge::run_monitor(ans,parameter);}
+void print_judge_result() {Print::print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);}
 #endif

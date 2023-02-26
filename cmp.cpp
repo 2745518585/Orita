@@ -6,14 +6,14 @@ int cmp_main(int argc,char **argv)
 {
     init_parameter(argc,argv);
     if(get_sum_parameter("f")<2) return 0;
-    add_file(_judge_out,get_parameter("f",1));
-    add_file(_judge_ans,get_parameter("f",2));
-    if(find_file(_judge_out)||find_file(_judge_ans))
+    string file1=get_file(get_parameter("f",1));
+    string file2=get_file(get_parameter("f",2));
+    if(find_file(file1)||find_file(file2))
     {
         print_result(_NF);
         return 1;
     }
-    if(compare())
+    if(compare(file1,file2))
     {
         print_result(_DA);
         return 1;

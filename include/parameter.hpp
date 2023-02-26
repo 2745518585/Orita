@@ -3,58 +3,38 @@
 #include"init.hpp"
 namespace Parameter
 {
-    const int N=1001;
-    string parameter[N][N],name_parameter[N];
-    int tot,sum_parameter[N];
-    void init_parameter(int argc,char **argv)
+    json parameter;
+    int init_parameter(int argc,char **argv)
     {
-        for(int i=0;i<=N-1;++i) sum_parameter[i]=-1;
         for(int i=1;i<=argc-1;++i)
         {
             if(argv[i][0]=='/')
             {
-                sum_parameter[++tot]=0;
-                name_parameter[tot]=GBtoUTF8(argv[i]+1);
+                string para=GBtoUTF8(argv[i]+1);
                 int j=1;
                 for(;i+j<=argc-1&&argv[i+j][0]!='/';++j)
                 {
-                    parameter[tot][j]=GBtoUTF8(argv[i+j]);
-                    ++sum_parameter[tot];
+                    parameter[para][j]=GBtoUTF8(argv[i+j]);
                 }
+                parameter[para][0]=j-1;
                 i+=j-1;
             }
+            else return 1;
         }
+        return 0;
     }
-    string get_parameter(string name,int num2)
+    string get_parameter(string name,int num)
     {
-        int num=0;
-        for(int i=1;i<=tot;++i)
-        {
-            if(name==name_parameter[i])
-            {
-                num=i;
-                break;
-            }
-        }
-        if(num==0||num2>sum_parameter[num]) return NULL;
-        return parameter[num][num2];
+        if((int)parameter[name].type()==0||(int)parameter[name][num].type()==0) return NULL;
+        return parameter[name][num];
     }
     int get_sum_parameter(string name)
     {
-        int num=0;
-        for(int i=1;i<=tot;++i)
-        {
-            if(name==name_parameter[i])
-            {
-                num=i;
-                break;
-            }
-        }
-        if(num==0) return -1;
-        return sum_parameter[num];
+        if((int)parameter[name].type()==0) return -1;
+        return parameter[name][0];
     }
 }
-void init_parameter(int argc,char **argv) {Parameter::init_parameter(argc,argv);}
+int init_parameter(int argc,char **argv) {return Parameter::init_parameter(argc,argv);}
 string get_parameter(string name,int num2) {return Parameter::get_parameter(name,num2);}
 int get_sum_parameter(string name) {return Parameter::get_sum_parameter(name);}
 #endif

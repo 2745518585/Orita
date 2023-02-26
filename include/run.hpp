@@ -10,6 +10,7 @@
 void Begin()
 {
     init();
+    Judge::begin();
     Name::begin();
     Data::begin();
 }

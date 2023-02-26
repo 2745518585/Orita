@@ -3,16 +3,10 @@
 #include"init.hpp"
 #define _run_ans 1
 #define _run_chk 2
-#define _judge_in 3
-#define _judge_out 4
-#define _judge_ans 5
 #define _check_in 11
 #define _check_out 12
 #define _check_ans 13
 #define _check_chk 14
-#define _data_in 21
-#define _data_out 22
-#define _compile_file 31
 const int _custom_start=100,_custom_tot=100;
 namespace Name
 {
@@ -93,19 +87,31 @@ namespace Name
     }
     void add_file(int num,string name)
     {
+        if(name[0]=='<')
+        {
+            add_name(num,name);
+            return;
+        }
         while(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
         if(name[0]==':')
         {
             add_name(num,get_name(get_custom_num(name)));
             return;
         }
-        string complete_address;
-        if(name[1]==':') complete_address=name;
-        else complete_address=running_address+"\\"+name;
-        add_name(num,complete_address);
+        if(name[1]==':') add_name(num,name);
+        else add_name(num,running_address+"\\"+name);
+    }
+    string get_file(string name)
+    {
+        if(name[0]=='<') return name;
+        while(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
+        if(name[0]==':') return get_name(get_custom_num(name));
+        if(name[1]==':') return name;
+        else return running_address+"\\"+name;
     }
     string add_namesuf(string name,string namesuf)
     {
+        if(name[0]=='<') return name;
         if(name.size()<namesuf.size()||name.substr(name.size()-namesuf.size(),namesuf.size())!=namesuf) return name+namesuf;
         return name;
     }
@@ -123,5 +129,6 @@ string get_namesuf(string name) {return Name::get_namesuf(name);}
 string get_namesuf(int num) {return Name::get_namesuf(num);}
 int get_custom_num(string name) {return Name::get_custom_num(name);}
 void add_file(int num,string name) {return Name::add_file(num,name);}
+string get_file(string name) {return Name::get_file(name);}
 string add_namesuf(string name,string namesuf) {return Name::add_namesuf(name,namesuf);}
 #endif
