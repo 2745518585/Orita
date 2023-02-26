@@ -2,8 +2,17 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-const int SUM=9,N=1001;
-int sum,value[N],min_value[N],max_value[N];
+const int SUM=9;
+json make_cor_parameter()
+{
+    json cor_parameter={
+        {"f",{-1,2}}
+    };
+    for(int i=1;i<=SUM;++i) cor_parameter[to_string(i)]={-1,2};
+    return cor_parameter;
+}
+json cor_parameter=make_cor_parameter();
+int sum,value[1001],min_value[1001],max_value[1001];
 string old_name,new_name;
 int check_value(string str)
 {
@@ -69,8 +78,8 @@ int check_name(string str)
 }
 string solve_value(string str)
 {
-    int sta1[N],top1=0,top2=0;
-    char sta2[N];
+    int sta1[1001],top1=0,top2=0;
+    char sta2[1001];
     auto check_number=[&](int pos)
     {
         if(pos<0||pos>=str.size()) return false;
@@ -120,7 +129,7 @@ string solve_value(string str)
         if(str[i]==',') len_begin=i+1;
     }
     while(top2>0) compute();
-    char buf[N];
+    char buf[1001];
     if(len_begin==-1) sprintf(buf,"%d",sta1[1]);
     else sprintf(buf,str.substr(len_begin,str.size()-len_begin).c_str(),sta1[1]);
     return buf;
@@ -158,7 +167,16 @@ void make_scheme(int num)
 }
 int changna_main(int argc,char **argv)
 {
-    init_parameter(argc,argv);
+    if(init_parameter(argc,argv))
+    {
+        print_result(_II);
+        return 0;
+    }
+    if(check_parameter(cor_parameter))
+    {
+        print_result(_II);
+        return 0;
+    }
     if(get_sum_parameter("f")<2)
     {
         print_result(_II);

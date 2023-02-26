@@ -2,9 +2,16 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-int cmp_main(int argc,char **argv)
+json make_cor_parameter()
 {
-    init_parameter(argc,argv);
+    json cor_parameter={
+        {"f",{-1,2}}
+    };
+    return cor_parameter;
+}
+json cor_parameter=make_cor_parameter();
+int cmp_main()
+{
     if(get_sum_parameter("f")<2) return 0;
     string file1=get_file(get_parameter("f",1));
     string file2=get_file(get_parameter("f",2));
@@ -27,7 +34,17 @@ int cmp_main(int argc,char **argv)
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=cmp_main(argc,argv);
+    if(init_parameter(argc,argv))
+    {
+        print_result(_II);
+        return 0;
+    }
+    if(check_parameter(cor_parameter))
+    {
+        print_result(_II);
+        return 0;
+    }
+    int exit_code=cmp_main();
     End();
     return exit_code;
 }

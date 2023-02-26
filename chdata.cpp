@@ -2,9 +2,20 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-int chdata(int argc,char **argv)
+json make_cor_parameter()
 {
-    init_parameter(argc,argv);
+    json cor_parameter={
+        {"f",{-1,2}},
+        {"if",{-1,1}},
+        {"of",{-1,1}},
+        {"s",{-1,0,1}},
+        {"t",{-1,1}}
+    };
+    return cor_parameter;
+}
+json cor_parameter=make_cor_parameter();
+int chdata_main()
+{
     if(get_sum_parameter("f")>=2)
     {
         string in_file=get_file(get_parameter("f",1)),out_file=get_file(get_parameter("f",2));
@@ -60,7 +71,17 @@ int chdata(int argc,char **argv)
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=chdata(argc,argv);
+    if(init_parameter(argc,argv))
+    {
+        print_result(_II);
+        return 0;
+    }
+    if(check_parameter(cor_parameter))
+    {
+        print_result(_II);
+        return 0;
+    }
+    int exit_code=chdata_main();
     End();
     return exit_code;
 }

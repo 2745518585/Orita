@@ -3,9 +3,18 @@
 #include"run.hpp"
 using namespace std;
 string compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
-int compile_main(int argc,char **argv)
+json make_cor_parameter()
 {
-    init_parameter(argc,argv);
+    json cor_parameter={
+        {"f",{-2}},
+        {"r",{-1,1}},
+        {"o",{-2}}
+    };
+    return cor_parameter;
+}
+json cor_parameter=make_cor_parameter();
+int compile_main()
+{
     if(get_sum_parameter("o")!=-1)
     {
         for(int i=1;i<=get_sum_parameter("o");++i) compile_parameter=compile_parameter+" "+get_parameter("o",i);
@@ -53,7 +62,17 @@ int compile_main(int argc,char **argv)
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=compile_main(argc,argv);
+    if(init_parameter(argc,argv))
+    {
+        print_result(_II);
+        return 0;
+    }
+    if(check_parameter(cor_parameter))
+    {
+        print_result(_II);
+        return 0;
+    }
+    int exit_code=compile_main();
     End();
     return exit_code;
 }

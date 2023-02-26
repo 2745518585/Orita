@@ -2,18 +2,28 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-int judge_main(int argc,char **argv)
+json make_cor_parameter()
 {
-    init_parameter(argc,argv);
+    json cor_parameter={
+        {"f",{-1,1}},
+        {"c",{-1,0,1}},
+        {"t",{-1,1}},
+        {"d",{-1,2}}
+    };
+    return cor_parameter;
+}
+json cor_parameter=make_cor_parameter();
+int judge_main()
+{
     // init name
     string ans,chk;
-    if(get_sum_parameter("f")>=1) add_file(_run_ans,get_parameter("f",1));
+    if(get_sum_parameter("f")==1) add_file(_run_ans,get_parameter("f",1));
     if(find_name(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     ans=add_namesuf(get_name(_run_ans),".cpp");
     bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
     {
-        if(get_sum_parameter("c")>=1) add_file(_run_chk,get_parameter("c",1));
+        if(get_sum_parameter("c")==1) add_file(_run_chk,get_parameter("c",1));
         if(find_name(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
         chk=add_namesuf(get_name(_run_chk),".cpp");
         if(chk[0]!='<') use_checker=true;
@@ -23,8 +33,8 @@ int judge_main(int argc,char **argv)
     if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(use_checker&&find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     // init time
-    if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
-    if(get_sum_parameter("d")<2)
+    if(get_sum_parameter("t")==1) change_time_limit(stoi(get_parameter("t",1)));
+    if(get_sum_parameter("d")==-1)
     {
         print_result(_Success);
         return 0;
@@ -57,7 +67,17 @@ int judge_main(int argc,char **argv)
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=judge_main(argc,argv);
+    if(init_parameter(argc,argv))
+    {
+        print_result(_II);
+        return 0;
+    }
+    if(check_parameter(cor_parameter))
+    {
+        print_result(_II);
+        return 0;
+    }
+    int exit_code=judge_main();
     End();
     return exit_code;
 }

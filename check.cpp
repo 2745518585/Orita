@@ -2,13 +2,27 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-int check_main(int argc,char **argv)
+json make_cor_parameter()
 {
-    init_parameter(argc,argv);
-    system("del /Q \""+appdata_address+"\\Orita\\source\\*.cpp\")"+system_to_nul);
+    json cor_parameter={
+        {"f",{-1,3}},
+        {"if",{-1,1}},
+        {"of",{-1,1}},
+        {"af",{-1,1}},
+        {"c",{-1,0,1}},
+        {"n",{-1,1}},
+        {"e",{-1,0}},
+        {"p",{-1,0}},
+        {"t",{-1,1}}
+    };
+    return cor_parameter;
+}
+json cor_parameter=make_cor_parameter();
+int check_main()
+{
     // init name
     string in,out,ans,chk;
-    if(get_sum_parameter("f")>=3)
+    if(get_sum_parameter("f")==3)
     {
         add_file(_check_in,get_parameter("f",1));
         add_file(_check_out,get_parameter("f",2));
@@ -29,7 +43,7 @@ int check_main(int argc,char **argv)
     bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
     {
-        if(get_sum_parameter("c")>=1) add_file(_check_chk,get_parameter("c",1));
+        if(get_sum_parameter("c")==1) add_file(_check_chk,get_parameter("c",1));
         if(find_name(_check_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
         chk=add_namesuf(get_name(_check_chk),".cpp");
         if(chk[0]!='<') use_checker=true;
@@ -40,9 +54,9 @@ int check_main(int argc,char **argv)
     if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(use_checker&&find_file(chk)) {print_result(_NF);return 0;}
     // init time
-    if(get_sum_parameter("t")>=1) change_time_limit(stoi(get_parameter("t",1)));
+    if(get_sum_parameter("t")==1) change_time_limit(stoi(get_parameter("t",1)));
     // init total sum
-    if(get_sum_parameter("n")<1)
+    if(get_sum_parameter("n")==-1)
     {
         print_result(_Success);
         return 0;
@@ -143,7 +157,17 @@ int check_main(int argc,char **argv)
 int main(int argc,char **argv)
 {
     Begin();
-    int exit_code=check_main(argc,argv);
+    if(init_parameter(argc,argv))
+    {
+        print_result(_II);
+        return 0;
+    }
+    if(check_parameter(cor_parameter))
+    {
+        print_result(_II);
+        return 0;
+    }
+    int exit_code=check_main();
     End();
     return exit_code;
 }
