@@ -2,7 +2,6 @@
 #include<windows.h>
 #include"run.hpp"
 using namespace std;
-string compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
 json make_cor_parameter()
 {
     json cor_parameter={
@@ -15,6 +14,7 @@ json make_cor_parameter()
 json cor_parameter=make_cor_parameter();
 int compile_main()
 {
+    string compile_parameter="";
     if(get_sum_parameter("o")!=-1)
     {
         for(int i=1;i<=get_sum_parameter("o");++i) compile_parameter=compile_parameter+" "+get_parameter("o",i);

@@ -1,16 +1,16 @@
 #ifndef _FILE_COMPILE
 #define _FILE_COMPILE _FILE_COMPILE
 #include"name.hpp"
+#include"data.hpp"
 #include"print.hpp"
 namespace Compile
 {
-    string default_compile_parameter="-std=c++14 -O2 -Wl,--stack=2147483647";
     int compile(string ans,string compile_parameter)
     {
         if(get_namesuf(ans)!=".cpp") return -1;
         string name=get_namepre(ans),address=get_address(ans);
         system("taskkill /f /pid "+name+".exe"+system_to_nul);
-        return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+default_compile_parameter+" "+compile_parameter)!=0;
+        return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+get_compile_parameter()+" "+compile_parameter)!=0;
     }
     int find_dangerous_syscalls(string ans,string compile_parameter)
     {
@@ -25,7 +25,7 @@ namespace Compile
         }
         infile.close();
         outfile.close();
-        system("g++ -E \""+appdata_address+"\\Orita\\temp\\"+namepre+".cpp\" > \""+appdata_address+"\\Orita\\temp\\"+namepre+".e\" "+default_compile_parameter+" "+compile_parameter);
+        system("g++ -E \""+appdata_address+"\\Orita\\temp\\"+namepre+".cpp\" > \""+appdata_address+"\\Orita\\temp\\"+namepre+".e\" "+get_compile_parameter()+" "+compile_parameter);
         system("del /Q \""+appdata_address+"\\Orita\\temp\\"+namepre+".cpp\"");
         infile.open(UTF8toGB(appdata_address+"\\Orita\\temp\\"+namepre+".e"));
         while(getline(infile,str))
