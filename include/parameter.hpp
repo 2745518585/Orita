@@ -10,11 +10,11 @@ namespace Parameter
         {
             if(argv[i][0]=='/')
             {
-                string para=GBtoUTF8(argv[i]+1);
+                string para=argv[i]+1;
                 int j=1;
                 for(;i+j<=argc-1&&argv[i+j][0]!='/';++j)
                 {
-                    parameter[para][j]=GBtoUTF8(argv[i+j]);
+                    parameter[para][j]=argv[i+j];
                 }
                 parameter[para][0]=j-1;
                 i+=j-1;

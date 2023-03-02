@@ -54,10 +54,10 @@ int chdata_main()
     else if(get_sum_parameter("s")!=-1)
     {
         char str;
-        FILE *file=fopen(UTF8toGB(appdata_address+"\\Orita\\data\\data.in").c_str(),"w");
+        FILE *file=fopen((appdata_address+"\\Orita\\data\\data.in").c_str(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
-        file=fopen(UTF8toGB(appdata_address+"\\Orita\\data\\data.out").c_str(),"w");
+        file=fopen((appdata_address+"\\Orita\\data\\data.out").c_str(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
     }
@@ -71,16 +71,8 @@ int chdata_main()
 int main(int argc,char **argv)
 {
     Begin();
-    if(init_parameter(argc,argv))
-    {
-        print_result(_II);
-        return 0;
-    }
-    if(check_parameter(cor_parameter))
-    {
-        print_result(_II);
-        return 0;
-    }
+    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
+    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=chdata_main();
     End();
     return exit_code;

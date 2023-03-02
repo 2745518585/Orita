@@ -14,13 +14,13 @@ namespace Name
     json name_json;
     void begin()
     {
-        ifstream file(UTF8toGB(appdata_address+"\\Orita\\name.json"));
+        ifstream file(appdata_address+"\\Orita\\name.json");
         file>>name_json;
         file.close();
     }
     void end()
     {
-        ofstream file(UTF8toGB(appdata_address+"\\Orita\\name.json"));
+        ofstream file(appdata_address+"\\Orita\\name.json");
         file<<setw(4)<<name_json;
         file.close();
     }
@@ -30,11 +30,11 @@ namespace Name
     }
     void add_name(int num,string name)
     {
-        name_json["name"+to_string(num,name_len)]=name;
+        name_json["name"+to_string(num,name_len)]=GBtoUTF8(name);
     }
     string get_name(int num)
     {
-        return name_json["name"+to_string(num,name_len)];
+        return UTF8toGB(name_json["name"+to_string(num,name_len)]);
     }
     string get_filename(string name)
     {

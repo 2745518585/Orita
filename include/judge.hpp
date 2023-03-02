@@ -18,7 +18,7 @@ namespace Judge
     }
     int compare(string file1,string file2)
     {
-        ifstream infile1(UTF8toGB(file1)),infile2(UTF8toGB(file2));
+        ifstream infile1(file1),infile2(file2);
         string str1,str2;
         bool empty1=0,empty2=0;
         while(true)

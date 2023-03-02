@@ -167,16 +167,8 @@ void make_scheme(int num)
 }
 int changna_main(int argc,char **argv)
 {
-    if(init_parameter(argc,argv))
-    {
-        print_result(_II);
-        return 0;
-    }
-    if(check_parameter(cor_parameter))
-    {
-        print_result(_II);
-        return 0;
-    }
+    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
+    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     if(get_sum_parameter("f")<2)
     {
         print_result(_II);

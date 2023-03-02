@@ -20,39 +20,52 @@ json make_cor_parameter()
 json cor_parameter=make_cor_parameter();
 int check_main()
 {
+    auto check_file=[&](int num)
+    {
+        if(find_name(num)) return 1;
+        if(find_file(add_namesuf(get_name(num),".cpp"))) return 1;
+        return 0;
+    };
+    auto check_chkfile=[&](int num)
+    {
+        if(find_name(num)) return 1;
+        if(get_name(num)[0]=='<'&&get_name(num)[2]=='>')
+        {
+            if(get_name(num)=="<0>"||get_name(num)=="<1>");
+            else return 1;
+        }
+        else if(find_file(add_namesuf(get_name(num),".cpp"))) return 1;
+        return 0;
+    };
     // init name
-    string in,out,ans,chk;
     if(get_sum_parameter("f")==3)
     {
         add_file(_check_in,get_parameter("f",1));
         add_file(_check_out,get_parameter("f",2));
         add_file(_check_ans,get_parameter("f",3));
+        if(check_file(_check_in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
+        if(check_file(_check_out)) {cout<<"\nstd:";print_result(_NF);return 0;}
+        if(check_file(_check_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     }
     else
     {
-        if(get_sum_parameter("if")>=1) add_file(_check_in,get_parameter("if",1));
-        if(get_sum_parameter("of")>=1) add_file(_check_out,get_parameter("of",1));
-        if(get_sum_parameter("af")>=1) add_file(_check_ans,get_parameter("af",1));
+        if(get_sum_parameter("if")==1) add_file(_check_in,get_parameter("if",1));
+        if(get_sum_parameter("of")==1) add_file(_check_out,get_parameter("of",1));
+        if(get_sum_parameter("af")==1) add_file(_check_ans,get_parameter("af",1));
+        if(get_sum_parameter("if")==1&&check_file(_check_in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
+        if(get_sum_parameter("of")==1&&check_file(_check_out)) {cout<<"\nstd:";print_result(_NF);return 0;}
+        if(get_sum_parameter("af")==1&&check_file(_check_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     }
-    if(find_name(_check_in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
-    if(find_name(_check_out)) {cout<<"\nstd:";print_result(_NF);return 0;}
-    if(find_name(_check_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
-    in=add_namesuf(get_name(_check_in),".cpp");
-    out=add_namesuf(get_name(_check_out),".cpp");
-    ans=add_namesuf(get_name(_check_ans),".cpp");
-    bool use_checker=false;
+    bool use_checker=false,use_file_checker=false;
     if(get_sum_parameter("c")!=-1)
     {
-        if(get_sum_parameter("c")==1) add_file(_check_chk,get_parameter("c",1));
-        if(find_name(_check_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
-        chk=add_namesuf(get_name(_check_chk),".cpp");
-        if(chk[0]!='<') use_checker=true;
+        if(get_sum_parameter("c")==1)
+        {
+            add_file(_check_chk,get_parameter("c",1));
+            if(check_chkfile(_check_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
+        }
+        use_checker=true;
     }
-    else chk="<1>";
-    if(find_file(in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
-    if(find_file(out)) {cout<<"\nstd:";print_result(_NF);return 0;}
-    if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
-    if(use_checker&&find_file(chk)) {print_result(_NF);return 0;}
     // init time
     if(get_sum_parameter("t")==1) change_time_limit(stoi(get_parameter("t",1)));
     // init total sum
@@ -62,11 +75,26 @@ int check_main()
         return 0;
     }
     int total_sum=stoi(get_parameter("n",1));
+    // find file
+    if(check_file(_check_in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
+    if(check_file(_check_out)) {cout<<"\nstd:";print_result(_NF);return 0;}
+    if(check_file(_check_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
+    if(use_checker&&check_chkfile(_check_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
+    string in,out,ans,chk;
+    in=add_namesuf(get_name(_check_in),".cpp");
+    out=add_namesuf(get_name(_check_out),".cpp");
+    ans=add_namesuf(get_name(_check_ans),".cpp");
+    if(use_checker)
+    {
+        if(get_name(_check_chk)[0]=='<') chk=get_name(_check_chk);
+        else chk=add_namesuf(get_name(_check_chk),".cpp"),use_file_checker=true;
+    }
+    else chk="<1>";
     // compile file
-    if(compile(in)) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
-    if(compile(out)) {cout<<"\nstd:";print_result(_CE);return 0;}
-    if(compile(ans)) {print_result(_CE);return 0;}
-    if(use_checker&&compile(chk)) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(in,"data_maker")) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
+    if(print_compile(out,"std")) {cout<<"\nstd:";print_result(_CE);return 0;}
+    if(print_compile(ans,"ans")) {print_result(_CE);return 0;}
+    if(use_file_checker&&print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(in)) {cout<<"\ndata_maker:";print_result(_DS);}
     if(find_dangerous_syscalls(out)) {cout<<"\nstd:";print_result(_DS);}
@@ -157,16 +185,8 @@ int check_main()
 int main(int argc,char **argv)
 {
     Begin();
-    if(init_parameter(argc,argv))
-    {
-        print_result(_II);
-        return 0;
-    }
-    if(check_parameter(cor_parameter))
-    {
-        print_result(_II);
-        return 0;
-    }
+    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
+    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=check_main();
     End();
     return exit_code;

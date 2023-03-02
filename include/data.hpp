@@ -6,13 +6,13 @@ namespace Data
     json data_json;
     void begin()
     {
-        ifstream file(UTF8toGB(appdata_address+"\\Orita\\data.json"));
+        ifstream file(appdata_address+"\\Orita\\data.json");
         file>>data_json;
         file.close();
     }
     void end()
     {
-        ofstream file((UTF8toGB(appdata_address+"\\Orita\\data.json")));
+        ofstream file(appdata_address+"\\Orita\\data.json");
         file<<setw(4)<<data_json;
         file.close();
     }
@@ -26,11 +26,11 @@ namespace Data
     }
     void change_compile_parameter(string para)
     {
-        data_json["compile_parameter"]=para;
+        data_json["compile_parameter"]=GBtoUTF8(para);
     }
     string get_compile_parameter()
     {
-        return data_json["compile_parameter"];
+        return UTF8toGB(data_json["compile_parameter"]);
     }
 }
 void change_time_limit(int time) {Data::change_time_limit(time);}

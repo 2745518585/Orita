@@ -32,14 +32,14 @@ int compile_main()
     else if(get_sum_parameter("f")==-1)
     {
         system("dir /b /s > files.txt");
-        ifstream infile(UTF8toGB("files.txt"));
+        ifstream infile("files.txt");
         string file;
         while(infile>>file)
         {
-            file=GBtoUTF8(file);
+            file=file;
             if(get_namesuf(file)==".cpp"&&get_filename(file)!="compile.cpp")
             {
-                cout<<UTF8toGB(get_filename(file))<<":\n";
+                cout<<get_filename(file)<<":\n";
                 if(!compile(file,compile_parameter)) print_result(_Success);
                 else print_result(_CE);
             }
@@ -52,7 +52,7 @@ int compile_main()
         for(int i=1;i<=get_sum_parameter("f");++i)
         {
             string file=get_file(add_namesuf(get_parameter("f",i),".cpp"));
-            cout<<UTF8toGB(get_filename(file))<<"\n";
+            cout<<get_filename(file)<<"\n";
             if(compile(file,compile_parameter)==0) print_result(_Success);
             else print_result(_CE);
         }
@@ -62,16 +62,8 @@ int compile_main()
 int main(int argc,char **argv)
 {
     Begin();
-    if(init_parameter(argc,argv))
-    {
-        print_result(_II);
-        return 0;
-    }
-    if(check_parameter(cor_parameter))
-    {
-        print_result(_II);
-        return 0;
-    }
+    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
+    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=compile_main();
     End();
     return exit_code;
