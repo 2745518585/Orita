@@ -127,7 +127,7 @@ int check_main()
                 if(run_monitor(in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i))) {cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
                 if(Judge::exit_code!=0) {cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
             }
-            else system(get_address(in)+"\\"+get_namepre(in)+".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
+            else system("\""+get_address(in)+"\\"+get_namepre(in)+"\".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
             Judge::ans_file=appdata_address+"\\Orita\\data\\data.out";
             cout<<"\nans1:";
             judge_monitor(out,"<0>");
@@ -163,8 +163,8 @@ int check_main()
             }
             else
             {
-                system(get_address(in)+"\\"+get_namepre(in)+".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
-                system(get_address(out)+"\\"+get_namepre(out)+".exe < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"");
+                system("\""+get_address(in)+"\\"+get_namepre(in)+".exe\" > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
+                system("\""+get_address(out)+"\\"+get_namepre(out)+".exe\" < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"");
                 ++runned_sum;
             }
             judge_monitor(ans,chk);

@@ -41,7 +41,7 @@ string GBtoUTF8(const string &gb2312)
     delete []str;
     return ss.str();
 }
-string system_to_nul=" > nul 2>&1";
+string system_to_nul=" > nul 2>&1 ";
 int system(string inst)
 {
     return system(("cmd /C \""+inst+"\"").c_str());

@@ -6,14 +6,14 @@ const int SUM=9;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-1,2}}
+        {"f",{1}}
     };
     for(int i=1;i<=SUM;++i) cor_parameter[to_string(i)]={-1,2};
     return cor_parameter;
 }
 json cor_parameter=make_cor_parameter();
 int sum,value[1001],min_value[1001],max_value[1001];
-string old_name,new_name;
+string inst;
 int check_value(string str)
 {
     int sum_bracket=0;
@@ -78,8 +78,9 @@ int check_name(string str)
 }
 string solve_value(string str)
 {
-    int sta1[1001],top1=0,top2=0;
-    char sta2[1001];
+    static int sta1[1001],top1=0,top2=0;
+    static char sta2[1001];
+    top1=0,top2=0;
     auto check_number=[&](int pos)
     {
         if(pos<0||pos>=str.size()) return false;
@@ -129,7 +130,7 @@ string solve_value(string str)
         if(str[i]==',') len_begin=i+1;
     }
     while(top2>0) compute();
-    char buf[1001];
+    static char buf[1001];
     if(len_begin==-1) sprintf(buf,"%d",sta1[1]);
     else sprintf(buf,str.substr(len_begin,str.size()-len_begin).c_str(),sta1[1]);
     return buf;
@@ -153,9 +154,9 @@ void make_scheme(int num)
 {
     if(num==SUM+1)
     {
-        string solved_old_name=solve_name(old_name),solved_new_name=solve_name(new_name);
-        cout<<solved_old_name<<" -> "<<solved_new_name<<endl;
-        if(system("copy \""+solved_old_name+"\" \"renamed\\"+solved_new_name+"\""+system_to_nul)==0)
+        string solved_inst=solve_name(inst);
+        cout<<solved_inst<<"\n";
+        if(system(system_to_nul+solved_inst)==0)
         {
             print_result(_Success);
             ++sum;
@@ -167,16 +168,8 @@ void make_scheme(int num)
 }
 int changna_main(int argc,char **argv)
 {
-    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
-    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
-    if(get_sum_parameter("f")<2)
-    {
-        print_result(_II);
-        return 1;
-    }
-    old_name=get_parameter("f",1);
-    new_name=get_parameter("f",2);
-    if(check_name(get_parameter("f",1))||check_name(get_parameter("f",2)))
+    inst=get_parameter("f",1);
+    if(check_name(get_parameter("f",1)))
     {
         print_result(_II);
         return 1;
@@ -189,13 +182,14 @@ int changna_main(int argc,char **argv)
             max_value[i]=stoi(get_parameter(to_string(i),2));
         }
     }
-    system("mkdir renamed"+system_to_nul);
     make_scheme(1);
     return 0;
 }
 int main(int argc,char **argv)
 {
     Begin();
+    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
+    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=changna_main(argc,argv);
     End();
     return exit_code;
