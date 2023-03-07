@@ -7,12 +7,12 @@ namespace Compile
 {
     int if_end_compile;
     bool if_end_print;
-    int compile(string ans,string compile_parameter)
+    int compile(string ans,string compile_parameter,bool if_print)
     {
         if(get_namesuf(ans)!=".cpp") return -1;
         string name=get_namepre(ans),address=get_address(ans);
         system("taskkill /f /pid "+name+".exe"+system_to_nul);
-        return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+get_compile_parameter()+" "+compile_parameter)!=0;
+        return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+get_compile_parameter()+" "+compile_parameter+(if_print?"":system_to_nul))!=0;
     }
     void printing(string str)
     {
@@ -44,7 +44,7 @@ namespace Compile
         if_end_compile=0;
         if_end_print=false;
         thread(printing,str).detach();
-        int result=compile(ans,compile_parameter);
+        int result=compile(ans,compile_parameter,false);
         if(result) if_end_compile=-1;
         else if_end_compile=1;
         while(!if_end_print) Sleep(5);
@@ -80,7 +80,7 @@ namespace Compile
         return 0;
     }
 }
-int compile(string ans,string compile_parameter="") {return Compile::compile(ans,compile_parameter);}
+int compile(string ans,string compile_parameter="",bool if_print=true) {return Compile::compile(ans,compile_parameter,if_print);}
 int print_compile(string ans,string str,string compile_parameter="") {return Compile::print_compile(ans,str,compile_parameter);}
 int find_dangerous_syscalls(string ans,string compile_parameter="") {return Compile::find_dangerous_syscalls(ans,compile_parameter);}
 #endif
