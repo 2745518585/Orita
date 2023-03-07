@@ -16,11 +16,18 @@
 #define _DA 10
 #define _NF 50
 #define _II 51
+#define _color_white 255,255,255
+#define _color_red 240,0,0
+#define _color_orange 240,160,0
+#define _color_yellow 240,240,0
+#define _color_green 32,224,112
+#define _color_blue 0,176,255
+#define _color_purple 160,0,240
 namespace Print
 {
-    void change_color(int intensity,int red,int green,int blue)
+    void change_color(int red,int green,int blue)
     {
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),(8*intensity)|(4*red)|(2*green)|(blue));
+        cout<<"\e[38;2;"<<red<<";"<<green<<";"<<blue<<"m";
     }
     void print_result(int result,int information)
     {
@@ -28,95 +35,95 @@ namespace Print
         {
             if(result==_Success)
             {
-                change_color(1,0,1,0);
+                change_color(_color_green);
                 cout<<"\nSuccess\n\n";
-                change_color(1,1,1,1);
+                change_color(_color_white);
             }
             if(result==_Fail)
             {
-                change_color(1,1,0,0);
+                change_color(_color_red);
                 cout<<"\nFail\n\n";
-                change_color(1,1,1,1);
+                change_color(_color_white);
             }
             return;
         }
         if(result==_AC)
         {
-            change_color(1,0,1,0);
+            change_color(_color_green);
             cout<<"\nAccepted\n"<<information<<"ms\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_WA)
         {
-            change_color(1,1,0,0);
+            change_color(_color_red);
             cout<<"\nWrong Answer\n"<<information<<"ms\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_RE)
         {
-            change_color(1,1,0,1);
+            change_color(_color_purple);
             cout<<"\nRuntime Error\nexit with code "<<information<<"\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_TLE_CA)
         {
-            change_color(1,0,0,1);
+            change_color(_color_blue);
             cout<<"\nTime Limit Error\n"<<information<<"ms\n\nCorrect Answer\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_TLE_WA)
         {
-            change_color(1,0,0,1);
+            change_color(_color_blue);
             cout<<"\nTime Limit Error\n"<<information<<"ms\n\nWrong Answer\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_TLE_O)
         {
-            change_color(1,0,0,1);
+            change_color(_color_blue);
             cout<<"\nTime Limit Error\nover "<<information<<"ms\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_CE)
         {
-            change_color(1,1,1,0);
+            change_color(_color_yellow);
             cout<<"\nCompile Error\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_DS)
         {
-            change_color(1,1,1,0);
+            change_color(_color_yellow);
             cout<<"\nDangerous syscalls\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_SR)
         {
-            change_color(1,0,1,0);
+            change_color(_color_green);
             cout<<"\nSuccess run\n"<<information<<"ms\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_SA)
         {
-            change_color(1,0,1,0);
+            change_color(_color_green);
             cout<<"\nSame Answer\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_DA)
         {
-            change_color(1,1,0,0);
+            change_color(_color_red);
             cout<<"\nDifferent Answer\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_NF)
         {
-            change_color(1,0,1,1);
+            change_color(_color_orange);
             cout<<"\nNo such file\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
         if(result==_II)
         {
-            change_color(1,0,1,1);
+            change_color(_color_orange);
             cout<<"\nInvalid input\n\n";
-            change_color(1,1,1,1);
+            change_color(_color_white);
         }
     }
     void print_judge_result(int result,int time,int exit_code,int time_limit)
@@ -142,7 +149,7 @@ namespace Print
         return "";
     }
 }
-void change_color(int intensity,int red,int green,int blue) {Print::change_color(intensity,red,green,blue);}
+void change_color(int red,int green,int blue) {Print::change_color(red,green,blue);}
 void print_result(int result,int information) {Print::print_result(result,information);}
 void print_result(int result) {Print::print_result(result,0);}
 void print_judge_result(int result,int time,int exit_code,int time_limit) {Print::print_judge_result(result,time,exit_code,time_limit);}
