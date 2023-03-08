@@ -115,9 +115,9 @@ int check_main()
         cout<<"#"<<i<<"--------------------------------------------------";
         if(runned_sum-ac_sum!=0)
         {
-            change_color(_color_red);
+            change_color("red");
             cout<<" Unaccepted "<<runned_sum-ac_sum;
-            change_color(_color_red);
+            change_color("white");
         }
         cout<<"\n";
         if(use_compare)

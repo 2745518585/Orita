@@ -14,15 +14,11 @@ namespace Name
     json name_json;
     void begin()
     {
-        ifstream file(appdata_address+"\\Orita\\name.json");
-        file>>name_json;
-        file.close();
+        (ifstream)(appdata_address+"\\Orita\\name.json")>>name_json;
     }
     void end()
     {
-        ofstream file(appdata_address+"\\Orita\\name.json");
-        file<<setw(4)<<name_json;
-        file.close();
+        (ofstream)(appdata_address+"\\Orita\\name.json")<<setw(4)<<name_json;
     }
     int find_name(int num)
     {

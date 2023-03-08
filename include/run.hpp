@@ -9,13 +9,14 @@
 #include"files.hpp"
 void Begin()
 {
-    init();
+    Init::begin();
     Judge::begin();
     Name::begin();
     Data::begin();
 }
 void End()
 {
+    Init::end();
     Name::end();
     Data::end();
 }

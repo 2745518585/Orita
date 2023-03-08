@@ -47,20 +47,29 @@ int system(string inst)
     return system(("cmd /C \""+inst+"\"").c_str());
 }
 string running_address,appdata_address;
-void init()
-{
-    char temp[1001];
-    getcwd(temp,1000);
-    running_address=temp;
-    appdata_address=getenv("appdata");
-    system("del /Q "+appdata_address+"\\Orita\\source\\*"+system_to_nul);
-    system("del /Q "+appdata_address+"\\Orita\\temp\\*"+system_to_nul);
-}
+json settings;
 template<typename T>
 string to_string(T num,int len)
 {
     string str=to_string(num);
     if(str.size()>len) return str;
     return string(len-str.size(),'0')+str;
+}
+namespace Init
+{
+    void begin()
+    {
+        char temp[1001];
+        getcwd(temp,1000);
+        running_address=temp;
+        appdata_address=getenv("appdata");
+        system("del /Q "+appdata_address+"\\Orita\\source\\*"+system_to_nul);
+        system("del /Q "+appdata_address+"\\Orita\\temp\\*"+system_to_nul);
+        (ifstream)(appdata_address+"\\Orita\\settings.json")>>settings;
+    }
+    void end()
+    {
+        (ofstream)(appdata_address+"\\Orita\\settings.json")<<setw(4)<<settings;
+    }
 }
 #endif
