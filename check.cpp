@@ -170,7 +170,7 @@ int check_main()
             judge_monitor(ans,chk);
             print_judge_result();
             int result=Judge::result;
-            if(result!=_AC&&result!=_SR&&result!=_SA)
+            if(result>0)
             {
                 copy_result("data\\data.in","data\\"+to_string(i)+".in");
                 copy_result("data\\data.out","data\\"+to_string(i)+".out");

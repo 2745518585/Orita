@@ -1,8 +1,8 @@
 #ifndef _FILE_PRINT
 #define _FILE_PRINT _FILE_PRINT
 #include"init.hpp"
-#define _Success -1
-#define _Fail -2
+#define _Success -2
+#define _SR -1
 #define _AC 0
 #define _WA 1
 #define _RE 2
@@ -11,11 +11,11 @@
 #define _TLE_O 5
 #define _CE 6
 #define _DS 7
-#define _SR 8
 #define _SA 9
 #define _DA 10
 #define _NF 50
 #define _II 51
+#define _Fail 52
 namespace Print
 {
     void change_color(int red,int green,int blue)
@@ -29,21 +29,17 @@ namespace Print
     }
     void print_result(int result,int information)
     {
-        if(result<0)
+        if(result==_Success)
         {
-            if(result==_Success)
-            {
-                change_color("green");
-                cout<<"\nSuccess\n\n";
-                change_color("white");
-            }
-            if(result==_Fail)
-            {
-                change_color("red");
-                cout<<"\nFail\n\n";
-                change_color("white");
-            }
-            return;
+            change_color("green");
+            cout<<"\nSuccess\n\n";
+            change_color("white");
+        }
+        if(result==_Fail)
+        {
+            change_color("red");
+            cout<<"\nFail\n\n";
+            change_color("white");
         }
         if(result==_AC)
         {
