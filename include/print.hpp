@@ -1,8 +1,7 @@
 #ifndef _FILE_PRINT
 #define _FILE_PRINT _FILE_PRINT
 #include"init.hpp"
-#define _Success -2
-#define _SR -1
+#define _Success -50
 #define _AC 0
 #define _WA 1
 #define _RE 2
@@ -89,12 +88,6 @@ namespace Print
             cout<<"\nDangerous syscalls\n\n";
             change_color("white");
         }
-        if(result==_SR)
-        {
-            change_color("green");
-            cout<<"\nSuccess run\n"<<information<<"ms\n\n";
-            change_color("white");
-        }
         if(result==_SA)
         {
             change_color("green");
@@ -137,7 +130,6 @@ namespace Print
         if(result==_TLE_O) return "TLE_O";
         if(result==_CE) return "CE";
         if(result==_DS) return "DS";
-        if(result==_SR) return "SR";
         if(result==_SA) return "SA";
         if(result==_DA) return "DA";
         return "";

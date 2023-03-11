@@ -15,36 +15,19 @@ json make_cor_parameter()
 json cor_parameter=make_cor_parameter();
 int judge_main()
 {
-    auto check_file=[&](int num)
-    {
-        if(find_name(num)) return 1;
-        if(find_file(add_namesuf(get_name(num),".cpp"))) return 1;
-        return 0;
-    };
-    auto check_chkfile=[&](int num)
-    {
-        if(find_name(num)) return 1;
-        if(get_name(num)[0]=='<'&&get_name(num)[2]=='>')
-        {
-            if(get_name(num)=="<0>"||get_name(num)=="<1>");
-            else return 1;
-        }
-        else if(find_file(add_namesuf(get_name(num),".cpp"))) return 1;
-        return 0;
-    };
     // init name
     if(get_sum_parameter("f")==1)
     {
         add_file(_run_ans,get_parameter("f",1));
-        if(check_file(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
+        if(find_file(add_namesuf(get_name(_run_ans),".cpp"))) {cout<<"\nans:";print_result(_NF);return 0;}
     }
-    bool use_checker=false,use_file_checker=false;
+    bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
     {
         if(get_sum_parameter("c")==1)
         {
             add_file(_run_chk,get_parameter("c",1));
-            if(check_chkfile(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
+            if(find_file(add_namesuf(get_name(_run_chk),".cpp"))) {cout<<"\nchecker:";print_result(_NF);return 0;}
         }
         use_checker=true;
     }
@@ -57,19 +40,17 @@ int judge_main()
         return 0;
     }
     // find file
-    if(check_file(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
-    if(use_checker&&check_chkfile(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
+    if(find_name(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
+    if(use_checker&&find_name(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     string ans,chk;
     ans=add_namesuf(get_name(_run_ans),".cpp");
-    if(use_checker)
-    {
-        if(get_name(_run_chk)[0]=='<') chk=get_name(_run_chk);
-        else chk=add_namesuf(get_name(_run_chk),".cpp"),use_file_checker=true;
-    }
-    else chk="<1>";
+    if(use_checker) chk=add_namesuf(get_name(_run_chk),".cpp");
+    else chk=get_file(":1");
+    if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
+    if(find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     // compile file
     if(print_compile(ans,"ans")) {print_result(_CE);return 0;}
-    if(use_file_checker&&print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(ans)) {print_result(_DS);}
     string name_pre=get_parameter("d",1);
@@ -82,7 +63,7 @@ int judge_main()
         Judge::out_file=running_address+"\\"+name_pre+to_string(i)+".out";
         Judge::ans_file=running_address+"\\"+name_pre+to_string(i)+".ans";
         if(find_file(Judge::in_file)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
-        if(chk!="<0>"&&find_file(Judge::out_file)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
+        if(chk!=":0"&&find_file(Judge::out_file)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
         judge_monitor(ans,chk);
         print_judge_result();
         if(Judge::result==0) ++ac_sum;

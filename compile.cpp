@@ -29,24 +29,6 @@ int compile_main()
             system(get_address(file)+"\\"+get_namepre(file)+".exe");
         }
     }
-    else if(get_sum_parameter("f")==-1)
-    {
-        system("dir /b /s > files.txt");
-        ifstream infile("files.txt");
-        string file;
-        while(infile>>file)
-        {
-            file=file;
-            if(get_namesuf(file)==".cpp"&&get_filename(file)!="compile.cpp")
-            {
-                cout<<get_filename(file)<<":\n";
-                if(!compile(file,compile_parameter)) print_result(_Success);
-                else print_result(_CE);
-            }
-        }
-        infile.close();
-        system("del /Q files.txt > nul 2>&1");
-    }
     else
     {
         for(int i=1;i<=get_sum_parameter("f");++i)

@@ -38,8 +38,7 @@ namespace Judge
     }
     int check_ans(string chk)
     {
-        if(chk=="<1>") return compare(out_file,ans_file);
-        else return system("\""+get_address(chk)+"\\"+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\"");
+        return system("\""+get_address(chk)+"\\"+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\"");
     }
     int judge(string ans,string chk)
     {
@@ -55,7 +54,6 @@ namespace Judge
         if(result!=-1) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         string check_inst;
-        if(chk=="<0>") return result=_SR;
         if(check_ans(chk))
         {
             if(time>get_time_limit()) result=_TLE_WA;
