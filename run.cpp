@@ -42,8 +42,8 @@ int run_main()
     // init time
     if(get_sum_parameter("t")==1) change_time_limit(stoi(get_parameter("t",1)));
     // compile file
-    if(print_compile(ans,"ans")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(ans,"ans","-D RUNNING")) {print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D RUNNING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(ans)) {print_result(_DS);}
     // run

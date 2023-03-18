@@ -49,8 +49,8 @@ int judge_main()
     if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     // compile file
-    if(print_compile(ans,"ans")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(ans,"ans","-D RUNNING")) {print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D RUNNING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(ans)) {print_result(_DS);}
     string name_pre=get_parameter("d",1);

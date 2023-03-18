@@ -74,10 +74,10 @@ int check_main()
     if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     // compile file
-    if(print_compile(in,"data_maker")) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
-    if(print_compile(out,"std")) {cout<<"\nstd:";print_result(_CE);return 0;}
-    if(print_compile(ans,"ans")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(in,"data_maker","-D RUNNING")) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
+    if(print_compile(out,"std","-D RUNNING")) {cout<<"\nstd:";print_result(_CE);return 0;}
+    if(print_compile(ans,"ans","-D RUNNING")) {print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D RUNNING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(in)) {cout<<"\ndata_maker:";print_result(_DS);}
     if(find_dangerous_syscalls(out)) {cout<<"\nstd:";print_result(_DS);}
@@ -130,6 +130,7 @@ int check_main()
                     copy_result("data\\data.in","data\\"+to_string(i)+".in");
                     copy_result("data\\data.out","data\\"+to_string(i)+".out");
                     copy_result("data\\data.ans","data\\"+to_string(i)+".ans");
+                    copy_result("data\\data.txt","data\\"+to_string(i)+".txt");
                 }
                 else print_result(_SA),++ac_sum;
             }
@@ -158,6 +159,7 @@ int check_main()
                 copy_result("data\\data.in","data\\"+to_string(i)+".in");
                 copy_result("data\\data.out","data\\"+to_string(i)+".out");
                 copy_result("data\\data.ans","data\\"+to_string(i)+".ans");
+                copy_result("data\\data.txt","data\\"+to_string(i)+".txt");
             }
             else ++ac_sum;
         }

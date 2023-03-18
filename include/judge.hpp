@@ -9,12 +9,13 @@ namespace Judge
     int result,time,time_limit,exit_code;
     clock_t begin_time;
     bool if_end;
-    string in_file,out_file,ans_file;
+    string in_file,out_file,ans_file,chk_file;
     void begin()
     {
         in_file=appdata_address+"\\Orita\\data\\data.in";
         out_file=appdata_address+"\\Orita\\data\\data.out";
         ans_file=appdata_address+"\\Orita\\data\\data.ans";
+        chk_file=appdata_address+"\\Orita\\data\\data.txt";
     }
     int compare(string file1,string file2)
     {
@@ -38,7 +39,7 @@ namespace Judge
     }
     int check_ans(string chk)
     {
-        return system("\""+get_address(chk)+"\\"+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\"");
+        return system("\""+get_address(chk)+"\\"+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\"");
     }
     int judge(string ans,string chk)
     {
