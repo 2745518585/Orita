@@ -74,10 +74,10 @@ int check_main()
     if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     // compile file
-    if(print_compile(in,"data_maker","-D RUNNING")) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
-    if(print_compile(out,"std","-D RUNNING")) {cout<<"\nstd:";print_result(_CE);return 0;}
-    if(print_compile(ans,"ans","-D RUNNING")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker","-D RUNNING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(in,"data_maker","-D JUDGING")) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
+    if(print_compile(out,"std","-D JUDGING")) {cout<<"\nstd:";print_result(_CE);return 0;}
+    if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D JUDGING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(in)) {cout<<"\ndata_maker:";print_result(_DS);}
     if(find_dangerous_syscalls(out)) {cout<<"\nstd:";print_result(_DS);}

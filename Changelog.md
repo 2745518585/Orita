@@ -148,6 +148,6 @@ Orita 第一个正式版本。
 
 #### 新增
 
-- 在 `run`、`check`、`judge` 命令中编译的文件在编译时会加上 `RUNNING` 的宏定义。
+- 在 `run`、`check`、`judge` 命令中编译的文件在编译时会加上 `JUDGING` 的宏定义。
 - 记录 `checker` 的输出。
 - 随机生成树。
