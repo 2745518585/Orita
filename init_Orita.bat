@@ -8,4 +8,6 @@ g++ %~dp0compile.cpp -o %~dp0compile.exe -std=c++14 -O2 -Wl,--stack=2147483647 -
 g++ %~dp0changna.cpp -o %~dp0changna.exe -std=c++14 -O2 -Wl,--stack=2147483647 -I %~dp0include
 g++ %~dp0cmp.cpp -o %~dp0cmp.exe -std=c++14 -O2 -Wl,--stack=2147483647 -I %~dp0include
 g++ %~dp0setfile.cpp -o %~dp0setfile.exe -std=c++14 -O2 -Wl,--stack=2147483647 -I %~dp0include
+g++ %~dp0orita.cpp -o %~dp0orita.exe -std=c++14 -O2 -Wl,--stack=2147483647 -I %~dp0include
+g++ %~dp0orita\orita.cpp -o %~dp0orita\orita.exe -std=c++14 -O2 -Wl,--stack=2147483647 -I %~dp0include
 exit

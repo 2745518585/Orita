@@ -37,7 +37,7 @@ string GBtoUTF8(const string &gb2312)
     delete []str;
     return ss.str();
 }
-string appdata_address=GBtoUTF8(getenv("appdata")),file_address;
+string appdata_address=getenv("appdata"),file_address;
 int system(string inst)
 {
     return system(("cmd /C \""+inst+"\"").c_str());
@@ -54,11 +54,10 @@ string change(string str)
 }
 string get_path()
 {
-	char szFilePath[1001];
-	GetModuleFileNameA(NULL, szFilePath, MAX_PATH);
-	(strrchr(szFilePath,'\\'))[0]=0;
-	string path=szFilePath;
-	return path;
+    char path[1001];
+    GetModuleFileNameA(NULL,path,MAX_PATH);
+    (strrchr(path,'\\'))[0]=0;
+    return path;
 }
 int main()
 {
@@ -72,6 +71,6 @@ int main()
     system("mkdir \"%appdata%\\Orita\\temp\" > nul 2>&1");
     system("mkdir \"%appdata%\\Orita\\random\" > nul 2>&1");
     system("copy \""+file_address+"\\source\\*\" \"%appdata%\\Orita\" > nul 2>&1");
-    system("echo "+change("{\"name100\":\""+appdata_address+"\\Orita\\0.cpp\",\"name101\":\""+appdata_address+"\\Orita\\1.cpp\"}")+" > \"%appdata%\\Orita\\name.json\"");
+    system("echo "+change("{\"name100\":\""+GBtoUTF8(appdata_address)+"\\Orita\\0.cpp\",\"name101\":\""+GBtoUTF8(appdata_address)+"\\Orita\\1.cpp\"}")+" > \"%appdata%\\Orita\\name.json\"");
     return 0;
 }
