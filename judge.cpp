@@ -5,10 +5,10 @@ using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-1,1}},
-        {"c",{-1,0,1}},
-        {"t",{-1,1}},
-        {"d",{-1,2}}
+        {"f",{_not_define,1}},
+        {"c",{_not_define,0,1}},
+        {"t",{_not_define,1}},
+        {"d",{_not_define,2}}
     };
     return cor_parameter;
 }

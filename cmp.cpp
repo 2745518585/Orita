@@ -5,7 +5,7 @@ using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-1,2}}
+        {"f",{_not_define,2}}
     };
     return cor_parameter;
 }

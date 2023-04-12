@@ -5,7 +5,7 @@ using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter;
-    for(int i=1;i<=_custom_tot;++i) cor_parameter[to_string(i)]={-1,1};
+    for(int i=1;i<=_custom_tot;++i) cor_parameter[to_string(i)]={_not_define,1};
     return cor_parameter;
 }
 json cor_parameter=make_cor_parameter();

@@ -5,15 +5,15 @@ using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-1,3}},
-        {"if",{-1,1}},
-        {"of",{-1,1}},
-        {"af",{-1,1}},
-        {"c",{-1,0,1}},
-        {"n",{-1,1}},
-        {"e",{-1,0}},
-        {"p",{-1,0}},
-        {"t",{-1,1}}
+        {"f",{_not_define,3}},
+        {"if",{_not_define,1}},
+        {"of",{_not_define,1}},
+        {"af",{_not_define,1}},
+        {"c",{_not_define,0,1}},
+        {"n",{_not_define,1}},
+        {"e",{_not_define,0}},
+        {"p",{_not_define,0}},
+        {"t",{_not_define,1}}
     };
     return cor_parameter;
 }

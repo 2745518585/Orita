@@ -8,7 +8,7 @@ json make_cor_parameter()
     json cor_parameter={
         {"f",{1}}
     };
-    for(int i=1;i<=SUM;++i) cor_parameter[to_string(i)]={-1,2};
+    for(int i=1;i<=SUM;++i) cor_parameter[to_string(i)]={_not_define,2};
     return cor_parameter;
 }
 json cor_parameter=make_cor_parameter();
