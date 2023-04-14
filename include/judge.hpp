@@ -6,6 +6,7 @@
 #include"print.hpp"
 namespace Judge
 {
+    #define _not_end -1
     int result,time,time_limit,exit_code;
     clock_t begin_time;
     bool if_end;
@@ -48,11 +49,11 @@ namespace Judge
         if(exit_code=system(run_inst))
         {
             if_end=true;
-            if(result!=-1) return result;
+            if(result!=_not_end) return result;
             return result=_RE;
         }
         if_end=true;
-        if(result!=-1) return result;
+        if(result!=_not_end) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
         string check_inst;
         if(check_ans(chk))
@@ -70,16 +71,16 @@ namespace Judge
     int judge_monitor(string ans,string chk)
     {
         if_end=false;
-        result=-1;
+        result=_not_end;
         time_limit=get_time_limit();
-        begin_time=-1;
+        begin_time=_not_end;
         thread(judge,ans,chk).detach();
-        while(begin_time==-1||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
+        while(begin_time==_not_end||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
             Sleep(5);
             if(if_end)
             {
-                while(result==-1) Sleep(5);
+                while(result==_not_end) Sleep(5);
                 return 0;
             }
         }
@@ -107,6 +108,7 @@ namespace Judge
         system("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
         return 1;
     }
+    #undef _not_end
 }
 int compare(string file1,string file2) {return Judge::compare(file1,file2);}
 int check_ans(string chk) {return Judge::check_ans(chk);}

@@ -1,5 +1,3 @@
-#include<bits/stdc++.h>
-#include<windows.h>
 #include"run.hpp"
 using namespace std;
 json make_cor_parameter()

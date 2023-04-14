@@ -1,9 +1,14 @@
 #ifndef _FILE_INIT
 #define _FILE_INIT _FILE_INIT
-#include<bits/stdc++.h>
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<algorithm>
+#include<string>
 #include<windows.h>
 #include<direct.h>
 #include<sstream>
+#include<thread>
 #include"nlohmann/json.hpp"
 using namespace std;
 using json=nlohmann::json;
@@ -46,8 +51,6 @@ int system(string inst)
 {
     return system(("cmd /C \""+inst+"\"").c_str());
 }
-string running_address,appdata_address;
-json settings;
 template<typename T>
 string to_string(T num,int len)
 {
@@ -55,14 +58,28 @@ string to_string(T num,int len)
     if(str.size()>len) return str;
     return string(len-str.size(),'0')+str;
 }
+json settings;
+namespace Init
+{
+    string get_running_address()
+    {
+        char address[1001];
+        getcwd(address,1000);
+        return address;
+    }
+    string get_file_address()
+    {
+        char address[1001];
+        GetModuleFileNameA(NULL,address,MAX_PATH);
+        (strrchr(address,'\\'))[0]=0;
+        return address;
+    }
+}
+string running_address=Init::get_running_address(),file_address=Init::get_file_address(),appdata_address=getenv("appdata");
 namespace Init
 {
     void begin()
     {
-        char temp[1001];
-        getcwd(temp,1000);
-        running_address=temp;
-        appdata_address=getenv("appdata");
         system("del /Q "+appdata_address+"\\Orita\\source\\*"+system_to_nul);
         system("del /Q "+appdata_address+"\\Orita\\temp\\*"+system_to_nul);
         (ifstream)(appdata_address+"\\Orita\\settings.json")>>settings;
