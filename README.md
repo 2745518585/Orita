@@ -12,7 +12,11 @@
 
 然后运行 `init_Orita` 命令。
 
-出现奇怪问题需要初始化也可以使用 `init_Orita` 清空配置。
+出现奇怪问题需要初始化可以使用 `reset_Orita` 清空配置。
+
+除了 `init_Orita` 以外的所有命令运行时均需要在前面加上 `orita`，如 `orita run`，默认可以去掉 `orita`，如 `run`。
+
+如果 Orita 的命令与其他命令冲突，可以只将 `Orita\orita` 目录加入环境变量。除了 `init_Orita` 以外的所有命令前需加上 `orita`。
 
 ## 全局逻辑
 
@@ -37,6 +41,14 @@ $0$ 槽位：空，总是返回 $0$。
 $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，返回 `ans` 和 `out` 忽略行末空格和文末换行的比较结果。
 
 ## 命令
+
+### orita
+
+`orita ...`
+
+#### 描述
+
+不跟任何参数查看 Orita 相关信息，否则运行命令。
 
 ### run
 
@@ -86,7 +98,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 #### 默认编译参数
 
-`-std=c++14 -O2 -Wl,--stack=2147483647 -I include`。
+`-std=c++14 -O2 -Wl,--stack=2147483647 -D JUDGING`
 
 ### chdata
 
@@ -180,7 +192,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 #### 默认编译参数
 
-`-std=c++14 -O2 -Wl,--stack=2147483647`。
+`-std=c++14 -O2 -Wl,--stack=2147483647 -D JUDGING`
 
 ### judge
 
@@ -226,6 +238,10 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 最后结果会汇总到 `result.txt`。
 
+#### 默认编译参数
+
+`-std=c++14 -O2 -Wl,--stack=2147483647 -D JUDGING`
+
 ### compile
 
 `compile [/f file1 file2 ...] [/r file] [/o compile_parameter]`
@@ -254,7 +270,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 #### 默认编译参数
 
-`-std=c++14 -O2 -Wl,--stack=2147483647`。
+`-std=c++14 -O2 -Wl,--stack=2147483647 [-I include]`
 
 ### changna
 

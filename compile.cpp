@@ -1,13 +1,11 @@
-#include<bits/stdc++.h>
-#include<windows.h>
 #include"run.hpp"
 using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-2}},
-        {"r",{-1,1}},
-        {"o",{-2}}
+        {"f",{_no_limit}},
+        {"r",{_not_define,1}},
+        {"o",{_no_limit}}
     };
     return cor_parameter;
 }

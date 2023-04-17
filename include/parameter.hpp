@@ -1,6 +1,8 @@
 #ifndef _FILE_PARAMETER
 #define _FILE_PARAMETER _FILE_PARAMETER
 #include"init.hpp"
+#define _not_define -1
+#define _no_limit -2
 namespace Parameter
 {
     json parameter;
@@ -41,7 +43,7 @@ namespace Parameter
             bool if_cor=false;
             for(auto cor_sum:para.value().items())
             {
-                if(sum==cor_sum.value()||cor_sum.value()==-2)
+                if(sum==cor_sum.value()||cor_sum.value()==_no_limit)
                 {
                     if_cor=true;
                     break;
@@ -51,7 +53,7 @@ namespace Parameter
         }
         for(auto para:parameter.items())
         {
-            if((int)cor_parameter[para.key()].type()==0) return 1; 
+            if((int)cor_parameter[para.key()].type()==0) return 1;
         }
         return 0;
     }

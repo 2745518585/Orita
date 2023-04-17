@@ -1,13 +1,11 @@
-#include<bits/stdc++.h>
-#include<windows.h>
 #include"run.hpp"
 using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-1,1}},
-        {"c",{-1,0,1}},
-        {"t",{-1,1}}
+        {"f",{_not_define,1}},
+        {"c",{_not_define,0,1}},
+        {"t",{_not_define,1}}
     };
     return cor_parameter;
 }
@@ -42,8 +40,8 @@ int run_main()
     // init time
     if(get_sum_parameter("t")==1) change_time_limit(stoi(get_parameter("t",1)));
     // compile file
-    if(print_compile(ans,"ans")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D JUDGING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(ans)) {print_result(_DS);}
     // run

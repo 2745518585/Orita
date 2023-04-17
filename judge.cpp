@@ -1,14 +1,12 @@
-#include<bits/stdc++.h>
-#include<windows.h>
 #include"run.hpp"
 using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-1,1}},
-        {"c",{-1,0,1}},
-        {"t",{-1,1}},
-        {"d",{-1,2}}
+        {"f",{_not_define,1}},
+        {"c",{_not_define,0,1}},
+        {"t",{_not_define,1}},
+        {"d",{_not_define,2}}
     };
     return cor_parameter;
 }
@@ -49,8 +47,8 @@ int judge_main()
     if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
     if(find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
     // compile file
-    if(print_compile(ans,"ans")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D JUDGING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(ans)) {print_result(_DS);}
     string name_pre=get_parameter("d",1);

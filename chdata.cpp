@@ -1,15 +1,13 @@
-#include<bits/stdc++.h>
-#include<windows.h>
 #include"run.hpp"
 using namespace std;
 json make_cor_parameter()
 {
     json cor_parameter={
-        {"f",{-1,2}},
-        {"if",{-1,1}},
-        {"of",{-1,1}},
-        {"s",{-1,0,1}},
-        {"t",{-1,1}}
+        {"f",{_not_define,2}},
+        {"if",{_not_define,1}},
+        {"of",{_not_define,1}},
+        {"s",{_not_define,0,1}},
+        {"t",{_not_define,1}}
     };
     return cor_parameter;
 }

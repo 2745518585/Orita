@@ -12,7 +12,7 @@ namespace Compile
         if(get_namesuf(ans)!=".cpp") return -1;
         string name=get_namepre(ans),address=get_address(ans);
         system("taskkill /f /pid "+name+".exe"+system_to_nul);
-        return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+get_compile_parameter()+" "+compile_parameter+(if_print?"":system_to_nul))!=0;
+        return system("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+get_compile_parameter()+" "+compile_parameter+" "+(if_print?"":system_to_nul))!=0;
     }
     void printing(string str)
     {
