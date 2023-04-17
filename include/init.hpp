@@ -10,12 +10,11 @@
 #include<sstream>
 #include<thread>
 #include"nlohmann/json.hpp"
-using namespace std;
 using json=nlohmann::json;
-string UTF8toGB(const string &utf8)
+std::string UTF8toGB(const std::string &utf8)
 {
     if(utf8.empty()) return "";
-    stringstream ss;
+    std::stringstream ss;
     int len=MultiByteToWideChar(CP_UTF8,0,utf8.c_str(),-1,NULL,0);
     wchar_t*wstr=new wchar_t[len+1];
     memset(wstr,0,len+1);
@@ -29,10 +28,10 @@ string UTF8toGB(const string &utf8)
     delete []str;
     return ss.str();
 }
-string GBtoUTF8(const string &gb2312)
+std::string GBtoUTF8(const std::string &gb2312)
 {
     if(gb2312.empty()) return "";
-    stringstream ss;
+    std::stringstream ss;
     int len=MultiByteToWideChar(CP_ACP,0,gb2312.c_str(),-1,NULL,0);
     wchar_t*wstr=new wchar_t[len+1];
     memset(wstr,0,len+1);
@@ -46,30 +45,30 @@ string GBtoUTF8(const string &gb2312)
     delete []str;
     return ss.str();
 }
-string system_to_nul=" > nul 2>&1 ";
-int system(string inst)
+std::string system_to_nul=" > nul 2>&1 ";
+int ssystem(std::string inst)
 {
     return system(("cmd /C \""+inst+"\"").c_str());
 }
 template<typename T>
-string to_string(T num,int len)
+std::string to_string_len(T num,int len)
 {
-    string str=to_string(num);
+    std::string str=std::to_string(num);
     if(str.size()>len) return str;
-    return string(len-str.size(),'0')+str;
+    return std::string(len-str.size(),'0')+str;
 }
 json settings;
 namespace Init
 {
-    string get_running_address()
+    std::string get_running_address()
     {
         char address[1001];
         getcwd(address,1000);
         return address;
     }
-    string get_file_address()
+    std::string get_file_address()
     {
-        string address=__FILE__;
+        std::string address=__FILE__;
         int len=address.size();
         while(address[len-1]!='/'&&address[len-1]!='\\') --len;
         --len;
@@ -83,18 +82,18 @@ namespace Init
         return address;
     }
 }
-string running_address=Init::get_running_address(),file_address=Init::get_file_address(),appdata_address=getenv("appdata");
+std::string running_address=Init::get_running_address(),file_address=Init::get_file_address(),appdata_address=getenv("appdata");
 namespace Init
 {
     void begin()
     {
-        system("del /Q "+appdata_address+"\\Orita\\source\\*"+system_to_nul);
-        system("del /Q "+appdata_address+"\\Orita\\temp\\*"+system_to_nul);
-        (ifstream)(appdata_address+"\\Orita\\settings.json")>>settings;
+        ssystem("del /Q "+appdata_address+"\\Orita\\source\\*"+system_to_nul);
+        ssystem("del /Q "+appdata_address+"\\Orita\\temp\\*"+system_to_nul);
+        (std::ifstream)(appdata_address+"\\Orita\\settings.json")>>settings;
     }
     void end()
     {
-        (ofstream)(appdata_address+"\\Orita\\settings.json")<<setw(4)<<settings;
+        (std::ofstream)(appdata_address+"\\Orita\\settings.json")<<std::setw(4)<<settings;
     }
 }
 #endif

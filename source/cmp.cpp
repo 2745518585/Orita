@@ -1,5 +1,5 @@
 #include"run.hpp"
-using namespace std;
+
 json make_cor_parameter()
 {
     json cor_parameter={
@@ -11,8 +11,8 @@ json cor_parameter=make_cor_parameter();
 int cmp_main()
 {
     if(get_sum_parameter("f")<2) return 0;
-    string file1=get_file(get_parameter("f",1));
-    string file2=get_file(get_parameter("f",2));
+    std::string file1=get_file(get_parameter("f",1));
+    std::string file2=get_file(get_parameter("f",2));
     if(find_file(file1)||find_file(file2))
     {
         print_result(_NF);

@@ -12,7 +12,7 @@ namespace Parameter
         {
             if(argv[i][0]=='/')
             {
-                string para=argv[i]+1;
+                std::string para=argv[i]+1;
                 int j=1;
                 for(;i+j<=argc-1&&argv[i+j][0]!='/';++j)
                 {
@@ -25,12 +25,12 @@ namespace Parameter
         }
         return 0;
     }
-    string get_parameter(string name,int num)
+    std::string get_parameter(std::string name,int num)
     {
         if((int)parameter[name].type()==0||(int)parameter[name][num].type()==0) return NULL;
         return parameter[name][num];
     }
-    int get_sum_parameter(string name)
+    int get_sum_parameter(std::string name)
     {
         if((int)parameter[name].type()==0) return -1;
         return parameter[name][0];
@@ -59,7 +59,7 @@ namespace Parameter
     }
 }
 int init_parameter(int argc,char **argv) {return Parameter::init_parameter(argc,argv);}
-string get_parameter(string name,int num2) {return Parameter::get_parameter(name,num2);}
-int get_sum_parameter(string name) {return Parameter::get_sum_parameter(name);}
+std::string get_parameter(std::string name,int num2) {return Parameter::get_parameter(name,num2);}
+int get_sum_parameter(std::string name) {return Parameter::get_sum_parameter(name);}
 int check_parameter(json check_parameter) {return Parameter::check_parameter(check_parameter);}
 #endif

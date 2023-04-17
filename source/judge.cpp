@@ -1,5 +1,5 @@
 #include"run.hpp"
-using namespace std;
+
 json make_cor_parameter()
 {
     json cor_parameter={
@@ -17,7 +17,7 @@ int judge_main()
     if(get_sum_parameter("f")==1)
     {
         add_file(_run_ans,get_parameter("f",1));
-        if(find_file(add_namesuf(get_name(_run_ans),".cpp"))) {cout<<"\nans:";print_result(_NF);return 0;}
+        if(find_file(add_namesuf(get_name(_run_ans),".cpp"))) {std::cout<<"\nans:";print_result(_NF);return 0;}
     }
     bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
@@ -25,7 +25,7 @@ int judge_main()
         if(get_sum_parameter("c")==1)
         {
             add_file(_run_chk,get_parameter("c",1));
-            if(find_file(add_namesuf(get_name(_run_chk),".cpp"))) {cout<<"\nchecker:";print_result(_NF);return 0;}
+            if(find_file(add_namesuf(get_name(_run_chk),".cpp"))) {std::cout<<"\nchecker:";print_result(_NF);return 0;}
         }
         use_checker=true;
     }
@@ -38,28 +38,28 @@ int judge_main()
         return 0;
     }
     // find file
-    if(find_name(_run_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
-    if(use_checker&&find_name(_run_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
-    string ans,chk;
+    if(find_name(_run_ans)) {std::cout<<"\nans:";print_result(_NF);return 0;}
+    if(use_checker&&find_name(_run_chk)) {std::cout<<"\nchecker:";print_result(_NF);return 0;}
+    std::string ans,chk;
     ans=add_namesuf(get_name(_run_ans),".cpp");
     if(use_checker) chk=add_namesuf(get_name(_run_chk),".cpp");
     else chk=get_file(":1");
-    if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
-    if(find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
+    if(find_file(ans)) {std::cout<<"\nans:";print_result(_NF);return 0;}
+    if(find_file(chk)) {std::cout<<"\nchecker:";print_result(_NF);return 0;}
     // compile file
     if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker","-D JUDGING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D JUDGING")) {std::cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(ans)) {print_result(_DS);}
-    string name_pre=get_parameter("d",1);
-    ofstream file("result.txt");
+    std::string name_pre=get_parameter("d",1);
+    std::ofstream file("result.txt");
     int total_sum=stoi(get_parameter("d",2)),ac_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
-        cout<<"#"<<i<<"--------------------------------------------------"<<"\n";
-        Judge::in_file=running_address+"\\"+name_pre+to_string(i)+".in";
-        Judge::out_file=running_address+"\\"+name_pre+to_string(i)+".out";
-        Judge::ans_file=running_address+"\\"+name_pre+to_string(i)+".ans";
+        std::cout<<"#"<<i<<"--------------------------------------------------"<<"\n";
+        Judge::in_file=running_address+"\\"+name_pre+std::to_string(i)+".in";
+        Judge::out_file=running_address+"\\"+name_pre+std::to_string(i)+".out";
+        Judge::ans_file=running_address+"\\"+name_pre+std::to_string(i)+".ans";
         if(find_file(Judge::in_file)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
         if(chk!=":0"&&find_file(Judge::out_file)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
         judge_monitor(ans,chk);
@@ -68,7 +68,7 @@ int judge_main()
         file<<i<<":\t"<<get_short_result(Judge::result)<<"\n";
     }
     file.close();
-    cout<<ac_sum<<" / "<<total_sum;
+    std::cout<<ac_sum<<" / "<<total_sum;
     return 0;
 }
 int main(int argc,char **argv)

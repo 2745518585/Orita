@@ -19,97 +19,97 @@ namespace Print
 {
     void change_color(int red,int green,int blue)
     {
-        cout<<"\e[38;2;"<<red<<";"<<green<<";"<<blue<<"m";
+        std::cout<<"\e[38;2;"<<red<<";"<<green<<";"<<blue<<"m";
     }
-    void change_color(string color)
+    void change_color(std::string color)
     {
         if((int)settings["colors"][color][0].type()==0||(int)settings["colors"][color][1].type()==0||(int)settings["colors"][color][2].type()==0) return;
-        cout<<"\e[38;2;"<<settings["colors"][color][0]<<";"<<settings["colors"][color][1]<<";"<<settings["colors"][color][2]<<"m";
+        std::cout<<"\e[38;2;"<<settings["colors"][color][0]<<";"<<settings["colors"][color][1]<<";"<<settings["colors"][color][2]<<"m";
     }
     void print_result(int result,int information)
     {
         if(result==_Success)
         {
             change_color("green");
-            cout<<"\nSuccess\n\n";
+            std::cout<<"\nSuccess\n\n";
             change_color("white");
         }
         if(result==_Fail)
         {
             change_color("red");
-            cout<<"\nFail\n\n";
+            std::cout<<"\nFail\n\n";
             change_color("white");
         }
         if(result==_AC)
         {
             change_color("green");
-            cout<<"\nAccepted\n"<<information<<"ms\n\n";
+            std::cout<<"\nAccepted\n"<<information<<"ms\n\n";
             change_color("white");
         }
         if(result==_WA)
         {
             change_color("red");
-            cout<<"\nWrong Answer\n"<<information<<"ms\n\n";
+            std::cout<<"\nWrong Answer\n"<<information<<"ms\n\n";
             change_color("white");
         }
         if(result==_RE)
         {
             change_color("purple");
-            cout<<"\nRuntime Error\nexit with code "<<information<<"\n\n";
+            std::cout<<"\nRuntime Error\nexit with code "<<information<<"\n\n";
             change_color("white");
         }
         if(result==_TLE_CA)
         {
             change_color("blue");
-            cout<<"\nTime Limit Error\n"<<information<<"ms\n\nCorrect Answer\n\n";
+            std::cout<<"\nTime Limit Error\n"<<information<<"ms\n\nCorrect Answer\n\n";
             change_color("white");
         }
         if(result==_TLE_WA)
         {
             change_color("blue");
-            cout<<"\nTime Limit Error\n"<<information<<"ms\n\nWrong Answer\n\n";
+            std::cout<<"\nTime Limit Error\n"<<information<<"ms\n\nWrong Answer\n\n";
             change_color("white");
         }
         if(result==_TLE_O)
         {
             change_color("blue");
-            cout<<"\nTime Limit Error\nover "<<information<<"ms\n\n";
+            std::cout<<"\nTime Limit Error\nover "<<information<<"ms\n\n";
             change_color("white");
         }
         if(result==_CE)
         {
             change_color("yellow");
-            cout<<"\nCompile Error\n\n";
+            std::cout<<"\nCompile Error\n\n";
             change_color("white");
         }
         if(result==_DS)
         {
             change_color("yellow");
-            cout<<"\nDangerous syscalls\n\n";
+            std::cout<<"\nDangerous syscalls\n\n";
             change_color("white");
         }
         if(result==_SA)
         {
             change_color("green");
-            cout<<"\nSame Answer\n\n";
+            std::cout<<"\nSame Answer\n\n";
             change_color("white");
         }
         if(result==_DA)
         {
             change_color("red");
-            cout<<"\nDifferent Answer\n\n";
+            std::cout<<"\nDifferent Answer\n\n";
             change_color("white");
         }
         if(result==_NF)
         {
             change_color("orange");
-            cout<<"\nNo such file\n\n";
+            std::cout<<"\nNo such file\n\n";
             change_color("white");
         }
         if(result==_II)
         {
             change_color("orange");
-            cout<<"\nInvalid input\n\n";
+            std::cout<<"\nInvalid input\n\n";
             change_color("white");
         }
     }
@@ -119,7 +119,7 @@ namespace Print
         else if(result==_TLE_O) print_result(result,time_limit*2);
         else print_result(result,time);
     }
-    string get_short_result(int result)
+    std::string get_short_result(int result)
     {
         if(result==_NF) return "NF";
         if(result==_AC) return "AC";
@@ -136,9 +136,9 @@ namespace Print
     }
 }
 void change_color(int red,int green,int blue) {Print::change_color(red,green,blue);}
-void change_color(string color) {Print::change_color(color);}
+void change_color(std::string color) {Print::change_color(color);}
 void print_result(int result,int information) {Print::print_result(result,information);}
 void print_result(int result) {Print::print_result(result,0);}
 void print_judge_result(int result,int time,int exit_code,int time_limit) {Print::print_judge_result(result,time,exit_code,time_limit);}
-string get_short_result(int result) {return Print::get_short_result(result);}
+std::string get_short_result(int result) {return Print::get_short_result(result);}
 #endif

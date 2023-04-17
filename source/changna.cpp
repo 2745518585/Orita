@@ -1,18 +1,18 @@
 #include"run.hpp"
-using namespace std;
+
 const int SUM=9;
 json make_cor_parameter()
 {
     json cor_parameter={
         {"f",{1}}
     };
-    for(int i=1;i<=SUM;++i) cor_parameter[to_string(i)]={_not_define,2};
+    for(int i=1;i<=SUM;++i) cor_parameter[std::to_string(i)]={_not_define,2};
     return cor_parameter;
 }
 json cor_parameter=make_cor_parameter();
 int sum,value[1001],min_value[1001],max_value[1001];
-string inst;
-int check_value(string str)
+std::string inst;
+int check_value(std::string str)
 {
     int sum_bracket=0;
     auto check_number=[&](int pos)
@@ -60,21 +60,21 @@ int check_value(string str)
     }
     return 0;
 }
-int check_name(string str)
+int check_name(std::string str)
 {
     for(int i=0;i<str.size();++i)
     {
         if(str[i]==':')
         {
             int j=str.find(':',i+1);
-            if(j==string::npos) return 1;
+            if(j==std::string::npos) return 1;
             if(check_value(str.substr(i+1,j-i-1))) return 1;
             i=j;
         }
     }
     return 0;
 }
-string solve_value(string str)
+std::string solve_value(std::string str)
 {
     static int sta1[1001],top1=0,top2=0;
     static char sta2[1001];
@@ -133,9 +133,9 @@ string solve_value(string str)
     else sprintf(buf,str.substr(len_begin,str.size()-len_begin).c_str(),sta1[1]);
     return buf;
 }
-string solve_name(string str)
+std::string solve_name(std::string str)
 {
-    string solved_str;
+    std::string solved_str;
     for(int i=0;i<str.size();++i)
     {
         if(str[i]==':')
@@ -152,9 +152,9 @@ void make_scheme(int num)
 {
     if(num==SUM+1)
     {
-        string solved_inst=solve_name(inst);
-        cout<<solved_inst<<"\n";
-        if(system(system_to_nul+solved_inst)==0)
+        std::string solved_inst=solve_name(inst);
+        std::cout<<solved_inst<<"\n";
+        if(ssystem(system_to_nul+solved_inst)==0)
         {
             print_result(_Success);
             ++sum;
@@ -174,10 +174,10 @@ int changna_main(int argc,char **argv)
     }
     for(int i=1;i<=9;++i)
     {
-        if(get_sum_parameter(to_string(i))>=2)
+        if(get_sum_parameter(std::to_string(i))>=2)
         {
-            min_value[i]=stoi(get_parameter(to_string(i),1));
-            max_value[i]=stoi(get_parameter(to_string(i),2));
+            min_value[i]=stoi(get_parameter(std::to_string(i),1));
+            max_value[i]=stoi(get_parameter(std::to_string(i),2));
         }
     }
     make_scheme(1);

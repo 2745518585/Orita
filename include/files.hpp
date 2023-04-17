@@ -3,20 +3,20 @@
 #include"name.hpp"
 namespace Files
 {
-    int copy_source(string file,string copy)
+    int copy_source(std::string file,std::string copy)
     {
-        return system("copy \""+file+"\" \""+appdata_address+"\\Orita\\"+copy+"\""+system_to_nul);
+        return ssystem("copy \""+file+"\" \""+appdata_address+"\\Orita\\"+copy+"\""+system_to_nul);
     }
-    int copy_result(string file,string copy)
+    int copy_result(std::string file,std::string copy)
     {
-        return system("copy \""+appdata_address+"\\Orita\\"+file+"\" \""+copy+"\""+system_to_nul);
+        return ssystem("copy \""+appdata_address+"\\Orita\\"+file+"\" \""+copy+"\""+system_to_nul);
     }
-    int find_file(string file)
+    int find_file(std::string file)
     {
-        return system("dir \""+file+"\""+system_to_nul);
+        return ssystem("dir \""+file+"\""+system_to_nul);
     }
 }
-int copy_source(string file,string copy) {return Files::copy_source(file,copy);}
-int copy_result(string file,string copy) {return Files::copy_result(file,copy);}
-int find_file(string file) {return Files::find_file(file);}
+int copy_source(std::string file,std::string copy) {return Files::copy_source(file,copy);}
+int copy_result(std::string file,std::string copy) {return Files::copy_result(file,copy);}
+int find_file(std::string file) {return Files::find_file(file);}
 #endif

@@ -1,5 +1,5 @@
 #include"run.hpp"
-using namespace std;
+
 json make_cor_parameter()
 {
     json cor_parameter={
@@ -24,18 +24,18 @@ int check_main()
         add_file(_check_in,get_parameter("f",1));
         add_file(_check_out,get_parameter("f",2));
         add_file(_check_ans,get_parameter("f",3));
-        if(find_file(add_namesuf(get_name(_check_in),".cpp"))) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
-        if(find_file(add_namesuf(get_name(_check_out),".cpp"))) {cout<<"\nstd:";print_result(_NF);return 0;}
-        if(find_file(add_namesuf(get_name(_check_ans),".cpp"))) {cout<<"\nans:";print_result(_NF);return 0;}
+        if(find_file(add_namesuf(get_name(_check_in),".cpp"))) {std::cout<<"\ndata_maker:";print_result(_NF);return 0;}
+        if(find_file(add_namesuf(get_name(_check_out),".cpp"))) {std::cout<<"\nstd:";print_result(_NF);return 0;}
+        if(find_file(add_namesuf(get_name(_check_ans),".cpp"))) {std::cout<<"\nans:";print_result(_NF);return 0;}
     }
     else
     {
         if(get_sum_parameter("if")==1) add_file(_check_in,get_parameter("if",1));
         if(get_sum_parameter("of")==1) add_file(_check_out,get_parameter("of",1));
         if(get_sum_parameter("af")==1) add_file(_check_ans,get_parameter("af",1));
-        if(get_sum_parameter("if")==1&&find_file(add_namesuf(get_name(_check_in),".cpp"))) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
-        if(get_sum_parameter("of")==1&&find_file(add_namesuf(get_name(_check_out),".cpp"))) {cout<<"\nstd:";print_result(_NF);return 0;}
-        if(get_sum_parameter("af")==1&&find_file(add_namesuf(get_name(_check_ans),".cpp"))) {cout<<"\nans:";print_result(_NF);return 0;}
+        if(get_sum_parameter("if")==1&&find_file(add_namesuf(get_name(_check_in),".cpp"))) {std::cout<<"\ndata_maker:";print_result(_NF);return 0;}
+        if(get_sum_parameter("of")==1&&find_file(add_namesuf(get_name(_check_out),".cpp"))) {std::cout<<"\nstd:";print_result(_NF);return 0;}
+        if(get_sum_parameter("af")==1&&find_file(add_namesuf(get_name(_check_ans),".cpp"))) {std::cout<<"\nans:";print_result(_NF);return 0;}
     }
     bool use_checker=false;
     if(get_sum_parameter("c")!=-1)
@@ -43,7 +43,7 @@ int check_main()
         if(get_sum_parameter("c")==1)
         {
             add_file(_check_chk,get_parameter("c",1));
-            if(find_file(add_namesuf(get_name(_check_chk),".cpp"))) {cout<<"\nchecker:";print_result(_NF);return 0;}
+            if(find_file(add_namesuf(get_name(_check_chk),".cpp"))) {std::cout<<"\nchecker:";print_result(_NF);return 0;}
         }
         use_checker=true;
     }
@@ -57,28 +57,28 @@ int check_main()
     }
     int total_sum=stoi(get_parameter("n",1));
     // find file
-    if(find_name(_check_in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
-    if(find_name(_check_out)) {cout<<"\nstd:";print_result(_NF);return 0;}
-    if(find_name(_check_ans)) {cout<<"\nans:";print_result(_NF);return 0;}
-    if(use_checker&&find_name(_check_chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
-    string in,out,ans,chk;
+    if(find_name(_check_in)) {std::cout<<"\ndata_maker:";print_result(_NF);return 0;}
+    if(find_name(_check_out)) {std::cout<<"\nstd:";print_result(_NF);return 0;}
+    if(find_name(_check_ans)) {std::cout<<"\nans:";print_result(_NF);return 0;}
+    if(use_checker&&find_name(_check_chk)) {std::cout<<"\nchecker:";print_result(_NF);return 0;}
+    std::string in,out,ans,chk;
     in=add_namesuf(get_name(_check_in),".cpp");
     out=add_namesuf(get_name(_check_out),".cpp");
     ans=add_namesuf(get_name(_check_ans),".cpp");
     if(use_checker) chk=add_namesuf(get_name(_check_chk),".cpp");
     else chk=get_file(":1");
-    if(find_file(in)) {cout<<"\ndata_maker:";print_result(_NF);return 0;}
-    if(find_file(out)) {cout<<"\nstd:";print_result(_NF);return 0;}
-    if(find_file(ans)) {cout<<"\nans:";print_result(_NF);return 0;}
-    if(find_file(chk)) {cout<<"\nchecker:";print_result(_NF);return 0;}
+    if(find_file(in)) {std::cout<<"\ndata_maker:";print_result(_NF);return 0;}
+    if(find_file(out)) {std::cout<<"\nstd:";print_result(_NF);return 0;}
+    if(find_file(ans)) {std::cout<<"\nans:";print_result(_NF);return 0;}
+    if(find_file(chk)) {std::cout<<"\nchecker:";print_result(_NF);return 0;}
     // compile file
-    if(print_compile(in,"data_maker","-D JUDGING")) {cout<<"\ndata_maker:";print_result(_CE);return 0;}
-    if(print_compile(out,"std","-D JUDGING")) {cout<<"\nstd:";print_result(_CE);return 0;}
+    if(print_compile(in,"data_maker","-D JUDGING")) {std::cout<<"\ndata_maker:";print_result(_CE);return 0;}
+    if(print_compile(out,"std","-D JUDGING")) {std::cout<<"\nstd:";print_result(_CE);return 0;}
     if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
-    if(print_compile(chk,"checker","-D JUDGING")) {cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(print_compile(chk,"checker","-D JUDGING")) {std::cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
-    if(find_dangerous_syscalls(in)) {cout<<"\ndata_maker:";print_result(_DS);}
-    if(find_dangerous_syscalls(out)) {cout<<"\nstd:";print_result(_DS);}
+    if(find_dangerous_syscalls(in)) {std::cout<<"\ndata_maker:";print_result(_DS);}
+    if(find_dangerous_syscalls(out)) {std::cout<<"\nstd:";print_result(_DS);}
     if(find_dangerous_syscalls(ans)) {print_result(_DS);}
     // init monitor
     bool use_monitor=false;
@@ -87,35 +87,35 @@ int check_main()
     bool use_compare=false;
     if(get_sum_parameter("p")!=-1) use_compare=true;
     // init data dir
-    system("mkdir data"+system_to_nul);
-    system("del /Q data\\*"+system_to_nul);
+    ssystem("mkdir data"+system_to_nul);
+    ssystem("del /Q data\\*"+system_to_nul);
     // check
     int ac_sum=0,runned_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
-        cout<<"#"<<i<<"--------------------------------------------------";
+        std::cout<<"#"<<i<<"--------------------------------------------------";
         if(runned_sum-ac_sum!=0)
         {
             change_color("red");
-            cout<<" Unaccepted "<<runned_sum-ac_sum;
+            std::cout<<" Unaccepted "<<runned_sum-ac_sum;
             change_color("white");
         }
-        cout<<"\n";
+        std::cout<<"\n";
         if(use_compare)
         {
             if(use_monitor)
             {
-                if(run_monitor(in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i))) {cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
-                if(Judge::exit_code!=0) {cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
+                if(run_monitor(in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(Judge::exit_code!=0) {std::cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
             }
-            else system("\""+get_address(in)+"\\"+get_namepre(in)+"\".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
+            else ssystem("\""+get_address(in)+"\\"+get_namepre(in)+"\".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i));
             Judge::ans_file=appdata_address+"\\Orita\\data\\data.out";
-            cout<<"\nans1:";
+            std::cout<<"\nans1:";
             judge_monitor(out,get_file(":0"));
             print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);
             int result1=Judge::result;
             Judge::ans_file=appdata_address+"\\Orita\\data\\data.ans";
-            cout<<"ans2:";
+            std::cout<<"ans2:";
             judge_monitor(ans,get_file(":0"));
             print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);
             int result2=Judge::result;
@@ -125,10 +125,10 @@ int check_main()
                 if(check_ans(chk))
                 {
                     print_result(_DA);
-                    copy_result("data\\data.in","data\\"+to_string(i)+".in");
-                    copy_result("data\\data.out","data\\"+to_string(i)+".out");
-                    copy_result("data\\data.ans","data\\"+to_string(i)+".ans");
-                    copy_result("data\\data.txt","data\\"+to_string(i)+".txt");
+                    copy_result("data\\data.in","data\\"+std::to_string(i)+".in");
+                    copy_result("data\\data.out","data\\"+std::to_string(i)+".out");
+                    copy_result("data\\data.ans","data\\"+std::to_string(i)+".ans");
+                    copy_result("data\\data.txt","data\\"+std::to_string(i)+".txt");
                 }
                 else print_result(_SA),++ac_sum;
             }
@@ -137,16 +137,16 @@ int check_main()
         {
             if(use_monitor)
             {
-                if(run_monitor(in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i))) {cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
-                if(Judge::exit_code!=0) {cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
-                if(run_monitor(out," < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"")) {cout<<"\nstd:";print_result(_TLE_O,get_time_limit()*2);continue;}
-                if(Judge::exit_code!=0) {cout<<"\nstd:";print_result(_RE,Judge::exit_code);continue;}
+                if(run_monitor(in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(Judge::exit_code!=0) {std::cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
+                if(run_monitor(out," < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"")) {std::cout<<"\nstd:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(Judge::exit_code!=0) {std::cout<<"\nstd:";print_result(_RE,Judge::exit_code);continue;}
                 ++runned_sum;
             }
             else
             {
-                system("\""+get_address(in)+"\\"+get_namepre(in)+".exe\" > \""+appdata_address+"\\Orita\\data\\data.in\" "+to_string(i));
-                system("\""+get_address(out)+"\\"+get_namepre(out)+".exe\" < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"");
+                ssystem("\""+get_address(in)+"\\"+get_namepre(in)+".exe\" > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i));
+                ssystem("\""+get_address(out)+"\\"+get_namepre(out)+".exe\" < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"");
                 ++runned_sum;
             }
             judge_monitor(ans,chk);
@@ -154,15 +154,15 @@ int check_main()
             int result=Judge::result;
             if(result>0)
             {
-                copy_result("data\\data.in","data\\"+to_string(i)+".in");
-                copy_result("data\\data.out","data\\"+to_string(i)+".out");
-                copy_result("data\\data.ans","data\\"+to_string(i)+".ans");
-                copy_result("data\\data.txt","data\\"+to_string(i)+".txt");
+                copy_result("data\\data.in","data\\"+std::to_string(i)+".in");
+                copy_result("data\\data.out","data\\"+std::to_string(i)+".out");
+                copy_result("data\\data.ans","data\\"+std::to_string(i)+".ans");
+                copy_result("data\\data.txt","data\\"+std::to_string(i)+".txt");
             }
             else ++ac_sum;
         }
     }
-    cout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
+    std::cout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
     return 0;
 }
 int main(int argc,char **argv)

@@ -10,7 +10,7 @@ namespace Judge
     int result,time,time_limit,exit_code;
     clock_t begin_time;
     bool if_end;
-    string in_file,out_file,ans_file,chk_file;
+    std::string in_file,out_file,ans_file,chk_file;
     void begin()
     {
         in_file=appdata_address+"\\Orita\\data\\data.in";
@@ -18,10 +18,10 @@ namespace Judge
         ans_file=appdata_address+"\\Orita\\data\\data.ans";
         chk_file=appdata_address+"\\Orita\\data\\data.txt";
     }
-    int compare(string file1,string file2)
+    int compare(std::string file1,std::string file2)
     {
-        ifstream infile1(file1),infile2(file2);
-        string str1,str2;
+        std::ifstream infile1(file1),infile2(file2);
+        std::string str1,str2;
         bool empty1=0,empty2=0;
         while(true)
         {
@@ -38,15 +38,15 @@ namespace Judge
         }
         return 0;
     }
-    int check_ans(string chk)
+    int check_ans(std::string chk)
     {
-        return system("\""+get_address(chk)+"\\"+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\"");
+        return ssystem("\""+get_address(chk)+"\\"+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\"");
     }
-    int judge(string ans,string chk)
+    int judge(std::string ans,std::string chk)
     {
-        string run_inst="\""+get_address(ans)+"\\"+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
+        std::string run_inst="\""+get_address(ans)+"\\"+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
         begin_time=clock();
-        if(exit_code=system(run_inst))
+        if(exit_code=ssystem(run_inst))
         {
             if_end=true;
             if(result!=_not_end) return result;
@@ -55,7 +55,7 @@ namespace Judge
         if_end=true;
         if(result!=_not_end) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        string check_inst;
+        std::string check_inst;
         if(check_ans(chk))
         {
             if(time>get_time_limit()) result=_TLE_WA;
@@ -68,13 +68,13 @@ namespace Judge
         }
         return result;
     }
-    int judge_monitor(string ans,string chk)
+    int judge_monitor(std::string ans,std::string chk)
     {
         if_end=false;
         result=_not_end;
         time_limit=get_time_limit();
         begin_time=_not_end;
-        thread(judge,ans,chk).detach();
+        std::thread(judge,ans,chk).detach();
         while(begin_time==_not_end||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
             Sleep(5);
@@ -85,35 +85,35 @@ namespace Judge
             }
         }
         result=_TLE_O;
-        system("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
+        ssystem("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
         while(if_end==false) Sleep(5);
         return 1;
     }
-    void running(string ans,string parameter)
+    void running(std::string ans,std::string parameter)
     {
         begin_time=clock();
-        exit_code=system(get_address(ans)+"\\"+get_namepre(ans)+".exe "+parameter);
+        exit_code=ssystem(get_address(ans)+"\\"+get_namepre(ans)+".exe "+parameter);
         if_end=true;
     }
-    int run_monitor(string ans,string parameter)
+    int run_monitor(std::string ans,std::string parameter)
     {
         if_end=false;
         time_limit=get_time_limit();
         begin_time=-1;
-        thread(running,ans,parameter).detach();
+        std::thread(running,ans,parameter).detach();
         while(begin_time==-1||(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000<time_limit*2)
         {
             if(if_end) return 0;
         }
-        system("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
+        ssystem("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
         return 1;
     }
     #undef _not_end
 }
-int compare(string file1,string file2) {return Judge::compare(file1,file2);}
-int check_ans(string chk) {return Judge::check_ans(chk);}
-int judge(string ans,string chk) {return Judge::judge(ans,chk);}
-int judge_monitor(string ans,string chk) {return Judge::judge_monitor(ans,chk);}
-int run_monitor(string ans,string parameter) {return Judge::run_monitor(ans,parameter);}
+int compare(std::string file1,std::string file2) {return Judge::compare(file1,file2);}
+int check_ans(std::string chk) {return Judge::check_ans(chk);}
+int judge(std::string ans,std::string chk) {return Judge::judge(ans,chk);}
+int judge_monitor(std::string ans,std::string chk) {return Judge::judge_monitor(ans,chk);}
+int run_monitor(std::string ans,std::string parameter) {return Judge::run_monitor(ans,parameter);}
 void print_judge_result() {Print::print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);}
 #endif

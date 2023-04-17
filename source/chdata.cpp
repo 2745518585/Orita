@@ -1,5 +1,5 @@
 #include"run.hpp"
-using namespace std;
+
 json make_cor_parameter()
 {
     json cor_parameter={
@@ -16,7 +16,7 @@ int chdata_main()
 {
     if(get_sum_parameter("f")>=2)
     {
-        string in_file=get_file(get_parameter("f",1)),out_file=get_file(get_parameter("f",2));
+        std::string in_file=get_file(get_parameter("f",1)),out_file=get_file(get_parameter("f",2));
         if(find_file(in_file)||find_file(out_file))
         {
             print_result(_NF);
@@ -27,7 +27,7 @@ int chdata_main()
     }
     else if(get_sum_parameter("if")>=1||get_sum_parameter("of")>=1)
     {
-        string in_file,out_file;
+        std::string in_file,out_file;
         if(get_sum_parameter("if")>=1)
         {
             in_file=get_file(get_parameter("if",1));
