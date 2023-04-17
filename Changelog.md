@@ -160,6 +160,7 @@ Orita 第一个正式版本。
 #### 代码
 
 - 去掉 `using namespace std;`
+- 添加 `#pragma once`。
 
 #### 新增
 

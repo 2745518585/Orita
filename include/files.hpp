@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _FILE_FILES
 #define _FILE_FILES _FILE_FILES
 #include"name.hpp"

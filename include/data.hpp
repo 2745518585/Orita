@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _FILE_DATA
 #define _FILE_DATA _FILE_DATA
 #include"init.hpp"

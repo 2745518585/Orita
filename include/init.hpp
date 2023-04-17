@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _FILE_INIT
 #define _FILE_INIT _FILE_INIT
 #include<iostream>

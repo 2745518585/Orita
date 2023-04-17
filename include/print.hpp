@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _FILE_PRINT
 #define _FILE_PRINT _FILE_PRINT
 #include"init.hpp"

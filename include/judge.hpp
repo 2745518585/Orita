@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _FILE_JUDGE
 #define _FILE_JUDGE _FILE_JUDGE
 #include"name.hpp"
