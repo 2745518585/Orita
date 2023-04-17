@@ -157,6 +157,10 @@ Orita 第一个正式版本。
 
 2023-04-17
 
+#### 代码
+
+- 去掉 `using namespace std;`
+
 #### 新增
 
 - 使用 CMake。
