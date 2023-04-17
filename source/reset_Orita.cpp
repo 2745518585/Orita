@@ -20,7 +20,7 @@ int main()
     system("mkdir \"%appdata%\\Orita\\source\" > nul 2>&1");
     system("mkdir \"%appdata%\\Orita\\temp\" > nul 2>&1");
     system("mkdir \"%appdata%\\Orita\\random\" > nul 2>&1");
-    system("copy \""+file_address+"\\source\\*\" \"%appdata%\\Orita\" > nul 2>&1");
+    system("copy \""+file_address+"\\files\\*\" \"%appdata%\\Orita\" > nul 2>&1");
     system("echo "+change_form("{\"name100\":\""+appdata_address+"\\Orita\\0.cpp\",\"name101\":\""+appdata_address+"\\Orita\\1.cpp\"}")+" > \"%appdata%\\Orita\\name.json\"");
     return 0;
 }

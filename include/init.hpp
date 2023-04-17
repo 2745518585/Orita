@@ -69,9 +69,17 @@ namespace Init
     }
     string get_file_address()
     {
-        char address[1001];
-        GetModuleFileNameA(NULL,address,MAX_PATH);
-        (strrchr(address,'\\'))[0]=0;
+        string address=__FILE__;
+        int len=address.size();
+        while(address[len-1]!='/'&&address[len-1]!='\\') --len;
+        --len;
+        while(address[len-1]!='/'&&address[len-1]!='\\') --len;
+        --len;
+        address=address.substr(0,len);
+        for(int i=0;i<len;++i)
+        {
+            if(address[i]=='/'||address[len-1]=='\\') address[i]='\\';
+        }
         return address;
     }
 }

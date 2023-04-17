@@ -1,18 +1,22 @@
-#include<init.hpp>
+#include<iostream>
+#include<string>
+#include<windows.h>
 using namespace std;
 int main(int argc,char **argv)
 {
-    if(argc==1)
+    string para=__FILE__;
+    int len=para.size();
+    while(para[len-1]!='/'&&para[len-1]!='\\') --len;
+    --len;
+    while(para[len-1]!='/'&&para[len-1]!='\\') --len;
+    --len;
+    para=para.substr(0,len);
+    for(int i=0;i<len;++i)
     {
-        cout<<"--------------------------------------------------\n";
-        cout<<"  Orita - Useful OI Tools\n";
-        cout<<"  Version: Dev 0.0.11\n";
-        cout<<"  Repository: https://github.com/2745518585/Orita\n";
-        cout<<"--------------------------------------------------\n";
-        return 0;
+        if(para[i]=='/'||para[len-1]=='\\') para[i]='\\';
     }
-    string inst=file_address+"\\..\\"+argv[1]+".exe";
-    for(int i=2;i<=argc-1;++i) inst+=" \""+string(argv[i])+"\" ";
-    system(inst.c_str());
+    para+="\\build\\orita";
+    for(int i=1;i<argc;++i) para+=" \""+string(argv[i])+"\" ";
+    system(para.c_str());
     return 0;
 }
