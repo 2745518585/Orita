@@ -1,17 +1,21 @@
+#pragma once
 #ifndef DATA_MAKER
 #define DATA_MAKER DATA_MAKER
-#include<bits/stdc++.h>
-#include<windows.h>
-#define _NEQ1 1
-#define _NEQ2 -1
-#define _LES1 2
-#define _LES2 -2
-#define _GRE1 3
-#define _GRE2 -3
-#define _LOE1 4
-#define _LOE2 -4
-#define _GOE1 5
-#define _GOE2 -5
+#include<iostream>
+#include<fstream>
+#include<cstdio>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<utility>
+#include<map>
+#include<random>
+#include<ctime>
+#define _NEQ 1
+#define _LES 2
+#define _GRE 3
+#define _LOE 4
+#define _GOE 5
 namespace Data_maker
 {
     typedef long long ll;
@@ -41,83 +45,44 @@ namespace Data_maker
     {
         return rnd(ulim-llim+1)+llim;
     }
-    void grnd_pair(ll &s1,ll &s2,ll llim,ll ulim,int opra)
+    std::map<int,std::pair<ll,ll>> pairs;
+    std::pair<ll,ll> reg_pair(int num,ll llim,ll ulim,int opra)
     {
+        if(pairs.count(num)) return pairs[num];
         auto checker=[&](ll s1,ll s2)
         {
-            if(opra==_NEQ1||opra==_NEQ2) return s1!=s2;
-            if(opra==_LES1||opra==_LES2) return s1<s2;
-            if(opra==_GRE1||opra==_GRE2) return s1>s2;
-            if(opra==_LOE1||opra==_LOE2) return s1<=s2;
-            if(opra==_GOE1||opra==_GOE2) return s1>=s2;
-            return false;
-        };
-        s1=rnd(llim,ulim),s2=rnd(llim,ulim);
-        while(!checker(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
-    }
-    void grnd_pair(ll &s1,ll &s2,ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
-    {
-        auto checker=[&](ll s1,ll s2)
-        {
-            if(opra==_NEQ1||opra==_NEQ2) return s1!=s2;
-            if(opra==_LES1||opra==_LES2) return s1<s2;
-            if(opra==_GRE1||opra==_GRE2) return s1>s2;
-            if(opra==_LOE1||opra==_LOE2) return s1<=s2;
-            if(opra==_GOE1||opra==_GOE2) return s1>=s2;
-            return false;
-        };
-        s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
-        while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
-    }
-    ll rnd_pair(ll llim,ll ulim,int opra)
-    {
-        static bool if_pair;
-        static ll pair_second;
-        if(if_pair==true)
-        {
-            if_pair=false;
-            return pair_second;
-        }
-        auto checker=[&](ll s1,ll s2)
-        {
-            if(opra==_NEQ1||opra==_NEQ2) return s1!=s2;
-            if(opra==_LES1||opra==_LES2) return s1<s2;
-            if(opra==_GRE1||opra==_GRE2) return s1>s2;
-            if(opra==_LOE1||opra==_LOE2) return s1<=s2;
-            if(opra==_GOE1||opra==_GOE2) return s1>=s2;
+            if(opra==_NEQ) return s1!=s2;
+            if(opra==_LES) return s1<s2;
+            if(opra==_GRE) return s1>s2;
+            if(opra==_LOE) return s1<=s2;
+            if(opra==_GOE) return s1>=s2;
             return false;
         };
         ll s1=rnd(llim,ulim),s2=rnd(llim,ulim);
         while(!checker(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
-        if_pair=true;
-        if(opra<0) std::swap(s1,s2);
-        pair_second=s2;
-        return s1;
+        pairs[num]=std::make_pair(s1,s2);
+        return std::make_pair(s1,s2);
     }
-    ll rnd_pair(ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
+    std::pair<ll,ll> reg_pair(int num,ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
     {
-        static bool if_pair;
-        static ll pair_second;
-        if(if_pair==true)
-        {
-            if_pair=false;
-            return pair_second;
-        }
         auto checker=[&](ll s1,ll s2)
         {
-            if(opra==_NEQ1||opra==_NEQ2) return s1!=s2;
-            if(opra==_LES1||opra==_LES2) return s1<s2;
-            if(opra==_GRE1||opra==_GRE2) return s1>s2;
-            if(opra==_LOE1||opra==_LOE2) return s1<=s2;
-            if(opra==_GOE1||opra==_GOE2) return s1>=s2;
+            if(opra==_NEQ) return s1!=s2;
+            if(opra==_LES) return s1<s2;
+            if(opra==_GRE) return s1>s2;
+            if(opra==_LOE) return s1<=s2;
+            if(opra==_GOE) return s1>=s2;
             return false;
         };
         ll s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
         while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
-        if_pair=true;
-        if(opra<0) std::swap(s1,s2);
-        pair_second=s2;
-        return s1;
+        pairs[num]=std::make_pair(s1,s2);
+        return std::make_pair(s1,s2);
+    }
+    std::pair<ll,ll> rnd_pair(int num)
+    {
+        if(!pairs.count(num)) std::make_pair(0,0);
+        return pairs[num];
     }
     std::vector<std::pair<int,int>> rnd_tree(int tot)
     {
@@ -147,9 +112,8 @@ namespace Data_maker
 long long rnd(){return Data_maker::rnd();}
 long long rnd(long long lim){return Data_maker::rnd(lim);}
 long long rnd(long long llim,long long ulim){return Data_maker::rnd(llim,ulim);}
-void grnd_pair(long long &s1,long long &s2,long long llim,long long ulim,int opra){Data_maker::grnd_pair(s1,s2,llim,ulim,opra);}
-void grnd_pair(long long &s1,long long &s2,long long llim1,long long ulim1,long long llim2,long long ulim2,int opra){Data_maker::grnd_pair(s1,s2,llim1,ulim1,llim2,ulim2,opra);}
-long long rnd_pair(long long llim,long long ulim,int opra){return Data_maker::rnd_pair(llim,ulim,opra);}
-long long rnd_pair(long long llim1,long long ulim1,long long llim2,long long ulim2,int opra){return Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,opra);}
+std::pair<long long,long long> reg_pair(int num,long long llim,long long ulim,int opra){return Data_maker::reg_pair(num,llim,ulim,opra);}
+std::pair<long long,long long> reg_pair(int num,long long llim1,long long ulim1,long long llim2,long long ulim2,int opra){return Data_maker::reg_pair(num,llim1,ulim1,llim2,ulim2,opra);}
+std::pair<long long,long long> rnd_pair(int num){return Data_maker::rnd_pair(num);}
 std::vector<std::pair<int,int>> rnd_tree(int tot){return Data_maker::rnd_tree(tot);}
 #endif
