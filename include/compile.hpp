@@ -12,7 +12,6 @@ namespace Compile
     {
         if(get_namesuf(ans)!=".cpp") return -1;
         std::string name=get_namepre(ans),address=get_address(ans);
-        ssystem("taskkill /f /pid "+name+".exe"+system_to_nul);
         return ssystem("g++ \""+address+"\\"+name+".cpp\" -o \""+address+"\\"+name+".exe\" "+get_compile_parameter()+" "+compile_parameter+" "+(if_print?"":system_to_nul))!=0;
     }
     void printing(std::string str)

@@ -11,7 +11,7 @@ json make_cor_parameter()
 json cor_parameter=make_cor_parameter();
 int compile_main()
 {
-    std::string compile_parameter="";
+    std::string compile_parameter;
     if(get_sum_parameter("o")!=-1)
     {
         for(int i=1;i<=get_sum_parameter("o");++i) compile_parameter=compile_parameter+" "+get_parameter("o",i);

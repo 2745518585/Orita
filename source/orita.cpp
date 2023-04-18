@@ -12,8 +12,8 @@ int main(int argc,char **argv)
         std::cout<<"--------------------------------------------------\n";
         return 0;
     }
-    std::string inst=file_address+"\\build\\"+argv[1]+".exe";
-    for(int i=2;i<argc;++i) inst+=" \""+std::string(argv[i])+"\" ";
-    system(inst.c_str());
+    std::string command=file_address+"\\build\\"+argv[1]+".exe";
+    for(int i=2;i<argc;++i) command+=" \""+std::string(argv[i])+"\" ";
+    system(command.c_str());
     return 0;
 }

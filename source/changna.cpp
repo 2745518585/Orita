@@ -10,7 +10,7 @@ json make_cor_parameter()
 }
 json cor_parameter=make_cor_parameter();
 int sum,value[1001],min_value[1001],max_value[1001];
-std::string inst;
+std::string command;
 int check_value(std::string str)
 {
     int sum_bracket=0;
@@ -151,9 +151,9 @@ void make_scheme(int num)
 {
     if(num==SUM+1)
     {
-        std::string solved_inst=solve_name(inst);
-        std::cout<<solved_inst<<"\n";
-        if(ssystem(system_to_nul+solved_inst)==0)
+        std::string solved_command=solve_name(command);
+        std::cout<<solved_command<<"\n";
+        if(ssystem(system_to_nul+solved_command)==0)
         {
             print_result(_Success);
             ++sum;
@@ -165,7 +165,7 @@ void make_scheme(int num)
 }
 int changna_main(int argc,char **argv)
 {
-    inst=get_parameter("f",1);
+    command=get_parameter("f",1);
     if(check_name(get_parameter("f",1)))
     {
         print_result(_II);

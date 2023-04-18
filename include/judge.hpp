@@ -45,9 +45,9 @@ namespace Judge
     }
     int judge(std::string ans,std::string chk)
     {
-        std::string run_inst="\""+get_address(ans)+"\\"+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
+        std::string run_command="\""+get_address(ans)+"\\"+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
         begin_time=clock();
-        if(exit_code=ssystem(run_inst))
+        if(exit_code=ssystem(run_command))
         {
             if_end=true;
             if(result!=_not_end) return result;
@@ -56,7 +56,7 @@ namespace Judge
         if_end=true;
         if(result!=_not_end) return result;
         time=(double)(clock()-begin_time)/CLOCKS_PER_SEC*1000;
-        std::string check_inst;
+        std::string check_command;
         if(check_ans(chk))
         {
             if(time>get_time_limit()) result=_TLE_WA;

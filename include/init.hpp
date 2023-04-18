@@ -47,9 +47,9 @@ std::string GBtoUTF8(const std::string &gb2312)
     return ss.str();
 }
 std::string system_to_nul=" > nul 2>&1 ";
-int ssystem(std::string inst)
+int ssystem(std::string command)
 {
-    return system(("cmd /C \""+inst+"\"").c_str());
+    return system(("cmd /C \""+command+"\"").c_str());
 }
 template<typename T>
 std::string to_string_len(T num,int len)
