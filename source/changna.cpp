@@ -1,5 +1,4 @@
 #include"run.hpp"
-
 const int SUM=9;
 json make_cor_parameter()
 {

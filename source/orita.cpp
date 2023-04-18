@@ -1,6 +1,5 @@
 #include"init.hpp"
 #include"Oritaconfig.hpp"
-
 int main(int argc,char **argv)
 {
     if(argc==1)

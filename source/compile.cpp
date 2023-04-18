@@ -1,5 +1,4 @@
 #include"run.hpp"
-
 json make_cor_parameter()
 {
     json cor_parameter={
@@ -17,14 +16,26 @@ int compile_main()
     {
         for(int i=1;i<=get_sum_parameter("o");++i) compile_parameter=compile_parameter+" "+get_parameter("o",i);
     }
-    if(!ssystem("dir include"+system_to_nul)) compile_parameter+=" -I include";
     if(get_sum_parameter("r")!=-1)
     {
         std::string file;
         file=get_file(add_namesuf(get_parameter("r",1),".cpp"));
         if(!compile(file,compile_parameter))
         {
-            ssystem(get_address(file)+"\\"+get_namepre(file)+".exe");
+            clock_t begin_time=clock();
+            int exit_code=ssystem(get_address(file)+"\\"+get_namepre(file)+".exe");
+            change_color("grey");
+            std::cout<<"\n===== time: ";
+            change_color("blue");
+            std::cout<<(int)((double)(clock()-begin_time)/CLOCKS_PER_SEC*1000);
+            change_color("grey");
+            std::cout<<" ms, exit code: ";
+            if(exit_code==0) change_color("green");
+            else change_color("purple");
+            std::cout<<exit_code;
+            change_color("grey");
+            std::cout<<" =====\n";
+            change_color("white");
         }
     }
     else

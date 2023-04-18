@@ -1,5 +1,4 @@
 #include"run.hpp"
-
 json make_cor_parameter()
 {
     json cor_parameter={

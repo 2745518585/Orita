@@ -1,5 +1,4 @@
 #include"init.hpp"
-
 std::string change_form(std::string str)
 {
     int pos=str.find("\\");
