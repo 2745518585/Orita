@@ -46,9 +46,8 @@ namespace Data_maker
         return rnd(ulim-llim+1)+llim;
     }
     std::map<int,std::pair<ll,ll>> pairs;
-    std::pair<ll,ll> reg_pair(int num,ll llim,ll ulim,int opra)
+    std::pair<ll,ll> rnd_pair(ll llim,ll ulim,int opra)
     {
-        if(pairs.count(num)) return pairs[num];
         auto checker=[&](ll s1,ll s2)
         {
             if(opra==_NEQ) return s1!=s2;
@@ -60,10 +59,9 @@ namespace Data_maker
         };
         ll s1=rnd(llim,ulim),s2=rnd(llim,ulim);
         while(!checker(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
-        pairs[num]=std::make_pair(s1,s2);
         return std::make_pair(s1,s2);
     }
-    std::pair<ll,ll> reg_pair(int num,ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
+    std::pair<ll,ll> rnd_pair(ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
     {
         auto checker=[&](ll s1,ll s2)
         {
@@ -76,10 +74,21 @@ namespace Data_maker
         };
         ll s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
         while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
-        pairs[num]=std::make_pair(s1,s2);
         return std::make_pair(s1,s2);
     }
-    std::pair<ll,ll> rnd_pair(int num)
+    std::pair<ll,ll> reg_pair(int num,ll llim,ll ulim,int opra)
+    {
+        if(pairs.count(num)) return pairs[num];
+        pairs[num]=rnd_pair(llim,ulim,opra);
+        return pairs[num];
+    }
+    std::pair<ll,ll> reg_pair(int num,ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
+    {
+        if(pairs.count(num)) return pairs[num];
+        pairs[num]=rnd_pair(llim1,ulim1,llim2,ulim2,opra);
+        return pairs[num];
+    }
+    std::pair<ll,ll> reg_pair(int num)
     {
         if(!pairs.count(num)) std::make_pair(0,0);
         return pairs[num];
@@ -100,20 +109,38 @@ namespace Data_maker
         for(int i=1;i<=tot;++i) fa[i]=i;
         for(int i=1;i<=tot-1;++i)
         {
-            int pos1=rnd(1,tot),pos2=rnd(1,tot);
-            while(find(pos1)==find(pos2)) pos1=rnd(1,tot),pos2=rnd(1,tot);
-            ans.push_back(std::make_pair(pos1,pos2));
-            fa[find(pos1)]=find(pos2);
+            std::pair<int,int> pos=rnd_pair(1,tot,_LES);
+            while(find(pos.first)==find(pos.second)) pos=rnd_pair(1,tot,_LES);
+            ans.push_back(pos);
+            fa[find(pos.first)]=find(pos.second);
         }
         delete[] fa;
+        return ans;
+    }
+    std::vector<std::pair<int,int>> rnd_ucgraph(int totp,int tote)
+    {
+        std::vector<std::pair<int,int>> ans=rnd_tree(totp);
+        tote-=totp-1;
+        std::map<std::pair<int,int>,bool> edges;
+        for(auto i:ans) edges[i]=true;
+        for(int i=1;i<=tote;++i)
+        {
+            std::pair<int,int> pos=rnd_pair(1,totp,_LES);
+            while(edges.count(pos)) pos=rnd_pair(1,totp,_LES);
+            ans.push_back(pos);
+            edges[pos]=true;
+        }
         return ans;
     }
 }
 unsigned long long rnd(){return Data_maker::rnd();}
 long long rnd(long long lim){return Data_maker::rnd(lim);}
 long long rnd(long long llim,long long ulim){return Data_maker::rnd(llim,ulim);}
+std::pair<long long,long long> rnd_pair(long long llim,long long ulim,int opra){return Data_maker::rnd_pair(llim,ulim,opra);}
+std::pair<long long,long long> rnd_pair(long long llim1,long long ulim1,long long llim2,long long ulim2,int opra){return Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,opra);}
 std::pair<long long,long long> reg_pair(int num,long long llim,long long ulim,int opra){return Data_maker::reg_pair(num,llim,ulim,opra);}
 std::pair<long long,long long> reg_pair(int num,long long llim1,long long ulim1,long long llim2,long long ulim2,int opra){return Data_maker::reg_pair(num,llim1,ulim1,llim2,ulim2,opra);}
-std::pair<long long,long long> rnd_pair(int num){return Data_maker::rnd_pair(num);}
+std::pair<long long,long long> reg_pair(int num){return Data_maker::reg_pair(num);}
 std::vector<std::pair<int,int>> rnd_tree(int tot){return Data_maker::rnd_tree(tot);}
+std::vector<std::pair<int,int>> rnd_ucgraph(int totp,int tote){return Data_maker::rnd_ucgraph(totp,tote);}
 #endif
