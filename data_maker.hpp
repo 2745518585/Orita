@@ -109,7 +109,7 @@ namespace Data_maker
         return ans;
     }
 }
-long long rnd(){return Data_maker::rnd();}
+unsigned long long rnd(){return Data_maker::rnd();}
 long long rnd(long long lim){return Data_maker::rnd(lim);}
 long long rnd(long long llim,long long ulim){return Data_maker::rnd(llim,ulim);}
 std::pair<long long,long long> reg_pair(int num,long long llim,long long ulim,int opra){return Data_maker::reg_pair(num,llim,ulim,opra);}
