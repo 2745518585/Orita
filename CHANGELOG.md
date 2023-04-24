@@ -1,4 +1,4 @@
-# Change Log
+# Orita CHANGELOG
 
 ## Dev 0.0
 
@@ -165,3 +165,13 @@ Orita 第一个正式版本。
 #### 新增
 
 - 使用 CMake。
+
+## Dev 0.1
+
+### Dev 0.1.0
+
+2023-04-24
+
+#### 新增
+
+- 支持 Linux 系统。

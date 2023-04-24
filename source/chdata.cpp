@@ -21,8 +21,8 @@ int chdata_main()
             print_result(_NF);
             return 0;
         }
-        copy_source(in_file,"data\\data.in");
-        copy_source(out_file,"data\\data.out");
+        copy_source(in_file,"data"+sPATH_SE+"data.in");
+        copy_source(out_file,"data"+sPATH_SE+"data.out");
     }
     else if(get_sum_parameter("if")>=1||get_sum_parameter("of")>=1)
     {
@@ -45,16 +45,16 @@ int chdata_main()
                 return 0;
             }
         }
-        if(get_sum_parameter("if")>=1) copy_source(in_file,"data\\data.in");
-        if(get_sum_parameter("of")>=1) copy_source(out_file,"data\\data.out");
+        if(get_sum_parameter("if")>=1) copy_source(in_file,"data"+sPATH_SE+"data.in");
+        if(get_sum_parameter("of")>=1) copy_source(out_file,"data"+sPATH_SE+"data.out");
     }
     else if(get_sum_parameter("s")!=-1)
     {
         char str;
-        FILE *file=fopen((appdata_address+"\\Orita\\data\\data.in").c_str(),"w");
+        FILE *file=fopen((appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in").c_str(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
-        file=fopen((appdata_address+"\\Orita\\data\\data.out").c_str(),"w");
+        file=fopen((appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out").c_str(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
     }

@@ -56,9 +56,9 @@ int judge_main()
     for(int i=1;i<=total_sum;++i)
     {
         std::cout<<"#"<<i<<"--------------------------------------------------"<<"\n";
-        Judge::in_file=running_address+"\\"+name_pre+std::to_string(i)+".in";
-        Judge::out_file=running_address+"\\"+name_pre+std::to_string(i)+".out";
-        Judge::ans_file=running_address+"\\"+name_pre+std::to_string(i)+".ans";
+        Judge::in_file=running_path+sPATH_SE+name_pre+std::to_string(i)+".in";
+        Judge::out_file=running_path+sPATH_SE+name_pre+std::to_string(i)+".out";
+        Judge::ans_file=running_path+sPATH_SE+name_pre+std::to_string(i)+".ans";
         if(find_file(Judge::in_file)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
         if(chk!=":0"&&find_file(Judge::out_file)) {print_result(_NF);file<<i<<":\t"<<get_short_result(_NF)<<"\n";continue;}
         judge_monitor(ans,chk);

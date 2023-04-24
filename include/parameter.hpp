@@ -7,15 +7,24 @@
 namespace Parameter
 {
     json parameter;
+    bool check_if_para(std::string para)
+    {
+        if(para.size()==0||para[0]!='/') return false;
+        for(int i=1;i<para.size();++i)
+        {
+            if(!((para[i]>='a'&&para[i]<='z')||(para[i]>='A'&&para[i]<='Z'))) return false;
+        }
+        return true;
+    }
     int init_parameter(int argc,char **argv)
     {
         for(int i=1;i<=argc-1;++i)
         {
-            if(argv[i][0]=='/')
+            if(check_if_para(argv[i]))
             {
                 std::string para=argv[i]+1;
                 int j=1;
-                for(;i+j<=argc-1&&argv[i+j][0]!='/';++j)
+                for(;i+j<=argc-1&&!check_if_para(argv[i+j]);++j)
                 {
                     parameter[para][j]=argv[i+j];
                 }

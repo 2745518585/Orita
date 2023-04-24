@@ -1,4 +1,4 @@
 {
-    "compile_parameter": "-std=c++14 -O2 -Wl,--stack=2147483647",
+    "compile_parameter": "-std=c++14 -O2",
     "time": 1000
 }

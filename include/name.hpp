@@ -15,11 +15,11 @@ namespace Name
     json name_json;
     void begin()
     {
-        (std::ifstream)(appdata_address+"\\Orita\\name.json")>>name_json;
+        (std::ifstream)(appdata_path+sPATH_SE+"name.json")>>name_json;
     }
     void end()
     {
-        (std::ofstream)(appdata_address+"\\Orita\\name.json")<<std::setw(4)<<name_json;
+        (std::ofstream)(appdata_path+sPATH_SE+"name.json")<<std::setw(4)<<name_json;
     }
     int find_name(int num)
     {
@@ -27,34 +27,34 @@ namespace Name
     }
     void add_name(int num,std::string name)
     {
-        name_json["name"+to_string_len(num,name_len)]=GBtoUTF8(name);
+        name_json["name"+to_string_len(num,name_len)]=systoUTF8(name);
     }
     std::string get_name(int num)
     {
-        return UTF8toGB(name_json["name"+to_string_len(num,name_len)]);
+        return UTF8tosys(name_json["name"+to_string_len(num,name_len)]);
     }
     std::string get_filename(std::string name)
     {
         int len=name.size();
-        for(int i=len-1;i>=0;--i) if(name[i]=='\\') return name.substr(i+1,len-(i+1));
+        for(int i=len-1;i>=0;--i) if(name[i]==PATH_SE) return name.substr(i+1,len-(i+1));
         return name;
     }
     std::string get_filename(int num)
     {
         std::string name=get_name(num);
         int len=name.size();
-        for(int i=len-1;i>=0;--i) if(name[i]=='\\') return name.substr(i+1,len-(i+1));
+        for(int i=len-1;i>=0;--i) if(name[i]==PATH_SE) return name.substr(i+1,len-(i+1));
         return name;
     }
-    std::string get_address(std::string name)
+    std::string get_path(std::string name)
     {
         int len=name.size();
-        for(int i=len-1;i>=0;--i) if(name[i]=='\\') return name.substr(0,i);
+        for(int i=len-1;i>=0;--i) if(name[i]==PATH_SE) return name.substr(0,i);
         return name;
     }
-    std::string get_address(int num)
+    std::string get_path(int num)
     {
-        return get_address(get_name(num));
+        return get_path(get_name(num));
     }
     std::string get_namepre(std::string name)
     {
@@ -95,16 +95,14 @@ namespace Name
             add_name(num,get_name(get_custom_num(name)));
             return;
         }
-        if(name[1]==':') add_name(num,name);
-        else add_name(num,running_address+"\\"+name);
+        add_name(num,fullpath(name));
     }
     std::string get_file(std::string name)
     {
         if(name[0]=='<') return name;
         while(name[0]=='"'&&name[name.size()-1]=='"') name=name.substr(1,name.size()-2);
         if(name[0]==':') return get_name(get_custom_num(name));
-        if(name[1]==':') return name;
-        else return running_address+"\\"+name;
+        return fullpath(name);
     }
     std::string add_namesuf(std::string name,std::string namesuf)
     {
@@ -118,8 +116,8 @@ void add_name(int num,std::string name) {return Name::add_name(num,name);}
 std::string get_name(int num) {return Name::get_name(num);}
 std::string get_filename(std::string name) {return Name::get_filename(name);}
 std::string get_filename(int num) {return Name::get_filename(num);}
-std::string get_address(std::string name) {return Name::get_address(name);}
-std::string get_address(int num) {return Name::get_address(num);}
+std::string get_path(std::string name) {return Name::get_path(name);}
+std::string get_path(int num) {return Name::get_path(num);}
 std::string get_namepre(std::string name) {return Name::get_namepre(name);}
 std::string get_namepre(int num) {return Name::get_namepre(num);}
 std::string get_namesuf(std::string name) {return Name::get_namesuf(name);}

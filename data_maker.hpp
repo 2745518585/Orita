@@ -22,12 +22,12 @@ namespace Data_maker
     typedef unsigned long long ull;
     unsigned int init_rnd()
     {
-        std::ifstream infile(std::string(getenv("appdata"))+"\\Orita\\random\\seed.txt");
+        std::ifstream infile(std::string(getenv("appdata"))+std::string(_PATH_SE)+"Orita"+std::string(_PATH_SE)+"random"+std::string(_PATH_SE)+"seed.txt");
         unsigned int seed;
         infile>>seed;
         infile.close();
         seed=seed+(seed<<7)+(seed>>11)+(seed<<13)+time(NULL);
-        std::ofstream outfile(std::string(getenv("appdata"))+"\\Orita\\random\\seed.txt");
+        std::ofstream outfile(std::string(getenv("appdata"))+std::string(_PATH_SE)+"Orita"+std::string(_PATH_SE)+"random"+std::string(_PATH_SE)+"seed.txt");
         outfile<<seed;
         outfile.close();
         return seed;

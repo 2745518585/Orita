@@ -23,12 +23,13 @@ int compile_main()
         file=get_file(add_namesuf(get_parameter("r",1),".cpp"));
         if(!compile(file,compile_parameter))
         {
-            clock_t begin_time=clock();
-            int exit_code=ssystem(get_address(file)+"\\"+get_namepre(file)+".exe");
+            stime run_time;
+            run_time.init();
+            int exit_code=ssystem(get_path(file)+sPATH_SE+get_namepre(file)+".exe");
             change_color("grey");
             std::cout<<"\n===== time: ";
             change_color("blue");
-            std::cout<<(int)((double)(clock()-begin_time)/CLOCKS_PER_SEC*1000);
+            std::cout<<run_time.get_time();
             change_color("grey");
             std::cout<<" ms, exit code: ";
             if(exit_code==0) change_color("green");
@@ -43,12 +44,13 @@ int compile_main()
     {
         std::string file;
         file=get_file(add_namesuf(get_parameter("t",1),".exe"));
-        clock_t begin_time=clock();
+        stime run_time;
+        run_time.init();
         int exit_code=ssystem(file);
         change_color("grey");
         std::cout<<"\n===== time: ";
         change_color("blue");
-        std::cout<<(int)((double)(clock()-begin_time)/CLOCKS_PER_SEC*1000);
+        std::cout<<run_time.get_time();
         change_color("grey");
         std::cout<<" ms, exit code: ";
         if(exit_code==0) change_color("green");

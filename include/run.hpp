@@ -8,6 +8,7 @@
 #include"judge.hpp"
 #include"parameter.hpp"
 #include"files.hpp"
+#include"time.hpp"
 void Begin()
 {
     Init::begin();

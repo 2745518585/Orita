@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
+add_definitions(-w)
 add_subdirectory(include)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -29,7 +30,7 @@ add_executable(judge source/judge.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 project(reset_Orita)
-add_executable(reset_Orita source/reset_orita.cpp)
+add_executable(reset_Orita source/reset_Orita.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 project(run)
@@ -40,7 +41,7 @@ project(setfile)
 add_executable(setfile source/setfile.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-project(orita VERSION 0.0.12)
+project(orita VERSION 0.0.13)
 configure_file(Oritaconfig.hpp.in Oritaconfig.hpp)
 add_executable(orita source/orita.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/include)

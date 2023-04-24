@@ -48,10 +48,10 @@ int run_main()
     // print result
     print_judge_result();
     // copy result
-    ssystem("md data"+system_to_nul);
-    copy_result("data\\data.in","data\\data.in");
-    copy_result("data\\data.out","data\\data.out");
-    copy_result("data\\data.ans","data\\data.ans");
+    ssystem("mkdir data"+system_to_nul);
+    copy_result("data"+sPATH_SE+"data.in","data"+sPATH_SE+"data.in");
+    copy_result("data"+sPATH_SE+"data.out","data"+sPATH_SE+"data.out");
+    copy_result("data"+sPATH_SE+"data.ans","data"+sPATH_SE+"data.ans");
     return 0;
 }
 int main(int argc,char **argv)

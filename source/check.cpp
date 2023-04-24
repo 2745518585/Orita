@@ -87,7 +87,7 @@ int check_main()
     if(get_sum_parameter("p")!=-1) use_compare=true;
     // init data dir
     ssystem("mkdir data"+system_to_nul);
-    ssystem("del /Q data\\*"+system_to_nul);
+    ssystem("del /Q data"+sPATH_SE+"*"+system_to_nul);
     // check
     int ac_sum=0,runned_sum=0;
     for(int i=1;i<=total_sum;++i)
@@ -104,16 +104,16 @@ int check_main()
         {
             if(use_monitor)
             {
-                if(run_monitor(in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(run_monitor(in," > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
                 if(Judge::exit_code!=0) {std::cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
             }
-            else ssystem("\""+get_address(in)+"\\"+get_namepre(in)+"\".exe > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i));
-            Judge::ans_file=appdata_address+"\\Orita\\data\\data.out";
+            else ssystem("\""+get_path(in)+sPATH_SE+get_namepre(in)+"\".exe > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i));
+            Judge::ans_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out";
             std::cout<<"\nans1:";
             judge_monitor(out,get_file(":0"));
             print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);
             int result1=Judge::result;
-            Judge::ans_file=appdata_address+"\\Orita\\data\\data.ans";
+            Judge::ans_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.ans";
             std::cout<<"ans2:";
             judge_monitor(ans,get_file(":0"));
             print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);
@@ -124,10 +124,10 @@ int check_main()
                 if(check_ans(chk))
                 {
                     print_result(_DA);
-                    copy_result("data\\data.in","data\\"+std::to_string(i)+".in");
-                    copy_result("data\\data.out","data\\"+std::to_string(i)+".out");
-                    copy_result("data\\data.ans","data\\"+std::to_string(i)+".ans");
-                    copy_result("data\\data.txt","data\\"+std::to_string(i)+".txt");
+                    copy_result("data"+sPATH_SE+"data.in","data"+sPATH_SE+std::to_string(i)+".in");
+                    copy_result("data"+sPATH_SE+"data.out","data"+sPATH_SE+std::to_string(i)+".out");
+                    copy_result("data"+sPATH_SE+"data.ans","data"+sPATH_SE+std::to_string(i)+".ans");
+                    copy_result("data"+sPATH_SE+"data.txt","data"+sPATH_SE+std::to_string(i)+".txt");
                 }
                 else print_result(_SA),++ac_sum;
             }
@@ -136,16 +136,16 @@ int check_main()
         {
             if(use_monitor)
             {
-                if(run_monitor(in," > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(run_monitor(in," > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
                 if(Judge::exit_code!=0) {std::cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
-                if(run_monitor(out," < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"")) {std::cout<<"\nstd:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(run_monitor(out," < \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out\"")) {std::cout<<"\nstd:";print_result(_TLE_O,get_time_limit()*2);continue;}
                 if(Judge::exit_code!=0) {std::cout<<"\nstd:";print_result(_RE,Judge::exit_code);continue;}
                 ++runned_sum;
             }
             else
             {
-                ssystem("\""+get_address(in)+"\\"+get_namepre(in)+".exe\" > \""+appdata_address+"\\Orita\\data\\data.in\" "+std::to_string(i));
-                ssystem("\""+get_address(out)+"\\"+get_namepre(out)+".exe\" < \""+appdata_address+"\\Orita\\data\\data.in\" > \""+appdata_address+"\\Orita\\data\\data.out\"");
+                ssystem("\""+get_path(in)+sPATH_SE+get_namepre(in)+".exe\" > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i));
+                ssystem("\""+get_path(out)+sPATH_SE+get_namepre(out)+".exe\" < \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out\"");
                 ++runned_sum;
             }
             judge_monitor(ans,chk);
@@ -153,10 +153,10 @@ int check_main()
             int result=Judge::result;
             if(result>0)
             {
-                copy_result("data\\data.in","data\\"+std::to_string(i)+".in");
-                copy_result("data\\data.out","data\\"+std::to_string(i)+".out");
-                copy_result("data\\data.ans","data\\"+std::to_string(i)+".ans");
-                copy_result("data\\data.txt","data\\"+std::to_string(i)+".txt");
+                copy_result("data"+sPATH_SE+"data.in","data"+sPATH_SE+std::to_string(i)+".in");
+                copy_result("data"+sPATH_SE+"data.out","data"+sPATH_SE+std::to_string(i)+".out");
+                copy_result("data"+sPATH_SE+"data.ans","data"+sPATH_SE+std::to_string(i)+".ans");
+                copy_result("data"+sPATH_SE+"data.txt","data"+sPATH_SE+std::to_string(i)+".txt");
             }
             else ++ac_sum;
         }
