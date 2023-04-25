@@ -18,16 +18,35 @@
 #define _GOE 5
 namespace Data_maker
 {
+    #ifdef _WIN32
+    char PATH_SE='\\';
+    std::string sPATH_SE="\\";
+    #define _PATH_SE "\\"
+    #endif
+    #ifdef __linux__
+    char PATH_SE='/';
+    std::string sPATH_SE="/";
+    #define _PATH_SE "/"
+    #endif
+    std::string get_appdata_path()
+    {
+        #ifdef _WIN32
+        return getenv("appdata")+sPATH_SE+"Orita";
+        #endif
+        #ifdef __linux__
+        return getenv("HOME")+sPATH_SE+".Orita";
+        #endif
+    }
     typedef long long ll;
     typedef unsigned long long ull;
     unsigned int init_rnd()
     {
-        std::ifstream infile(std::string(getenv("appdata"))+std::string(_PATH_SE)+"Orita"+std::string(_PATH_SE)+"random"+std::string(_PATH_SE)+"seed.txt");
+        std::ifstream infile(get_appdata_path()+sPATH_SE+"random"+sPATH_SE+"seed.txt");
         unsigned int seed;
         infile>>seed;
         infile.close();
         seed=seed+(seed<<7)+(seed>>11)+(seed<<13)+time(NULL);
-        std::ofstream outfile(std::string(getenv("appdata"))+std::string(_PATH_SE)+"Orita"+std::string(_PATH_SE)+"random"+std::string(_PATH_SE)+"seed.txt");
+        std::ofstream outfile(get_appdata_path()+sPATH_SE+"random"+sPATH_SE+"seed.txt");
         outfile<<seed;
         outfile.close();
         return seed;
@@ -90,7 +109,7 @@ namespace Data_maker
     }
     std::pair<ll,ll> reg_pair(int num)
     {
-        if(!pairs.count(num)) std::make_pair(0,0);
+        if(!pairs.count(num)) return std::make_pair(0,0);
         return pairs[num];
     }
     std::vector<std::pair<int,int>> rnd_tree(int tot)
