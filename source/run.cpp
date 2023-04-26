@@ -42,7 +42,7 @@ int run_main()
     if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
     if(print_compile(chk,"checker","-D JUDGING")) {std::cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
-    if(find_dangerous_syscalls(ans)) {print_result(_DS);}
+    if(find_dangerous_syscalls(ans,"-D JUDGING")) {print_result(_DS);}
     // run
     judge_monitor(ans,chk);
     // print result

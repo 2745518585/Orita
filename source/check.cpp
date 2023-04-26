@@ -76,9 +76,9 @@ int check_main()
     if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
     if(print_compile(chk,"checker","-D JUDGING")) {std::cout<<"\nchecker:";print_result(_CE);return 0;}
     // find dangerous syscalls
-    if(find_dangerous_syscalls(in)) {std::cout<<"\ndata_maker:";print_result(_DS);}
-    if(find_dangerous_syscalls(out)) {std::cout<<"\nstd:";print_result(_DS);}
-    if(find_dangerous_syscalls(ans)) {print_result(_DS);}
+    if(find_dangerous_syscalls(in,"-D JUDGING")) {std::cout<<"\ndata_maker:";print_result(_DS);}
+    if(find_dangerous_syscalls(out,"-D JUDGING")) {std::cout<<"\nstd:";print_result(_DS);}
+    if(find_dangerous_syscalls(ans,"-D JUDGING")) {print_result(_DS);}
     // init monitor
     bool use_monitor=false;
     if(get_sum_parameter("e")!=-1) use_monitor=true;

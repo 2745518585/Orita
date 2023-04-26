@@ -78,7 +78,7 @@ namespace Compile
         infile.open(appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".e");
         while(getline(infile,str))
         {
-            if(str.find("fopen")!=std::string::npos||str.find("freopen")!=std::string::npos||str.find("ifstream")!=std::string::npos||str.find("ofstream")!=std::string::npos||str.find("fstream")!=std::string::npos||str.find("system")!=std::string::npos)
+            if(str.find("fopen")!=std::string::npos||str.find("freopen")!=std::string::npos||str.find("ifstream")!=std::string::npos||str.find("ofstream")!=std::string::npos||str.find("fstream")!=std::string::npos)
             {
                 infile.close();
                 #ifdef _WIN32
