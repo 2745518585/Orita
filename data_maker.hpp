@@ -97,13 +97,11 @@ namespace Data_maker
     }
     std::pair<ll,ll> reg_pair(int num,ll llim,ll ulim,int opra)
     {
-        if(pairs.count(num)) return pairs[num];
         pairs[num]=rnd_pair(llim,ulim,opra);
         return pairs[num];
     }
     std::pair<ll,ll> reg_pair(int num,ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
     {
-        if(pairs.count(num)) return pairs[num];
         pairs[num]=rnd_pair(llim1,ulim1,llim2,ulim2,opra);
         return pairs[num];
     }
