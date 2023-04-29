@@ -41,7 +41,7 @@ project(setfile)
 add_executable(setfile source/setfile.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-project(orita VERSION 0.0.13)
+project(orita VERSION 0.1.0)
 configure_file(Oritaconfig.hpp.in Oritaconfig.hpp)
 add_executable(orita source/orita.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/include)
