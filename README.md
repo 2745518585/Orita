@@ -63,32 +63,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 `/t <time>`    修改默认运行时间限制（单位 ms）。
 
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`ans:`    `file` 的信息。
-
-`checker:`    `chk_file` 的信息。
-
-`No Such File`    未找到源文件。
-
-`Accepted`    答案正确。
-
-`Wrong Answer`    答案错误。
-
-`Runtime Error`    运行时错误。
-
-`Time Limit Error, over ... ms`    超出时间限制（此时会强制杀死源代码进程）。
-
-`Time Limit Error, Correct Answer`    超出时间限制，答案正确。
-
-`Time Limit Error, Wrong Answer`    超出时间限制，答案错误。
-
-`Compile Error`    编译错误。
-
-`Dangerous syscalls`    危险的系统调用。
-
 #### 数据及源代码输出
 
 数据与源代码输出会在程序运行完成后存放至 `data\data.in` `data\data.out` `data\data.ans`。
@@ -112,14 +86,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 `/s`    从 `stdin` 与 `stdout` 中读取，每个文件以 `EOF` 结束。此参数与 `/f` 冲突，优先级低于 `/f`。
 
 `/t <time>`    修改默认运行时间限制（单位 ms）。
-
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`Success`    成功修改标准输入输出。
-
-`No Such File`    未找到文件。
 
 ### check
 
@@ -149,40 +115,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 `/af <ans_file>`    指定 `ans` 文件（后缀不为 `.cpp `自动添加 `.cpp `后缀）。如无此参数则以上一次设置的 `ans` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
 
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`data_maker:`    `in_file` 的信息。
-
-`std:`    `out_file` 的信息。
-
-`ans:`    `ans_file` 的信息。
-
-`checker:`    `chk_file` 的信息。
-
-`No Such File`    未找到源文件。
-
-`Compile Error`    编译错误。
-
-`Dangerous syscalls`    危险的系统调用。
-
-`#i--------------------------------------------------  (Unaccepted p)`    表示第 $i$ 个数据点的信息，当前已经有 $p$ 个数据点错误（没有此项则表示当前无错误）。
-
-`Accepted`    答案正确。
-
-`Wrong Answer`    答案错误。
-
-`Runtime Error`    运行时错误。
-
-`Time Limit Error, over ... ms`    超出时间限制（此时会强制杀死源代码进程）。
-
-`Time Limit Error, Correct Answer`    超出时间限制，答案正确。
-
-`Time Limit Error, Wrong Answer`    超出时间限制，答案错误。
-
-`ac_sum / total_sum`    共 $total\_ sum$ 个测试点，正确 $ac\_ sum$ 个。
-
 #### 数据及源代码输出
 
 错误数据点的数据与源代码输出会在当前测试点运行完成后存放至 `data\i.in` `data\i.out` `data\i.ans`。
@@ -197,7 +129,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 #### 描述
 
-给定多组数据和源代码，得到源代码的所有结果。
+给定多组数据和源代码，得到源代码的所有结果。最后结果会汇总到 `result.txt`。
 
 #### 参数列表
 
@@ -208,32 +140,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 `/d <data_pre> <sum>`    指定数据点的前缀名和个数。程序将从当前目录下寻找名为 `data_pre` + $i$ + `.in` 的文件作为第 $i$ 组输入文件和 `data_pre` + $i$ + `.out` 作为第 $i$ 组输出文件。如无此参数将不会开始评测，仅视为设置参数。
 
 `/t <time>`    修改默认运行时间限制（单位 ms）。
-
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`No Such File`    未找到源文件。
-
-`Accepted`    答案正确。
-
-`Wrong Answer`    答案错误。
-
-`Runtime Error`    运行时错误。
-
-`Time Limit Error, over ... ms`    超出时间限制（此时会强制杀死源代码进程）。
-
-`Time Limit Error, Correct Answer`    超出时间限制，答案正确。
-
-`Time Limit Error, Wrong Answer`    超出时间限制，答案错误。
-
-`Compile Error`    编译错误。
-
-`Dangerous syscalls`    危险的系统调用。
-
-`ac_sum / total_sum`    共 $total\_ sum$ 个测试点，正确 $ac\_ sum$ 个。
-
-最后结果会汇总到 `result.txt`。
 
 #### 默认编译参数
 
@@ -256,16 +162,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 `/t <file>`    给定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），运行该源文件对应生成的可执行文件。此参数与 `/f` 冲突，优先级高于 `/f`。添加此参数将没有输出。
 
 `/o [compile_parameter]`    给定编译参数。此参数将跟在默认编译参数后，`g++` 会在冲突的参数中选择靠后的参数。
-
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`file`    正在编译 `file` 文件。
-
-`Success`    编译成功。
-
-`Compile Error`    编译错误。
 
 #### 默认编译参数
 
@@ -293,16 +189,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 形如 `:s:` 的表达式表示当前文件编号，即已经成功执行的命令个数 $+1$。
 
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`inst` 尝试执行 `inst`。
-
-`Success` 成功。
-
-`Fail` 失败，一般为未找到文件。
-
 #### 注意事项
 
 未指定标准输出和标准错误输出的命令全部定向到空，`Window` 下在命令开头加上 `> nul 2>&1`，`Linux` 下在命令开头加上 `> /dev/null 2>&1`。
@@ -319,16 +205,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 `/f <file1> <file2>`    指定比较的两个文件。默认忽略行末空格与文末换行。
 
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`No such file`    找不到文件。
-
-`Different Answer`    文件不相同。
-
-`Same Answer`    文件相同。
-
 ### setfile
 
 `setfile [/i <file>]`
@@ -340,9 +216,3 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 #### 参数列表
 
 `/i <file>`    将槽位 $i$ 的文件修改为 `file`。
-
-#### 返回值说明
-
-`Invalid input` 输入不合法。
-
-`Success`    修改成功。
