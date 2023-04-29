@@ -15,11 +15,11 @@ namespace Name
     json name_json;
     void begin()
     {
-        (std::ifstream)(appdata_path+sPATH_SE+"name.json")>>name_json;
+        (std::ifstream)(appdata_path+sPS+"name.json")>>name_json;
     }
     void end()
     {
-        (std::ofstream)(appdata_path+sPATH_SE+"name.json")<<std::setw(4)<<name_json;
+        (std::ofstream)(appdata_path+sPS+"name.json")<<std::setw(4)<<name_json;
     }
     int find_name(int num)
     {
@@ -36,20 +36,20 @@ namespace Name
     std::string get_filename(std::string name)
     {
         int len=name.size();
-        for(int i=len-1;i>=0;--i) if(name[i]==PATH_SE) return name.substr(i+1,len-(i+1));
+        for(int i=len-1;i>=0;--i) if(name[i]==PS) return name.substr(i+1,len-(i+1));
         return name;
     }
     std::string get_filename(int num)
     {
         std::string name=get_name(num);
         int len=name.size();
-        for(int i=len-1;i>=0;--i) if(name[i]==PATH_SE) return name.substr(i+1,len-(i+1));
+        for(int i=len-1;i>=0;--i) if(name[i]==PS) return name.substr(i+1,len-(i+1));
         return name;
     }
     std::string get_path(std::string name)
     {
         int len=name.size();
-        for(int i=len-1;i>=0;--i) if(name[i]==PATH_SE) return name.substr(0,i);
+        for(int i=len-1;i>=0;--i) if(name[i]==PS) return name.substr(0,i);
         return name;
     }
     std::string get_path(int num)
@@ -110,6 +110,10 @@ namespace Name
         if(name.size()<namesuf.size()||name.substr(name.size()-namesuf.size(),namesuf.size())!=namesuf) return name+namesuf;
         return name;
     }
+    std::string get_exefile(std::string name)
+    {
+        return get_namepre(name)+PS+".exe";
+    }
 }
 int find_name(int num) {return Name::find_name(num);}
 void add_name(int num,std::string name) {return Name::add_name(num,name);}
@@ -126,4 +130,5 @@ int get_custom_num(std::string name) {return Name::get_custom_num(name);}
 void add_file(int num,std::string name) {return Name::add_file(num,name);}
 std::string get_file(std::string name) {return Name::get_file(name);}
 std::string add_namesuf(std::string name,std::string namesuf) {return Name::add_namesuf(name,namesuf);}
+std::string get_exefile(std::string name) {return Name::get_exefile(name);}
 #endif

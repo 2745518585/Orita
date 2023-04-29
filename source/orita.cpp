@@ -13,10 +13,10 @@ int main(int argc,char **argv)
         return 0;
     }
     #ifdef _WIN32
-    std::string command="\""+file_path+sPATH_SE+"build"+sPATH_SE+argv[1]+".exe\"";
+    std::string command="\""+file_path+sPS+"build"+sPS+argv[1]+".exe\"";
     #endif
     #ifdef __linux__
-    std::string command="\""+file_path+sPATH_SE+"build"+sPATH_SE+argv[1]+"\"";
+    std::string command="\""+file_path+sPS+"build"+sPS+argv[1]+"\"";
     #endif
     for(int i=2;i<argc;++i) command+=" \""+std::string(argv[i])+"\" ";
     #ifdef _WIN32

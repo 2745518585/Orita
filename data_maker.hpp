@@ -19,34 +19,34 @@
 namespace Data_maker
 {
     #ifdef _WIN32
-    char PATH_SE='\\';
-    std::string sPATH_SE="\\";
-    #define _PATH_SE "\\"
+    char PS='\\';
+    std::string sPS="\\";
+    #define _PS "\\"
     #endif
     #ifdef __linux__
-    char PATH_SE='/';
-    std::string sPATH_SE="/";
-    #define _PATH_SE "/"
+    char PS='/';
+    std::string sPS="/";
+    #define _PS "/"
     #endif
     std::string get_appdata_path()
     {
         #ifdef _WIN32
-        return getenv("appdata")+sPATH_SE+"Orita";
+        return getenv("appdata")+sPS+"Orita";
         #endif
         #ifdef __linux__
-        return getenv("HOME")+sPATH_SE+".Orita";
+        return getenv("HOME")+sPS+".Orita";
         #endif
     }
     typedef long long ll;
     typedef unsigned long long ull;
     unsigned int init_rnd()
     {
-        std::ifstream infile(get_appdata_path()+sPATH_SE+"random"+sPATH_SE+"seed.txt");
+        std::ifstream infile(get_appdata_path()+sPS+"random"+sPS+"seed.txt");
         unsigned int seed;
         infile>>seed;
         infile.close();
         seed=seed+(seed<<7)+(seed>>11)+(seed<<13)+time(NULL);
-        std::ofstream outfile(get_appdata_path()+sPATH_SE+"random"+sPATH_SE+"seed.txt");
+        std::ofstream outfile(get_appdata_path()+sPS+"random"+sPS+"seed.txt");
         outfile<<seed;
         outfile.close();
         return seed;

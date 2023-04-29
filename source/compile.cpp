@@ -25,7 +25,7 @@ int compile_main()
         {
             stime run_time;
             run_time.init();
-            int exit_code=ssystem(get_path(file)+sPATH_SE+get_namepre(file)+".exe");
+            int exit_code=ssystem(get_path(file)+sPS+get_namepre(file)+".exe");
             change_color("grey");
             std::cout<<"\n===== time: ";
             change_color("blue");
@@ -74,10 +74,8 @@ int compile_main()
 }
 int main(int argc,char **argv)
 {
-    Begin();
     if(init_parameter(argc,argv)) {print_result(_II);return 0;}
     if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=compile_main();
-    End();
     return exit_code;
 }

@@ -13,7 +13,7 @@ namespace Compile
     {
         if(get_namesuf(ans)!=".cpp") return -1;
         std::string name=get_namepre(ans),path=get_path(ans);
-        return ssystem("g++ \""+path+sPATH_SE+name+".cpp\" -o \""+path+sPATH_SE+name+".exe\" "+get_compile_parameter()+" "+compile_parameter+" "+(if_print?"":system_to_nul))!=0;
+        return ssystem("g++ \""+path+sPS+name+".cpp\" -o \""+path+sPS+name+".exe\" "+get_compile_parameter()+" "+compile_parameter+" "+(if_print?"":system_to_nul))!=0;
     }
     void printing(std::string str)
     {
@@ -60,7 +60,7 @@ namespace Compile
         if(get_namesuf(ans)!=".cpp") return -1;
         std::string namepre=get_namepre(ans);
         std::ifstream infile(ans);
-        std::ofstream outfile(appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".cpp");
+        std::ofstream outfile(appdata_path+sPS+"temp"+sPS+namepre+".cpp");
         std::string str;
         while(getline(infile,str))
         {
@@ -68,34 +68,34 @@ namespace Compile
         }
         infile.close();
         outfile.close();
-        ssystem("g++ -E \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".cpp\" > \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".e\" "+get_compile_parameter()+" "+compile_parameter);
+        ssystem("g++ -E \""+appdata_path+sPS+"temp"+sPS+namepre+".cpp\" > \""+appdata_path+sPS+"temp"+sPS+namepre+".e\" "+get_compile_parameter()+" "+compile_parameter);
         #ifdef _WIN32
-        ssystem("del /Q \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".cpp\"");
+        ssystem("del /Q \""+appdata_path+sPS+"temp"+sPS+namepre+".cpp\"");
         #endif
         #ifdef __linux__
-        ssystem("rm -r \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".cpp\"");
+        ssystem("rm -r \""+appdata_path+sPS+"temp"+sPS+namepre+".cpp\"");
         #endif
-        infile.open(appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".e");
+        infile.open(appdata_path+sPS+"temp"+sPS+namepre+".e");
         while(getline(infile,str))
         {
             if(str.find("fopen")!=std::string::npos||str.find("freopen")!=std::string::npos||str.find("ifstream")!=std::string::npos||str.find("ofstream")!=std::string::npos||str.find("fstream")!=std::string::npos)
             {
                 infile.close();
                 #ifdef _WIN32
-                ssystem("del /Q \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".e\"");
+                ssystem("del /Q \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
                 #endif
                 #ifdef __linux__
-                ssystem("rm -r \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".e\"");
+                ssystem("rm -r \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
                 #endif
                 return 1;
             }
         }
         infile.close();
         #ifdef _WIN32
-        ssystem("del /Q \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".e\"");
+        ssystem("del /Q \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
         #endif
         #ifdef __linux__
-        ssystem("rm -r \""+appdata_path+sPATH_SE+"temp"+sPATH_SE+namepre+".e\"");
+        ssystem("rm -r \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
         #endif
         return 0;
     }

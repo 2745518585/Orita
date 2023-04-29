@@ -9,17 +9,23 @@
 #include"parameter.hpp"
 #include"files.hpp"
 #include"time.hpp"
-void Begin()
+namespace Run
 {
-    Init::begin();
-    Judge::begin();
-    Name::begin();
-    Data::begin();
-}
-void End()
-{
-    Init::end();
-    Name::end();
-    Data::end();
+    class Init_run
+    {
+      public:
+        Init_run()
+        {
+            Init::begin();
+            Name::begin();
+            Data::begin();
+        }
+        ~Init_run()
+        {
+            Init::end();
+            Name::end();
+            Data::end();
+        }
+    }_Init_run;
 }
 #endif

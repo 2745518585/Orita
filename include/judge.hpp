@@ -7,18 +7,6 @@
 #include"print.hpp"
 namespace Judge
 {
-    #define _not_end -1
-    int result,time,time_limit,exit_code;
-    stime run_time;
-    bool if_begin,if_end;
-    std::string in_file,out_file,ans_file,chk_file;
-    void begin()
-    {
-        in_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in";
-        out_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out";
-        ans_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.ans";
-        chk_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.txt";
-    }
     int compare(std::string file1,std::string file2)
     {
         std::ifstream infile1(file1),infile2(file2);
@@ -39,26 +27,40 @@ namespace Judge
         }
         return 0;
     }
-    int check_ans(std::string chk)
+}
+class judger
+{
+  public:
+    int result,time,exit_code;
+    stime run_time;
+    std::string ans,chk,in_file,out_file,ans_file,chk_file;
+    judger(std::string _ans,std::string _chk)
     {
-        return ssystem("\""+get_path(chk)+sPATH_SE+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\"");
+        ans=_ans,chk=_chk;
+        in_file=appdata_path+sPS+"data"+sPS+"data.in";
+        out_file=appdata_path+sPS+"data"+sPS+"data.out";
+        ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
+        chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
     }
-    int judge(std::string ans,std::string chk)
+    judger(std::string _ans,std::string _chk,std::string _in_file,std::string _out_file,std::string _ans_file,std::string _chk_file)
     {
-        std::string run_command="\""+get_path(ans)+sPATH_SE+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
-        if_begin=true;
+        ans=_ans,chk=_chk;
+        if(_in_file!="") in_file=_in_file;
+        else in_file=appdata_path+sPS+"data"+sPS+"data.in";
+        if(_out_file!="") out_file=_out_file;
+        else out_file=appdata_path+sPS+"data"+sPS+"data.out";
+        if(_ans_file!="") ans_file=_ans_file;
+        else ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
+        if(_chk_file!="") chk_file=_chk_file;
+        else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
+    }
+    int judge()
+    {
+        std::string run_command="\""+get_path(ans)+sPS+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
         run_time.init();
-        if(exit_code=ssystem(run_command))
-        {
-            if_end=true;
-            if(result!=_not_end) return result;
-            return result=_RE;
-        }
-        if_end=true;
-        if(result!=_not_end) return result;
+        if(exit_code=ssystem(run_command)) return result=_RE;
         time=run_time.get_time();
-        std::string check_command;
-        if(check_ans(chk))
+        if(ssystem("\""+get_path(chk)+sPS+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
         {
             if(time>get_time_limit()) result=_TLE_WA;
             else result=_WA;
@@ -70,13 +72,72 @@ namespace Judge
         }
         return result;
     }
-    int judge_monitor(std::string ans,std::string chk)
+    void print_result()
     {
+        Print::print_judge_result(result,time,exit_code);
+    }
+};
+class monitor_judger
+{
+  public:
+    #define _not_end -1
+    int result,time,exit_code;
+    stime run_time;
+    bool if_begin,if_end;
+    std::string ans,chk,in_file,out_file,ans_file,chk_file;
+    monitor_judger(std::string _ans,std::string _chk)
+    {
+        ans=_ans,chk=_chk;
+        in_file=appdata_path+sPS+"data"+sPS+"data.in";
+        out_file=appdata_path+sPS+"data"+sPS+"data.out";
+        ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
+        chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
+    }
+    monitor_judger(std::string _ans,std::string _chk,std::string _in_file,std::string _out_file,std::string _ans_file,std::string _chk_file)
+    {
+        ans=_ans,chk=_chk;
+        if(_in_file!="") in_file=_in_file;
+        else in_file=appdata_path+sPS+"data"+sPS+"data.in";
+        if(_out_file!="") out_file=_out_file;
+        else out_file=appdata_path+sPS+"data"+sPS+"data.out";
+        if(_ans_file!="") ans_file=_ans_file;
+        else ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
+        if(_chk_file!="") chk_file=_chk_file;
+        else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
+    }
+    int run_judge()
+    {
+        std::string run_command="\""+get_path(ans)+sPS+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
+        run_time.init();
+        if_begin=true;
+        if(exit_code=ssystem(run_command))
+        {
+            if_end=true;
+            if(result!=_not_end) return result;
+            return result=_RE;
+        }
+        if_end=true;
+        if(result!=_not_end) return result;
+        time=run_time.get_time();
+        std::string check_command;
+        if(ssystem("\""+get_path(chk)+sPS+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
+        {
+            if(time>get_time_limit()) result=_TLE_WA;
+            else result=_WA;
+        }
+        else
+        {
+            if(time>get_time_limit()) result=_TLE_CA;
+            else result=_AC;
+        }
+        return result;
+    }
+    int judge()
+    {
+        int time_limit=get_time_limit();
         result=_not_end;
-        time_limit=get_time_limit();
-        if_begin=false;
-        if_end=false;
-        std::thread(judge,ans,chk).detach();
+        if_begin=if_end=false;
+        std::thread(&monitor_judger::run_judge,this).detach();
         while(if_begin==false||run_time.get_time()<time_limit*2)
         {
             ssleep(5);
@@ -87,23 +148,39 @@ namespace Judge
             }
         }
         result=_TLE_O;
+        time=get_time_limit()*2;
         ssystem("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
         while(if_end==false) ssleep(5);
         return 1;
     }
-    void running(std::string ans,std::string parameter)
+    void print_result()
     {
-        if_begin=true;
+        Print::print_judge_result(result,time,exit_code);
+    }
+};
+class monitor_runner
+{
+  public:
+    int exit_code;
+    stime run_time;
+    bool if_begin,if_end;
+    std::string ans,argu;
+    monitor_runner(std::string _ans,std::string _argu)
+    {
+        ans=_ans,argu=_argu;
+    }
+    void run_run()
+    {
         run_time.init();
-        exit_code=ssystem(get_path(ans)+sPATH_SE+get_namepre(ans)+".exe "+parameter);
+        if_begin=true;
+        exit_code=ssystem(get_path(ans)+sPS+get_namepre(ans)+".exe "+argu);
         if_end=true;
     }
-    int run_monitor(std::string ans,std::string parameter)
+    int run()
     {
-        time_limit=get_time_limit();
-        if_begin=false;
-        if_end=false;
-        std::thread(running,ans,parameter).detach();
+        int time_limit=get_time_limit();
+        if_begin=if_end=false;
+        std::thread(&monitor_runner::run_run,this).detach();
         while(if_begin==false||run_time.get_time()<time_limit*2)
         {
             if(if_end) return 0;
@@ -111,12 +188,6 @@ namespace Judge
         ssystem("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
         return 1;
     }
-    #undef _not_end
-}
+};
 int compare(std::string file1,std::string file2) {return Judge::compare(file1,file2);}
-int check_ans(std::string chk) {return Judge::check_ans(chk);}
-int judge(std::string ans,std::string chk) {return Judge::judge(ans,chk);}
-int judge_monitor(std::string ans,std::string chk) {return Judge::judge_monitor(ans,chk);}
-int run_monitor(std::string ans,std::string parameter) {return Judge::run_monitor(ans,parameter);}
-void print_judge_result() {Print::print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);}
 #endif

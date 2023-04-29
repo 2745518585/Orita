@@ -114,10 +114,9 @@ namespace Print
             change_color("white");
         }
     }
-    void print_judge_result(int result,int time,int exit_code,int time_limit)
+    void print_judge_result(int result,int time,int exit_code)
     {
         if(result==_RE) print_result(result,exit_code);
-        else if(result==_TLE_O) print_result(result,time_limit*2);
         else print_result(result,time);
     }
     std::string get_short_result(int result)
@@ -140,6 +139,6 @@ void change_color(int red,int green,int blue) {Print::change_color(red,green,blu
 void change_color(std::string color) {Print::change_color(color);}
 void print_result(int result,int information) {Print::print_result(result,information);}
 void print_result(int result) {Print::print_result(result,0);}
-void print_judge_result(int result,int time,int exit_code,int time_limit) {Print::print_judge_result(result,time,exit_code,time_limit);}
+void print_judge_result(int result,int time,int exit_code) {Print::print_judge_result(result,time,exit_code);}
 std::string get_short_result(int result) {return Print::get_short_result(result);}
 #endif

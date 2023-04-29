@@ -7,19 +7,19 @@ namespace Files
     int copy_source(std::string file,std::string copy)
     {
         #ifdef _WIN32
-        return ssystem("copy \""+file+"\" \""+appdata_path+sPATH_SE+copy+"\""+system_to_nul);
+        return ssystem("copy \""+file+"\" \""+appdata_path+sPS+copy+"\""+system_to_nul);
         #endif
         #ifdef __linux__
-        return ssystem("cp \""+file+"\" \""+appdata_path+sPATH_SE+copy+"\""+system_to_nul);
+        return ssystem("cp \""+file+"\" \""+appdata_path+sPS+copy+"\""+system_to_nul);
         #endif
     }
     int copy_result(std::string file,std::string copy)
     {
         #ifdef _WIN32
-        return ssystem("copy \""+appdata_path+sPATH_SE+file+"\" \""+copy+"\""+system_to_nul);
+        return ssystem("copy \""+appdata_path+sPS+file+"\" \""+copy+"\""+system_to_nul);
         #endif
         #ifdef __linux__
-        return ssystem("cp \""+appdata_path+sPATH_SE+file+"\" \""+copy+"\""+system_to_nul);
+        return ssystem("cp \""+appdata_path+sPS+file+"\" \""+copy+"\""+system_to_nul);
         #endif
     }
     int find_file(std::string file)

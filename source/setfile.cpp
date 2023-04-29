@@ -20,10 +20,8 @@ int setfile_main()
 }
 int main(int argc,char **argv)
 {
-    Begin();
     if(init_parameter(argc,argv)) {print_result(_II);return 0;}
     if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=setfile_main();
-    End();
     return exit_code;
 }

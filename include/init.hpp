@@ -77,14 +77,14 @@ std::string systoUTF8(const std::string str)
 }
 
 #ifdef _WIN32
-char PATH_SE='\\';
-std::string sPATH_SE="\\";
-#define _PATH_SE "\\"
+char PS='\\';
+std::string sPS="\\";
+#define _PS "\\"
 #endif
 #ifdef __linux__
-char PATH_SE='/';
-std::string sPATH_SE="/";
-#define _PATH_SE "/"
+char PS='/';
+std::string sPS="/";
+#define _PS "/"
 #endif
 std::string fullpath(std::string path)
 {
@@ -146,11 +146,11 @@ namespace Init
         int len=path.size();
         for(int i=0;i<len;++i)
         {
-            if(path[i]=='/'||path[i]=='\\') path[i]=PATH_SE;
+            if(path[i]=='/'||path[i]=='\\') path[i]=PS;
         }
-        while(path[len-1]!=PATH_SE) --len;
+        while(path[len-1]!=PS) --len;
         --len;
-        while(path[len-1]!=PATH_SE) --len;
+        while(path[len-1]!=PS) --len;
         --len;
         path=path.substr(0,len);
         return path;
@@ -158,10 +158,10 @@ namespace Init
     std::string get_appdata_path()
     {
         #ifdef _WIN32
-        return getenv("appdata")+sPATH_SE+"Orita";
+        return getenv("appdata")+sPS+"Orita";
         #endif
         #ifdef __linux__
-        return getenv("HOME")+sPATH_SE+".Orita";
+        return getenv("HOME")+sPS+".Orita";
         #endif
     }
 }
@@ -171,18 +171,18 @@ namespace Init
     void begin()
     {
         #ifdef _WIN32
-        ssystem("del /Q "+appdata_path+_PATH_SE+"source"+_PATH_SE+"*"+system_to_nul);
-        ssystem("del /Q "+appdata_path+_PATH_SE+"temp"+_PATH_SE+"*"+system_to_nul);
+        ssystem("del /Q "+appdata_path+_PS+"source"+_PS+"*"+system_to_nul);
+        ssystem("del /Q "+appdata_path+_PS+"temp"+_PS+"*"+system_to_nul);
         #endif
         #ifdef __linux__
         ssystem("rm -r "+appdata_path+"/source/*"+system_to_nul);
         ssystem("rm -r "+appdata_path+"/temp/*"+system_to_nul);
         #endif
-        (std::ifstream)(appdata_path+_PATH_SE+"settings.json")>>settings;
+        (std::ifstream)(appdata_path+_PS+"settings.json")>>settings;
     }
     void end()
     {
-        (std::ofstream)(appdata_path+_PATH_SE+"settings.json")<<std::setw(4)<<settings;
+        (std::ofstream)(appdata_path+_PS+"settings.json")<<std::setw(4)<<settings;
     }
 }
 #endif

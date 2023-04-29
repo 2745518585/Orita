@@ -184,10 +184,8 @@ int changna_main(int argc,char **argv)
 }
 int main(int argc,char **argv)
 {
-    Begin();
     if(init_parameter(argc,argv)) {print_result(_II);return 0;}
     if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=changna_main(argc,argv);
-    End();
     return exit_code;
 }

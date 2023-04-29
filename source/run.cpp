@@ -44,19 +44,19 @@ int run_main()
     // find dangerous syscalls
     if(find_dangerous_syscalls(ans,"-D JUDGING")) {print_result(_DS);}
     // run
-    judge_monitor(ans,chk);
+    monitor_judger run_judger(ans,chk);
+    run_judger.judge();
     // print result
-    print_judge_result();
+    run_judger.print_result();
     // copy result
     ssystem("mkdir data"+system_to_nul);
-    copy_result("data"+sPATH_SE+"data.in","data"+sPATH_SE+"data.in");
-    copy_result("data"+sPATH_SE+"data.out","data"+sPATH_SE+"data.out");
-    copy_result("data"+sPATH_SE+"data.ans","data"+sPATH_SE+"data.ans");
+    copy_result("data"+sPS+"data.in","data"+sPS+"data.in");
+    copy_result("data"+sPS+"data.out","data"+sPS+"data.out");
+    copy_result("data"+sPS+"data.ans","data"+sPS+"data.ans");
     return 0;
 }
 int main(int argc,char **argv)
 {
-    Begin();
     if(init_parameter(argc,argv))
     {
         print_result(_II);
@@ -68,6 +68,5 @@ int main(int argc,char **argv)
         return 0;
     }
     int exit_code=run_main();
-    End();
     return exit_code;
 }

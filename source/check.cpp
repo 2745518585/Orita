@@ -87,7 +87,7 @@ int check_main()
     if(get_sum_parameter("p")!=-1) use_compare=true;
     // init data dir
     ssystem("mkdir data"+system_to_nul);
-    ssystem("del /Q data"+sPATH_SE+"*"+system_to_nul);
+    ssystem("del /Q data"+sPS+"*"+system_to_nul);
     // check
     int ac_sum=0,runned_sum=0;
     for(int i=1;i<=total_sum;++i)
@@ -104,30 +104,29 @@ int check_main()
         {
             if(use_monitor)
             {
-                if(run_monitor(in," > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
-                if(Judge::exit_code!=0) {std::cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
+                monitor_runner run_runner(in," > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
+                if(run_runner.run()) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(run_runner.exit_code) {std::cout<<"\ndata_maker:";print_result(_RE,run_runner.exit_code);continue;}
             }
-            else ssystem("\""+get_path(in)+sPATH_SE+get_namepre(in)+"\".exe > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i));
-            Judge::ans_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out";
+            else ssystem("\""+get_path(in)+sPS+get_namepre(in)+"\".exe > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
+            monitor_judger run_judger1(out,get_file(":0"),"","",appdata_path+sPS+"data"+sPS+"data.out","");
             std::cout<<"\nans1:";
-            judge_monitor(out,get_file(":0"));
-            print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);
-            int result1=Judge::result;
-            Judge::ans_file=appdata_path+sPATH_SE+"data"+sPATH_SE+"data.ans";
+            run_judger1.judge();
+            run_judger1.print_result();
+            monitor_judger run_judger2(ans,get_file(":0"),"","",appdata_path+sPS+"data"+sPS+"data.ans","");
             std::cout<<"ans2:";
-            judge_monitor(ans,get_file(":0"));
-            print_judge_result(Judge::result,Judge::time,Judge::exit_code,Judge::time_limit);
-            int result2=Judge::result;
+            run_judger2.judge();
+            run_judger2.print_result();
             ++runned_sum;
-            if(result1==_AC&&result2==_AC)
+            if(run_judger1.result==_AC&&run_judger2.result==_AC)
             {
-                if(check_ans(chk))
+                if(ssystem(get_exefile(chk)+" "+appdata_path+sPS+"data"+sPS+"data.in "+appdata_path+sPS+"data"+sPS+"data.out "+appdata_path+sPS+"data"+sPS+"data.ans"))
                 {
                     print_result(_DA);
-                    copy_result("data"+sPATH_SE+"data.in","data"+sPATH_SE+std::to_string(i)+".in");
-                    copy_result("data"+sPATH_SE+"data.out","data"+sPATH_SE+std::to_string(i)+".out");
-                    copy_result("data"+sPATH_SE+"data.ans","data"+sPATH_SE+std::to_string(i)+".ans");
-                    copy_result("data"+sPATH_SE+"data.txt","data"+sPATH_SE+std::to_string(i)+".txt");
+                    copy_result("data"+sPS+"data.in","data"+sPS+std::to_string(i)+".in");
+                    copy_result("data"+sPS+"data.out","data"+sPS+std::to_string(i)+".out");
+                    copy_result("data"+sPS+"data.ans","data"+sPS+std::to_string(i)+".ans");
+                    copy_result("data"+sPS+"data.txt","data"+sPS+std::to_string(i)+".txt");
                 }
                 else print_result(_SA),++ac_sum;
             }
@@ -136,27 +135,29 @@ int check_main()
         {
             if(use_monitor)
             {
-                if(run_monitor(in," > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i))) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
-                if(Judge::exit_code!=0) {std::cout<<"\ndata_maker:";print_result(_RE,Judge::exit_code);continue;}
-                if(run_monitor(out," < \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out\"")) {std::cout<<"\nstd:";print_result(_TLE_O,get_time_limit()*2);continue;}
-                if(Judge::exit_code!=0) {std::cout<<"\nstd:";print_result(_RE,Judge::exit_code);continue;}
+                monitor_runner run_runner1(in," > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
+                if(run_runner1.run()) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(run_runner1.exit_code) {std::cout<<"\ndata_maker:";print_result(_RE,run_runner1.exit_code);continue;}
+                monitor_runner run_runner2(out," < \""+appdata_path+sPS+"data"+sPS+"data.in\" > \""+appdata_path+sPS+"data"+sPS+"data.out\"");
+                if(run_runner2.run()) {std::cout<<"\nstd:";print_result(_TLE_O,get_time_limit()*2);continue;}
+                if(run_runner2.exit_code) {std::cout<<"\nstd:";print_result(_RE,run_runner2.exit_code);continue;}
                 ++runned_sum;
             }
             else
             {
-                ssystem("\""+get_path(in)+sPATH_SE+get_namepre(in)+".exe\" > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" "+std::to_string(i));
-                ssystem("\""+get_path(out)+sPATH_SE+get_namepre(out)+".exe\" < \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.in\" > \""+appdata_path+sPATH_SE+"data"+sPATH_SE+"data.out\"");
+                ssystem("\""+get_path(in)+sPS+get_namepre(in)+".exe\" > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
+                ssystem("\""+get_path(out)+sPS+get_namepre(out)+".exe\" < \""+appdata_path+sPS+"data"+sPS+"data.in\" > \""+appdata_path+sPS+"data"+sPS+"data.out\"");
                 ++runned_sum;
             }
-            judge_monitor(ans,chk);
-            print_judge_result();
-            int result=Judge::result;
-            if(result>0)
+            monitor_judger run_judger(ans,chk);
+            run_judger.judge();
+            run_judger.print_result();
+            if(run_judger.result>0)
             {
-                copy_result("data"+sPATH_SE+"data.in","data"+sPATH_SE+std::to_string(i)+".in");
-                copy_result("data"+sPATH_SE+"data.out","data"+sPATH_SE+std::to_string(i)+".out");
-                copy_result("data"+sPATH_SE+"data.ans","data"+sPATH_SE+std::to_string(i)+".ans");
-                copy_result("data"+sPATH_SE+"data.txt","data"+sPATH_SE+std::to_string(i)+".txt");
+                copy_result("data"+sPS+"data.in","data"+sPS+std::to_string(i)+".in");
+                copy_result("data"+sPS+"data.out","data"+sPS+std::to_string(i)+".out");
+                copy_result("data"+sPS+"data.ans","data"+sPS+std::to_string(i)+".ans");
+                copy_result("data"+sPS+"data.txt","data"+sPS+std::to_string(i)+".txt");
             }
             else ++ac_sum;
         }
@@ -166,10 +167,8 @@ int check_main()
 }
 int main(int argc,char **argv)
 {
-    Begin();
     if(init_parameter(argc,argv)) {print_result(_II);return 0;}
     if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
     int exit_code=check_main();
-    End();
     return exit_code;
 }
