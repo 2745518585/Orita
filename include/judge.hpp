@@ -58,7 +58,7 @@ class judger
     {
         std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
         run_time.init();
-        if(exit_code=ssystem(run_command)) return result=_RE;
+        if(exit_code=ssystem(run_command)/sys_exit_code) return result=_RE;
         time=run_time.get_time();
         if(ssystem("\""+get_exefile(chk)+"\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
         {
@@ -110,7 +110,7 @@ class monitor_judger
         std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
         run_time.init();
         if_begin=true;
-        if(exit_code=ssystem(run_command))
+        if(exit_code=ssystem(run_command)/sys_exit_code)
         {
             if_end=true;
             if(result!=_not_end) return result;
@@ -173,7 +173,7 @@ class monitor_runner
     {
         run_time.init();
         if_begin=true;
-        exit_code=ssystem(get_exefile(ans)+" "+argu);
+        exit_code=ssystem(get_exefile(ans)+" "+argu)/sys_exit_code;
         if_end=true;
     }
     int run()

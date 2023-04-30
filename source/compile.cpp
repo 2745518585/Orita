@@ -25,7 +25,7 @@ int compile_main()
         {
             stime run_time;
             run_time.init();
-            int exit_code=ssystem(get_exefile(file));
+            int exit_code=ssystem(get_exefile(file))/sys_exit_code;
             change_color("grey");
             std::cout<<"\n===== time: ";
             change_color("blue");
@@ -45,7 +45,7 @@ int compile_main()
         std::string file;
         stime run_time;
         run_time.init();
-        int exit_code=ssystem(file);
+        int exit_code=ssystem(file)/sys_exit_code;
         change_color("grey");
         std::cout<<"\n===== time: ";
         change_color("blue");

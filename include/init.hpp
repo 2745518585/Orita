@@ -118,6 +118,13 @@ std::string system_to_nul=" > nul 2>&1 ";
 #ifdef __linux__
 std::string system_to_nul=" > /dev/null 2>&1 ";
 #endif
+#ifdef _WIN32
+int sys_exit_code=1;
+#endif
+#ifdef __linux__
+int sys_exit_code=256;
+#endif
+
 int ssystem(const std::string command)
 {
     #ifdef _WIN32

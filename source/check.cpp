@@ -55,6 +55,15 @@ int check_main()
         return 0;
     }
     int total_sum=stoi(get_parameter("n",1));
+    // init monitor
+    bool use_monitor=false;
+    if(get_sum_parameter("e")!=-1) use_monitor=true;
+    // init compare
+    bool use_compare=false;
+    if(get_sum_parameter("p")!=-1) use_compare=true;
+    // init data dir
+    ssystem("mkdir data"+system_to_nul);
+    ssystem("del /Q data"+sPS+"*"+system_to_nul);
     // find file
     if(find_name(_check_in)) {std::cout<<"\ndata_maker:";print_result(_NF);return 0;}
     if(find_name(_check_out)) {std::cout<<"\nstd:";print_result(_NF);return 0;}
@@ -75,19 +84,11 @@ int check_main()
     if(print_compile(out,"std","-D JUDGING")) {std::cout<<"\nstd:";print_result(_CE);return 0;}
     if(print_compile(ans,"ans","-D JUDGING")) {print_result(_CE);return 0;}
     if(print_compile(chk,"checker","-D JUDGING")) {std::cout<<"\nchecker:";print_result(_CE);return 0;}
+    if(use_compare&&print_compile(get_file(":0"),"checker0","-D JUDGING")) {std::cout<<"\nchecker0:";print_result(_CE);return 0;}
     // find dangerous syscalls
     if(find_dangerous_syscalls(in,"-D JUDGING")) {std::cout<<"\ndata_maker:";print_result(_DS);}
     if(find_dangerous_syscalls(out,"-D JUDGING")) {std::cout<<"\nstd:";print_result(_DS);}
     if(find_dangerous_syscalls(ans,"-D JUDGING")) {print_result(_DS);}
-    // init monitor
-    bool use_monitor=false;
-    if(get_sum_parameter("e")!=-1) use_monitor=true;
-    // init compare
-    bool use_compare=false;
-    if(get_sum_parameter("p")!=-1) use_compare=true;
-    // init data dir
-    ssystem("mkdir data"+system_to_nul);
-    ssystem("del /Q data"+sPS+"*"+system_to_nul);
     // check
     int ac_sum=0,runned_sum=0;
     for(int i=1;i<=total_sum;++i)
