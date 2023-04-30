@@ -108,7 +108,7 @@ int check_main()
                 if(run_runner.run()) {std::cout<<"\ndata_maker:";print_result(_TLE_O,get_time_limit()*2);continue;}
                 if(run_runner.exit_code) {std::cout<<"\ndata_maker:";print_result(_RE,run_runner.exit_code);continue;}
             }
-            else ssystem("\""+get_path(in)+sPS+get_namepre(in)+"\".exe > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
+            else ssystem("\""+get_exefile(in)+"\" > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
             monitor_judger run_judger1(out,get_file(":0"),"","",appdata_path+sPS+"data"+sPS+"data.out","");
             std::cout<<"\nans1:";
             run_judger1.judge();
@@ -145,8 +145,8 @@ int check_main()
             }
             else
             {
-                ssystem("\""+get_path(in)+sPS+get_namepre(in)+".exe\" > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
-                ssystem("\""+get_path(out)+sPS+get_namepre(out)+".exe\" < \""+appdata_path+sPS+"data"+sPS+"data.in\" > \""+appdata_path+sPS+"data"+sPS+"data.out\"");
+                ssystem("\""+get_exefile(in)+"\" > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
+                ssystem("\""+get_exefile(out)+"\" < \""+appdata_path+sPS+"data"+sPS+"data.in\" > \""+appdata_path+sPS+"data"+sPS+"data.out\"");
                 ++runned_sum;
             }
             monitor_judger run_judger(ans,chk);

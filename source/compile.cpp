@@ -25,7 +25,7 @@ int compile_main()
         {
             stime run_time;
             run_time.init();
-            int exit_code=ssystem(get_path(file)+sPS+get_namepre(file)+".exe");
+            int exit_code=ssystem(get_exefile(file));
             change_color("grey");
             std::cout<<"\n===== time: ";
             change_color("blue");
@@ -43,7 +43,6 @@ int compile_main()
     else if(get_sum_parameter("t")!=-1)
     {
         std::string file;
-        file=get_file(add_namesuf(get_parameter("t",1),".exe"));
         stime run_time;
         run_time.init();
         int exit_code=ssystem(file);

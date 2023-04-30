@@ -12,8 +12,7 @@ namespace Compile
     int compile(std::string ans,std::string compile_parameter,bool if_print)
     {
         if(get_namesuf(ans)!=".cpp") return -1;
-        std::string name=get_namepre(ans),path=get_path(ans);
-        return ssystem("g++ \""+path+sPS+name+".cpp\" -o \""+path+sPS+name+".exe\" "+get_compile_parameter()+" "+compile_parameter+" "+(if_print?"":system_to_nul))!=0;
+        return ssystem("g++ \""+ans+"\" -o \""+get_exefile(ans)+"\" "+get_compile_parameter()+" "+compile_parameter+" "+(if_print?"":system_to_nul))!=0;
     }
     void printing(std::string str)
     {

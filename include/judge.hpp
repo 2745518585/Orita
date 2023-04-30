@@ -56,11 +56,11 @@ class judger
     }
     int judge()
     {
-        std::string run_command="\""+get_path(ans)+sPS+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
+        std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
         run_time.init();
         if(exit_code=ssystem(run_command)) return result=_RE;
         time=run_time.get_time();
-        if(ssystem("\""+get_path(chk)+sPS+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
+        if(ssystem("\""+get_exefile(chk)+"\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
         {
             if(time>get_time_limit()) result=_TLE_WA;
             else result=_WA;
@@ -107,7 +107,7 @@ class monitor_judger
     }
     int run_judge()
     {
-        std::string run_command="\""+get_path(ans)+sPS+get_namepre(ans)+".exe\" < \""+in_file+"\" > \""+ans_file+"\"";
+        std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
         run_time.init();
         if_begin=true;
         if(exit_code=ssystem(run_command))
@@ -120,7 +120,7 @@ class monitor_judger
         if(result!=_not_end) return result;
         time=run_time.get_time();
         std::string check_command;
-        if(ssystem("\""+get_path(chk)+sPS+get_namepre(chk)+".exe\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
+        if(ssystem("\""+get_exefile(chk)+"\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
         {
             if(time>get_time_limit()) result=_TLE_WA;
             else result=_WA;
@@ -149,7 +149,7 @@ class monitor_judger
         }
         result=_TLE_O;
         time=get_time_limit()*2;
-        ssystem("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
+        ssystem("taskkill /f /pid "+get_exename(ans)+system_to_nul);
         while(if_end==false) ssleep(5);
         return 1;
     }
@@ -173,7 +173,7 @@ class monitor_runner
     {
         run_time.init();
         if_begin=true;
-        exit_code=ssystem(get_path(ans)+sPS+get_namepre(ans)+".exe "+argu);
+        exit_code=ssystem(get_exefile(ans)+" "+argu);
         if_end=true;
     }
     int run()
@@ -185,7 +185,7 @@ class monitor_runner
         {
             if(if_end) return 0;
         }
-        ssystem("taskkill /f /pid "+get_namepre(ans)+".exe"+system_to_nul);
+        ssystem("taskkill /f /pid "+get_exename(ans)+system_to_nul);
         return 1;
     }
 };

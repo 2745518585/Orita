@@ -112,7 +112,11 @@ namespace Name
     }
     std::string get_exefile(std::string name)
     {
-        return get_namepre(name)+PS+".exe";
+        return get_path(name)+sPS+get_namepre(name)+exe_suf;
+    }
+    std::string get_exename(std::string name)
+    {
+        return get_namepre(name)+exe_suf;
     }
 }
 int find_name(int num) {return Name::find_name(num);}
@@ -131,4 +135,5 @@ void add_file(int num,std::string name) {return Name::add_file(num,name);}
 std::string get_file(std::string name) {return Name::get_file(name);}
 std::string add_namesuf(std::string name,std::string namesuf) {return Name::add_namesuf(name,namesuf);}
 std::string get_exefile(std::string name) {return Name::get_exefile(name);}
+std::string get_exename(std::string name) {return Name::get_exename(name);}
 #endif
