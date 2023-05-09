@@ -1,9 +1,9 @@
-#include<bits/stdc++.h>
-using namespace std;
+#include<fstream>
+#include<string>
 int main(int argc,char **argv)
 {
-    ifstream infile1(argv[2]),infile2(argv[3]);
-    string str1,str2;
+    std::ifstream infile1(argv[2]),infile2(argv[3]);
+    std::string str1,str2;
     bool empty1=0,empty2=0;
     while(true)
     {
@@ -16,7 +16,7 @@ int main(int argc,char **argv)
         if(end2||str2.size()==0) empty2=true;
         else empty2=false;
         if(empty1^empty2) return 1;
-        if(strcmp(str1.c_str(),str2.c_str())!=0) return 1;
+        if(str1!=str2) return 1;
     }
     return 0;
 }
