@@ -24,8 +24,9 @@ namespace Print
     }
     void change_color(std::string color)
     {
-        if((int)settings["colors"][color][0].type()==0||(int)settings["colors"][color][1].type()==0||(int)settings["colors"][color][2].type()==0) return;
-        std::cout<<"\e[38;2;"<<settings["colors"][color][0]<<";"<<settings["colors"][color][1]<<";"<<settings["colors"][color][2]<<"m";
+        if((int)settings["colors"][color].type()==0) return;
+        std::string red=((std::string)settings["colors"][color]).substr(1,2),green=((std::string)settings["colors"][color]).substr(3,2),blue=((std::string)settings["colors"][color]).substr(5,2);
+        std::cout<<"\e[38;2;"<<stoi(red,0,16)<<";"<<stoi(green,0,16)<<";"<<stoi(blue,0,16)<<"m";
     }
     void print_result(int result,int information)
     {
