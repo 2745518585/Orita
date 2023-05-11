@@ -24,9 +24,9 @@ int check_main()
     // init name
     if(get_sum_argu("f")==3)
     {
-        if(find_file(add_namesuf(get_argu("f",1),".cpp"))) {print_result(_in_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_argu("f",2),".cpp"))) {print_result(_out_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_argu("f",3),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+        if(find_file(add_namesuf(get_file(get_argu("f",1)),".cpp"))) {print_result(_in_name,_NF);return 0;}
+        if(find_file(add_namesuf(get_file(get_argu("f",2)),".cpp"))) {print_result(_out_name,_NF);return 0;}
+        if(find_file(add_namesuf(get_file(get_argu("f",3)),".cpp"))) {print_result(_ans_name,_NF);return 0;}
         add_file(_check_in,get_argu("f",1));
         add_file(_check_out,get_argu("f",2));
         add_file(_check_ans,get_argu("f",3));
@@ -35,17 +35,17 @@ int check_main()
     {
         if(get_sum_argu("if")==1)
         {
-            if(find_file(add_namesuf(get_argu("if",1),".cpp"))) {print_result(_in_name,_NF);return 0;}
+            if(find_file(add_namesuf(get_file(get_argu("if",1)),".cpp"))) {print_result(_in_name,_NF);return 0;}
             add_file(_check_in,get_argu("if",1));
         }
         if(get_sum_argu("of")==1)
         {
-            if(find_file(add_namesuf(get_argu("of",1),".cpp"))) {print_result(_out_name,_NF);return 0;}
+            if(find_file(add_namesuf(get_file(get_argu("of",1)),".cpp"))) {print_result(_out_name,_NF);return 0;}
             add_file(_check_out,get_argu("of",1));
         }
         if(get_sum_argu("af")==1)
         {
-            if(find_file(add_namesuf(get_argu("af",1),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+            if(find_file(add_namesuf(get_file(get_argu("af",1)),".cpp"))) {print_result(_ans_name,_NF);return 0;}
             add_file(_check_ans,get_argu("af",1));
         }
     }
@@ -54,8 +54,8 @@ int check_main()
     {
         if(get_sum_argu("c")==1)
         {
+            if(find_file(add_namesuf(get_file(get_argu("c",1)),".cpp"))) {print_result(_chk_name,_NF);return 0;}
             add_file(_check_chk,get_argu("c",1));
-            if(find_file(add_namesuf(get_name(_check_chk),".cpp"))) {print_result(_chk_name,_NF);return 0;}
         }
         use_checker=true;
     }
@@ -78,17 +78,17 @@ int check_main()
     ssystem("mkdir data"+system_to_nul);
     ssystem("del /Q data"+sPS+"*"+system_to_nul);
     // find file
-    if(find_name(_check_in)) {print_result(_in_name,_NF);return 0;}
-    if(find_name(_check_out)) {print_result(_out_name,_NF);return 0;}
-    if(find_name(_check_ans)) {print_result(_ans_name,_NF);return 0;}
-    if(use_checker&&find_name(_check_chk)) {print_result(_chk_name,_NF);return 0;}
+    if(find_filestr(_check_in)) {print_result(_in_name,_NF);return 0;}
+    if(find_filestr(_check_out)) {print_result(_out_name,_NF);return 0;}
+    if(find_filestr(_check_ans)) {print_result(_ans_name,_NF);return 0;}
+    if(use_checker&&find_filestr(_check_chk)) {print_result(_chk_name,_NF);return 0;}
     std::string in,out,ans,chk;
-    in=add_namesuf(get_name(_check_in),".cpp");
-    out=add_namesuf(get_name(_check_out),".cpp");
-    ans=add_namesuf(get_name(_check_ans),".cpp");
-    if(use_compare) chk=get_file(":0");
-    else if(use_checker) chk=add_namesuf(get_name(_check_chk),".cpp");
-    else chk=get_file(":1");
+    in=add_namesuf(get_file(_check_in),".cpp");
+    out=add_namesuf(get_file(_check_out),".cpp");
+    ans=add_namesuf(get_file(_check_ans),".cpp");
+    if(use_compare) chk=get_file("%0");
+    else if(use_checker) chk=add_namesuf(get_file(_check_chk),".cpp");
+    else chk=get_file("%1");
     if(find_file(in)) {print_result(_in_name,_NF);return 0;}
     if(find_file(out)) {print_result(_out_name,_NF);return 0;}
     if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
@@ -136,11 +136,11 @@ int check_main()
                 if(run_runner.exit_code) {print_result(_in_name,_RE,0,run_runner.exit_code);continue;}
             }
             else ssystem("\""+get_exefile(in)+"\" > \""+appdata_path+sPS+"data"+sPS+"data.in\" "+std::to_string(i));
-            monitor_judger run_judger1(out,get_file(":0"),"","",appdata_path+sPS+"data"+sPS+"data.out","");
+            monitor_judger run_judger1(out,get_file("%0"),"","",appdata_path+sPS+"data"+sPS+"data.out","");
             print_result(_ans_name+"1");
             run_judger1.judge();
             run_judger1.print_result();
-            monitor_judger run_judger2(ans,get_file(":0"),"","",appdata_path+sPS+"data"+sPS+"data.ans","");
+            monitor_judger run_judger2(ans,get_file("%0"),"","",appdata_path+sPS+"data"+sPS+"data.ans","");
             print_result(_ans_name+"2");
             run_judger2.judge();
             run_judger2.print_result();

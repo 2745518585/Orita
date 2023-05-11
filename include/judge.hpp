@@ -1,8 +1,7 @@
 #pragma once
 #ifndef _FILE_JUDGE
 #define _FILE_JUDGE _FILE_JUDGE
-#include"name.hpp"
-#include"compile.hpp"
+#include"files.hpp"
 #include"data.hpp"
 #include"print.hpp"
 namespace Judge
@@ -151,7 +150,7 @@ class monitor_judger
         }
         result=_TLE_O;
         time=get_time_limit()*2;
-        ssystem("taskkill /f /pid "+get_exename(ans)+system_to_nul);
+        ssystem("taskkill /f /pid "+get_exefilename(ans)+system_to_nul);
         while(if_end==false) ssleep(5);
         return 1;
     }
@@ -187,7 +186,7 @@ class monitor_runner
         {
             if(if_end) return 0;
         }
-        ssystem("taskkill /f /pid "+get_exename(ans)+system_to_nul);
+        ssystem("taskkill /f /pid "+get_exefilename(ans)+system_to_nul);
         return 1;
     }
 };

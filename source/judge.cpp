@@ -17,16 +17,16 @@ int judge_main()
     // init name
     if(get_sum_argu("f")==1)
     {
+        if(find_file(add_namesuf(get_file(get_argu("f",1)),".cpp"))) {print_result(_ans_name,_NF);return 0;}
         add_file(_run_ans,get_argu("f",1));
-        if(find_file(add_namesuf(get_name(_run_ans),".cpp"))) {print_result(_ans_name,_NF);return 0;}
     }
     bool use_checker=false;
     if(get_sum_argu("c")!=-1)
     {
         if(get_sum_argu("c")==1)
         {
+            if(find_file(add_namesuf(get_file(get_argu("c",1)),".cpp"))) {print_result(_chk_name,_NF);return 0;}
             add_file(_run_chk,get_argu("c",1));
-            if(find_file(add_namesuf(get_name(_run_chk),".cpp"))) {print_result(_chk_name,_NF);return 0;}
         }
         use_checker=true;
     }
@@ -39,12 +39,12 @@ int judge_main()
         return 0;
     }
     // find file
-    if(find_name(_run_ans)) {print_result(_ans_name,_NF);return 0;}
-    if(use_checker&&find_name(_run_chk)) {print_result(_chk_name,_NF);return 0;}
+    if(find_filestr(_run_ans)) {print_result(_ans_name,_NF);return 0;}
+    if(use_checker&&find_filestr(_run_chk)) {print_result(_chk_name,_NF);return 0;}
     std::string ans,chk;
-    ans=add_namesuf(get_name(_run_ans),".cpp");
-    if(use_checker) chk=add_namesuf(get_name(_run_chk),".cpp");
-    else chk=get_file(":1");
+    ans=add_namesuf(get_file(_run_ans),".cpp");
+    if(use_checker) chk=add_namesuf(get_file(_run_chk),".cpp");
+    else chk=get_file("%1");
     if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
     if(find_file(chk)) {print_result(_chk_name,_NF);return 0;}
     // compile file

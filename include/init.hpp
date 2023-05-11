@@ -180,6 +180,7 @@ std::string to_string_len(const T num,const int len)
     if(str.size()>len) return str;
     return std::string(len-str.size(),'0')+str;
 }
+
 json settings;
 namespace Init
 {
@@ -219,14 +220,6 @@ namespace Init
 {
     void begin()
     {
-        #ifdef _WIN32
-        ssystem("del /Q "+appdata_path+sPS+"source"+sPS+"*"+system_to_nul);
-        ssystem("del /Q "+appdata_path+sPS+"temp"+sPS+"*"+system_to_nul);
-        #endif
-        #ifdef __linux__
-        ssystem("rm -r "+appdata_path+"/source/*"+system_to_nul);
-        ssystem("rm -r "+appdata_path+"/temp/*"+system_to_nul);
-        #endif
         (std::ifstream)(appdata_path+sPS+"settings.json")>>settings;
     }
     void end()

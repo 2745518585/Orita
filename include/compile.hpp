@@ -1,15 +1,14 @@
 #pragma once
 #ifndef _FILE_COMPILE
 #define _FILE_COMPILE _FILE_COMPILE
-#include"name.hpp"
+#include"files.hpp"
 #include"data.hpp"
-#include"print.hpp"
 #include"time.hpp"
 namespace Compile
 {
     int compile(std::string ans,std::string compile_argu,bool if_print)
     {
-        if(get_namesuf(ans)!=".cpp") return -1;
+        if(get_filenamesuf(ans)!=".cpp") return -1;
         return ssystem("g++ \""+ans+"\" -o \""+get_exefile(ans)+"\" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul))!=0;
     }
 }
@@ -32,7 +31,7 @@ class compiler
     std::map<std::string,int> results;
     int compile(std::string file,std::string compile_argu)
     {
-        if(get_namesuf(file)!=".cpp") return -1;
+        if(get_filenamesuf(file)!=".cpp") return -1;
         return ssystem("g++ \""+file+"\" -o \""+get_exefile(file)+"\" "+get_compile_argu()+" "+compile_argu+system_to_nul)!=0;
     }
     void auto_compile()
