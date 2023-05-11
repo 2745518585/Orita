@@ -72,9 +72,9 @@ class judger
         }
         return result;
     }
-    void print_result()
+    void print_result(std::string name="")
     {
-        Print::print_judge_result(result,time,exit_code);
+        Print::print_result(name,result,time,exit_code);
     }
 };
 class monitor_judger
@@ -153,9 +153,9 @@ class monitor_judger
         while(if_end==false) ssleep(5);
         return 1;
     }
-    void print_result()
+    void print_result(std::string name="")
     {
-        Print::print_judge_result(result,time,exit_code);
+        Print::print_result(name,result,time,exit_code);
     }
 };
 class monitor_runner
