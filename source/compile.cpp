@@ -1,27 +1,27 @@
 #include"run.hpp"
-json make_cor_parameter()
+json make_cor_argu()
 {
-    json cor_parameter={
+    json cor_argu={
         {"f",{_no_limit}},
         {"r",{_not_define,1}},
         {"t",{_not_define,1}},
         {"o",{_no_limit}}
     };
-    return cor_parameter;
+    return cor_argu;
 }
-json cor_parameter=make_cor_parameter();
+json cor_argu=make_cor_argu();
 int compile_main()
 {
-    std::string compile_parameter;
-    if(get_sum_parameter("o")!=-1)
+    std::string compile_argu;
+    if(get_sum_argu("o")!=-1)
     {
-        for(int i=1;i<=get_sum_parameter("o");++i) compile_parameter=compile_parameter+" "+get_parameter("o",i);
+        for(int i=1;i<=get_sum_argu("o");++i) compile_argu=compile_argu+" "+get_argu("o",i);
     }
-    if(get_sum_parameter("r")!=-1)
+    if(get_sum_argu("r")!=-1)
     {
         std::string file;
-        file=get_file(add_namesuf(get_parameter("r",1),".cpp"));
-        if(!compile(file,compile_parameter))
+        file=get_file(add_namesuf(get_argu("r",1),".cpp"));
+        if(!compile(file,compile_argu))
         {
             stime run_time;
             run_time.init();
@@ -40,7 +40,7 @@ int compile_main()
             change_color("white");
         }
     }
-    else if(get_sum_parameter("t")!=-1)
+    else if(get_sum_argu("t")!=-1)
     {
         std::string file;
         stime run_time;
@@ -61,11 +61,11 @@ int compile_main()
     }
     else
     {
-        for(int i=1;i<=get_sum_parameter("f");++i)
+        for(int i=1;i<=get_sum_argu("f");++i)
         {
-            std::string file=get_file(add_namesuf(get_parameter("f",i),".cpp"));
+            std::string file=get_file(add_namesuf(get_argu("f",i),".cpp"));
             std::cout<<get_filename(file)<<"\n";
-            if(compile(file,compile_parameter)==0) print_result(_Success);
+            if(compile(file,compile_argu)==0) print_result(_Success);
             else print_result(_CE);
         }
     }
@@ -73,8 +73,8 @@ int compile_main()
 }
 int main(int argc,char **argv)
 {
-    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
-    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
+    if(init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=compile_main();
     return exit_code;
 }

@@ -1,14 +1,14 @@
 #include"run.hpp"
 const int SUM=9;
-json make_cor_parameter()
+json make_cor_argu()
 {
-    json cor_parameter={
+    json cor_argu={
         {"f",{1}}
     };
-    for(int i=1;i<=SUM;++i) cor_parameter[std::to_string(i)]={_not_define,2};
-    return cor_parameter;
+    for(int i=1;i<=SUM;++i) cor_argu[std::to_string(i)]={_not_define,2};
+    return cor_argu;
 }
-json cor_parameter=make_cor_parameter();
+json cor_argu=make_cor_argu();
 int sum,value[1001],min_value[1001],max_value[1001];
 std::string command;
 int check_value(std::string str)
@@ -165,18 +165,18 @@ void make_scheme(int num)
 }
 int changna_main(int argc,char **argv)
 {
-    command=get_parameter("f",1);
-    if(check_name(get_parameter("f",1)))
+    command=get_argu("f",1);
+    if(check_name(get_argu("f",1)))
     {
         print_result(_II);
         return 1;
     }
     for(int i=1;i<=9;++i)
     {
-        if(get_sum_parameter(std::to_string(i))>=2)
+        if(get_sum_argu(std::to_string(i))>=2)
         {
-            min_value[i]=stoi(get_parameter(std::to_string(i),1));
-            max_value[i]=stoi(get_parameter(std::to_string(i),2));
+            min_value[i]=stoi(get_argu(std::to_string(i),1));
+            max_value[i]=stoi(get_argu(std::to_string(i),2));
         }
     }
     make_scheme(1);
@@ -184,8 +184,8 @@ int changna_main(int argc,char **argv)
 }
 int main(int argc,char **argv)
 {
-    if(init_parameter(argc,argv)) {print_result(_II);return 0;}
-    if(check_parameter(cor_parameter)) {print_result(_II);return 0;}
+    if(init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=changna_main(argc,argv);
     return exit_code;
 }

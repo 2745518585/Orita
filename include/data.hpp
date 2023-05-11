@@ -25,17 +25,17 @@ namespace Data
     {
         return data_json["time"];
     }
-    void change_compile_parameter(std::string para)
+    void change_compile_argu(std::string para)
     {
-        data_json["compile_parameter"]=systoUTF8(para);
+        data_json["compile_argu"]=systoUTF8(para);
     }
-    std::string get_compile_parameter()
+    std::string get_compile_argu()
     {
-        return UTF8tosys(data_json["compile_parameter"]);
+        return UTF8tosys(data_json["compile_argu"]);
     }
 }
 void change_time_limit(int time) {Data::change_time_limit(time);}
 int get_time_limit() {return Data::get_time_limit();}
-void change_compile_parameter(std::string para) {Data::change_compile_parameter(para);}
-std::string get_compile_parameter() {return Data::get_compile_parameter();}
+void change_compile_argu(std::string para) {Data::change_compile_argu(para);}
+std::string get_compile_argu() {return Data::get_compile_argu();}
 #endif

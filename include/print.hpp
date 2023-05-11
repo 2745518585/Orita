@@ -142,4 +142,58 @@ void print_result(int result,int information) {Print::print_result(result,inform
 void print_result(int result) {Print::print_result(result,0);}
 void print_judge_result(int result,int time,int exit_code) {Print::print_judge_result(result,time,exit_code);}
 std::string get_short_result(int result) {return Print::get_short_result(result);}
+class printer
+{
+  public:
+    int interval_time,len;
+    std::vector<std::string> str;
+    std::atomic<bool> if_end;
+    std::mutex wait_lock;
+    std::condition_variable wait;
+    void print()
+    {
+        int pos=0;
+        while(!if_end)
+        {
+            pos=(pos+1)%str.size();
+            std::cout<<str[pos];
+            std::cout.flush();
+            {
+                std::unique_lock<std::mutex> lock(wait_lock);
+                wait.wait_for(lock,std::chrono::milliseconds(interval_time),[&](){return (bool)if_end;});
+                lock.unlock();
+            }
+            for(int i=0;i<len;++i) std::cout<<"\b";
+            std::cout.flush();
+        }
+        for(int i=0;i<len;++i) std::cout<<" ";
+        for(int i=0;i<len;++i) std::cout<<"\b";
+        std::cout.flush();
+    }
+    void start()
+    {
+        std::thread(&printer::print,this).detach();
+    }
+    void stop()
+    {
+        if_end=true;
+        wait.notify_all();
+        ssleep(10);
+    }
+    printer(std::initializer_list<std::string> _str,int _interval_time)
+    {
+        if_end=false;
+        len=0;
+        interval_time=_interval_time;
+        for(auto i:_str) str.push_back(i),len=std::max(len,(int)i.size());
+        for(int i=0;i<str.size();++i)
+        {
+            while(str[i].size()<len) str[i]+=" ";
+        }
+    }
+    ~printer()
+    {
+        stop();
+    }
+};
 #endif

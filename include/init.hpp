@@ -5,9 +5,13 @@
 #include<fstream>
 #include<cstdio>
 #include<algorithm>
+#include<queue>
 #include<string>
 #include<sstream>
 #include<thread>
+#include<atomic>
+#include<mutex>
+#include<condition_variable>
 #include"nlohmann/json.hpp"
 using json=nlohmann::json;
 
@@ -104,12 +108,7 @@ std::string exe_suf="";
 
 void ssleep(const unsigned time)
 {
-    #ifdef _WIN32
-    Sleep(time);
-    #endif
-    #ifdef __linux__
-    usleep(time*1000);
-    #endif
+    std::this_thread::sleep_for(std::chrono::milliseconds(time));
 }
 
 #ifdef _WIN32

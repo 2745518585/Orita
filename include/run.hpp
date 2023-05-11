@@ -6,7 +6,7 @@
 #include"data.hpp"
 #include"print.hpp"
 #include"judge.hpp"
-#include"parameter.hpp"
+#include"argu.hpp"
 #include"files.hpp"
 #include"time.hpp"
 namespace Run

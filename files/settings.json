@@ -8,5 +8,6 @@
         "red": "#f00000",
         "white": "#cccccc",
         "yellow": "#f0f000"
-    }
+    },
+    "max_thread_num": 10
 }

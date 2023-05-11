@@ -7,99 +7,115 @@
 #include"time.hpp"
 namespace Compile
 {
-    int if_end_compile;
-    bool if_end_print;
-    int compile(std::string ans,std::string compile_parameter,bool if_print)
+    int compile(std::string ans,std::string compile_argu,bool if_print)
     {
         if(get_namesuf(ans)!=".cpp") return -1;
-        return ssystem("g++ \""+ans+"\" -o \""+get_exefile(ans)+"\" "+get_compile_parameter()+" "+compile_parameter+" "+(if_print?"":system_to_nul))!=0;
-    }
-    void printing(std::string str)
-    {
-        static int SUM=3;
-        int sum=0;
-        std::cout<<"Compiling "<<str;
-        std::cout.flush();
-        while(!if_end_compile)
-        {
-            sum=sum%SUM+1;
-            for(int i=1;i<=sum;++i) std::cout<<".";
-            for(int i=sum+1;i<=SUM;++i) std::cout<<" ";
-            std::cout.flush();
-            for(int i=1;i<=10;++i)
-            {
-                ssleep(15);
-                if(if_end_compile) break;
-            }
-            for(int i=1;i<=SUM;++i) std::cout<<"\b";
-            std::cout.flush();
-        }
-        if(if_end_compile!=-1)
-        {
-            for(int i=1;i<=SUM;++i) std::cout<<" ";
-            for(int i=1;i<=SUM;++i) std::cout<<"\b";
-            std::cout<<" Success\n";
-            std::cout.flush();
-        }
-        if_end_print=true;
-    }
-    int print_compile(std::string ans,std::string str,std::string compile_parameter)
-    {
-        if_end_compile=0;
-        if_end_print=false;
-        std::thread(printing,str).detach(); 
-        int result=compile(ans,compile_parameter,false);
-        if(result) if_end_compile=-1;
-        else if_end_compile=1;
-        while(!if_end_print) ssleep(5);
-        return result;
-    }
-    int find_dangerous_syscalls(std::string ans,std::string compile_parameter)
-    {
-        if(get_namesuf(ans)!=".cpp") return -1;
-        std::string namepre=get_namepre(ans);
-        std::ifstream infile(ans);
-        std::ofstream outfile(appdata_path+sPS+"temp"+sPS+namepre+".cpp");
-        std::string str;
-        while(getline(infile,str))
-        {
-            if(str.substr(0,8)!="#include") outfile<<str<<"\n";
-        }
-        infile.close();
-        outfile.close();
-        ssystem("g++ -E \""+appdata_path+sPS+"temp"+sPS+namepre+".cpp\" > \""+appdata_path+sPS+"temp"+sPS+namepre+".e\" "+get_compile_parameter()+" "+compile_parameter);
-        #ifdef _WIN32
-        ssystem("del /Q \""+appdata_path+sPS+"temp"+sPS+namepre+".cpp\"");
-        #endif
-        #ifdef __linux__
-        ssystem("rm -r \""+appdata_path+sPS+"temp"+sPS+namepre+".cpp\"");
-        #endif
-        infile.open(appdata_path+sPS+"temp"+sPS+namepre+".e");
-        while(getline(infile,str))
-        {
-            if(str.find("fopen")!=std::string::npos||str.find("freopen")!=std::string::npos||str.find("ifstream")!=std::string::npos||str.find("ofstream")!=std::string::npos||str.find("fstream")!=std::string::npos)
-            {
-                infile.close();
-                #ifdef _WIN32
-                ssystem("del /Q \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
-                #endif
-                #ifdef __linux__
-                ssystem("rm -r \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
-                #endif
-                return 1;
-            }
-        }
-        infile.close();
-        #ifdef _WIN32
-        ssystem("del /Q \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
-        #endif
-        #ifdef __linux__
-        ssystem("rm -r \""+appdata_path+sPS+"temp"+sPS+namepre+".e\"");
-        #endif
-        return 0;
+        return ssystem("g++ \""+ans+"\" -o \""+get_exefile(ans)+"\" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul))!=0;
     }
 }
-int compile(std::string ans,std::string compile_parameter="",bool if_print=true) {return Compile::compile(ans,compile_parameter,if_print);}
-int print_compile(std::string ans,std::string str,std::string compile_parameter="") {return Compile::print_compile(ans,str,compile_parameter);}
-int find_dangerous_syscalls(std::string ans,std::string compile_parameter="") {return Compile::find_dangerous_syscalls(ans,compile_parameter);}
+int compile(std::string ans,std::string compile_argu="",bool if_print=true) {return Compile::compile(ans,compile_argu,if_print);}
+class compiler
+{
+  public:
+    std::atomic<int> running_sum;
+    std::atomic<bool> if_end;
+    std::mutex wait_que_lock,wait_end_lock,wait_result_lock;
+    std::condition_variable wait_que,wait_end,wait_result;
+    class comp_file
+    {
+      public:
+        comp_file(){}
+        comp_file(std::string name,std::string file,std::string argu):name(name),file(file),argu(argu){}
+        std::string name,file,argu;
+    };
+    std::queue<comp_file> compile_que;
+    std::map<std::string,int> results;
+    int compile(std::string file,std::string compile_argu)
+    {
+        if(get_namesuf(file)!=".cpp") return -1;
+        return ssystem("g++ \""+file+"\" -o \""+get_exefile(file)+"\" "+get_compile_argu()+" "+compile_argu+system_to_nul)!=0;
+    }
+    void auto_compile()
+    {
+        ++running_sum;
+        while(true)
+        {
+            {
+                std::unique_lock<std::mutex> lock(wait_que_lock);
+                wait_que.wait(lock,[&](){return !compile_que.empty()||if_end;});
+                lock.unlock();
+            }
+            static std::mutex read_lock1;
+            read_lock1.lock();
+            if(if_end)
+            {
+                --running_sum;
+                ssleep(10);
+                if(running_sum==0) wait_end.notify_all();
+                read_lock1.unlock();
+                break;
+            }
+            if(compile_que.empty()) continue;
+            comp_file file=compile_que.front();
+            compile_que.pop();
+            read_lock1.unlock();
+            int result=compile(file.file,file.argu);
+            static std::mutex read_lock2;
+            read_lock2.lock();
+            results[file.name]=result;
+            wait_result.notify_all();
+            read_lock2.unlock();
+        }
+    }
+    compiler(int thread_sum)
+    {
+        thread_sum=std::min(thread_sum,(int)settings["max_thread_num"]);
+        running_sum=0;
+        if_end=false;
+        for(int i=1;i<=thread_sum;++i) std::thread(&compiler::auto_compile,this).detach();
+    }
+    ~compiler()
+    {
+        if_end=true;
+        wait_que.notify_all();
+        {
+            std::unique_lock<std::mutex> lock(wait_end_lock);
+            wait_end.wait(lock,[&](){return running_sum==0;});
+            lock.unlock();
+        }
+        ssleep(10);
+    }
+    void add(std::string name,std::string file,std::string argu="")
+    {
+        compile_que.push(comp_file(name,file,argu));
+        wait_que.notify_one();
+    }
+    void add(std::initializer_list<std::initializer_list<std::string>> file,std::string argu="")
+    {
+        for(auto i:file)
+        {
+            if(i.size()!=2) continue;
+            add(*i.begin(),*next(i.begin()));
+        }
+    }
+    void wait(std::initializer_list<std::string> name)
+    {
+        auto check=[&]()
+        {
+            for(auto i:name) if(!results.count(i)) return false;
+            return true;
+        };
+        std::unique_lock<std::mutex> lock(wait_result_lock);
+        wait_result.wait(lock,check);
+        lock.unlock();
+    }
+    std::pair<int,std::string> get(std::initializer_list<std::string> name)
+    {
+        for(auto i:name)
+        {
+            if(!results.count(i)||results[i]) return std::make_pair(1,i);
+        }
+        return std::make_pair(0,"");
+    }
+};
 #endif
