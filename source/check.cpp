@@ -24,21 +24,30 @@ int check_main()
     // init name
     if(get_sum_argu("f")==3)
     {
+        if(find_file(add_namesuf(get_argu("f",1),".cpp"))) {print_result(_in_name,_NF);return 0;}
+        if(find_file(add_namesuf(get_argu("f",2),".cpp"))) {print_result(_out_name,_NF);return 0;}
+        if(find_file(add_namesuf(get_argu("f",3),".cpp"))) {print_result(_ans_name,_NF);return 0;}
         add_file(_check_in,get_argu("f",1));
         add_file(_check_out,get_argu("f",2));
         add_file(_check_ans,get_argu("f",3));
-        if(find_file(add_namesuf(get_name(_check_in),".cpp"))) {print_result(_in_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_name(_check_out),".cpp"))) {print_result(_out_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_name(_check_ans),".cpp"))) {print_result(_ans_name,_NF);return 0;}
     }
     else
     {
-        if(get_sum_argu("if")==1) add_file(_check_in,get_argu("if",1));
-        if(get_sum_argu("of")==1) add_file(_check_out,get_argu("of",1));
-        if(get_sum_argu("af")==1) add_file(_check_ans,get_argu("af",1));
-        if(get_sum_argu("if")==1&&find_file(add_namesuf(get_name(_check_in),".cpp"))) {print_result(_in_name,_NF);return 0;}
-        if(get_sum_argu("of")==1&&find_file(add_namesuf(get_name(_check_out),".cpp"))) {print_result(_out_name,_NF);return 0;}
-        if(get_sum_argu("af")==1&&find_file(add_namesuf(get_name(_check_ans),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+        if(get_sum_argu("if")==1)
+        {
+            if(find_file(add_namesuf(get_argu("if",1),".cpp"))) {print_result(_in_name,_NF);return 0;}
+            add_file(_check_in,get_argu("if",1));
+        }
+        if(get_sum_argu("of")==1)
+        {
+            if(find_file(add_namesuf(get_argu("of",1),".cpp"))) {print_result(_out_name,_NF);return 0;}
+            add_file(_check_out,get_argu("of",1));
+        }
+        if(get_sum_argu("af")==1)
+        {
+            if(find_file(add_namesuf(get_argu("af",1),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+            add_file(_check_ans,get_argu("af",1));
+        }
     }
     bool use_checker=false;
     if(get_sum_argu("c")!=-1)
@@ -55,7 +64,7 @@ int check_main()
     // init total sum
     if(get_sum_argu("n")==-1)
     {
-        print_result(_Success);
+        print_result(_SS);
         return 0;
     }
     int total_sum=stoi(get_argu("n",1));
@@ -136,7 +145,7 @@ int check_main()
             run_judger2.judge();
             run_judger2.print_result();
             ++runned_sum;
-            if(run_judger1.result==_AC&&run_judger2.result==_AC)
+            if(run_judger1.result.istrue()&&run_judger2.result.istrue())
             {
                 if(compare(appdata_path+sPS+"data"+sPS+"data.ans",appdata_path+sPS+"data"+sPS+"data.out"))
                 {
@@ -170,7 +179,7 @@ int check_main()
             monitor_judger run_judger(ans,chk);
             run_judger.judge();
             run_judger.print_result();
-            if(run_judger.result>0)
+            if(run_judger.result.isfalse())
             {
                 copy_result("data"+sPS+"data.in","data"+sPS+std::to_string(i)+".in");
                 copy_result("data"+sPS+"data.out","data"+sPS+std::to_string(i)+".out");

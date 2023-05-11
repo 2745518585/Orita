@@ -65,7 +65,7 @@ int compile_main()
         {
             std::string file=get_file(add_namesuf(get_argu("f",i),".cpp"));
             std::cout<<get_filename(file)<<"\n";
-            if(compile(file,compile_argu)==0) print_result(_Success);
+            if(compile(file,compile_argu)==0) print_result(_SS);
             else print_result(_CE);
         }
     }

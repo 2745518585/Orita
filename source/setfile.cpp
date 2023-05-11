@@ -15,7 +15,7 @@ int setfile_main()
             add_file(i+_custom_start,get_argu(std::to_string(i),1));
         }
     }
-    print_result(_Success);
+    print_result(_SS);
     return 0;
 }
 int main(int argc,char **argv)

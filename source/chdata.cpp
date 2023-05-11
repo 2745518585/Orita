@@ -62,7 +62,7 @@ int chdata_main()
     {
         change_time_limit(stoi(get_argu("t",1)));
     }
-    print_result(_Success);
+    print_result(_SS);
     return 0;
 }
 int main(int argc,char **argv)

@@ -28,11 +28,13 @@ namespace Judge
         return 0;
     }
 }
+int compare(std::string file1,std::string file2) {return Judge::compare(file1,file2);}
 class judger
 {
   public:
-    int result,time,exit_code;
+    int time,exit_code;
     stime run_time;
+    res result;
     std::string ans,chk,in_file,out_file,ans_file,chk_file;
     judger(std::string _ans,std::string _chk)
     {
@@ -54,7 +56,7 @@ class judger
         if(_chk_file!="") chk_file=_chk_file;
         else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
     }
-    int judge()
+    res judge()
     {
         std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
         run_time.init();
@@ -80,8 +82,8 @@ class judger
 class monitor_judger
 {
   public:
-    #define _not_end -1
-    int result,time,exit_code;
+    int time,exit_code;
+    res result;
     stime run_time;
     bool if_begin,if_end;
     std::string ans,chk,in_file,out_file,ans_file,chk_file;
@@ -105,7 +107,7 @@ class monitor_judger
         if(_chk_file!="") chk_file=_chk_file;
         else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
     }
-    int run_judge()
+    res run_judge()
     {
         std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
         run_time.init();
@@ -113,11 +115,11 @@ class monitor_judger
         if(exit_code=ssystem(run_command)/sys_exit_code)
         {
             if_end=true;
-            if(result!=_not_end) return result;
+            if(!result.is(_NL)) return result;
             return result=_RE;
         }
         if_end=true;
-        if(result!=_not_end) return result;
+        if(!result.is(_NL)) return result;
         time=run_time.get_time();
         std::string check_command;
         if(ssystem("\""+get_exefile(chk)+"\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
@@ -135,7 +137,7 @@ class monitor_judger
     int judge()
     {
         int time_limit=get_time_limit();
-        result=_not_end;
+        result=_NL;
         if_begin=if_end=false;
         std::thread(&monitor_judger::run_judge,this).detach();
         while(if_begin==false||run_time.get_time()<time_limit*2)
@@ -143,7 +145,7 @@ class monitor_judger
             ssleep(5);
             if(if_end)
             {
-                while(result==_not_end) ssleep(5);
+                while(result.is(_NL)) ssleep(5);
                 return 0;
             }
         }
@@ -189,5 +191,4 @@ class monitor_runner
         return 1;
     }
 };
-int compare(std::string file1,std::string file2) {return Judge::compare(file1,file2);}
 #endif

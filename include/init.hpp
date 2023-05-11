@@ -134,6 +134,45 @@ int ssystem(const std::string command)
     #endif
 }
 
+#define _NL 0
+#define _AC 1
+#define _SA 2
+#define _SS 3
+#define _WA -1
+#define _RE -2
+#define _TLE_CA -3
+#define _TLE_WA -4
+#define _TLE_O -5
+#define _CE -6
+#define _DA -7
+#define _NF -8
+#define _II -9
+#define _FL -10
+class res
+{
+  public:
+    int result;
+    res(){}
+    res(int _result):result(_result){}
+    bool is(int _result)
+    {
+        return result==_result;
+    }
+    bool istrue()
+    {
+        return result>0;
+    }
+    bool isfalse()
+    {
+        return result<0;
+    }
+};
+
+bool verify_result(int result)
+{
+    return result>0;
+}
+
 template<typename T>
 std::string to_string_len(const T num,const int len)
 {

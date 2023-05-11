@@ -155,10 +155,10 @@ void make_scheme(int num)
         std::cout<<solved_command<<"\n";
         if(ssystem(system_to_nul+solved_command)==0)
         {
-            print_result(_Success);
+            print_result(_SS);
             ++sum;
         }
-        else print_result(_Fail);
+        else print_result(_FL);
         return;
     }
     for(value[num]=min_value[num];value[num]<=max_value[num];++value[num]) make_scheme(num+1);

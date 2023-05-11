@@ -35,7 +35,7 @@ int judge_main()
     // init data
     if(get_sum_argu("d")==-1)
     {
-        print_result(_Success);
+        print_result(_SS);
         return 0;
     }
     // find file
@@ -77,7 +77,7 @@ int judge_main()
         monitor_judger run_judger(ans,chk,running_path+sPS+name_pre+std::to_string(i)+".in",running_path+sPS+name_pre+std::to_string(i)+".out",running_path+sPS+name_pre+std::to_string(i)+".ans",running_path+sPS+name_pre+std::to_string(i)+".txt");
         run_judger.judge();
         run_judger.print_result();
-        if(run_judger.result==0) ++ac_sum;
+        if(run_judger.result.istrue()) ++ac_sum;
         file<<i<<":\t"<<get_short_result(run_judger.result)<<"\n";
     }
     file.close();
