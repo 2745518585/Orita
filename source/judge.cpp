@@ -74,11 +74,11 @@ int judge_main()
         for(int j=1;j<=50;++j) std::cout<<"\b";
         std::cout<<"#"<<i<<"\n";
         if(find_file(running_path+sPS+name_pre+std::to_string(i)+".in")) {print_result(_NF);continue;}
-        monitor_judger run_judger(ans,chk,running_path+sPS+name_pre+std::to_string(i)+".in",running_path+sPS+name_pre+std::to_string(i)+".out",running_path+sPS+name_pre+std::to_string(i)+".ans",running_path+sPS+name_pre+std::to_string(i)+".txt");
+        judger run_judger(ans,chk,running_path+sPS+name_pre+std::to_string(i)+".in",running_path+sPS+name_pre+std::to_string(i)+".out",running_path+sPS+name_pre+std::to_string(i)+".ans",running_path+sPS+name_pre+std::to_string(i)+".txt");
         run_judger.judge();
         run_judger.print_result();
         if(run_judger.result.istrue()) ++ac_sum;
-        file<<i<<":\t"<<get_short_result(run_judger.result)<<"\n";
+        file<<i<<":\t"<<get_short_resultname(run_judger.result)<<"\n";
     }
     file.close();
     std::cout<<ac_sum<<" / "<<total_sum;

@@ -88,6 +88,12 @@ namespace Print
             std::cout<<"Different Answer\n";
             change_color("white");
         }
+        if(result.is(_TO))
+        {
+            change_color("blue");
+            std::cout<<"Timeout\n";
+            change_color("white");
+        }
         if(result.is(_NF))
         {
             change_color("orange");
@@ -102,8 +108,28 @@ namespace Print
         }
         std::cout.flush();
     }
-    std::string get_short_result(res result)
+    std::string get_resultname(res result)
     {
+        if(result.is(_NL)) return "NULL";
+        if(result.is(_NF)) return "No such file";
+        if(result.is(_AC)) return "Accepted";
+        if(result.is(_WA)) return "Wrong Answer";
+        if(result.is(_RE)) return "Runtime Error";
+        if(result.is(_TLE_CA)) return "Time Limit Error with Correct Answer";
+        if(result.is(_TLE_WA)) return "Time Limit Error with Wrong Answer";
+        if(result.is(_TLE_O)) return "Time Limit Error";
+        if(result.is(_CE)) return "Compile Error";
+        if(result.is(_SA)) return "Same Answer";
+        if(result.is(_DA)) return "Different Answer";
+        if(result.is(_II)) return "Invalid input";
+        if(result.is(_TO)) return "Timeout";
+        if(result.is(_SS)) return "Success";
+        if(result.is(_FL)) return "Fail";
+        return "";
+    }
+    std::string get_short_resultname(res result)
+    {
+        if(result.is(_NL)) return "NL";
         if(result.is(_NF)) return "NF";
         if(result.is(_AC)) return "AC";
         if(result.is(_WA)) return "WA";
@@ -114,6 +140,10 @@ namespace Print
         if(result.is(_CE)) return "CE";
         if(result.is(_SA)) return "SA";
         if(result.is(_DA)) return "DA";
+        if(result.is(_II)) return "II";
+        if(result.is(_TO)) return "TO";
+        if(result.is(_SS)) return "SS";
+        if(result.is(_FL)) return "FL";
         return "";
     }
 }
@@ -121,7 +151,8 @@ void change_color(int red,int green,int blue) {Print::change_color(red,green,blu
 void change_color(std::string color) {Print::change_color(color);}
 void print_result(res result=_NL,int time=0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
 void print_result(std::string name,res result=_NL,int time=0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
-std::string get_short_result(res result) {return Print::get_short_result(result);}
+std::string get_resultname(res result) {return Print::get_resultname(result);}
+std::string get_short_resultname(res result) {return Print::get_short_resultname(result);}
 class printer
 {
   public:

@@ -9,5 +9,6 @@
         "white": "#cccccc",
         "yellow": "#f0f000"
     },
-    "max_thread_num": 10
+    "max_thread_num": 10,
+    "runtime_limit": 1000
 }

@@ -145,18 +145,23 @@ int ssystem(const std::string command)
 #define _TLE_O -5
 #define _CE -6
 #define _DA -7
-#define _NF -8
-#define _II -9
-#define _FL -10
+#define _TO -8
+#define _NF -9
+#define _II -10
+#define _FL -11
 class res
 {
   public:
     int result;
-    res(){}
+    res():result(_NL){}
     res(int _result):result(_result){}
     bool is(int _result)
     {
         return result==_result;
+    }
+    bool isnull()
+    {
+        return result==0;
     }
     bool istrue()
     {

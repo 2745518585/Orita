@@ -28,166 +28,90 @@ namespace Judge
     }
 }
 int compare(std::string file1,std::string file2) {return Judge::compare(file1,file2);}
-class judger
+class runner
 {
   public:
-    int time,exit_code;
+    int time,exit_code,time_limit;
     stime run_time;
-    res result;
-    std::string ans,chk,in_file,out_file,ans_file,chk_file;
-    judger(std::string _ans,std::string _chk)
+    std::atomic<bool> if_end;
+    std::string file,argu,in_file,out_file;
+    std::mutex wait_lock;
+    std::condition_variable wait;
+    runner(std::string _file,std::string _in_file="",std::string _out_file="",std::string _argu="",int _time_limit=settings["runtime_limit"])
     {
-        ans=_ans,chk=_chk;
-        in_file=appdata_path+sPS+"data"+sPS+"data.in";
-        out_file=appdata_path+sPS+"data"+sPS+"data.out";
-        ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
-        chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
-    }
-    judger(std::string _ans,std::string _chk,std::string _in_file,std::string _out_file,std::string _ans_file,std::string _chk_file)
-    {
-        ans=_ans,chk=_chk;
-        if(_in_file!="") in_file=_in_file;
-        else in_file=appdata_path+sPS+"data"+sPS+"data.in";
-        if(_out_file!="") out_file=_out_file;
-        else out_file=appdata_path+sPS+"data"+sPS+"data.out";
-        if(_ans_file!="") ans_file=_ans_file;
-        else ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
-        if(_chk_file!="") chk_file=_chk_file;
-        else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
-    }
-    res judge()
-    {
-        std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
-        run_time.init();
-        if(exit_code=ssystem(run_command)/sys_exit_code) return result=_RE;
-        time=run_time.get_time();
-        if(ssystem("\""+get_exefile(chk)+"\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
-        {
-            if(time>get_time_limit()) result=_TLE_WA;
-            else result=_WA;
-        }
-        else
-        {
-            if(time>get_time_limit()) result=_TLE_CA;
-            else result=_AC;
-        }
-        return result;
-    }
-    void print_result(std::string name="")
-    {
-        Print::print_result(name,result,time,exit_code);
-    }
-};
-class monitor_judger
-{
-  public:
-    int time,exit_code;
-    res result;
-    stime run_time;
-    bool if_begin,if_end;
-    std::string ans,chk,in_file,out_file,ans_file,chk_file;
-    monitor_judger(std::string _ans,std::string _chk)
-    {
-        ans=_ans,chk=_chk;
-        in_file=appdata_path+sPS+"data"+sPS+"data.in";
-        out_file=appdata_path+sPS+"data"+sPS+"data.out";
-        ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
-        chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
-    }
-    monitor_judger(std::string _ans,std::string _chk,std::string _in_file,std::string _out_file,std::string _ans_file,std::string _chk_file)
-    {
-        ans=_ans,chk=_chk;
-        if(_in_file!="") in_file=_in_file;
-        else in_file=appdata_path+sPS+"data"+sPS+"data.in";
-        if(_out_file!="") out_file=_out_file;
-        else out_file=appdata_path+sPS+"data"+sPS+"data.out";
-        if(_ans_file!="") ans_file=_ans_file;
-        else ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
-        if(_chk_file!="") chk_file=_chk_file;
-        else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
-    }
-    res run_judge()
-    {
-        std::string run_command="\""+get_exefile(ans)+"\" < \""+in_file+"\" > \""+ans_file+"\"";
-        run_time.init();
-        if_begin=true;
-        if(exit_code=ssystem(run_command)/sys_exit_code)
-        {
-            if_end=true;
-            if(!result.is(_NL)) return result;
-            return result=_RE;
-        }
-        if_end=true;
-        if(!result.is(_NL)) return result;
-        time=run_time.get_time();
-        std::string check_command;
-        if(ssystem("\""+get_exefile(chk)+"\" \""+in_file+"\" \""+ans_file+"\" \""+out_file+"\" 2> \""+chk_file+"\""))
-        {
-            if(time>get_time_limit()) result=_TLE_WA;
-            else result=_WA;
-        }
-        else
-        {
-            if(time>get_time_limit()) result=_TLE_CA;
-            else result=_AC;
-        }
-        return result;
-    }
-    int judge()
-    {
-        int time_limit=get_time_limit();
-        result=_NL;
-        if_begin=if_end=false;
-        std::thread(&monitor_judger::run_judge,this).detach();
-        while(if_begin==false||run_time.get_time()<time_limit*2)
-        {
-            ssleep(5);
-            if(if_end)
-            {
-                while(result.is(_NL)) ssleep(5);
-                return 0;
-            }
-        }
-        result=_TLE_O;
-        time=get_time_limit()*2;
-        ssystem("taskkill /f /pid "+get_exefilename(ans)+system_to_nul);
-        while(if_end==false) ssleep(5);
-        return 1;
-    }
-    void print_result(std::string name="")
-    {
-        Print::print_result(name,result,time,exit_code);
-    }
-};
-class monitor_runner
-{
-  public:
-    int exit_code;
-    stime run_time;
-    bool if_begin,if_end;
-    std::string ans,argu;
-    monitor_runner(std::string _ans,std::string _argu)
-    {
-        ans=_ans,argu=_argu;
+        file=_file,in_file=_in_file,out_file=_out_file,argu=_argu,time_limit=_time_limit;
+        time=exit_code=0;
     }
     void run_run()
     {
         run_time.init();
-        if_begin=true;
-        exit_code=ssystem(get_exefile(ans)+" "+argu)/sys_exit_code;
+        exit_code=ssystem(get_exefile(file)+" "+argu+(in_file!=""?" < "+in_file:"")+(out_file!=""?" > "+out_file:""))/sys_exit_code;
+        time=run_time.get_time();
         if_end=true;
+        wait.notify_all();
     }
     int run()
     {
-        int time_limit=get_time_limit();
-        if_begin=if_end=false;
-        std::thread(&monitor_runner::run_run,this).detach();
-        while(if_begin==false||run_time.get_time()<time_limit*2)
+        if_end=false;
+        std::thread(&runner::run_run,this).detach();
+        std::unique_lock<std::mutex> lock(wait_lock);
+        wait.wait_for(lock,std::chrono::milliseconds(time_limit),[&](){return (bool)if_end;});
+        lock.unlock();
+        if(!if_end)
         {
-            if(if_end) return 0;
+            time=time_limit;
+            ssystem("taskkill /f /pid "+get_exefilename(file)+system_to_nul);
+            return 1;
         }
-        ssystem("taskkill /f /pid "+get_exefilename(ans)+system_to_nul);
-        return 1;
+        return 0;
+    }
+};
+class judger
+{
+  public:
+    int time,exit_code,chk_time,chk_exit_code;
+    res result,chk_result;
+    std::string ans,chk,in_file,out_file,ans_file,chk_file;
+    judger(std::string _ans,std::string _chk,std::string _in_file="",std::string _out_file="",std::string _ans_file="",std::string _chk_file="")
+    {
+        ans=_ans,chk=_chk;
+        if(_in_file!="") in_file=_in_file;
+        else in_file=appdata_path+sPS+"data"+sPS+"data.in";
+        if(_out_file!="") out_file=_out_file;
+        else out_file=appdata_path+sPS+"data"+sPS+"data.out";
+        if(_ans_file!="") ans_file=_ans_file;
+        else ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
+        if(_chk_file!="") chk_file=_chk_file;
+        else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
+        time=0,exit_code=0,chk_time=0,chk_exit_code=0;
+    }
+    res judge()
+    {
+        runner ans_runner(ans,in_file,ans_file,"",get_time_limit()*2);
+        if(ans_runner.run()) return result=_TLE_O;
+        time=ans_runner.time;
+        exit_code=ans_runner.exit_code;
+        if(exit_code) return result=_RE;
+        runner chk_runner(chk,"",chk_file,in_file+" "+out_file+" "+ans_file);
+        if(chk_runner.run()) return chk_result=_TO,result=_NL;
+        chk_time=chk_runner.time;
+        chk_exit_code=chk_runner.exit_code;
+        if(chk_exit_code!=0&&chk_exit_code!=1) return chk_result=_RE,result=_NL;
+        if(time<=get_time_limit())
+        {
+            if(chk_exit_code) return result=_WA;
+            else return result=_AC;
+        }
+        else
+        {
+            if(chk_exit_code) return result=_TLE_WA;
+            else return result=_TLE_CA;
+        }
+    }
+    void print_result(std::string name="",std::string chk_name="checker")
+    {
+        if(result.is(_NL)) Print::print_result(chk_name,chk_result,chk_time,chk_exit_code);
+        Print::print_result(name,result,time,exit_code);
     }
 };
 #endif

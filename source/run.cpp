@@ -58,7 +58,7 @@ int run_main()
     delete run_compiler;
     loading_printer.stop();
     // run
-    monitor_judger run_judger(ans,chk);
+    judger run_judger(ans,chk);
     run_judger.judge();
     // print result
     run_judger.print_result();
