@@ -70,7 +70,7 @@ int judge_main()
     int total_sum=stoi(get_argu("d",2)),ac_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
-        for(int j=1;j<=50;++j) std::cout<<"=";
+        for(int j=1;j<=50;++j) std::cout<<"-";
         for(int j=1;j<=50;++j) std::cout<<"\b";
         std::cout<<"#"<<i<<"\n";
         if(find_file(running_path+sPS+name_pre+std::to_string(i)+".in")) {print_result(_NF);continue;}

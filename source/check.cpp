@@ -106,12 +106,12 @@ int check_main()
     int ac_sum=0,runned_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
-        for(int j=1;j<=50;++j) std::cout<<"=";
+        for(int j=1;j<=50;++j) std::cout<<"-";
         for(int j=1;j<=50;++j) std::cout<<"\b";
         std::cout<<"#"<<i;
         if(runned_sum-ac_sum!=0)
         {
-            for(int j=1;j<=30-std::to_string(i).size();++j) std::cout<<"=";
+            for(int j=1;j<=30-std::to_string(i).size();++j) std::cout<<"-";
             change_color("grey");
             std::cout<<" Unaccepted ";
             change_color("red");

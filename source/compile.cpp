@@ -64,9 +64,8 @@ int compile_main()
         for(int i=1;i<=get_sum_argu("f");++i)
         {
             std::string file=get_file(add_namesuf(get_argu("f",i),".cpp"));
-            std::cout<<get_filename(file)<<"\n";
-            if(compile(file,compile_argu)==0) print_result(_SS);
-            else print_result(_CE);
+            if(compile(file,compile_argu)) print_result(get_filename(file),_CE);
+            else print_result(get_filename(file),_SS);
         }
     }
     return 0;
