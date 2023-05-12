@@ -37,7 +37,7 @@ int compile_main()
             std::cout<<exit_code;
             change_color("grey");
             std::cout<<" =====\n";
-            change_color("white");
+            change_color("default");
         }
     }
     else if(get_sum_argu("t")!=-1)
@@ -57,7 +57,7 @@ int compile_main()
         std::cout<<exit_code;
         change_color("grey");
         std::cout<<" =====\n";
-        change_color("white");
+        change_color("default");
     }
     else
     {

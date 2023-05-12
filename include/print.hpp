@@ -10,6 +10,11 @@ namespace Print
     }
     void change_color(std::string color)
     {
+        if(color=="default")
+        {
+            std::cout<<"\033[0m";
+            return;
+        }
         if((int)settings["colors"][color].type()==0) return;
         std::string red=((std::string)settings["colors"][color]).substr(1,2),green=((std::string)settings["colors"][color]).substr(3,2),blue=((std::string)settings["colors"][color]).substr(5,2);
         std::cout<<"\e[38;2;"<<stoi(red,0,16)<<";"<<stoi(green,0,16)<<";"<<stoi(blue,0,16)<<"m";
@@ -20,91 +25,91 @@ namespace Print
         {
             change_color("grey");
             std::cout<<name<<":\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_SS))
         {
             change_color("green");
             std::cout<<"Success\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_FL))
         {
             change_color("red");
             std::cout<<"Fail\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_AC))
         {
             change_color("green");
             std::cout<<"Accepted\n"<<time<<"ms\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_WA))
         {
             change_color("red");
             std::cout<<"Wrong Answer\n"<<time<<"ms\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_RE))
         {
             change_color("purple");
             std::cout<<"Runtime Error\nexit with code "<<exit_code<<"\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_TLE_CA))
         {
             change_color("blue");
             std::cout<<"Time Limit Error with Correct Answer\n"<<time<<"ms\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_TLE_WA))
         {
             change_color("blue");
             std::cout<<"Time Limit Error with Wrong Answer\n"<<time<<"ms\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_TLE_O))
         {
             change_color("blue");
             std::cout<<"Time Limit Error\nover "<<time<<"ms\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_CE))
         {
             change_color("yellow");
             std::cout<<"Compile Error\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_SA))
         {
             change_color("green");
             std::cout<<"Same Answer\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_DA))
         {
             change_color("red");
             std::cout<<"Different Answer\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_TO))
         {
             change_color("blue");
             std::cout<<"Timeout\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_NF))
         {
             change_color("orange");
             std::cout<<"No such file\n";
-            change_color("white");
+            change_color("default");
         }
         if(result.is(_II))
         {
             change_color("orange");
             std::cout<<"Invalid input\n";
-            change_color("white");
+            change_color("default");
         }
         std::cout.flush();
     }

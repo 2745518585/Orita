@@ -116,7 +116,7 @@ int check_main()
             std::cout<<" Unaccepted ";
             change_color("red");
             std::cout<<runned_sum-ac_sum<<" ";
-            change_color("white");
+            change_color("default");
         }
         std::cout<<"\n";
         ssystem("mkdir data"+sPS+"others"+sPS+std::to_string(i)+system_to_nul);
