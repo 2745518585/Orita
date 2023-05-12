@@ -197,18 +197,10 @@ namespace Init
     }
     std::string get_file_path()
     {
-        std::string path=__FILE__;
-        int len=path.size();
-        for(int i=0;i<len;++i)
-        {
-            if(path[i]=='/'||path[i]=='\\') path[i]=PS;
-        }
-        while(path[len-1]!=PS) --len;
-        --len;
-        while(path[len-1]!=PS) --len;
-        --len;
-        path=path.substr(0,len);
-        return path;
+        char tmp[1001];
+        GetModuleFileNameA(NULL,tmp,MAX_PATH);
+        std::string path=tmp;
+        return path.substr(0,path.find_last_of(PS,path.find_last_of(PS)-1));
     }
     std::string get_appdata_path()
     {
