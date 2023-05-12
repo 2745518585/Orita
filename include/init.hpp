@@ -22,6 +22,7 @@ using json=nlohmann::json;
 
 #ifdef __linux__
 #include<unistd.h>
+#include<limits.h>
 #include<sys/time.h>
 #endif
 
@@ -197,8 +198,13 @@ namespace Init
     }
     std::string get_file_path()
     {
-        char tmp[1001];
+        char tmp[10001];
+        #ifdef _WIN32
         GetModuleFileNameA(NULL,tmp,MAX_PATH);
+        #endif
+        #ifdef __linux__
+        realpath("/proc/self/exe",tmp);
+        #endif
         std::string path=tmp;
         return path.substr(0,path.find_last_of(PS,path.find_last_of(PS)-1));
     }
