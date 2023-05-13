@@ -12,7 +12,7 @@ namespace Argu
         if(para.size()==0||para[0]!='/') return false;
         for(int i=1;i<para.size();++i)
         {
-            if(!((para[i]>='a'&&para[i]<='z')||(para[i]>='A'&&para[i]<='Z'))) return false;
+            if(!((para[i]>='a'&&para[i]<='z')||(para[i]>='A'&&para[i]<='Z')||(para[i]>='0'&&para[i]<='9'))) return false;
         }
         return true;
     }
