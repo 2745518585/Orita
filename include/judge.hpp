@@ -4,6 +4,7 @@
 #include"files.hpp"
 #include"data.hpp"
 #include"print.hpp"
+#include"time.hpp"
 namespace Judge
 {
     int compare(std::string file1,std::string file2)
@@ -54,13 +55,20 @@ class runner
     {
         if_end=false;
         std::thread(&runner::run_run,this).detach();
-        std::unique_lock<std::mutex> lock(wait_lock);
-        wait.wait_for(lock,std::chrono::milliseconds(time_limit),[&](){return (bool)if_end;});
-        lock.unlock();
+        {
+            std::unique_lock<std::mutex> lock(wait_lock);
+            wait.wait_for(lock,std::chrono::milliseconds(time_limit),[&](){return (bool)if_end;});
+            lock.unlock();
+        }
         if(!if_end)
         {
-            time=time_limit;
             ssystem("taskkill /f /pid "+get_exefilename(file)+system_to_nul);
+            {
+                std::unique_lock<std::mutex> lock(wait_lock);
+                wait.wait(lock,[&](){return (bool)if_end;});
+                lock.unlock();
+            }
+            time=time_limit;
             return 1;
         }
         return 0;
