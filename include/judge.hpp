@@ -69,10 +69,10 @@ class runner
 class judger
 {
   public:
-    int time,exit_code,chk_time,chk_exit_code;
+    int time,exit_code,chk_time,chk_exit_code,time_limit;
     res result,chk_result;
     std::string ans,chk,in_file,out_file,ans_file,chk_file;
-    judger(std::string _ans,std::string _chk,std::string _in_file="",std::string _out_file="",std::string _ans_file="",std::string _chk_file="")
+    judger(std::string _ans,std::string _chk,std::string _in_file="",std::string _out_file="",std::string _ans_file="",std::string _chk_file="",int _time_limit=get_time_limit())
     {
         ans=_ans,chk=_chk;
         if(_in_file!="") in_file=_in_file;
@@ -83,21 +83,22 @@ class judger
         else ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
         if(_chk_file!="") chk_file=_chk_file;
         else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
+        time_limit=_time_limit;
         time=0,exit_code=0,chk_time=0,chk_exit_code=0;
     }
     res judge()
     {
-        runner ans_runner(ans,in_file,ans_file,"",get_time_limit()*2);
-        if(ans_runner.run()) return result=_TLE_O;
+        runner ans_runner(ans,in_file,ans_file,"",time_limit*2);
+        if(ans_runner.run()) return time=ans_runner.time,result=_TLE_O;
         time=ans_runner.time;
         exit_code=ans_runner.exit_code;
         if(exit_code) return result=_RE;
         runner chk_runner(chk,"",chk_file,in_file+" "+out_file+" "+ans_file);
-        if(chk_runner.run()) return chk_result=_TO,result=_NL;
+        if(chk_runner.run()) return chk_time=chk_runner.time,chk_result=_TO,result=_NL;
         chk_time=chk_runner.time;
         chk_exit_code=chk_runner.exit_code;
         if(chk_exit_code!=0&&chk_exit_code!=1) return chk_result=_RE,result=_NL;
-        if(time<=get_time_limit())
+        if(time<=time_limit)
         {
             if(chk_exit_code) return result=_WA;
             else return result=_AC;
