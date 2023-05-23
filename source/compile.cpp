@@ -42,10 +42,10 @@ int compile_main()
     }
     else if(get_sum_argu("t")!=-1)
     {
-        std::string file;
+        std::string file=get_argu("t",1);
         stime run_time;
         run_time.init();
-        int exit_code=ssystem(file)/sys_exit_code;
+        int exit_code=ssystem(get_exefile(file))/sys_exit_code;
         change_color("grey");
         std::cout<<"\n===== time: ";
         change_color("blue");
