@@ -6,13 +6,18 @@
 #include"time.hpp"
 namespace Compile
 {
-    int compile(std::string ans,std::string compile_argu,bool if_print)
+    int compile(std::string file,std::string compile_argu,bool if_print)
     {
-        if(get_filenamesuf(ans)!=".cpp") return -1;
-        return ssystem("g++ \""+ans+"\" -o \""+get_exefile(ans)+"\" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul))!=0;
+        if(get_filenamesuf(file)!=".cpp")
+        {
+            orita_log.print("[Warn] compile: \nfile: \""+file+"\"");
+            return -1;
+        }
+        orita_log.print("[Info] compile: \nfile: \""+file+"\"\nargu: "+compile_argu+"\ncommand: g++ \""+file+"\" -o \""+get_exefile(file)+"\" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul));
+        return ssystem("g++ \""+file+"\" -o \""+get_exefile(file)+"\" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul))!=0;
     }
 }
-int compile(std::string ans,std::string compile_argu="",bool if_print=true) {return Compile::compile(ans,compile_argu,if_print);}
+int compile(std::string file,std::string compile_argu="",bool if_print=true) {return Compile::compile(file,compile_argu,if_print);}
 class compiler
 {
   public:
@@ -29,11 +34,6 @@ class compiler
     };
     std::queue<comp_file> compile_que;
     std::map<std::string,int> results;
-    int compile(std::string file,std::string compile_argu)
-    {
-        if(get_filenamesuf(file)!=".cpp") return -1;
-        return ssystem("g++ \""+file+"\" -o \""+get_exefile(file)+"\" "+get_compile_argu()+" "+compile_argu+system_to_nul)!=0;
-    }
     void auto_compile()
     {
         ++running_sum;
@@ -58,7 +58,7 @@ class compiler
             comp_file file=compile_que.front();
             compile_que.pop();
             read_lock1.unlock();
-            int result=compile(file.file,file.argu);
+            int result=compile(file.file,file.argu,false);
             static std::mutex read_lock2;
             read_lock2.lock();
             results[file.name]=result;

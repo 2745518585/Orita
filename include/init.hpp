@@ -107,34 +107,6 @@ std::string exe_suf=".exe";
 std::string exe_suf="";
 #endif
 
-void ssleep(const unsigned time)
-{
-    std::this_thread::sleep_for(std::chrono::milliseconds(time));
-}
-
-#ifdef _WIN32
-std::string system_to_nul=" > nul 2>&1 ";
-#endif
-#ifdef __linux__
-std::string system_to_nul=" > /dev/null 2>&1 ";
-#endif
-#ifdef _WIN32
-int sys_exit_code=1;
-#endif
-#ifdef __linux__
-int sys_exit_code=256;
-#endif
-
-int ssystem(const std::string command)
-{
-    #ifdef _WIN32
-    return system(("cmd /C \""+command+"\"").c_str());
-    #endif
-    #ifdef __linux__
-    return system(command.c_str());
-    #endif
-}
-
 #define _NL 0
 #define _AC 1
 #define _SA 2
@@ -219,10 +191,120 @@ namespace Init
     }
 }
 std::string running_path=Init::get_running_path(),file_path=Init::get_file_path(),appdata_path=Init::get_appdata_path();
+
+class Log
+{
+  public:
+    std::string output_file;
+    std::mutex read_lock;
+    Log()
+    {
+        output_file=appdata_path+sPS+"Orita.log";
+    }
+    void clear()
+    {
+        read_lock.lock();
+        (std::ofstream)(output_file)<<"Orita LOG\nrunning path: \""<<running_path<<"\"\nfile path: \""<<file_path<<"\"\nappdata path: \""<<appdata_path<<"\"\n";
+        read_lock.unlock();
+    }
+    void print(std::string str)
+    {
+        read_lock.lock();
+        std::ofstream output(output_file,std::ios::app);
+        output<<str<<"\n";
+        output.close();
+        read_lock.unlock();
+    }
+}orita_log;
+
+void ssleep(const unsigned time)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(time));
+}
+
+#ifdef _WIN32
+std::string system_to_nul=" > nul 2>&1 ";
+#endif
+#ifdef __linux__
+std::string system_to_nul=" > /dev/null 2>&1 ";
+#endif
+#ifdef _WIN32
+int sys_exit_code=1;
+#endif
+#ifdef __linux__
+int sys_exit_code=256;
+#endif
+
+int ssystem(const std::string command)
+{
+    #ifdef _WIN32
+    return system(("cmd /C \""+command+"\"").c_str());
+    #endif
+    #ifdef __linux__
+    return system(command.c_str());
+    #endif
+}
+
+int find_file(const std::string file)
+{
+    const int result=ssystem("dir \""+file+"\""+system_to_nul);
+    if(result) orita_log.print("[Warn] fail find file: \nfile: \""+file+"\"");
+    else orita_log.print("[Info] find file: \nfile: \""+file+"\"");
+    return result;
+}
+
+int copy_file(const std::string file,const std::string copy_path)
+{
+    #ifdef _WIN32
+    const int result=ssystem("copy \""+file+"\" \""+copy_path+"\""+system_to_nul);
+    #endif
+    #ifdef __linux__
+    const int result=ssystem("cp \""+file+"\" \""+copy_path+"\""+system_to_nul);
+    #endif
+    if(result) orita_log.print("[Warn] fail copy file: \nfile: \""+file+"\"\ncopy_path: \""+copy_path+"\"");
+    else orita_log.print("[Info] copy file: \nfile: \""+file+"\"\ncopy_path: \""+copy_path+"\"");
+    return result;
+}
+
+int make_dir(const std::string dir)
+{
+    const int result=ssystem("mkdir \""+dir+"\""+system_to_nul);
+    if(result) orita_log.print("[Warn] fail make dir: \ndir: \""+dir+"\"");
+    else orita_log.print("[Info] make dir: \ndir: \""+dir+"\"");
+    return result;
+}
+
+int remove_dir(const std::string dir)
+{
+    #ifdef _WIN32
+    const int result=ssystem("rmdir /S /Q \""+dir+"\""+system_to_nul);
+    #endif
+    #ifdef __linux__
+    const int result=ssystem("rm -r \""+dir+"\""+system_to_nul);
+    #endif
+    if(result) orita_log.print("[Warn] fail remove dir: \ndir: \""+dir+"\"");
+    else orita_log.print("[Info] remove dir: \ndir: \""+dir+"\"");
+    return result;
+}
+
+int move_file(const std::string file,const std::string move_path)
+{
+    #ifdef _WIN32
+    const int result=ssystem("move \""+file+"\" \""+move_path+"\""+system_to_nul);
+    #endif
+    #ifdef __linux__
+    const int result=ssystem("mv -f \""+file+"\" \""+move_path+"\""+system_to_nul);
+    #endif
+    if(result) orita_log.print("[Warn] fail move file: \nfile: \""+file+"\"\nmove_path: \""+move_path+"\"");
+    else orita_log.print("[Info] move file: \nfile: \""+file+"\"\nmove_path: \""+move_path+"\"");
+    return result;
+}
+
 namespace Init
 {
     void begin()
     {
+        orita_log.clear();
         (std::ifstream)(appdata_path+sPS+"settings.json")>>settings;
     }
     void end()

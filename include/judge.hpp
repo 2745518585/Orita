@@ -45,8 +45,9 @@ class runner
     }
     void run_run()
     {
+        orita_log.print("[Info] run: \nfile: \""+get_exefile(file)+"\"\nargu: "+argu+"\nin_file: \""+in_file+"\"\nout_file: \""+out_file+"\"\ncommand: "+"\""+get_exefile(file)+"\" "+argu+(in_file!=""?" < \""+in_file+"\"":"")+(out_file!=""?" > \""+out_file+"\"":""));
         run_time.init();
-        exit_code=ssystem(get_exefile(file)+" "+argu+(in_file!=""?" < "+in_file:"")+(out_file!=""?" > "+out_file:""))/sys_exit_code;
+        exit_code=ssystem("\""+get_exefile(file)+"\" "+argu+(in_file!=""?" < \""+in_file+"\"":"")+(out_file!=""?" > \""+out_file+"\"":""))/sys_exit_code;
         time=run_time.get_time();
         if_end=true;
         wait.notify_all();
@@ -62,6 +63,7 @@ class runner
         }
         if(!if_end)
         {
+            orita_log.print("[Warn] run timeout: \nfile: \""+get_exefile(file)+"\"");
             ssystem("taskkill /f /pid "+get_exefilename(file)+system_to_nul);
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
@@ -101,7 +103,7 @@ class judger
         time=ans_runner.time;
         exit_code=ans_runner.exit_code;
         if(exit_code) return result=_RE;
-        runner chk_runner(chk,"",chk_file,in_file+" "+out_file+" "+ans_file);
+        runner chk_runner(chk,"",chk_file,"\""+in_file+"\" \""+out_file+"\" \""+ans_file+"\"");
         if(chk_runner.run()) return chk_time=chk_runner.time,chk_result=_TO,result=_NL;
         chk_time=chk_runner.time;
         chk_exit_code=chk_runner.exit_code;

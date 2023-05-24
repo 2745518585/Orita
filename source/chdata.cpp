@@ -21,8 +21,8 @@ int chdata_main()
             print_result(_NF);
             return 0;
         }
-        copy_source(in_file,"data"+sPS+"data.in");
-        copy_source(out_file,"data"+sPS+"data.out");
+        copy_file(in_file,appdata_path+sPS+"data"+sPS+"data.in");
+        copy_file(out_file,appdata_path+sPS+"data"+sPS+"data.out");
     }
     else if(get_sum_argu("if")>=1||get_sum_argu("of")>=1)
     {
@@ -45,8 +45,8 @@ int chdata_main()
                 return 0;
             }
         }
-        if(get_sum_argu("if")>=1) copy_source(in_file,"data"+sPS+"data.in");
-        if(get_sum_argu("of")>=1) copy_source(out_file,"data"+sPS+"data.out");
+        if(get_sum_argu("if")>=1) copy_file(in_file,appdata_path+sPS+"data"+sPS+"data.in");
+        if(get_sum_argu("of")>=1) copy_file(out_file,appdata_path+sPS+"data"+sPS+"data.out");
     }
     else if(get_sum_argu("s")!=-1)
     {

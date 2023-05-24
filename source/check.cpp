@@ -67,9 +67,9 @@ int check_main()
     }
     int total_sum=stoi(get_argu("n",1));
     // init data dir
-    ssystem("rmdir /S /Q data"+system_to_nul);
-    ssystem("mkdir data"+system_to_nul);
-    ssystem("mkdir data"+sPS+"others"+system_to_nul);
+    remove_dir("data");
+    make_dir("data");
+    make_dir("data"+sPS+"others");
     // find file
     if(find_filestr(_check_in)) {print_result(_in_name,_NF);return 0;}
     if(find_filestr(_check_out)) {print_result(_out_name,_NF);return 0;}
@@ -119,7 +119,7 @@ int check_main()
             change_color("default");
         }
         std::cout<<"\n";
-        ssystem("mkdir data"+sPS+"others"+sPS+std::to_string(i)+system_to_nul);
+        make_dir("data"+sPS+"others"+sPS+std::to_string(i));
         std::string in_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".in",out_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".out",ans_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".ans",chk_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".txt";
         runner in_runner(in,"",in_file,std::to_string(i));
         if(in_runner.run()) {print_result(_in_name,_TO,in_runner.time);continue;}
@@ -144,8 +144,7 @@ int check_main()
         if(ans_judger.result.istrue()) ++ac_sum;
         if(ans_judger.result.isfalse())
         {
-            ssystem("move data"+sPS+"others"+sPS+std::to_string(i)+" data"+system_to_nul);
-            ssystem("ren data"+sPS+std::to_string(i)+" \""+std::to_string(i)+" - "+get_short_resultname(ans_judger.result)+"\""+system_to_nul);
+            move_file("data"+sPS+"others"+sPS+std::to_string(i),"data"+sPS+std::to_string(i)+" - "+get_short_resultname(ans_judger.result));
         }
     }
     std::cout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";

@@ -63,10 +63,10 @@ int run_main()
     // print result
     run_judger.print_result();
     // copy result
-    ssystem("mkdir data"+system_to_nul);
-    copy_result("data"+sPS+"data.in","data"+sPS+"data.in");
-    copy_result("data"+sPS+"data.out","data"+sPS+"data.out");
-    copy_result("data"+sPS+"data.ans","data"+sPS+"data.ans");
+    make_dir("data");
+    copy_file(appdata_path+sPS+"data"+sPS+"data.in","data"+sPS+"data.in");
+    copy_file(appdata_path+sPS+"data"+sPS+"data.out","data"+sPS+"data.out");
+    copy_file(appdata_path+sPS+"data"+sPS+"data.ans","data"+sPS+"data.ans");
     return 0;
 }
 int main(int argc,char **argv)

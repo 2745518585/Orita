@@ -26,15 +26,18 @@ namespace Files
     {
         return (int)files_json["file"+to_string_len(num,number_len)].type()!=3;
     }
-    void add_filestr(int num,std::string file)
+    void add_filestr(int num,const std::string file)
     {
         files_json["file"+to_string_len(num,number_len)]=systoUTF8(file);
+        orita_log.print("[Info] name add filestr: \nnum: "+to_string_len(num,number_len)+"\nfile: \""+file+"\"");
     }
     std::string get_filestr(int num)
     {
-        return UTF8tosys(files_json["file"+to_string_len(num,number_len)]);
+        const std::string file=UTF8tosys(files_json["file"+to_string_len(num,number_len)]);
+        orita_log.print("[Info] name get filestr: \nnum: "+to_string_len(num,number_len)+"\nfile: \""+file+"\"");
+        return file;
     }
-    std::string get_filename(std::string file)
+    std::string get_filename(const std::string file)
     {
         int pos=file.find_last_of(PS);
         if(pos==std::string::npos) return file;
@@ -44,7 +47,7 @@ namespace Files
     {
         return get_filename(get_filestr(num));
     }
-    std::string get_filepath(std::string file)
+    std::string get_filepath(const std::string file)
     {
         int pos=file.find_last_of(PS);
         if(pos==std::string::npos) return "";
@@ -54,9 +57,9 @@ namespace Files
     {
         return get_filepath(get_filestr(num));
     }
-    std::string get_filenamepre(std::string file)
+    std::string get_filenamepre(const std::string file)
     {
-        std::string name=get_filename(file);
+        const std::string name=get_filename(file);
         int pos=name.find_last_of(".");
         if(pos==std::string::npos) return name;
         return name.substr(0,pos);
@@ -65,9 +68,9 @@ namespace Files
     {
         return get_filenamepre(get_filestr(num));
     }
-    std::string get_filenamesuf(std::string file)
+    std::string get_filenamesuf(const std::string file)
     {
-        std::string name=get_filename(file);
+        const std::string name=get_filename(file);
         int pos=name.find_last_of(".");
         if(pos==std::string::npos) return "";
         return name.substr(pos,name.size()-pos);
@@ -76,100 +79,82 @@ namespace Files
     {
         return get_filenamesuf(get_filestr(num));
     }
-    void add_file(int num,std::string file)
+    void add_file(int num,const std::string file)
     {
+        std::string file_result=file;
         #ifdef _WIN32
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>1&&file[1]==':')) file=running_path+sPS+file;
+        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>1&&file_result[1]==':')) file_result=running_path+sPS+file_result;
         #endif
         #ifdef __linux__
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>0&&file[0]=='/')) file=running_path+sPS+file;
+        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>0&&file_result[0]=='/')) file_result=running_path+sPS+file_result;
         #endif
-        add_filestr(num,file);
+        orita_log.print("[Info] name add file: \nname: \""+file+"\"\nfile: \""+file_result+"\"");
+        add_filestr(num,file_result);
     }
-    std::string get_file(std::string file)
+    std::string get_file(const std::string file)
     {
+        std::string file_result=file;
         #ifdef _WIN32
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>1&&file[1]==':')) file=running_path+sPS+file;
+        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>1&&file_result[1]==':')) file_result=running_path+sPS+file_result;
         #endif
         #ifdef __linux__
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>0&&file[0]=='/')) file=running_path+sPS+file;
+        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>0&&file_result[0]=='/')) file_result=running_path+sPS+file_result;
         #endif
-        if(file.size()>0&&file[0]=='%'&&file.find('%',1)==std::string::npos)
+        if(file_result.size()>0&&file_result[0]=='%'&&file_result.find('%',1)==std::string::npos)
         {
-            return get_file(get_filestr(std::stoi(file.substr(1,file.size()-1))+_custom_start));
+            file_result=get_file(get_filestr(std::stoi(file_result.substr(1,file_result.size()-1))+_custom_start));
         }
-        int pos=0;
-        while(file.find('%',pos)!=std::string::npos)
+        else
         {
-            int pos1=file.find('%',pos),pos2=file.find('%',pos1+1);
-            if(pos2-pos1==1)
+            int pos=0;
+            while(file_result.find('%',pos)!=std::string::npos)
             {
-                file=file.substr(0,pos1)+"%"+file.substr(pos2+1,file.size()-pos2-1);
-                pos=pos1+1;
-                continue;
+                int pos1=file_result.find('%',pos),pos2=file_result.find('%',pos1+1);
+                if(pos2-pos1==1)
+                {
+                    file_result=file_result.substr(0,pos1)+"%"+file_result.substr(pos2+1,file_result.size()-pos2-1);
+                    pos=pos1+1;
+                    continue;
+                }
+                file_result=file_result.substr(0,pos1)+getenv(file_result.substr(pos1+1,pos2-pos1-1).c_str())+file_result.substr(pos2+1,file_result.size()-pos2-1);
             }
-            file=file.substr(0,pos1)+getenv(file.substr(pos1+1,pos2-pos1-1).c_str())+file.substr(pos2+1,file.size()-pos2-1);
         }
-        return file;
+        orita_log.print("[Info] name get file: \nname: \""+file+"\"\nfile: \""+file_result+"\"");
+        return file_result;
     }
     std::string get_file(int num)
     {
         return get_file(get_filestr(num));
     }
-    std::string add_namesuf(std::string file,std::string namesuf)
+    std::string add_namesuf(const std::string file,const std::string namesuf)
     {
-        if(get_filenamesuf(file)!=namesuf) file+=namesuf;
+        if(get_filenamesuf(file)!=namesuf) return file+namesuf;
         return file;
     }
-    std::string get_exefile(std::string file)
+    std::string get_exefile(const std::string file)
     {
         return get_filepath(file)+sPS+get_filenamepre(file)+exe_suf;
     }
-    std::string get_exefilename(std::string file)
+    std::string get_exefilename(const std::string file)
     {
         return get_filenamepre(file)+exe_suf;
     }
-    int find_file(std::string file)
-    {
-        return ssystem("dir \""+file+"\""+system_to_nul);
-    }
-    int copy_source(std::string file,std::string copy)
-    {
-        #ifdef _WIN32
-        return ssystem("copy \""+file+"\" \""+appdata_path+sPS+copy+"\""+system_to_nul);
-        #endif
-        #ifdef __linux__
-        return ssystem("cp \""+file+"\" \""+appdata_path+sPS+copy+"\""+system_to_nul);
-        #endif
-    }
-    int copy_result(std::string file,std::string copy)
-    {
-        #ifdef _WIN32
-        return ssystem("copy \""+appdata_path+sPS+file+"\" \""+copy+"\""+system_to_nul);
-        #endif
-        #ifdef __linux__
-        return ssystem("cp \""+appdata_path+sPS+file+"\" \""+copy+"\""+system_to_nul);
-        #endif
-    }
 }
 int find_filestr(int num) {return Files::find_filestr(num);}
-void add_filestr(int num,std::string file) {return Files::add_filestr(num,file);}
+void add_filestr(int num,const std::string file) {return Files::add_filestr(num,file);}
 std::string get_filestr(int num) {return Files::get_filestr(num);}
-std::string get_filename(std::string file) {return Files::get_filename(file);}
+std::string get_filename(const std::string file) {return Files::get_filename(file);}
 std::string get_filename(int num) {return Files::get_filename(num);}
-std::string get_filepath(std::string file) {return Files::get_filepath(file);}
+std::string get_filepath(const std::string file) {return Files::get_filepath(file);}
 std::string get_filepath(int num) {return Files::get_filepath(num);}
-std::string get_filenamepre(std::string file) {return Files::get_filenamepre(file);}
+std::string get_filenamepre(const std::string file) {return Files::get_filenamepre(file);}
 std::string get_filenamepre(int num) {return Files::get_filenamepre(num);}
-std::string get_filenamesuf(std::string file) {return Files::get_filenamesuf(file);}
+std::string get_filenamesuf(const std::string file) {return Files::get_filenamesuf(file);}
 std::string get_filenamesuf(int num) {return Files::get_filenamesuf(num);}
-void add_file(int num,std::string file) {return Files::add_file(num,file);}
-std::string get_file(std::string file) {return Files::get_file(file);}
+void add_file(int num,const std::string file) {return Files::add_file(num,file);}
+std::string get_file(const std::string file) {return Files::get_file(file);}
 std::string get_file(int num) {return Files::get_file(num);}
-std::string add_namesuf(std::string file,std::string namesuf) {return Files::add_namesuf(file,namesuf);}
-std::string get_exefile(std::string file) {return Files::get_exefile(file);}
+std::string add_namesuf(const std::string file,const std::string namesuf) {return Files::add_namesuf(file,namesuf);}
+std::string get_exefile(const std::string file) {return Files::get_exefile(file);}
 std::string get_exefilename(std::string file) {return Files::get_exefilename(file);}
-int find_file(std::string file) {return Files::find_file(file);}
-int copy_source(std::string file,std::string copy) {return Files::copy_source(file,copy);}
-int copy_result(std::string file,std::string copy) {return Files::copy_result(file,copy);}
 #endif
