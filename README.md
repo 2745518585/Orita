@@ -4,6 +4,10 @@
 
 由 [赵悦岑](https://github.com/2745518585/) 开发的一款 OI 工具，包括评测、对拍、数据生成等，主要由 C++ 语言编写。
 
+[vscode-Orita](https://github.com/2745518585/vscode-Orita)
+
+Orita 的配套 vscode 拓展。
+
 ## 初始化
 
 使用前需要保证环境为 `Windows` 或 `Linux` 环境，电脑中有支持 `C++14` 的 `g++` 且已加入环境变量（即可以在控制台运行 `g++`）。最好有版本 `3.15` 以上的 `CMake`。
