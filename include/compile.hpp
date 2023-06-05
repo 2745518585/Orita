@@ -10,11 +10,14 @@ namespace Compile
     {
         if(get_filenamesuf(file)!=".cpp")
         {
-            orita_log.print("[Warn] compile: \nfile: \""+file+"\"");
+            orita_log.print(_LOG_WARN,"fail compile","file: "+add_quotation(file));
             return -1;
         }
-        orita_log.print("[Info] compile: \nfile: \""+file+"\"\nargu: "+compile_argu+"\ncommand: g++ \""+file+"\" -o \""+get_exefile(file)+"\" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul));
-        return ssystem("g++ \""+file+"\" -o \""+get_exefile(file)+"\" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul))!=0;
+        std::string command="g++ "+add_quotation(file)+" -o "+add_quotation(get_exefile(file))+" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul);
+        int result=ssystem(command)!=0;
+        if(result) orita_log.print(_LOG_WARN,"fail compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
+        else orita_log.print(_LOG_INFO,"compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
+        return result;
     }
 }
 int compile(std::string file,std::string compile_argu="",bool if_print=true) {return Compile::compile(file,compile_argu,if_print);}

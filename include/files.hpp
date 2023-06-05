@@ -29,12 +29,12 @@ namespace Files
     void add_filestr(int num,const std::string file)
     {
         files_json["file"+to_string_len(num,number_len)]=systoUTF8(file);
-        orita_log.print("[Info] name add filestr: \nnum: "+to_string_len(num,number_len)+"\nfile: \""+file+"\"");
+        orita_log.print(_LOG_INFO,"name add filestr","num: "+to_string_len(num,number_len),"file: "+add_quotation(file));
     }
     std::string get_filestr(int num)
     {
         const std::string file=UTF8tosys(files_json["file"+to_string_len(num,number_len)]);
-        orita_log.print("[Info] name get filestr: \nnum: "+to_string_len(num,number_len)+"\nfile: \""+file+"\"");
+        orita_log.print(_LOG_INFO,"name get filestr","num: "+to_string_len(num,number_len),"file: "+add_quotation(file));
         return file;
     }
     std::string get_filename(const std::string file)
@@ -79,27 +79,25 @@ namespace Files
     {
         return get_filenamesuf(get_filestr(num));
     }
-    void add_file(int num,const std::string file)
+    std::string get_path(const std::string file)
     {
-        std::string file_result=file;
         #ifdef _WIN32
-        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>1&&file_result[1]==':')) file_result=running_path+sPS+file_result;
+        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>1&&file[1]==':')) return running_path+sPS+file;
         #endif
         #ifdef __linux__
-        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>0&&file_result[0]=='/')) file_result=running_path+sPS+file_result;
+        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>0&&file[0]=='/')) return running_path+sPS+file;
         #endif
-        orita_log.print("[Info] name add file: \nname: \""+file+"\"\nfile: \""+file_result+"\"");
+        return file;
+    }
+    void add_file(int num,const std::string file)
+    {
+        std::string file_result=get_path(file);
+        orita_log.print(_LOG_INFO,"name add file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
         add_filestr(num,file_result);
     }
     std::string get_file(const std::string file)
     {
-        std::string file_result=file;
-        #ifdef _WIN32
-        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>1&&file_result[1]==':')) file_result=running_path+sPS+file_result;
-        #endif
-        #ifdef __linux__
-        if((file_result[0]==0||(file_result[0]!='%'||file_result[1]=='%'))&&!(file_result.size()>0&&file_result[0]=='/')) file_result=running_path+sPS+file_result;
-        #endif
+        std::string file_result=get_path(file);
         if(file_result.size()>0&&file_result[0]=='%'&&file_result.find('%',1)==std::string::npos)
         {
             file_result=get_file(get_filestr(std::stoi(file_result.substr(1,file_result.size()-1))+_custom_start));
@@ -119,7 +117,7 @@ namespace Files
                 file_result=file_result.substr(0,pos1)+getenv(file_result.substr(pos1+1,pos2-pos1-1).c_str())+file_result.substr(pos2+1,file_result.size()-pos2-1);
             }
         }
-        orita_log.print("[Info] name get file: \nname: \""+file+"\"\nfile: \""+file_result+"\"");
+        orita_log.print(_LOG_INFO,"name get file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
         return file_result;
     }
     std::string get_file(int num)

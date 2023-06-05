@@ -89,17 +89,6 @@ std::string sPS="\\";
 char PS='/';
 std::string sPS="/";
 #endif
-std::string fullpath(std::string path)
-{
-    #ifdef _WIN32
-    char abspath[4096]={0};
-    _fullpath(abspath,path.c_str(),4096);
-    #else
-    char abspath[40960]={0};
-    realpath(path.c_str(),abspath);
-    #endif
-    return abspath;
-}
 #ifdef _WIN32
 std::string exe_suf=".exe";
 #endif
@@ -159,6 +148,11 @@ std::string to_string_len(const T num,const int len)
     return std::string(len-str.size(),'0')+str;
 }
 
+std::string add_quotation(std::string str)
+{
+    return "\""+str+"\"";
+}
+
 json settings;
 namespace Init
 {
@@ -194,26 +188,49 @@ std::string running_path=Init::get_running_path(),file_path=Init::get_file_path(
 
 class Log
 {
+    #define _LOG_INFO 1
+    #define _LOG_WARN 2
+    #define _LOG_ERROR 3
+    #define _LOG_DEBUG 4
   public:
     std::string output_file;
     std::mutex read_lock;
+    std::ofstream output;
     Log()
     {
         output_file=appdata_path+sPS+"Orita.log";
     }
+    void print(std::string str)
+    {
+        output<<str<<"\n";
+    }
+    template<typename ...others_type>
+    void print(std::string str,others_type ...others)
+    {
+        print(str);
+        print(others...);
+    }
+    template<typename ...others_type>
+    void print(int info,std::string str,others_type ...others)
+    {
+        read_lock.lock();
+        output.open(output_file,std::ios::app);
+        if(info==_LOG_INFO) output<<"[Info] "<<str<<":\n";
+        if(info==_LOG_WARN) output<<"[Warn] "<<str<<":\n";
+        if(info==_LOG_ERROR) output<<"[Error] "<<str<<":\n";
+        if(info==_LOG_DEBUG) output<<"[Debug] "<<str<<":\n";
+        print(others...);
+        output.close();
+        read_lock.unlock();
+    }
     void clear()
     {
         read_lock.lock();
-        (std::ofstream)(output_file)<<"Orita LOG\nrunning path: \""<<running_path<<"\"\nfile path: \""<<file_path<<"\"\nappdata path: \""<<appdata_path<<"\"\n";
+        (std::ofstream)(output_file)<<"Orita LOG\n";
         read_lock.unlock();
-    }
-    void print(std::string str)
-    {
-        read_lock.lock();
-        std::ofstream output(output_file,std::ios::app);
-        output<<str<<"\n";
-        output.close();
-        read_lock.unlock();
+        print(_LOG_INFO,"running_path","path: "+add_quotation(running_path));
+        print(_LOG_INFO,"appdata_path","path: "+add_quotation(appdata_path));
+        print(_LOG_INFO,"file_path","path: "+add_quotation(file_path));
     }
 }orita_log;
 
@@ -238,7 +255,7 @@ int sys_exit_code=256;
 int ssystem(const std::string command)
 {
     #ifdef _WIN32
-    return system(("cmd /C \""+command+"\"").c_str());
+    return system(("cmd /C "+add_quotation(command)).c_str());
     #endif
     #ifdef __linux__
     return system(command.c_str());
@@ -247,56 +264,56 @@ int ssystem(const std::string command)
 
 int find_file(const std::string file)
 {
-    const int result=ssystem("dir \""+file+"\""+system_to_nul);
-    if(result) orita_log.print("[Warn] fail find file: \nfile: \""+file+"\"");
-    else orita_log.print("[Info] find file: \nfile: \""+file+"\"");
+    const int result=ssystem("dir "+add_quotation(file)+system_to_nul);
+    if(result) orita_log.print(_LOG_WARN,"fail find file","file: "+add_quotation(file));
+    else orita_log.print(_LOG_INFO,"find file","file: "+add_quotation(file));
     return result;
 }
 
 int copy_file(const std::string file,const std::string copy_path)
 {
     #ifdef _WIN32
-    const int result=ssystem("copy \""+file+"\" \""+copy_path+"\""+system_to_nul);
+    const int result=ssystem("copy "+add_quotation(file)+" "+add_quotation(copy_path)+system_to_nul);
     #endif
     #ifdef __linux__
-    const int result=ssystem("cp \""+file+"\" \""+copy_path+"\""+system_to_nul);
+    const int result=ssystem("cp "+add_quotation(file)+" "+add_quotation(copy_path)+system_to_nul);
     #endif
-    if(result) orita_log.print("[Warn] fail copy file: \nfile: \""+file+"\"\ncopy_path: \""+copy_path+"\"");
-    else orita_log.print("[Info] copy file: \nfile: \""+file+"\"\ncopy_path: \""+copy_path+"\"");
+    if(result) orita_log.print(_LOG_WARN,"fail copy file","file: "+add_quotation(file)+"\ncopy_path: "+add_quotation(copy_path));
+    else orita_log.print(_LOG_INFO,"copy file","file: "+add_quotation(file)+"\ncopy_path: "+add_quotation(copy_path));
     return result;
 }
 
 int make_dir(const std::string dir)
 {
-    const int result=ssystem("mkdir \""+dir+"\""+system_to_nul);
-    if(result) orita_log.print("[Warn] fail make dir: \ndir: \""+dir+"\"");
-    else orita_log.print("[Info] make dir: \ndir: \""+dir+"\"");
+    const int result=ssystem("mkdir "+add_quotation(dir)+system_to_nul);
+    if(result) orita_log.print(_LOG_WARN,"fail make dir","dir: "+add_quotation(dir));
+    else orita_log.print(_LOG_INFO,"make dir","dir: "+add_quotation(dir));
     return result;
 }
 
 int remove_dir(const std::string dir)
 {
     #ifdef _WIN32
-    const int result=ssystem("rmdir /S /Q \""+dir+"\""+system_to_nul);
+    const int result=ssystem("rmdir /S /Q "+add_quotation(dir)+system_to_nul);
     #endif
     #ifdef __linux__
-    const int result=ssystem("rm -r \""+dir+"\""+system_to_nul);
+    const int result=ssystem("rm -r "+add_quotation(dir)+system_to_nul);
     #endif
-    if(result) orita_log.print("[Warn] fail remove dir: \ndir: \""+dir+"\"");
-    else orita_log.print("[Info] remove dir: \ndir: \""+dir+"\"");
+    if(result) orita_log.print(_LOG_WARN,"fail remove dir","dir: "+add_quotation(dir));
+    else orita_log.print(_LOG_INFO,"remove dir","dir: "+add_quotation(dir));
     return result;
 }
 
 int move_file(const std::string file,const std::string move_path)
 {
     #ifdef _WIN32
-    const int result=ssystem("move \""+file+"\" \""+move_path+"\""+system_to_nul);
+    const int result=ssystem("move "+add_quotation(file)+" "+add_quotation(move_path)+system_to_nul);
     #endif
     #ifdef __linux__
-    const int result=ssystem("mv -f \""+file+"\" \""+move_path+"\""+system_to_nul);
+    const int result=ssystem("mv -f "+add_quotation(file)+" "+add_quotation(move_path)+system_to_nul);
     #endif
-    if(result) orita_log.print("[Warn] fail move file: \nfile: \""+file+"\"\nmove_path: \""+move_path+"\"");
-    else orita_log.print("[Info] move file: \nfile: \""+file+"\"\nmove_path: \""+move_path+"\"");
+    if(result) orita_log.print(_LOG_WARN,"fail move file","file: "+add_quotation(file)+"\nmove_path: "+add_quotation(move_path));
+    else orita_log.print(_LOG_INFO,"move file","file: "+add_quotation(file)+"\nmove_path: "+add_quotation(move_path));
     return result;
 }
 
