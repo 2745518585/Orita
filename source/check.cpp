@@ -69,7 +69,7 @@ int check_main()
     // init data dir
     remove_dir("data");
     make_dir("data");
-    make_dir("data"+sPS+"others");
+    make_dir(makepath("data","others"));
     // find file
     if(find_filestr(_check_in)) {print_result(_in_name,_NF);return 0;}
     if(find_filestr(_check_out)) {print_result(_out_name,_NF);return 0;}
@@ -119,8 +119,11 @@ int check_main()
             change_color("default");
         }
         std::cout<<"\n";
-        make_dir("data"+sPS+"others"+sPS+std::to_string(i));
-        std::string in_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".in",out_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".out",ans_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".ans",chk_file="data"+sPS+"others"+sPS+std::to_string(i)+sPS+std::to_string(i)+".txt";
+        make_dir(makepath("data","others",std::to_string(i)));
+        std::string in_file=makepath("data","others",std::to_string(i),std::to_string(i)+".in"),
+        out_file=makepath("data","others",std::to_string(i),std::to_string(i)+".out"),
+        ans_file=makepath("data","others",std::to_string(i),std::to_string(i)+".ans"),
+        chk_file=makepath("data","others",std::to_string(i),std::to_string(i)+".txt");
         runner in_runner(in,"",in_file,std::to_string(i));
         if(in_runner.run()) {print_result(_in_name,_TO,in_runner.time);continue;}
         if(in_runner.exit_code) {print_result(_in_name,_RE,0,in_runner.exit_code);continue;}
@@ -144,7 +147,7 @@ int check_main()
         if(ans_judger.result.istrue()) ++ac_sum;
         if(ans_judger.result.isfalse())
         {
-            move_file("data"+sPS+"others"+sPS+std::to_string(i),"data"+sPS+std::to_string(i)+" - "+get_short_resultname(ans_judger.result));
+            move_file(makepath("data","others",std::to_string(i)),makepath("data",std::to_string(i)+" - "+get_short_resultname(ans_judger.result)));
         }
     }
     std::cout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";

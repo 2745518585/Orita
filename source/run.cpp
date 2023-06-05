@@ -64,9 +64,9 @@ int run_main()
     run_judger.print_result();
     // copy result
     make_dir("data");
-    copy_file(appdata_path+sPS+"data"+sPS+"data.in","data"+sPS+"data.in");
-    copy_file(appdata_path+sPS+"data"+sPS+"data.out","data"+sPS+"data.out");
-    copy_file(appdata_path+sPS+"data"+sPS+"data.ans","data"+sPS+"data.ans");
+    copy_file(makepath(appdata_path,"data","data.in"),makepath("data","data.in"));
+    copy_file(makepath(appdata_path,"data","data.out"),makepath("data","data.out"));
+    copy_file(makepath(appdata_path,"data","data.ans"),makepath("data","data.ans"));
     return 0;
 }
 int main(int argc,char **argv)

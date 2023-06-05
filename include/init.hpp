@@ -89,6 +89,15 @@ std::string sPS="\\";
 char PS='/';
 std::string sPS="/";
 #endif
+std::string makepath(std::string path)
+{
+    return path;
+}
+template<typename ...others_type>
+std::string makepath(std::string path,others_type ...others)
+{
+    return path+PS+makepath(others...);
+}
 #ifdef _WIN32
 std::string exe_suf=".exe";
 #endif
@@ -135,11 +144,6 @@ class res
     }
 };
 
-bool verify_result(int result)
-{
-    return result>0;
-}
-
 template<typename T>
 std::string to_string_len(const T num,const int len)
 {
@@ -177,10 +181,10 @@ namespace Init
     std::string get_appdata_path()
     {
         #ifdef _WIN32
-        return getenv("appdata")+sPS+"Orita";
+        return makepath(getenv("appdata"),"Orita");
         #endif
         #ifdef __linux__
-        return getenv("HOME")+sPS+".Orita";
+        return makepath(getenv("HOME"),".Orita");
         #endif
     }
 }
@@ -198,7 +202,7 @@ class Log
     std::ofstream output;
     Log()
     {
-        output_file=appdata_path+sPS+"Orita.log";
+        output_file=makepath(appdata_path,"Orita.log");
     }
     void print(std::string str)
     {
@@ -322,11 +326,11 @@ namespace Init
     void begin()
     {
         orita_log.clear();
-        (std::ifstream)(appdata_path+sPS+"settings.json")>>settings;
+        (std::ifstream)(makepath(appdata_path,"settings.json"))>>settings;
     }
     void end()
     {
-        (std::ofstream)(appdata_path+sPS+"settings.json")<<std::setw(4)<<settings;
+        (std::ofstream)(makepath(appdata_path,"settings.json"))<<std::setw(4)<<settings;
     }
 }
 #endif

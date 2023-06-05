@@ -16,11 +16,11 @@ namespace Files
     json files_json;
     void begin()
     {
-        (std::ifstream)(appdata_path+sPS+"file.json")>>files_json;
+        (std::ifstream)(makepath(appdata_path,"file.json"))>>files_json;
     }
     void end()
     {
-        (std::ofstream)(appdata_path+sPS+"file.json")<<std::setw(4)<<files_json;
+        (std::ofstream)(makepath(appdata_path,"file.json"))<<std::setw(4)<<files_json;
     }
     int find_filestr(int num)
     {
@@ -82,10 +82,10 @@ namespace Files
     std::string get_path(const std::string file)
     {
         #ifdef _WIN32
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>1&&file[1]==':')) return running_path+sPS+file;
+        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>1&&file[1]==':')) return makepath(running_path,file);
         #endif
         #ifdef __linux__
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>0&&file[0]=='/')) return running_path+sPS+file;
+        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>0&&file[0]=='/')) return makepath(running_path,file);
         #endif
         return file;
     }
@@ -131,7 +131,7 @@ namespace Files
     }
     std::string get_exefile(const std::string file)
     {
-        return get_filepath(file)+sPS+get_filenamepre(file)+exe_suf;
+        return makepath(get_filepath(file),get_filenamepre(file)+exe_suf);
     }
     std::string get_exefilename(const std::string file)
     {

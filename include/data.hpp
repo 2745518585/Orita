@@ -7,13 +7,13 @@ namespace Data
     json data_json;
     void begin()
     {
-        std::ifstream file(appdata_path+sPS+"data.json");
+        std::ifstream file(makepath(appdata_path,"data.json"));
         file>>data_json;
         file.close();
     }
     void end()
     {
-        std::ofstream file(appdata_path+sPS+"data.json");
+        std::ofstream file(makepath(appdata_path,"data.json"));
         file<<std::setw(4)<<data_json;
         file.close();
     }

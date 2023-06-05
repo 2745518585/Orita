@@ -87,13 +87,13 @@ class judger
     {
         ans=_ans,chk=_chk;
         if(_in_file!="") in_file=_in_file;
-        else in_file=appdata_path+sPS+"data"+sPS+"data.in";
+        else in_file=makepath(appdata_path,"data","data.in");
         if(_out_file!="") out_file=_out_file;
-        else out_file=appdata_path+sPS+"data"+sPS+"data.out";
+        else out_file=makepath(appdata_path,"data","data.out");
         if(_ans_file!="") ans_file=_ans_file;
-        else ans_file=appdata_path+sPS+"data"+sPS+"data.ans";
+        else ans_file=makepath(appdata_path,"data","data.ans");
         if(_chk_file!="") chk_file=_chk_file;
-        else chk_file=appdata_path+sPS+"data"+sPS+"data.txt";
+        else chk_file=makepath(appdata_path,"data","data.txt");
         time_limit=_time_limit;
         time=0,exit_code=0,chk_time=0,chk_exit_code=0;
     }

@@ -21,8 +21,8 @@ int chdata_main()
             print_result(_NF);
             return 0;
         }
-        copy_file(in_file,appdata_path+sPS+"data"+sPS+"data.in");
-        copy_file(out_file,appdata_path+sPS+"data"+sPS+"data.out");
+        copy_file(in_file,makepath(appdata_path,"data","data.in"));
+        copy_file(out_file,makepath(appdata_path,"data","data.out"));
     }
     else if(get_sum_argu("if")>=1||get_sum_argu("of")>=1)
     {
@@ -45,16 +45,16 @@ int chdata_main()
                 return 0;
             }
         }
-        if(get_sum_argu("if")>=1) copy_file(in_file,appdata_path+sPS+"data"+sPS+"data.in");
-        if(get_sum_argu("of")>=1) copy_file(out_file,appdata_path+sPS+"data"+sPS+"data.out");
+        if(get_sum_argu("if")>=1) copy_file(in_file,makepath(appdata_path,"data","data.in"));
+        if(get_sum_argu("of")>=1) copy_file(out_file,makepath(appdata_path,"data","data.out"));
     }
     else if(get_sum_argu("s")!=-1)
     {
         char str;
-        FILE *file=fopen((appdata_path+sPS+"data"+sPS+"data.in").c_str(),"w");
+        FILE *file=fopen((makepath(appdata_path,"data","data.in")).c_str(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
-        file=fopen((appdata_path+sPS+"data"+sPS+"data.out").c_str(),"w");
+        file=fopen((makepath(appdata_path,"data","data.out")).c_str(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
     }
