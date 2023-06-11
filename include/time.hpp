@@ -2,8 +2,9 @@
 #ifndef _FILE_TIME
 #define _FILE_TIME _FILE_TIME
 #include"init.hpp"
-struct stime
+class stime
 {
+  public:
     #ifdef _WIN32
     LARGE_INTEGER begin_time;
     void init()

@@ -83,26 +83,24 @@ std::string systoUTF8(const std::string str)
 
 #ifdef _WIN32
 char PS='\\';
-std::string sPS="\\";
 #endif
 #ifdef __linux__
 char PS='/';
-std::string sPS="/";
 #endif
-std::string makepath(std::string path)
+std::string makepath(const std::string path)
 {
     return path;
 }
 template<typename ...others_type>
-std::string makepath(std::string path,others_type ...others)
+std::string makepath(const std::string path,const others_type ...others)
 {
     return path+PS+makepath(others...);
 }
 #ifdef _WIN32
-std::string exe_suf=".exe";
+const std::string exe_suf=".exe";
 #endif
 #ifdef __linux__
-std::string exe_suf="";
+const std::string exe_suf="";
 #endif
 
 #define _NL 0
@@ -122,23 +120,24 @@ std::string exe_suf="";
 #define _FL -11
 class res
 {
-  public:
+  private:
     int result;
+  public:
     res():result(_NL){}
-    res(int _result):result(_result){}
-    bool is(int _result)
+    res(const int _result):result(_result){}
+    bool is(const int _result)const
     {
         return result==_result;
     }
-    bool isnull()
+    bool isnull()const
     {
         return result==0;
     }
-    bool istrue()
+    bool istrue()const
     {
         return result>0;
     }
-    bool isfalse()
+    bool isfalse()const
     {
         return result<0;
     }
@@ -152,7 +151,7 @@ std::string to_string_len(const T num,const int len)
     return std::string(len-str.size(),'0')+str;
 }
 
-std::string add_quotation(std::string str)
+std::string add_quotation(const std::string str)
 {
     return "\""+str+"\"";
 }
@@ -188,7 +187,7 @@ namespace Init
         #endif
     }
 }
-std::string running_path=Init::get_running_path(),file_path=Init::get_file_path(),appdata_path=Init::get_appdata_path();
+const std::string running_path=Init::get_running_path(),file_path=Init::get_file_path(),appdata_path=Init::get_appdata_path();
 
 class Log
 {
@@ -196,26 +195,27 @@ class Log
     #define _LOG_WARN 2
     #define _LOG_ERROR 3
     #define _LOG_DEBUG 4
-  public:
+  private:
     std::string output_file;
     std::mutex read_lock;
     std::ofstream output;
+  public:
     Log()
     {
         output_file=makepath(appdata_path,"Orita.log");
     }
-    void print(std::string str)
+    void print(const std::string str)
     {
         output<<str<<"\n";
     }
     template<typename ...others_type>
-    void print(std::string str,others_type ...others)
+    void print(const std::string str,const others_type ...others)
     {
         print(str);
         print(others...);
     }
     template<typename ...others_type>
-    void print(int info,std::string str,others_type ...others)
+    void print(const int info,const std::string str,const others_type ...others)
     {
         read_lock.lock();
         output.open(output_file,std::ios::app);
@@ -244,16 +244,16 @@ void ssleep(const unsigned time)
 }
 
 #ifdef _WIN32
-std::string system_to_nul=" > nul 2>&1 ";
+const std::string system_to_nul=" > nul 2>&1 ";
 #endif
 #ifdef __linux__
-std::string system_to_nul=" > /dev/null 2>&1 ";
+const std::string system_to_nul=" > /dev/null 2>&1 ";
 #endif
 #ifdef _WIN32
-int sys_exit_code=1;
+const int sys_exit_code=1;
 #endif
 #ifdef __linux__
-int sys_exit_code=256;
+const int sys_exit_code=256;
 #endif
 
 int ssystem(const std::string command)

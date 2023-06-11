@@ -17,6 +17,7 @@ int compile_main()
     {
         for(int i=1;i<=get_sum_argu("o");++i) compile_argu=compile_argu+" "+get_argu("o",i);
     }
+    else compile_argu=get_compile_argu();
     if(get_sum_argu("r")!=-1)
     {
         std::string file;

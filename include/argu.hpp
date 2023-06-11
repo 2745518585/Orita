@@ -7,7 +7,7 @@
 namespace Argu
 {
     json argu;
-    bool check_if_para(std::string para)
+    bool check_if_para(const std::string para)
     {
         if(para.size()==0||para[0]!='/') return false;
         for(int i=1;i<para.size();++i)
@@ -35,17 +35,17 @@ namespace Argu
         }
         return 0;
     }
-    std::string get_argu(std::string name,int num)
+    std::string get_argu(const std::string name,const int num)
     {
         if((int)argu[name].type()==0||(int)argu[name][num].type()==0) return NULL;
         return argu[name][num];
     }
-    int get_sum_argu(std::string name)
+    int get_sum_argu(const std::string name)
     {
         if((int)argu[name].type()==0) return -1;
         return argu[name][0];
     }
-    int check_argu(json cor_argu)
+    int check_argu(const json cor_argu)
     {
         for(auto para:cor_argu.items())
         {
@@ -69,7 +69,7 @@ namespace Argu
     }
 }
 int init_argu(int argc,char **argv) {return Argu::init_argu(argc,argv);}
-std::string get_argu(std::string name,int num2) {return Argu::get_argu(name,num2);}
-int get_sum_argu(std::string name) {return Argu::get_sum_argu(name);}
-int check_argu(json check_argu) {return Argu::check_argu(check_argu);}
+std::string get_argu(const std::string name,const int num2) {return Argu::get_argu(name,num2);}
+int get_sum_argu(const std::string name) {return Argu::get_sum_argu(name);}
+int check_argu(const json check_argu) {return Argu::check_argu(check_argu);}
 #endif

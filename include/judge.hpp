@@ -7,7 +7,7 @@
 #include"time.hpp"
 namespace Judge
 {
-    int compare(std::string file1,std::string file2)
+    int compare(const std::string file1,const std::string file2)
     {
         std::ifstream infile1(file1),infile2(file2);
         std::string str1,str2;
@@ -28,7 +28,7 @@ namespace Judge
         return 0;
     }
 }
-int compare(std::string file1,std::string file2) {return Judge::compare(file1,file2);}
+int compare(const std::string file1,const std::string file2) {return Judge::compare(file1,file2);}
 class runner
 {
   public:
@@ -38,14 +38,14 @@ class runner
     std::string file,argu,in_file,out_file;
     std::mutex wait_lock;
     std::condition_variable wait;
-    runner(std::string _file,std::string _in_file="",std::string _out_file="",std::string _argu="",int _time_limit=settings["runtime_limit"])
+    runner(const std::string _file,const std::string _in_file="",const std::string _out_file="",const std::string _argu="",const int _time_limit=settings["runtime_limit"])
     {
         file=_file,in_file=_in_file,out_file=_out_file,argu=_argu,time_limit=_time_limit;
         time=exit_code=0;
     }
     void run_run()
     {
-        std::string command=""+add_quotation(get_exefile(file))+" "+argu+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
+        const std::string command=""+add_quotation(get_exefile(file))+" "+argu+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
         orita_log.print(_LOG_INFO,"run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
         run_time.init();
         exit_code=ssystem(command)/sys_exit_code;
@@ -83,7 +83,7 @@ class judger
     int time,exit_code,chk_time,chk_exit_code,time_limit;
     res result,chk_result;
     std::string ans,chk,in_file,out_file,ans_file,chk_file;
-    judger(std::string _ans,std::string _chk,std::string _in_file="",std::string _out_file="",std::string _ans_file="",std::string _chk_file="",int _time_limit=get_time_limit())
+    judger(const std::string _ans,const std::string _chk,const std::string _in_file="",const std::string _out_file="",const std::string _ans_file="",const std::string _chk_file="",const int _time_limit=get_time_limit())
     {
         ans=_ans,chk=_chk;
         if(_in_file!="") in_file=_in_file;
@@ -120,7 +120,7 @@ class judger
             else return result=_TLE_CA;
         }
     }
-    void print_result(std::string name="",std::string chk_name="checker")
+    void print_result(const std::string name="",const std::string chk_name="checker")
     {
         if(result.is(_NL)) Print::print_result(chk_name,chk_result,chk_time,chk_exit_code);
         Print::print_result(name,result,time,exit_code);

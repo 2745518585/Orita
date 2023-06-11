@@ -44,7 +44,7 @@ int run_main()
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},150);
     loading_printer.start();
     compiler *run_compiler=new compiler(2);
-    run_compiler->add({{_ans_name,ans},{_chk_name,chk}},"-D JUDGEING");
+    run_compiler->add({{_ans_name,ans},{_chk_name,chk}},get_compile_argu()+" -D JUDGING");
     run_compiler->wait({_ans_name,_chk_name});
     {
         auto compile_result=run_compiler->get({_ans_name,_chk_name});

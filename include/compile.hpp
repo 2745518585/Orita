@@ -6,21 +6,23 @@
 #include"time.hpp"
 namespace Compile
 {
-    int compile(std::string file,std::string compile_argu,bool if_print)
+    int compile(const std::string file,const std::string compile_argu="",const bool if_print=true)
     {
         if(get_filenamesuf(file)!=".cpp")
         {
             orita_log.print(_LOG_WARN,"fail compile","file: "+add_quotation(file));
             return -1;
         }
-        std::string command="g++ "+add_quotation(file)+" -o "+add_quotation(get_exefile(file))+" "+get_compile_argu()+" "+compile_argu+" "+(if_print?"":system_to_nul);
+        const std::string command="g++ "+add_quotation(file)+" -o "+add_quotation(get_exefile(file))+" "+compile_argu+" "+(if_print?"":system_to_nul);
         int result=ssystem(command)!=0;
         if(result) orita_log.print(_LOG_WARN,"fail compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
         else orita_log.print(_LOG_INFO,"compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
         return result;
     }
 }
-int compile(std::string file,std::string compile_argu="",bool if_print=true) {return Compile::compile(file,compile_argu,if_print);}
+int compile(const std::string file) {return Compile::compile(file);}
+int compile(const std::string file,const std::string compile_argu) {return Compile::compile(file,compile_argu);}
+int compile(const std::string file,const std::string compile_argu,const bool if_print) {return Compile::compile(file,compile_argu,if_print);}
 class compiler
 {
   public:
@@ -31,9 +33,9 @@ class compiler
     class comp_file
     {
       public:
-        comp_file(){}
-        comp_file(std::string name,std::string file,std::string argu):name(name),file(file),argu(argu){}
         std::string name,file,argu;
+        comp_file(){}
+        comp_file(const std::string name,const std::string file,const std::string argu):name(name),file(file),argu(argu){}
     };
     std::queue<comp_file> compile_que;
     std::map<std::string,int> results;
@@ -87,12 +89,12 @@ class compiler
         }
         ssleep(10);
     }
-    void add(std::string name,std::string file,std::string argu="")
+    void add(const std::string name,const std::string file,const std::string argu="")
     {
         compile_que.push(comp_file(name,file,argu));
         wait_que.notify_one();
     }
-    void add(std::initializer_list<std::initializer_list<std::string>> file,std::string argu="")
+    void add(const std::initializer_list<std::initializer_list<std::string>> file,const std::string argu="")
     {
         for(auto i:file)
         {
@@ -100,7 +102,7 @@ class compiler
             add(*i.begin(),*next(i.begin()));
         }
     }
-    void wait(std::initializer_list<std::string> name)
+    void wait(const std::initializer_list<std::string> name)
     {
         auto check=[&]()
         {
@@ -111,7 +113,7 @@ class compiler
         wait_result.wait(lock,check);
         lock.unlock();
     }
-    std::pair<int,std::string> get(std::initializer_list<std::string> name)
+    std::pair<int,std::string> get(const std::initializer_list<std::string> name)
     {
         for(auto i:name)
         {

@@ -4,11 +4,11 @@
 #include"init.hpp"
 namespace Print
 {
-    void change_color(int red,int green,int blue)
+    void change_color(const int red,const int green,const int blue)
     {
         std::cout<<"\e[38;2;"<<red<<";"<<green<<";"<<blue<<"m";
     }
-    void change_color(std::string color)
+    void change_color(const std::string color)
     {
         if(color=="default")
         {
@@ -16,10 +16,10 @@ namespace Print
             return;
         }
         if((int)settings["colors"][color].type()==0) return;
-        std::string red=((std::string)settings["colors"][color]).substr(1,2),green=((std::string)settings["colors"][color]).substr(3,2),blue=((std::string)settings["colors"][color]).substr(5,2);
+        const std::string red=((std::string)settings["colors"][color]).substr(1,2),green=((std::string)settings["colors"][color]).substr(3,2),blue=((std::string)settings["colors"][color]).substr(5,2);
         std::cout<<"\e[38;2;"<<stoi(red,0,16)<<";"<<stoi(green,0,16)<<";"<<stoi(blue,0,16)<<"m";
     }
-    void print_result(std::string name,res result,int time,int exit_code)
+    void print_result(const std::string name,const res result,const int time,const int exit_code)
     {
         if(name!="")
         {
@@ -113,7 +113,7 @@ namespace Print
         }
         std::cout.flush();
     }
-    std::string get_resultname(res result)
+    std::string get_resultname(const res result)
     {
         if(result.is(_NL)) return "NULL";
         if(result.is(_NF)) return "No such file";
@@ -132,7 +132,7 @@ namespace Print
         if(result.is(_FL)) return "Fail";
         return "";
     }
-    std::string get_short_resultname(res result)
+    std::string get_short_resultname(const res result)
     {
         if(result.is(_NL)) return "NL";
         if(result.is(_NF)) return "NF";
@@ -152,12 +152,12 @@ namespace Print
         return "";
     }
 }
-void change_color(int red,int green,int blue) {Print::change_color(red,green,blue);}
-void change_color(std::string color) {Print::change_color(color);}
-void print_result(res result=_NL,int time=0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
-void print_result(std::string name,res result=_NL,int time=0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
-std::string get_resultname(res result) {return Print::get_resultname(result);}
-std::string get_short_resultname(res result) {return Print::get_short_resultname(result);}
+void change_color(const int red,const int green,const int blue) {Print::change_color(red,green,blue);}
+void change_color(const std::string color) {Print::change_color(color);}
+void print_result(const res result=_NL,const int time=0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
+void print_result(const std::string name,const res result=_NL,const int time=0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
+std::string get_resultname(const res result) {return Print::get_resultname(result);}
+std::string get_short_resultname(const res result) {return Print::get_short_resultname(result);}
 class printer
 {
   public:
@@ -196,7 +196,7 @@ class printer
         wait.notify_all();
         ssleep(10);
     }
-    printer(std::initializer_list<std::string> _str,int _interval_time)
+    printer(const std::initializer_list<std::string> _str,const int _interval_time)
     {
         if_end=false;
         len=0;
