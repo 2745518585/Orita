@@ -67,6 +67,7 @@ int run_main()
     copy_file(makepath(appdata_path,"data","data.in"),makepath("data","data.in"));
     copy_file(makepath(appdata_path,"data","data.out"),makepath("data","data.out"));
     copy_file(makepath(appdata_path,"data","data.ans"),makepath("data","data.ans"));
+    copy_file(makepath(appdata_path,"data","data.txt"),makepath("data","data.txt"));
     return 0;
 }
 int main(int argc,char **argv)

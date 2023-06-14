@@ -1,3 +1,4 @@
+#include<iostream>
 #include<fstream>
 #include<string>
 int main(int argc,char **argv)
@@ -15,8 +16,11 @@ int main(int argc,char **argv)
         else empty1=false;
         if(end2||str2.size()==0) empty2=true;
         else empty2=false;
-        if(empty1^empty2) return 1;
-        if(str1!=str2) return 1;
+        if(empty1^empty2||str1!=str2)
+        {
+            std::cout<<"\n*****\n"<<str1<<"\n*****\n"<<str2<<"\n*****\n";
+            return 1;
+        }
     }
     return 0;
 }
