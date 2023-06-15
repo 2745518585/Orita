@@ -33,7 +33,7 @@ class runner
 {
   public:
     int time,exit_code,time_limit;
-    stime run_time;
+    stime timer;
     std::atomic<bool> if_end;
     std::string file,argu,in_file,out_file;
     std::mutex wait_lock;
@@ -47,9 +47,9 @@ class runner
     {
         const std::string command=""+add_quotation(get_exefile(file))+" "+argu+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
         orita_log.print(_LOG_INFO,"run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
-        run_time.init();
+        timer.init();
         exit_code=ssystem(command)/sys_exit_code;
-        time=run_time.get_time();
+        time=timer.get_time();
         if_end=true;
         wait.notify_all();
     }
