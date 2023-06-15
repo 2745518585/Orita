@@ -26,7 +26,7 @@ using json=nlohmann::json;
 #include<sys/time.h>
 #endif
 
-#ifdef _WIN32
+// code
 std::string UTF8toGB(const std::string &utf8)
 {
     if(utf8.empty()) return "";
@@ -61,7 +61,6 @@ std::string GBtoUTF8(const std::string &gb2312)
     delete []str;
     return ss.str();
 }
-#endif
 std::string UTF8tosys(const std::string str)
 {
     #ifdef _WIN32
@@ -81,6 +80,7 @@ std::string systoUTF8(const std::string str)
     #endif
 }
 
+// path
 #ifdef _WIN32
 char PS='\\';
 #endif
@@ -96,13 +96,8 @@ std::string makepath(const std::string path,const others_type ...others)
 {
     return path+PS+makepath(others...);
 }
-#ifdef _WIN32
-const std::string exe_suf=".exe";
-#endif
-#ifdef __linux__
-const std::string exe_suf="";
-#endif
 
+// result
 #define _NL 0
 #define _AC 1
 #define _SA 2
@@ -143,6 +138,7 @@ class res
     }
 };
 
+// string
 template<typename T>
 std::string to_string_len(const T num,const int len)
 {
@@ -150,13 +146,12 @@ std::string to_string_len(const T num,const int len)
     if(str.size()>len) return str;
     return std::string(len-str.size(),'0')+str;
 }
-
 std::string add_quotation(const std::string str)
 {
     return "\""+str+"\"";
 }
 
-json settings;
+// local path
 namespace Init
 {
     std::string get_running_path()
@@ -189,6 +184,7 @@ namespace Init
 }
 const std::string running_path=Init::get_running_path(),file_path=Init::get_file_path(),appdata_path=Init::get_appdata_path();
 
+// log
 class Log
 {
     #define _LOG_INFO 1
@@ -238,11 +234,28 @@ class Log
     }
 }orita_log;
 
+// time
 void ssleep(const unsigned time)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(time));
 }
+class stime
+{
+  public:
+    std::chrono::_V2::system_clock::time_point begin_time;
+    void init()
+    {
+        begin_time=std::chrono::high_resolution_clock::now();
+    }
+    int get_time()
+    {
+        auto end_time=std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> time=end_time-begin_time;
+        return time.count()*1000;
+    }
+};
 
+// command
 #ifdef _WIN32
 const std::string system_to_nul=" > nul 2>&1 ";
 #endif
@@ -255,7 +268,6 @@ const int sys_exit_code=1;
 #ifdef __linux__
 const int sys_exit_code=256;
 #endif
-
 int ssystem(const std::string command)
 {
     #ifdef _WIN32
@@ -265,7 +277,6 @@ int ssystem(const std::string command)
     return system(command.c_str());
     #endif
 }
-
 int find_file(const std::string file)
 {
     const int result=ssystem("dir "+add_quotation(file)+system_to_nul);
@@ -273,7 +284,6 @@ int find_file(const std::string file)
     else orita_log.print(_LOG_INFO,"find file","file: "+add_quotation(file));
     return result;
 }
-
 int copy_file(const std::string file,const std::string copy_path)
 {
     #ifdef _WIN32
@@ -282,11 +292,10 @@ int copy_file(const std::string file,const std::string copy_path)
     #ifdef __linux__
     const int result=ssystem("cp "+add_quotation(file)+" "+add_quotation(copy_path)+system_to_nul);
     #endif
-    if(result) orita_log.print(_LOG_WARN,"fail copy file","file: "+add_quotation(file)+"\ncopy_path: "+add_quotation(copy_path));
-    else orita_log.print(_LOG_INFO,"copy file","file: "+add_quotation(file)+"\ncopy_path: "+add_quotation(copy_path));
+    if(result) orita_log.print(_LOG_WARN,"fail copy file","file: "+add_quotation(file),"copy_path: "+add_quotation(copy_path));
+    else orita_log.print(_LOG_INFO,"copy file","file: "+add_quotation(file),"copy_path: "+add_quotation(copy_path));
     return result;
 }
-
 int make_dir(const std::string dir)
 {
     const int result=ssystem("mkdir "+add_quotation(dir)+system_to_nul);
@@ -294,7 +303,6 @@ int make_dir(const std::string dir)
     else orita_log.print(_LOG_INFO,"make dir","dir: "+add_quotation(dir));
     return result;
 }
-
 int remove_dir(const std::string dir)
 {
     #ifdef _WIN32
@@ -307,7 +315,6 @@ int remove_dir(const std::string dir)
     else orita_log.print(_LOG_INFO,"remove dir","dir: "+add_quotation(dir));
     return result;
 }
-
 int move_file(const std::string file,const std::string move_path)
 {
     #ifdef _WIN32
@@ -316,11 +323,13 @@ int move_file(const std::string file,const std::string move_path)
     #ifdef __linux__
     const int result=ssystem("mv -f "+add_quotation(file)+" "+add_quotation(move_path)+system_to_nul);
     #endif
-    if(result) orita_log.print(_LOG_WARN,"fail move file","file: "+add_quotation(file)+"\nmove_path: "+add_quotation(move_path));
-    else orita_log.print(_LOG_INFO,"move file","file: "+add_quotation(file)+"\nmove_path: "+add_quotation(move_path));
+    if(result) orita_log.print(_LOG_WARN,"fail move file","file: "+add_quotation(file),"move_path: "+add_quotation(move_path));
+    else orita_log.print(_LOG_INFO,"move file","file: "+add_quotation(file),"move_path: "+add_quotation(move_path));
     return result;
 }
 
+// settings
+json settings;
 namespace Init
 {
     void begin()

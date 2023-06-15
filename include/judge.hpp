@@ -4,7 +4,6 @@
 #include"files.hpp"
 #include"data.hpp"
 #include"print.hpp"
-#include"time.hpp"
 namespace Judge
 {
     int compare(const std::string file1,const std::string file2)
