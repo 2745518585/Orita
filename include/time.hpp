@@ -5,32 +5,16 @@
 class stime
 {
   public:
-    #ifdef _WIN32
-    LARGE_INTEGER begin_time;
+    std::chrono::_V2::system_clock::time_point begin_time;
     void init()
     {
-        QueryPerformanceCounter(&begin_time);
+        begin_time=std::chrono::high_resolution_clock::now();
     }
     int get_time()
     {
-        LARGE_INTEGER now_time,time_per_sec;
-        QueryPerformanceFrequency(&time_per_sec);
-        QueryPerformanceCounter(&now_time);
-        return (int)((double)(now_time.QuadPart-begin_time.QuadPart)*1000/(double)time_per_sec.QuadPart);
+        auto end_time=std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> time=end_time-begin_time;
+        return time.count()*1000;
     }
-    #endif
-    #ifdef __linux__
-    timeval begin_time;
-    void init()
-    {
-        gettimeofday(&begin_time,NULL);
-    }
-    int get_time()
-    {
-        timeval now_time;
-        gettimeofday(&now_time,NULL);
-        return (now_time.tv_sec-begin_time.tv_sec)*1000+(now_time.tv_usec-begin_time.tv_usec)/1000;
-    }
-    #endif
 };
 #endif
