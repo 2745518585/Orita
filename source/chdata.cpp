@@ -13,9 +13,9 @@ json make_cor_argu()
 json cor_argu=make_cor_argu();
 int chdata_main()
 {
-    if(get_sum_argu("f")>=2)
+    if(argus["f"].sum()>=2)
     {
-        std::string in_file=get_file(get_argu("f",1)),out_file=get_file(get_argu("f",2));
+        std::string in_file=get_file(argus["f"][1]),out_file=get_file(argus["f"][2]);
         if(find_file(in_file)||find_file(out_file))
         {
             print_result(_NF);
@@ -24,31 +24,31 @@ int chdata_main()
         copy_file(in_file,makepath(appdata_path,"data","data.in"));
         copy_file(out_file,makepath(appdata_path,"data","data.out"));
     }
-    else if(get_sum_argu("if")>=1||get_sum_argu("of")>=1)
+    else if(argus["if"].sum()>=1||argus["of"].sum()>=1)
     {
         std::string in_file,out_file;
-        if(get_sum_argu("if")>=1)
+        if(argus["if"].sum()>=1)
         {
-            in_file=get_file(get_argu("if",1));
+            in_file=get_file(argus["if"][1]);
             if(find_file(in_file))
             {
                 print_result(_NF);
                 return 0;
             }
         }
-        if(get_sum_argu("of")>=1)
+        if(argus["of"].sum()>=1)
         {
-            out_file=get_file(get_argu("of",1));
+            out_file=get_file(argus["of"][1]);
             if(find_file(out_file))
             {
                 print_result(_NF);
                 return 0;
             }
         }
-        if(get_sum_argu("if")>=1) copy_file(in_file,makepath(appdata_path,"data","data.in"));
-        if(get_sum_argu("of")>=1) copy_file(out_file,makepath(appdata_path,"data","data.out"));
+        if(argus["if"].sum()>=1) copy_file(in_file,makepath(appdata_path,"data","data.in"));
+        if(argus["of"].sum()>=1) copy_file(out_file,makepath(appdata_path,"data","data.out"));
     }
-    else if(get_sum_argu("s")!=-1)
+    else if(argus["s"].sum()!=-1)
     {
         char str;
         FILE *file=fopen((makepath(appdata_path,"data","data.in")).c_str(),"w");
@@ -58,17 +58,17 @@ int chdata_main()
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
     }
-    if(get_sum_argu("t")>=1)
+    if(argus["t"].sum()>=1)
     {
-        change_time_limit(stoi(get_argu("t",1)));
+        change_time_limit(stoi(argus["t"][1]));
     }
     print_result(_SS);
     return 0;
 }
 int main(int argc,char **argv)
 {
-    if(init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=chdata_main();
     return exit_code;
 }

@@ -4,15 +4,16 @@
 #include"init.hpp"
 #define _not_define -1
 #define _no_limit -2
-namespace Argu
+class arguer
 {
-    json argu;
-    bool check_if_para(const std::string para)
+  public:
+    json argus;
+    bool check_if_argu(const std::string argu)
     {
-        if(para.size()==0||para[0]!='/') return false;
-        for(int i=1;i<para.size();++i)
+        if(argu.size()==0||argu[0]!='/') return false;
+        for(int i=1;i<argu.size();++i)
         {
-            if(!((para[i]>='a'&&para[i]<='z')||(para[i]>='A'&&para[i]<='Z')||(para[i]>='0'&&para[i]<='9'))) return false;
+            if(!((argu[i]>='a'&&argu[i]<='z')||(argu[i]>='A'&&argu[i]<='Z')||(argu[i]>='0'&&argu[i]<='9'))) return false;
         }
         return true;
     }
@@ -20,38 +21,28 @@ namespace Argu
     {
         for(int i=1;i<=argc-1;++i)
         {
-            if(check_if_para(argv[i]))
+            if(check_if_argu(argv[i]))
             {
-                std::string para=argv[i]+1;
+                std::string argu=argv[i]+1;
                 int j=1;
-                for(;i+j<=argc-1&&!check_if_para(argv[i+j]);++j)
+                for(;i+j<=argc-1&&!check_if_argu(argv[i+j]);++j)
                 {
-                    argu[para][j]=argv[i+j];
+                    argus[argu][j]=argv[i+j];
                 }
-                argu[para][0]=j-1;
+                argus[argu][0]=j-1;
                 i+=j-1;
             }
             else return 1;
         }
         return 0;
     }
-    std::string get_argu(const std::string name,const int num)
-    {
-        if((int)argu[name].type()==0||(int)argu[name][num].type()==0) return NULL;
-        return argu[name][num];
-    }
-    int get_sum_argu(const std::string name)
-    {
-        if((int)argu[name].type()==0) return -1;
-        return argu[name][0];
-    }
     int check_argu(const json cor_argu)
     {
-        for(auto para:cor_argu.items())
+        for(auto argu:cor_argu.items())
         {
-            int sum=get_sum_argu(para.key());
+            int sum=get_sum_argu(argu.key());
             bool if_cor=false;
-            for(auto cor_sum:para.value().items())
+            for(auto cor_sum:argu.value().items())
             {
                 if(sum==cor_sum.value()||cor_sum.value()==_no_limit)
                 {
@@ -61,15 +52,41 @@ namespace Argu
             }
             if(!if_cor) return 1;
         }
-        for(auto para:argu.items())
+        for(auto argu:argus.items())
         {
-            if((int)cor_argu[para.key()].type()==0) return 1;
+            if((int)cor_argu[argu.key()].type()==0) return 1;
         }
         return 0;
     }
-}
-int init_argu(int argc,char **argv) {return Argu::init_argu(argc,argv);}
-std::string get_argu(const std::string name,const int num2) {return Argu::get_argu(name,num2);}
-int get_sum_argu(const std::string name) {return Argu::get_sum_argu(name);}
-int check_argu(const json check_argu) {return Argu::check_argu(check_argu);}
+    std::string get_argu(const std::string name,const int num)
+    {
+        if((int)argus[name].type()==0||(int)argus[name][num].type()==0) return NULL;
+        return argus[name][num];
+    }
+    int get_sum_argu(const std::string name)
+    {
+        if((int)argus[name].type()==0) return -1;
+        return argus[name][0];
+    }
+    class parameter
+    {
+      public:
+        json para;
+        parameter(json _para):para(_para) {}
+        std::string operator[](const size_t num)
+        {
+            if((int)para.type()==0||(int)para[num].type()==0) return NULL;
+            return para[num];
+        }
+        int sum()
+        {
+            if((int)para.type()==0) return -1;
+            return para[0];
+        }
+    };
+    parameter operator[](const std::string name)
+    {
+        return parameter(argus[name]);
+    }
+}argus;
 #endif

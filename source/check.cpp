@@ -20,52 +20,52 @@ const std::string _chk_name="checker";
 int check_main()
 {
     // init name
-    if(get_sum_argu("f")==3)
+    if(argus["f"].sum()==3)
     {
-        if(find_file(add_namesuf(get_file(get_argu("f",1)),".cpp"))) {print_result(_in_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_file(get_argu("f",2)),".cpp"))) {print_result(_out_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_file(get_argu("f",3)),".cpp"))) {print_result(_ans_name,_NF);return 0;}
-        add_file(_check_in,get_argu("f",1));
-        add_file(_check_out,get_argu("f",2));
-        add_file(_check_ans,get_argu("f",3));
+        if(find_file(add_namesuf(get_file(argus["f"][1]),".cpp"))) {print_result(_in_name,_NF);return 0;}
+        if(find_file(add_namesuf(get_file(argus["f"][2]),".cpp"))) {print_result(_out_name,_NF);return 0;}
+        if(find_file(add_namesuf(get_file(argus["f"][3]),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+        add_file(_check_in,argus["f"][1]);
+        add_file(_check_out,argus["f"][2]);
+        add_file(_check_ans,argus["f"][3]);
     }
     else
     {
-        if(get_sum_argu("if")==1)
+        if(argus["if"].sum()==1)
         {
-            if(find_file(add_namesuf(get_file(get_argu("if",1)),".cpp"))) {print_result(_in_name,_NF);return 0;}
-            add_file(_check_in,get_argu("if",1));
+            if(find_file(add_namesuf(get_file(argus["if"][1]),".cpp"))) {print_result(_in_name,_NF);return 0;}
+            add_file(_check_in,argus["if"][1]);
         }
-        if(get_sum_argu("of")==1)
+        if(argus["of"].sum()==1)
         {
-            if(find_file(add_namesuf(get_file(get_argu("of",1)),".cpp"))) {print_result(_out_name,_NF);return 0;}
-            add_file(_check_out,get_argu("of",1));
+            if(find_file(add_namesuf(get_file(argus["of"][1]),".cpp"))) {print_result(_out_name,_NF);return 0;}
+            add_file(_check_out,argus["of"][1]);
         }
-        if(get_sum_argu("af")==1)
+        if(argus["af"].sum()==1)
         {
-            if(find_file(add_namesuf(get_file(get_argu("af",1)),".cpp"))) {print_result(_ans_name,_NF);return 0;}
-            add_file(_check_ans,get_argu("af",1));
+            if(find_file(add_namesuf(get_file(argus["af"][1]),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+            add_file(_check_ans,argus["af"][1]);
         }
     }
     bool use_checker=false;
-    if(get_sum_argu("c")!=-1)
+    if(argus["c"].sum()!=-1)
     {
-        if(get_sum_argu("c")==1)
+        if(argus["c"].sum()==1)
         {
-            if(find_file(add_namesuf(get_file(get_argu("c",1)),".cpp"))) {print_result(_chk_name,_NF);return 0;}
-            add_file(_check_chk,get_argu("c",1));
+            if(find_file(add_namesuf(get_file(argus["c"][1]),".cpp"))) {print_result(_chk_name,_NF);return 0;}
+            add_file(_check_chk,argus["c"][1]);
         }
         use_checker=true;
     }
     // init time
-    if(get_sum_argu("t")==1) change_time_limit(stoi(get_argu("t",1)));
+    if(argus["t"].sum()==1) change_time_limit(stoi(argus["t"][1]));
     // init total sum
-    if(get_sum_argu("n")==-1)
+    if(argus["n"].sum()==-1)
     {
         print_result(_SS);
         return 0;
     }
-    int total_sum=stoi(get_argu("n",1));
+    int total_sum=stoi(argus["n"][1]);
     // init data dir
     remove_dir("data");
     make_dir("data");
@@ -155,8 +155,8 @@ int check_main()
 }
 int main(int argc,char **argv)
 {
-    if(init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=check_main();
     return exit_code;
 }

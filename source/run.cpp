@@ -14,18 +14,18 @@ const std::string _chk_name="checker";
 int run_main()
 {
     // init name
-    if(get_sum_argu("f")==1)
+    if(argus["f"].sum()==1)
     {
-        if(find_file(add_namesuf(get_file(get_argu("f",1)),".cpp"))) {print_result(_ans_name,_NF);return 0;}
-        add_file(_run_ans,get_argu("f",1));
+        if(find_file(add_namesuf(get_file(argus["f"][1]),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+        add_file(_run_ans,argus["f"][1]);
     }
     bool use_checker=false;
-    if(get_sum_argu("c")!=-1)
+    if(argus.get_sum_argu("c")!=-1)
     {
-        if(get_sum_argu("c")==1)
+        if(argus.get_sum_argu("c")==1)
         {
-            if(find_file(add_namesuf(get_file(get_argu("c",1)),".cpp"))) {print_result(_chk_name,_NF);return 0;}
-            add_file(_run_chk,get_argu("c",1));
+            if(find_file(add_namesuf(get_file(argus["c"][1]),".cpp"))) {print_result(_chk_name,_NF);return 0;}
+            add_file(_run_chk,argus["c"][1]);
         }
         use_checker=true;
     }
@@ -39,7 +39,7 @@ int run_main()
     if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
     if(find_file(chk)) {print_result(_chk_name,_NF);return 0;}
     // init time
-    if(get_sum_argu("t")==1) change_time_limit(stoi(get_argu("t",1)));
+    if(argus.get_sum_argu("t")==1) change_time_limit(stoi(argus["t"][1]));
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},150);
     loading_printer.start();
@@ -72,8 +72,8 @@ int run_main()
 }
 int main(int argc,char **argv)
 {
-    if(init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=run_main();
     return exit_code;
 }

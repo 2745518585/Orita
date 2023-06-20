@@ -10,9 +10,9 @@ int setfile_main()
 {
     for(int i=1;i<=_custom_tot;++i)
     {
-        if(get_sum_argu(std::to_string(i))>=1)
+        if(argus[std::to_string(i)].sum()>=1)
         {
-            add_file(i+_custom_start,get_argu(std::to_string(i),1));
+            add_file(i+_custom_start,argus[std::to_string(i)][1]);
         }
     }
     print_result(_SS);
@@ -20,8 +20,8 @@ int setfile_main()
 }
 int main(int argc,char **argv)
 {
-    if(init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=setfile_main();
     return exit_code;
 }

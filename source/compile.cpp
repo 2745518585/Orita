@@ -14,20 +14,20 @@ json cor_argu=make_cor_argu();
 int compile_main()
 {
     std::string compile_argu;
-    if(get_sum_argu("o")!=-1)
+    if(argus["o"].sum()!=-1)
     {
-        for(int i=1;i<=get_sum_argu("o");++i) compile_argu=compile_argu+" "+get_argu("o",i);
+        for(int i=1;i<=argus["o"].sum();++i) compile_argu=compile_argu+" "+argus["o"][i];
     }
     else compile_argu=get_compile_argu();
     std::string run_argu;
-    if(get_sum_argu("p")!=-1)
+    if(argus["p"].sum()!=-1)
     {
-        for(int i=1;i<=get_sum_argu("p");++i) run_argu=run_argu+" "+get_argu("p",i);
+        for(int i=1;i<=argus["p"].sum();++i) run_argu=run_argu+" "+argus["p"][i];
     }
-    if(get_sum_argu("r")!=-1)
+    if(argus["r"].sum()!=-1)
     {
         std::string file;
-        file=get_file(add_namesuf(get_argu("r",1),".cpp"));
+        file=get_file(add_namesuf(argus["r"][1],".cpp"));
         if(compile(file,compile_argu)) return 0;
         runner runs(get_exefile(file),"","",run_argu,1000000);
         runs.run();
@@ -44,9 +44,9 @@ int compile_main()
         std::cout<<" =====\n";
         change_color("default");
     }
-    else if(get_sum_argu("t")!=-1)
+    else if(argus["t"].sum()!=-1)
     {
-        std::string file=get_file(get_argu("t",1));
+        std::string file=get_file(argus["t"][1]);
         runner runs(file,"","",run_argu,1000000);
         runs.run();
         change_color("grey");
@@ -64,9 +64,9 @@ int compile_main()
     }
     else
     {
-        for(int i=1;i<=get_sum_argu("f");++i)
+        for(int i=1;i<=argus["f"].sum();++i)
         {
-            std::string file=get_file(add_namesuf(get_argu("f",i),".cpp"));
+            std::string file=get_file(add_namesuf(argus["f"][i],".cpp"));
             if(compile(file,compile_argu)) print_result(get_filename(file),_CE);
             else print_result(get_filename(file),_SS);
         }
@@ -75,8 +75,8 @@ int compile_main()
 }
 int main(int argc,char **argv)
 {
-    if(init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=compile_main();
     return exit_code;
 }

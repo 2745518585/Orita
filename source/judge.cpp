@@ -15,25 +15,25 @@ const std::string _chk_name="checker";
 int judge_main()
 {
     // init name
-    if(get_sum_argu("f")==1)
+    if(argus["f"].sum()==1)
     {
-        if(find_file(add_namesuf(get_file(get_argu("f",1)),".cpp"))) {print_result(_ans_name,_NF);return 0;}
-        add_file(_run_ans,get_argu("f",1));
+        if(find_file(add_namesuf(get_file(argus["f"][1]),".cpp"))) {print_result(_ans_name,_NF);return 0;}
+        add_file(_run_ans,argus["f"][1]);
     }
     bool use_checker=false;
-    if(get_sum_argu("c")!=-1)
+    if(argus["c"].sum()!=-1)
     {
-        if(get_sum_argu("c")==1)
+        if(argus["c"].sum()==1)
         {
-            if(find_file(add_namesuf(get_file(get_argu("c",1)),".cpp"))) {print_result(_chk_name,_NF);return 0;}
-            add_file(_run_chk,get_argu("c",1));
+            if(find_file(add_namesuf(get_file(argus["c"][1]),".cpp"))) {print_result(_chk_name,_NF);return 0;}
+            add_file(_run_chk,argus["c"][1]);
         }
         use_checker=true;
     }
     // init time
-    if(get_sum_argu("t")==1) change_time_limit(stoi(get_argu("t",1)));
+    if(argus["t"].sum()==1) change_time_limit(stoi(argus["t"][1]));
     // init data
-    if(get_sum_argu("d")==-1)
+    if(argus["d"].sum()==-1)
     {
         print_result(_SS);
         return 0;
@@ -65,9 +65,9 @@ int judge_main()
     delete run_compiler;
     loading_printer.stop();
     // judge
-    std::string name_pre=get_argu("d",1);
+    std::string name_pre=argus["d"][1];
     std::ofstream file("result.txt");
-    int total_sum=stoi(get_argu("d",2)),ac_sum=0;
+    int total_sum=stoi(argus["d"][2]),ac_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
         for(int j=1;j<=50;++j) std::cout<<"-";
@@ -86,8 +86,8 @@ int judge_main()
 }
 int main(int argc,char **argv)
 {
-    if(init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
     int exit_code=judge_main();
     return exit_code;
 }
