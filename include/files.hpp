@@ -2,14 +2,13 @@
 #ifndef _FILE_FILES
 #define _FILE_FILES _FILE_FILES
 #include"init.hpp"
-#define _run_ans 1
-#define _run_chk 2
-#define _check_in 11
-#define _check_out 12
-#define _check_ans 13
-#define _check_chk 14
-#define _custom_start 100
-#define _custom_tot 100
+#define _run_ans 101
+#define _run_chk 102
+#define _check_in 111
+#define _check_out 112
+#define _check_ans 113
+#define _check_chk 114
+#define _max_file_num 999
 namespace Files
 {
     #define number_len 3
@@ -100,7 +99,7 @@ namespace Files
         std::string file_result=get_path(file);
         if(file_result.size()>0&&file_result[0]=='%'&&file_result.find('%',1)==std::string::npos)
         {
-            file_result=get_file(get_filestr(std::stoi(file_result.substr(1,file_result.size()-1))+_custom_start));
+            file_result=get_file(get_filestr(std::stoi(file_result.substr(1,file_result.size()-1))));
         }
         else
         {
@@ -137,6 +136,7 @@ namespace Files
     {
         return get_filenamepre(file)+(std::string)settings["exe_suf"];
     }
+    #undef number_len
 }
 int find_filestr(const int num) {return Files::find_filestr(num);}
 void add_filestr(const int num,const std::string file) {return Files::add_filestr(num,file);}
