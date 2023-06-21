@@ -20,43 +20,29 @@ const std::string _chk_name="checker";
 int check_main()
 {
     // init name
-    if(argus["f"].sum()==3)
+    std::string in,out,ans,chk;
     {
-        if(find_file(add_namesuf(get_file(argus["f"][1]),".cpp"))) {print_result(_in_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_file(argus["f"][2]),".cpp"))) {print_result(_out_name,_NF);return 0;}
-        if(find_file(add_namesuf(get_file(argus["f"][3]),".cpp"))) {print_result(_ans_name,_NF);return 0;}
-        add_file(_check_in,argus["f"][1]);
-        add_file(_check_out,argus["f"][2]);
-        add_file(_check_ans,argus["f"][3]);
+        const std::string in_str=check_file(argus["f"].get(1),argus["if"].get(1),_check_in);
+        add_file(_check_in,in_str);
+        in=add_namesuf(get_file(in_str),".cpp");
     }
-    else
     {
-        if(argus["if"].sum()==1)
-        {
-            if(find_file(add_namesuf(get_file(argus["if"][1]),".cpp"))) {print_result(_in_name,_NF);return 0;}
-            add_file(_check_in,argus["if"][1]);
-        }
-        if(argus["of"].sum()==1)
-        {
-            if(find_file(add_namesuf(get_file(argus["of"][1]),".cpp"))) {print_result(_out_name,_NF);return 0;}
-            add_file(_check_out,argus["of"][1]);
-        }
-        if(argus["af"].sum()==1)
-        {
-            if(find_file(add_namesuf(get_file(argus["af"][1]),".cpp"))) {print_result(_ans_name,_NF);return 0;}
-            add_file(_check_ans,argus["af"][1]);
-        }
+        const std::string out_str=check_file(argus["f"].get(2),argus["of"].get(1),_check_out);
+        add_file(_check_out,out_str);
+        out=add_namesuf(get_file(out_str),".cpp");
     }
-    bool use_checker=false;
+    {
+        const std::string ans_str=check_file(argus["f"].get(3),argus["af"].get(1),_check_ans);
+        add_file(_check_ans,ans_str);
+        ans=add_namesuf(get_file(ans_str),".cpp");
+    }
     if(argus["c"].sum()!=-1)
     {
-        if(argus["c"].sum()==1)
-        {
-            if(find_file(add_namesuf(get_file(argus["c"][1]),".cpp"))) {print_result(_chk_name,_NF);return 0;}
-            add_file(_check_chk,argus["c"][1]);
-        }
-        use_checker=true;
+        const std::string chk_str=check_file(argus["c"].get(1),_check_chk);
+        add_file(_check_chk,chk_str);
+        chk=add_namesuf(get_file(chk_str),".cpp");
     }
+    else chk=add_namesuf(get_file("%1"),".cpp");
     // init time
     if(argus["t"].sum()==1) change_time_limit(stoi(argus["t"][1]));
     // init total sum
@@ -71,16 +57,6 @@ int check_main()
     make_dir("data");
     make_dir(makepath("data","others"));
     // find file
-    if(find_filestr(_check_in)) {print_result(_in_name,_NF);return 0;}
-    if(find_filestr(_check_out)) {print_result(_out_name,_NF);return 0;}
-    if(find_filestr(_check_ans)) {print_result(_ans_name,_NF);return 0;}
-    if(use_checker&&find_filestr(_check_chk)) {print_result(_chk_name,_NF);return 0;}
-    std::string in,out,ans,chk;
-    in=add_namesuf(get_file(_check_in),".cpp");
-    out=add_namesuf(get_file(_check_out),".cpp");
-    ans=add_namesuf(get_file(_check_ans),".cpp");
-    if(use_checker) chk=add_namesuf(get_file(_check_chk),".cpp");
-    else chk=get_file("%1");
     if(find_file(in)) {print_result(_in_name,_NF);return 0;}
     if(find_file(out)) {print_result(_out_name,_NF);return 0;}
     if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}

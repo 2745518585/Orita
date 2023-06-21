@@ -60,7 +60,7 @@ class arguer
     }
     std::string get_argu(const std::string name,const int num)
     {
-        if((int)argus[name].type()==0||(int)argus[name][num].type()==0) return NULL;
+        if((int)argus[name].type()==0||(int)argus[name][num].type()==0) return "";
         return argus[name][num];
     }
     int get_sum_argu(const std::string name)
@@ -75,7 +75,11 @@ class arguer
         parameter(json _para):para(_para) {}
         std::string operator[](const size_t num)
         {
-            if((int)para.type()==0||(int)para[num].type()==0) return NULL;
+            if((int)para.type()==0||(int)para[num].type()==0) return "";
+            return para[num];
+        }
+        json get(const size_t num)
+        {
             return para[num];
         }
         int sum()

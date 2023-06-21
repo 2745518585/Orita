@@ -7,6 +7,7 @@
 #include<algorithm>
 #include<queue>
 #include<string>
+#include<typeinfo>
 #include<sstream>
 #include<thread>
 #include<atomic>
@@ -91,8 +92,7 @@ std::string makepath(const std::string path)
 {
     return path;
 }
-template<typename ...others_type>
-std::string makepath(const std::string path,const others_type ...others)
+template<typename ...others_type> std::string makepath(const std::string path,const others_type ...others)
 {
     return path+PS+makepath(others...);
 }
@@ -204,14 +204,23 @@ class Log
     {
         output<<str<<"\n";
     }
-    template<typename ...others_type>
-    void print(const std::string str,const others_type ...others)
+    template<typename ...others_type> void print(const std::string str,const others_type ...others)
     {
         print(str);
         print(others...);
     }
-    template<typename ...others_type>
-    void print(const int info,const std::string str,const others_type ...others)
+    template<typename ...others_type> void print(const int info,const std::string str)
+    {
+        read_lock.lock();
+        output.open(output_file,std::ios::app);
+        if(info==_LOG_INFO) output<<"[Info] "<<str<<":\n";
+        if(info==_LOG_WARN) output<<"[Warn] "<<str<<":\n";
+        if(info==_LOG_ERROR) output<<"[Error] "<<str<<":\n";
+        if(info==_LOG_DEBUG) output<<"[Debug] "<<str<<":\n";
+        output.close();
+        read_lock.unlock();
+    }
+    template<typename ...others_type> void print(const int info,const std::string str,const others_type ...others)
     {
         read_lock.lock();
         output.open(output_file,std::ios::app);

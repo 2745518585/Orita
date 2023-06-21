@@ -14,32 +14,24 @@ const std::string _chk_name="checker";
 int run_main()
 {
     // init name
-    if(argus["f"].sum()==1)
-    {
-        if(find_file(add_namesuf(get_file(argus["f"][1]),".cpp"))) {print_result(_ans_name,_NF);return 0;}
-        add_file(_run_ans,argus["f"][1]);
-    }
-    bool use_checker=false;
-    if(argus.get_sum_argu("c")!=-1)
-    {
-        if(argus.get_sum_argu("c")==1)
-        {
-            if(find_file(add_namesuf(get_file(argus["c"][1]),".cpp"))) {print_result(_chk_name,_NF);return 0;}
-            add_file(_run_chk,argus["c"][1]);
-        }
-        use_checker=true;
-    }
-    // find file
-    if(find_filestr(_run_ans)) {print_result(_ans_name,_NF);return 0;}
-    if(use_checker&&find_filestr(_run_chk)) {print_result(_chk_name,_NF);return 0;}
     std::string ans,chk;
-    ans=add_namesuf(get_file(_run_ans),".cpp");
-    if(use_checker) chk=add_namesuf(get_file(_run_chk),".cpp");
-    else chk=get_file("%1");
-    if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
-    if(find_file(chk)) {print_result(_chk_name,_NF);return 0;}
+    {
+        const std::string ans_str=check_file(argus["f"].get(1),_run_ans);
+        add_file(_run_ans,ans_str);
+        ans=add_namesuf(get_file(ans_str),".cpp");
+    }
+    if(argus["c"].sum()!=-1)
+    {
+        const std::string chk_str=check_file(argus["c"].get(1),_run_chk);
+        add_file(_run_chk,chk_str);
+        chk=add_namesuf(get_file(chk_str),".cpp");
+    }
+    else chk=add_namesuf(get_file("%1"),".cpp");
     // init time
     if(argus.get_sum_argu("t")==1) change_time_limit(stoi(argus["t"][1]));
+    // find file
+    if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
+    if(find_file(chk)) {print_result(_chk_name,_NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},150);
     loading_printer.start();

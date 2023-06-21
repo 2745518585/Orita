@@ -81,12 +81,12 @@ namespace Files
     std::string get_path(const std::string file)
     {
         #ifdef _WIN32
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>1&&file[1]==':')) return makepath(running_path,file);
+        if((file.size()==1&&file[0]=='%')||(file.size()>=2&&(((file[0]>='A'&&file[0]<='Z'||file[0]>='a'&&file[0]<='z')&&file[1]==':')||(file[0]=='\\'&&file[1]=='\\')||(file[0]=='%'&&file[1]!='%')))) return file;
         #endif
         #ifdef __linux__
-        if((file[0]==0||(file[0]!='%'||file[1]=='%'))&&!(file.size()>0&&file[0]=='/')) return makepath(running_path,file);
+        if(file.size()>=1&&(file[0]=='/'||(file[0]=='%'&&(file.size()<2||file[1]!='%')))) return file;
         #endif
-        return file;
+        return makepath(appdata_path,file);
     }
     void add_file(const int num,const std::string file)
     {
@@ -123,6 +123,12 @@ namespace Files
     {
         return get_file(get_filestr(num));
     }
+    std::string check_file(const int str) {if(!find_filestr(str)) return get_filestr(str);return "";}
+    std::string check_file(const std::string str) {return str;}
+    std::string check_file(const json str) {if((int)str.type()==3) return (std::string)str;return "";}
+    template<typename ...others_type> std::string check_file(const int str,const others_type ...others) {if(!find_filestr(str)) return get_filestr(str);return check_file(others...);}
+    template<typename ...others_type> std::string check_file(const std::string str,const others_type ...others) {return str;}
+    template<typename ...others_type> std::string check_file(const json str,const others_type ...others) {if((int)str.type()==3) return (std::string)str;return check_file(others...);}
     std::string add_namesuf(const std::string file,const std::string namesuf)
     {
         if(get_filenamesuf(file)!=namesuf) return file+namesuf;
@@ -152,6 +158,7 @@ std::string get_filenamesuf(const int num) {return Files::get_filenamesuf(num);}
 void add_file(const int num,const std::string file) {return Files::add_file(num,file);}
 std::string get_file(const std::string file) {return Files::get_file(file);}
 std::string get_file(const int num) {return Files::get_file(num);}
+template<typename ...others_type> std::string check_file(const others_type ...others) {return Files::check_file(others...);}
 std::string add_namesuf(const std::string file,const std::string namesuf) {return Files::add_namesuf(file,namesuf);}
 std::string get_exefile(const std::string file) {return Files::get_exefile(file);}
 std::string get_exefilename(std::string file) {return Files::get_exefilename(file);}
