@@ -27,7 +27,7 @@ class compiler
   public:
     std::atomic<int> running_sum;
     std::atomic<bool> if_end;
-    std::mutex wait_que_lock,wait_end_lock,wait_result_lock;
+    std::mutex wait_que_lock,wait_end_lock,wait_result_lock,read_lock1,read_lock2;
     std::condition_variable wait_que,wait_end,wait_result;
     class comp_file
     {
@@ -48,7 +48,6 @@ class compiler
                 wait_que.wait(lock,[&](){return !compile_que.empty()||if_end;});
                 lock.unlock();
             }
-            static std::mutex read_lock1;
             read_lock1.lock();
             if(if_end)
             {
@@ -63,7 +62,6 @@ class compiler
             compile_que.pop();
             read_lock1.unlock();
             int result=compile(file.file,file.argu,false);
-            static std::mutex read_lock2;
             read_lock2.lock();
             results[file.name]=result;
             wait_result.notify_all();

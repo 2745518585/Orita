@@ -31,17 +31,14 @@ int compare(const std::string file1,const std::string file2) {return Judge::comp
 class runner
 {
   public:
-    int time,exit_code,time_limit;
+    const std::string file,argu,in_file,out_file;
+    const int time_limit;
+    int time=0,exit_code=0;
     stime timer;
     std::atomic<bool> if_end;
-    std::string file,argu,in_file,out_file;
     std::mutex wait_lock;
     std::condition_variable wait;
-    runner(const std::string _file,const std::string _in_file="",const std::string _out_file="",const std::string _argu="",const int _time_limit=settings["runtime_limit"])
-    {
-        file=_file,in_file=_in_file,out_file=_out_file,argu=_argu,time_limit=_time_limit;
-        time=exit_code=0;
-    }
+    runner(const std::string _file,const std::string _in_file="",const std::string _out_file="",const std::string _argu="",const int _time_limit=settings["runtime_limit"]):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
     void run_run()
     {
         const std::string command=""+add_quotation(get_exefile(file))+" "+argu+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
@@ -79,23 +76,11 @@ class runner
 class judger
 {
   public:
-    int time,exit_code,chk_time,chk_exit_code,time_limit;
+    const std::string ans,chk,in_file,out_file,ans_file,chk_file;
+    const int time_limit;
+    int time=0,exit_code=0,chk_time=0,chk_exit_code=0;
     res result,chk_result;
-    std::string ans,chk,in_file,out_file,ans_file,chk_file;
-    judger(const std::string _ans,const std::string _chk,const std::string _in_file="",const std::string _out_file="",const std::string _ans_file="",const std::string _chk_file="",const int _time_limit=get_time_limit())
-    {
-        ans=_ans,chk=_chk;
-        if(_in_file!="") in_file=_in_file;
-        else in_file=makepath(appdata_path,"data","data.in");
-        if(_out_file!="") out_file=_out_file;
-        else out_file=makepath(appdata_path,"data","data.out");
-        if(_ans_file!="") ans_file=_ans_file;
-        else ans_file=makepath(appdata_path,"data","data.ans");
-        if(_chk_file!="") chk_file=_chk_file;
-        else chk_file=makepath(appdata_path,"data","data.txt");
-        time_limit=_time_limit;
-        time=0,exit_code=0,chk_time=0,chk_exit_code=0;
-    }
+    judger(const std::string _ans,const std::string _chk,const std::string _in_file="",const std::string _out_file="",const std::string _ans_file="",const std::string _chk_file="",const int _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file==""?makepath(appdata_path,"data","data.in"):_in_file),out_file(_out_file==""?makepath(appdata_path,"data","data.out"):_out_file),ans_file(_ans_file==""?makepath(appdata_path,"data","data.ans"):_ans_file),chk_file(_chk_file==""?makepath(appdata_path,"data","data.txt"):_chk_file),time_limit(_time_limit) {}
     res judge()
     {
         runner ans_runner(ans,in_file,ans_file,"",time_limit*2);
