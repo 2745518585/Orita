@@ -86,7 +86,7 @@ namespace Files
         #ifdef __linux__
         if(file.size()>=1&&(file[0]=='/'||(file[0]=='%'&&(file.size()<2||file[1]!='%')))) return file;
         #endif
-        return makepath(appdata_path,file);
+        return makepath(running_path,file);
     }
     void add_file(const int num,const std::string file)
     {
