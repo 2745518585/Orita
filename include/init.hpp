@@ -28,6 +28,7 @@ using json=nlohmann::json;
 #endif
 
 // code
+#ifdef _WIN32
 std::string UTF8toGB(const std::string &utf8)
 {
     if(utf8.empty()) return "";
@@ -62,6 +63,7 @@ std::string GBtoUTF8(const std::string &gb2312)
     delete []str;
     return ss.str();
 }
+#endif
 std::string UTF8tosys(const std::string str)
 {
     #ifdef _WIN32
