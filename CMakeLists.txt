@@ -29,10 +29,6 @@ project(judge)
 add_executable(judge source/judge.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-project(reset_Orita)
-add_executable(reset_Orita source/reset_Orita.cpp)
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
 project(run)
 add_executable(run source/run.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)

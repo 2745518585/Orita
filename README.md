@@ -17,7 +17,7 @@ Orita 的配套 vscode 拓展。
 - 如果希望通过在所有命令前加上 `orita` 来调用（如 `orita run`，用于与其它命令冲突时），运行 `Orita\source\orita\` 目录下的 `init.bat`（`Windows`）或 `init.sh`（`Linux`），然后将 `Orita\build\build_orita\` 目录加入环境变量。
 - 否则将 `Orita\build\` 目录加入环境变量。
 
-使用 `reset_Orita` 命令初始化并清空配置。
+使用 `orita reset` 命令初始化并清空配置。
 
 ## 全局逻辑
 

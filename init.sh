@@ -9,4 +9,3 @@ g++ ${dir}/source/compile.cpp -o ${dir}/build/compile -std=c++14 -O2 -I ${dir}/i
 g++ ${dir}/source/changna.cpp -o ${dir}/build/changna -std=c++14 -O2 -I ${dir}/include -w
 g++ ${dir}/source/cmp.cpp -o ${dir}/build/cmp -std=c++14 -O2 -I ${dir}/include -w
 g++ ${dir}/source/setfile.cpp -o ${dir}/build/setfile -std=c++14 -O2 -I ${dir}/include -w
-g++ ${dir}/source/reset_Orita.cpp -o ${dir}/build/reset_Orita -std=c++14 -O2 -I ${dir}/include -w

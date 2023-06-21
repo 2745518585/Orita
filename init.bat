@@ -8,5 +8,4 @@ g++ %~dp0source\compile.cpp -o %~dp0build\compile.exe -std=c++14 -O2 -I %~dp0inc
 g++ %~dp0source\changna.cpp -o %~dp0build\changna.exe -std=c++14 -O2 -I %~dp0include -w
 g++ %~dp0source\cmp.cpp -o %~dp0build\cmp.exe -std=c++14 -O2 -I %~dp0include -w
 g++ %~dp0source\setfile.cpp -o %~dp0build\setfile.exe -std=c++14 -O2 -I %~dp0include -w
-g++ %~dp0source\reset_Orita.cpp -o %~dp0build\reset_Orita.exe -std=c++14 -O2 -I %~dp0include -w
 exit
