@@ -15,13 +15,13 @@ int setfile_main()
             add_file(i,argus[std::to_string(i)][1]);
         }
     }
-    print_result(_SS);
+    print_result(res::type::SS);
     return 0;
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=setfile_main();
     return exit_code;
 }

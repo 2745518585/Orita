@@ -155,10 +155,10 @@ void make_scheme(int num)
         std::cout<<solved_command<<"\n";
         if(ssystem(system_to_nul+solved_command)==0)
         {
-            print_result(_SS);
+            print_result(res::type::SS);
             ++sum;
         }
-        else print_result(_FL);
+        else print_result(res::type::FL);
         return;
     }
     for(value[num]=min_value[num];value[num]<=max_value[num];++value[num]) make_scheme(num+1);
@@ -168,7 +168,7 @@ int changna_main(int argc,char **argv)
     command=argus["f"][1];
     if(check_name(argus["f"][1]))
     {
-        print_result(_II);
+        print_result(res::type::II);
         return 1;
     }
     for(int i=1;i<=9;++i)
@@ -184,8 +184,8 @@ int changna_main(int argc,char **argv)
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=changna_main(argc,argv);
     return exit_code;
 }

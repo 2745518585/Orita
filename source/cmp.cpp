@@ -13,24 +13,24 @@ int cmp_main()
     std::string file2=get_file(argus["f"][2]);
     if(find_file(file1)||find_file(file2))
     {
-        print_result(_NF);
+        print_result(res::type::NF);
         return 1;
     }
     if(compare(file1,file2))
     {
-        print_result(_DA);
+        print_result(res::type::DA);
         return 1;
     }
     else
     {
-        print_result(_SA);
+        print_result(res::type::SA);
         return 0;
     }
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=cmp_main();
     return exit_code;
 }

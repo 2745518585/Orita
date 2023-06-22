@@ -48,7 +48,7 @@ int check_main()
     // init total sum
     if(argus["n"].sum()==-1)
     {
-        print_result(_SS);
+        print_result(res::type::SS);
         return 0;
     }
     int total_sum=stoi(argus["n"][1]);
@@ -57,10 +57,10 @@ int check_main()
     make_dir("data");
     make_dir(makepath("data","others"));
     // find file
-    if(find_file(in)) {print_result(_in_name,_NF);return 0;}
-    if(find_file(out)) {print_result(_out_name,_NF);return 0;}
-    if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
-    if(find_file(chk)) {print_result(_chk_name,_NF);return 0;}
+    if(find_file(in)) {print_result(_in_name,res::type::NF);return 0;}
+    if(find_file(out)) {print_result(_out_name,res::type::NF);return 0;}
+    if(find_file(ans)) {print_result(_ans_name,res::type::NF);return 0;}
+    if(find_file(chk)) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},150);
     loading_printer.start();
@@ -72,7 +72,7 @@ int check_main()
         if(compile_result.first)
         {
             loading_printer.stop();
-            print_result(compile_result.second,_CE);
+            print_result(compile_result.second,res::type::CE);
             return 0;
         }
     }
@@ -101,11 +101,11 @@ int check_main()
         ans_file=makepath("data","others",std::to_string(i),std::to_string(i)+".ans"),
         chk_file=makepath("data","others",std::to_string(i),std::to_string(i)+".txt");
         runner in_runner(in,"",in_file,std::to_string(i));
-        if(in_runner.run()) {print_result(_in_name,_TO,in_runner.time);continue;}
-        if(in_runner.exit_code) {print_result(_in_name,_RE,0,in_runner.exit_code);continue;}
+        if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
+        if(in_runner.exit_code) {print_result(_in_name,res::type::RE,0,in_runner.exit_code);continue;}
         runner out_runner(out,in_file,out_file);
-        if(out_runner.run()) {print_result(_out_name,_TO,out_runner.time);continue;}
-        if(out_runner.exit_code) {print_result(_out_name,_RE,0,out_runner.exit_code);continue;}
+        if(out_runner.run()) {print_result(_out_name,res::type::TO,out_runner.time);continue;}
+        if(out_runner.exit_code) {print_result(_out_name,res::type::RE,0,out_runner.exit_code);continue;}
         judger ans_judger(ans,chk,in_file,out_file,ans_file,chk_file);
         ans_judger.judge();
         ans_judger.print_result();
@@ -131,8 +131,8 @@ int check_main()
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=check_main();
     return exit_code;
 }

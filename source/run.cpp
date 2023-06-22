@@ -30,8 +30,8 @@ int run_main()
     // init time
     if(argus.get_sum_argu("t")==1) change_time_limit(stoi(argus["t"][1]));
     // find file
-    if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
-    if(find_file(chk)) {print_result(_chk_name,_NF);return 0;}
+    if(find_file(ans)) {print_result(_ans_name,res::type::NF);return 0;}
+    if(find_file(chk)) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},150);
     loading_printer.start();
@@ -43,7 +43,7 @@ int run_main()
         if(compile_result.first)
         {
             loading_printer.stop();
-            print_result(compile_result.second,_CE);
+            print_result(compile_result.second,res::type::CE);
             return 0;
         }
     }
@@ -64,8 +64,8 @@ int run_main()
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=run_main();
     return exit_code;
 }

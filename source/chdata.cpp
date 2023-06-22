@@ -15,8 +15,8 @@ int chdata_main()
 {
     std::string in_file=check_file(argus["f"].get(1),argus["if"].get(1));
     std::string out_file=check_file(argus["f"].get(2),argus["of"].get(1));
-    if(in_file!=""&&find_file(in_file)) {print_result(_NF);return 0;}
-    if(out_file!=""&&find_file(out_file)) {print_result(_NF);return 0;}
+    if(in_file!=""&&find_file(in_file)) {print_result(res::type::NF);return 0;}
+    if(out_file!=""&&find_file(out_file)) {print_result(res::type::NF);return 0;}
     if(in_file!="") copy_file(in_file,makepath(appdata_path,"data","data.in"));
     if(out_file!="") copy_file(out_file,makepath(appdata_path,"data","data.out"));
     if(argus["s"].sum()!=-1)
@@ -30,13 +30,13 @@ int chdata_main()
         while(str!=EOF) fputc(str,file),str=getchar();
     }
     if(argus["t"].sum()>=1) change_time_limit(stoi(argus["t"][1]));
-    print_result(_SS);
+    print_result(res::type::SS);
     return 0;
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=chdata_main();
     return exit_code;
 }

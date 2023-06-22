@@ -33,12 +33,12 @@ int judge_main()
     // init data
     if(argus["d"].sum()==-1)
     {
-        print_result(_SS);
+        print_result(res::type::SS);
         return 0;
     }
     // find file
-    if(find_file(ans)) {print_result(_ans_name,_NF);return 0;}
-    if(find_file(chk)) {print_result(_chk_name,_NF);return 0;}
+    if(find_file(ans)) {print_result(_ans_name,res::type::NF);return 0;}
+    if(find_file(chk)) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},150);
     loading_printer.start();
@@ -50,7 +50,7 @@ int judge_main()
         if(compile_result.first)
         {
             loading_printer.stop();
-            print_result(compile_result.second,_CE);
+            print_result(compile_result.second,res::type::CE);
             return 0;
         }
     }
@@ -65,7 +65,7 @@ int judge_main()
         for(int j=1;j<=50;++j) std::cout<<"-";
         for(int j=1;j<=50;++j) std::cout<<"\b";
         std::cout<<"#"<<i<<"\n";
-        if(find_file(makepath(running_path,name_pre+std::to_string(i)+".in"))) {print_result(_NF);continue;}
+        if(find_file(makepath(running_path,name_pre+std::to_string(i)+".in"))) {print_result(res::type::NF);continue;}
         judger run_judger(ans,chk,makepath(running_path,name_pre+std::to_string(i)+".in"),makepath(running_path,name_pre+std::to_string(i)+".out"),makepath(running_path,name_pre+std::to_string(i)+".ans"),makepath(running_path,name_pre+std::to_string(i)+".txt"));
         run_judger.judge();
         run_judger.print_result();
@@ -78,8 +78,8 @@ int judge_main()
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=judge_main();
     return exit_code;
 }

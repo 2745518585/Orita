@@ -31,52 +31,30 @@ int compile_main()
         if(compile(file,compile_argu)) return 0;
         runner runs(get_exefile(file),"","",run_argu,1000000);
         runs.run();
-        change_color("grey");
-        std::cout<<"\n===== time: ";
-        change_color("blue");
-        std::cout<<runs.time;
-        change_color("grey");
-        std::cout<<" ms, exit code: ";
-        if(runs.exit_code==0) change_color("green");
-        else change_color("purple");
-        std::cout<<runs.exit_code;
-        change_color("grey");
-        std::cout<<" =====\n";
-        change_color("default");
+        std::cout<<"\n"<<color_str("grey")<<"===== time: "<<color_str("blue")<<runs.time<<color_str("grey")<<" ms, exit code: "<<color_str(runs.exit_code?"purple":"green")<<runs.exit_code<<color_str("grey")<<" ====="<<color_str("default")<<"\n";
     }
     else if(argus["t"].sum()!=-1)
     {
         std::string file=get_file(argus["t"][1]);
         runner runs(file,"","",run_argu,1000000);
         runs.run();
-        change_color("grey");
-        std::cout<<"\n===== time: ";
-        change_color("blue");
-        std::cout<<runs.time;
-        change_color("grey");
-        std::cout<<" ms, exit code: ";
-        if(runs.exit_code==0) change_color("green");
-        else change_color("purple");
-        std::cout<<runs.exit_code;
-        change_color("grey");
-        std::cout<<" =====\n";
-        change_color("default");
+        std::cout<<"\n"<<color_str("grey")<<"===== time: "<<color_str("blue")<<runs.time<<color_str("grey")<<" ms, exit code: "<<color_str(runs.exit_code?"purple":"green")<<runs.exit_code<<color_str("grey")<<" ====="<<color_str("default")<<"\n";
     }
     else
     {
         for(int i=1;i<=argus["f"].sum();++i)
         {
             std::string file=get_file(add_namesuf(argus["f"][i],".cpp"));
-            if(compile(file,compile_argu)) print_result(get_filename(file),_CE);
-            else print_result(get_filename(file),_SS);
+            if(compile(file,compile_argu)) print_result(get_filename(file),res::type::CE);
+            else print_result(get_filename(file),res::type::SS);
         }
     }
     return 0;
 }
 int main(int argc,char **argv)
 {
-    if(argus.init_argu(argc,argv)) {print_result(_II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(_II);return 0;}
+    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
+    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
     int exit_code=compile_main();
     return exit_code;
 }

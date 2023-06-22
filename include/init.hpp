@@ -83,37 +83,26 @@ std::string makepath(const std::string path) {return path;}
 template<typename ...others_type> std::string makepath(const std::string path,const others_type ...others) {return path+PS+makepath(others...);}
 
 // result
-#define _NL 0
-#define _AC 1
-#define _SA 2
-#define _SS 3
-#define _WA -1
-#define _RE -2
-#define _TLE_CA -3
-#define _TLE_WA -4
-#define _TLE_O -5
-#define _CE -6
-#define _DA -7
-#define _TO -8
-#define _NF -9
-#define _II -10
-#define _FL -11
 class res
 {
-  private:
-    int result;
   public:
-    res():result(_NL){}
-    res(const int _result):result(_result){}
-    bool is(const int _result)const {return result==_result;}
-    bool isnull()const {return result==0;}
-    bool istrue()const {return result>0;}
-    bool isfalse()const {return result<0;}
+    enum type {NL,AC,SA,SS,WA,RE,TLE_CA,TLE_WA,TLE_O,CE,DA,TO,NF,II,FL};
+    type result;
+    res():result(type::NL) {}
+    res(type _result):result(_result) {}
+    bool is(const type target_result)const {return result==target_result;}
+    bool is(const std::initializer_list<type> target_result_list)const
+    {
+        for(auto target_result:target_result_list) if(result==target_result) return true;
+        return false;
+    }
+    bool istrue()const {return is({type::AC,type::SA,type::SS});}
+    bool isfalse()const {return is({type::WA,type::RE,type::TLE_CA,type::TLE_WA,type::TLE_O,type::CE,type::DA,type::TO,type::NF,type::II,type::FL});}
+    bool isnull()const {return is({type::NL});}
 };
 
 // string
-template<typename T>
-std::string to_string_len(const T num,const int len)
+template<typename T> std::string to_string_len(const T num,const int len)
 {
     std::string str=std::to_string(num);
     if(str.size()>len) return str;
