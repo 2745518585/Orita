@@ -13,42 +13,13 @@ json make_cor_argu()
 json cor_argu=make_cor_argu();
 int chdata_main()
 {
-    if(argus["f"].sum()>=2)
-    {
-        std::string in_file=get_file(argus["f"][1]),out_file=get_file(argus["f"][2]);
-        if(find_file(in_file)||find_file(out_file))
-        {
-            print_result(_NF);
-            return 0;
-        }
-        copy_file(in_file,makepath(appdata_path,"data","data.in"));
-        copy_file(out_file,makepath(appdata_path,"data","data.out"));
-    }
-    else if(argus["if"].sum()>=1||argus["of"].sum()>=1)
-    {
-        std::string in_file,out_file;
-        if(argus["if"].sum()>=1)
-        {
-            in_file=get_file(argus["if"][1]);
-            if(find_file(in_file))
-            {
-                print_result(_NF);
-                return 0;
-            }
-        }
-        if(argus["of"].sum()>=1)
-        {
-            out_file=get_file(argus["of"][1]);
-            if(find_file(out_file))
-            {
-                print_result(_NF);
-                return 0;
-            }
-        }
-        if(argus["if"].sum()>=1) copy_file(in_file,makepath(appdata_path,"data","data.in"));
-        if(argus["of"].sum()>=1) copy_file(out_file,makepath(appdata_path,"data","data.out"));
-    }
-    else if(argus["s"].sum()!=-1)
+    std::string in_file=check_file(argus["f"].get(1),argus["if"].get(1));
+    std::string out_file=check_file(argus["f"].get(2),argus["of"].get(1));
+    if(in_file!=""&&find_file(in_file)) {print_result(_NF);return 0;}
+    if(out_file!=""&&find_file(out_file)) {print_result(_NF);return 0;}
+    if(in_file!="") copy_file(in_file,makepath(appdata_path,"data","data.in"));
+    if(out_file!="") copy_file(out_file,makepath(appdata_path,"data","data.out"));
+    if(argus["s"].sum()!=-1)
     {
         char str;
         FILE *file=fopen((makepath(appdata_path,"data","data.in")).c_str(),"w");
@@ -58,10 +29,7 @@ int chdata_main()
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
     }
-    if(argus["t"].sum()>=1)
-    {
-        change_time_limit(stoi(argus["t"][1]));
-    }
+    if(argus["t"].sum()>=1) change_time_limit(stoi(argus["t"][1]));
     print_result(_SS);
     return 0;
 }
