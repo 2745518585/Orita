@@ -9,7 +9,6 @@ json make_cor_argu()
 json cor_argu=make_cor_argu();
 int cmp_main()
 {
-    if(argus["f"].sum()<2) return 0;
     std::string file1=get_file(argus["f"][1]);
     std::string file2=get_file(argus["f"][2]);
     if(find_file(file1)||find_file(file2))
