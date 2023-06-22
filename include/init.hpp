@@ -8,6 +8,7 @@
 #include<queue>
 #include<string>
 #include<typeinfo>
+#include<regex>
 #include<sstream>
 #include<thread>
 #include<atomic>

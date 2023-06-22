@@ -10,12 +10,7 @@ class arguer
     json argus;
     bool check_if_argu(const std::string argu)
     {
-        if(argu.size()==0||argu[0]!='/') return false;
-        for(int i=1;i<argu.size();++i)
-        {
-            if(!((argu[i]>='a'&&argu[i]<='z')||(argu[i]>='A'&&argu[i]<='Z')||(argu[i]>='0'&&argu[i]<='9'))) return false;
-        }
-        return true;
+        return std::regex_match(argu,std::regex("/([a-z]|[A-Z]|[0-9])+"));
     }
     int init_argu(int argc,char **argv)
     {

@@ -81,10 +81,10 @@ namespace Files
     std::string get_path(const std::string file)
     {
         #ifdef _WIN32
-        if((file.size()==1&&file[0]=='%')||(file.size()>=2&&(((file[0]>='A'&&file[0]<='Z'||file[0]>='a'&&file[0]<='z')&&file[1]==':')||(file[0]=='\\'&&file[1]=='\\')||(file[0]=='%'&&file[1]!='%')))) return file;
+        if(std::regex_match(file,std::regex("(%([^%]|$)|([a-z]|[A-Z]):|\\\\).*"))) return file;
         #endif
         #ifdef __linux__
-        if(file.size()>=1&&(file[0]=='/'||(file[0]=='%'&&(file.size()<2||file[1]!='%')))) return file;
+        if(std::regex_match(file,std::regex("(%([^%]|$)|/).*"))) return file;
         #endif
         return makepath(running_path,file);
     }
