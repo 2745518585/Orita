@@ -96,7 +96,7 @@ class compiler
         for(auto i:file)
         {
             if(i.size()!=2) continue;
-            add(*i.begin(),*next(i.begin()));
+            add(*i.begin(),*next(i.begin()),argu);
         }
     }
     void wait(const std::initializer_list<std::string> name)
@@ -116,7 +116,7 @@ class compiler
         {
             if(!results.count(i)||results[i]) return std::make_pair(1,i);
         }
-        return std::make_pair(0,"");
+        return std::make_pair(0,std::string(""));
     }
 };
 #endif
