@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 add_definitions(-w)
 add_subdirectory(include)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 
