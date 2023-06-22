@@ -42,7 +42,7 @@ class runner
     void run_run()
     {
         const std::string command=""+add_quotation(get_exefile(file))+" "+argu+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
-        orita_log.print(_LOG_INFO,"run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
+        INFO("run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
         timer.init();
         exit_code=ssystem(command)/sys_exit_code;
         time=timer.get_time();
@@ -60,7 +60,7 @@ class runner
         }
         if(!if_end)
         {
-            orita_log.print(_LOG_WARN,"run timeout","file: "+add_quotation(get_exefile(file)));
+            WARN("run timeout","file: "+add_quotation(get_exefile(file)));
             ssystem("taskkill /f /pid "+get_exefilename(file)+system_to_nul);
             {
                 std::unique_lock<std::mutex> lock(wait_lock);

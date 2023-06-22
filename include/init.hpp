@@ -64,25 +64,13 @@ std::string GBtoUTF8(const std::string &gb2312)
     delete []str;
     return ss.str();
 }
+std::string UTF8tosys(const std::string str) {return UTF8toGB(str);}
+std::string systoUTF8(const std::string str) {return GBtoUTF8(str);}
 #endif
-std::string UTF8tosys(const std::string str)
-{
-    #ifdef _WIN32
-    return UTF8toGB(str);
-    #endif
-    #ifdef __linux__
-    return str;
-    #endif
-}
-std::string systoUTF8(const std::string str)
-{
-    #ifdef _WIN32
-    return GBtoUTF8(str);
-    #endif
-    #ifdef __linux__
-    return str;
-    #endif
-}
+#ifdef __linux__
+std::string UTF8tosys(const std::string str) {return str;}
+std::string systoUTF8(const std::string str) {return str;}
+#endif
 
 // path
 #ifdef _WIN32
@@ -91,14 +79,8 @@ char PS='\\';
 #ifdef __linux__
 char PS='/';
 #endif
-std::string makepath(const std::string path)
-{
-    return path;
-}
-template<typename ...others_type> std::string makepath(const std::string path,const others_type ...others)
-{
-    return path+PS+makepath(others...);
-}
+std::string makepath(const std::string path) {return path;}
+template<typename ...others_type> std::string makepath(const std::string path,const others_type ...others) {return path+PS+makepath(others...);}
 
 // result
 #define _NL 0
@@ -123,22 +105,10 @@ class res
   public:
     res():result(_NL){}
     res(const int _result):result(_result){}
-    bool is(const int _result)const
-    {
-        return result==_result;
-    }
-    bool isnull()const
-    {
-        return result==0;
-    }
-    bool istrue()const
-    {
-        return result>0;
-    }
-    bool isfalse()const
-    {
-        return result<0;
-    }
+    bool is(const int _result)const {return result==_result;}
+    bool isnull()const {return result==0;}
+    bool istrue()const {return result>0;}
+    bool isfalse()const {return result<0;}
 };
 
 // string
@@ -245,6 +215,10 @@ class Log
         print(_LOG_INFO,"file_path","path: "+add_quotation(file_path));
     }
 }orita_log;
+#define INFO(...) orita_log.print(_LOG_INFO,__VA_ARGS__)
+#define WARN(...) orita_log.print(_LOG_WARN,__VA_ARGS__)
+#define ERROR(...) orita_log.print(_LOG_ERROR,__VA_ARGS__)
+#define DEBUG(...) orita_log.print(_LOG_DEBUG,__VA_ARGS__)
 
 // time
 void ssleep(const unsigned time)
@@ -292,8 +266,8 @@ int ssystem(const std::string command)
 int find_file(const std::string file)
 {
     const int result=ssystem("dir "+add_quotation(file)+system_to_nul);
-    if(result) orita_log.print(_LOG_WARN,"fail find file","file: "+add_quotation(file));
-    else orita_log.print(_LOG_INFO,"find file","file: "+add_quotation(file));
+    if(result) WARN("fail find file","file: "+add_quotation(file));
+    else INFO("find file","file: "+add_quotation(file));
     return result;
 }
 int copy_file(const std::string file,const std::string copy_path)
@@ -304,15 +278,15 @@ int copy_file(const std::string file,const std::string copy_path)
     #ifdef __linux__
     const int result=ssystem("cp "+add_quotation(file)+" "+add_quotation(copy_path)+system_to_nul);
     #endif
-    if(result) orita_log.print(_LOG_WARN,"fail copy file","file: "+add_quotation(file),"copy_path: "+add_quotation(copy_path));
-    else orita_log.print(_LOG_INFO,"copy file","file: "+add_quotation(file),"copy_path: "+add_quotation(copy_path));
+    if(result) WARN("fail copy file","file: "+add_quotation(file),"copy_path: "+add_quotation(copy_path));
+    else INFO("copy file","file: "+add_quotation(file),"copy_path: "+add_quotation(copy_path));
     return result;
 }
 int make_dir(const std::string dir)
 {
     const int result=ssystem("mkdir "+add_quotation(dir)+system_to_nul);
-    if(result) orita_log.print(_LOG_WARN,"fail make dir","dir: "+add_quotation(dir));
-    else orita_log.print(_LOG_INFO,"make dir","dir: "+add_quotation(dir));
+    if(result) WARN("fail make dir","dir: "+add_quotation(dir));
+    else INFO("make dir","dir: "+add_quotation(dir));
     return result;
 }
 int remove_dir(const std::string dir)
@@ -323,8 +297,8 @@ int remove_dir(const std::string dir)
     #ifdef __linux__
     const int result=ssystem("rm -r "+add_quotation(dir)+system_to_nul);
     #endif
-    if(result) orita_log.print(_LOG_WARN,"fail remove dir","dir: "+add_quotation(dir));
-    else orita_log.print(_LOG_INFO,"remove dir","dir: "+add_quotation(dir));
+    if(result) WARN("fail remove dir","dir: "+add_quotation(dir));
+    else INFO("remove dir","dir: "+add_quotation(dir));
     return result;
 }
 int move_file(const std::string file,const std::string move_path)
@@ -335,8 +309,8 @@ int move_file(const std::string file,const std::string move_path)
     #ifdef __linux__
     const int result=ssystem("mv -f "+add_quotation(file)+" "+add_quotation(move_path)+system_to_nul);
     #endif
-    if(result) orita_log.print(_LOG_WARN,"fail move file","file: "+add_quotation(file),"move_path: "+add_quotation(move_path));
-    else orita_log.print(_LOG_INFO,"move file","file: "+add_quotation(file),"move_path: "+add_quotation(move_path));
+    if(result) WARN("fail move file","file: "+add_quotation(file),"move_path: "+add_quotation(move_path));
+    else INFO("move file","file: "+add_quotation(file),"move_path: "+add_quotation(move_path));
     return result;
 }
 

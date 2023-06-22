@@ -15,7 +15,7 @@ namespace Print
             std::cout<<"\033[0m";
             return;
         }
-        if((int)settings["colors"][color].type()==0) return;
+        if(settings["colors"][color].type()==json::value_t::null) return;
         const std::string red=((std::string)settings["colors"][color]).substr(1,2),green=((std::string)settings["colors"][color]).substr(3,2),blue=((std::string)settings["colors"][color]).substr(5,2);
         std::cout<<"\e[38;2;"<<stoi(red,0,16)<<";"<<stoi(green,0,16)<<";"<<stoi(blue,0,16)<<"m";
     }

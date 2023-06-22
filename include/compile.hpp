@@ -9,13 +9,13 @@ namespace Compile
     {
         if(get_filenamesuf(file)!=".cpp")
         {
-            orita_log.print(_LOG_WARN,"fail compile","file: "+add_quotation(file));
+            WARN("fail compile","file: "+add_quotation(file));
             return -1;
         }
         const std::string command="g++ "+add_quotation(file)+" -o "+add_quotation(get_exefile(file))+" "+compile_argu+" "+(if_print?"":system_to_nul);
         int result=ssystem(command)!=0;
-        if(result) orita_log.print(_LOG_WARN,"fail compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
-        else orita_log.print(_LOG_INFO,"compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
+        if(result) WARN("fail compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
+        else INFO("compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
         return result;
     }
 }

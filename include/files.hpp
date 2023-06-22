@@ -21,19 +21,40 @@ namespace Files
     {
         (std::ofstream)(makepath(appdata_path,"file.json"))<<std::setw(4)<<files_json;
     }
-    int find_filestr(const int num)
+    class file_number
     {
-        return (int)files_json["file"+to_string_len(num,number_len)].type()!=3;
+      public:
+        const int num;
+        file_number(const int _num):num(_num)
+        {
+            if(num<0||num>_max_file_num)
+            {
+                ERROR("name invalid file_number","num: "+std::to_string(num));
+                class invalid_file_number {}error;
+                throw error;
+            }
+        }
+        std::string str()const {return "file"+to_string_len(num,number_len);}
+    };
+    int find_filestr(const file_number num)
+    {
+        return files_json[num.str()].type()!=json::value_t::string;
     }
-    void add_filestr(const int num,const std::string file)
+    void add_filestr(const file_number num,const std::string file)
     {
-        files_json["file"+to_string_len(num,number_len)]=systoUTF8(file);
-        orita_log.print(_LOG_INFO,"name add filestr","num: "+to_string_len(num,number_len),"file: "+add_quotation(file));
+        files_json[num.str()]=systoUTF8(file);
+        INFO("name add filestr","num: "+add_quotation(num.str()),"file: "+add_quotation(file));
     }
-    std::string get_filestr(const int num)
+    std::string get_filestr(const file_number num)
     {
-        const std::string file=UTF8tosys(files_json["file"+to_string_len(num,number_len)]);
-        orita_log.print(_LOG_INFO,"name get filestr","num: "+to_string_len(num,number_len),"file: "+add_quotation(file));
+        if(files_json[num.str()].type()!=json::value_t::string)
+        {
+            ERROR("name cannot get filestr","num: "+add_quotation(num.str()));
+            class no_such_filestr {}error;
+            throw error;
+        }
+        const std::string file=UTF8tosys(files_json[num.str()]);
+        INFO("name get filestr","num: "+add_quotation(num.str()),"file: "+add_quotation(file));
         return file;
     }
     std::string get_filename(const std::string file)
@@ -42,7 +63,7 @@ namespace Files
         if(pos==std::string::npos) return file;
         return file.substr(pos+1,file.size()-pos-1);
     }
-    std::string get_filename(const int num)
+    std::string get_filename(const file_number num)
     {
         return get_filename(get_filestr(num));
     }
@@ -52,7 +73,7 @@ namespace Files
         if(pos==std::string::npos) return "";
         return file.substr(0,pos);
     }
-    std::string get_filepath(const int num)
+    std::string get_filepath(const file_number num)
     {
         return get_filepath(get_filestr(num));
     }
@@ -63,7 +84,7 @@ namespace Files
         if(pos==std::string::npos) return name;
         return name.substr(0,pos);
     }
-    std::string get_filenamepre(const int num)
+    std::string get_filenamepre(const file_number num)
     {
         return get_filenamepre(get_filestr(num));
     }
@@ -74,7 +95,7 @@ namespace Files
         if(pos==std::string::npos) return "";
         return name.substr(pos,name.size()-pos);
     }
-    std::string get_filenamesuf(const int num)
+    std::string get_filenamesuf(const file_number num)
     {
         return get_filenamesuf(get_filestr(num));
     }
@@ -88,10 +109,10 @@ namespace Files
         #endif
         return makepath(running_path,file);
     }
-    void add_file(const int num,const std::string file)
+    void add_file(const file_number num,const std::string file)
     {
         std::string file_result=get_path(file);
-        orita_log.print(_LOG_INFO,"name add file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
+        INFO("name add file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
         add_filestr(num,file_result);
     }
     std::string get_file(const std::string file)
@@ -116,19 +137,19 @@ namespace Files
                 file_result=file_result.substr(0,pos1)+getenv(file_result.substr(pos1+1,pos2-pos1-1).c_str())+file_result.substr(pos2+1,file_result.size()-pos2-1);
             }
         }
-        orita_log.print(_LOG_INFO,"name get file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
+        INFO("name get file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
         return file_result;
     }
-    std::string get_file(const int num)
+    std::string get_file(const file_number num)
     {
         return get_file(get_filestr(num));
     }
     std::string check_file(const int str) {if(!find_filestr(str)) return get_filestr(str);return "";}
     std::string check_file(const std::string str) {return str;}
-    std::string check_file(const json str) {if((int)str.type()==3) return (std::string)str;return "";}
+    std::string check_file(json str) {if(str.type()==json::value_t::string) return (std::string)str;return "";}
     template<typename ...others_type> std::string check_file(const int str,const others_type ...others) {if(!find_filestr(str)) return get_filestr(str);return check_file(others...);}
     template<typename ...others_type> std::string check_file(const std::string str,const others_type ...others) {return str;}
-    template<typename ...others_type> std::string check_file(const json str,const others_type ...others) {if((int)str.type()==3) return (std::string)str;return check_file(others...);}
+    template<typename ...others_type> std::string check_file(json str,const others_type ...others) {if(str.type()==json::value_t::string) return (std::string)str;return check_file(others...);}
     std::string add_namesuf(const std::string file,const std::string namesuf)
     {
         if(get_filenamesuf(file)!=namesuf) return file+namesuf;
