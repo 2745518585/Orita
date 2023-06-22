@@ -31,8 +31,12 @@ class arguer
         }
         return 0;
     }
-    int check_argu(const json cor_argu)
+    int check_argu(json cor_argu)
     {
+        for(auto argu:argus.items())
+        {
+            if(cor_argu[argu.key()].type()==json::value_t::null) return 1;
+        }
         for(auto argu:cor_argu.items())
         {
             int sum=get_sum_argu(argu.key());
@@ -47,20 +51,16 @@ class arguer
             }
             if(!if_cor) return 1;
         }
-        for(auto argu:argus.items())
-        {
-            if((int)cor_argu[argu.key()].type()==0) return 1;
-        }
         return 0;
     }
     std::string get_argu(const std::string name,const int num)
     {
-        if((int)argus[name].type()==0||(int)argus[name][num].type()==0) return "";
+        if(argus[name].type()==json::value_t::null||argus[name][num].type()==json::value_t::null) return "";
         return argus[name][num];
     }
     int get_sum_argu(const std::string name)
     {
-        if((int)argus[name].type()==0) return -1;
+        if(argus[name].type()==json::value_t::null) return -1;
         return argus[name][0];
     }
     class parameter
@@ -70,7 +70,7 @@ class arguer
         parameter(json _para):para(_para) {}
         std::string operator[](const size_t num)
         {
-            if((int)para.type()==0||(int)para[num].type()==0) return "";
+            if(para.type()==json::value_t::null||para[num].type()==json::value_t::null) return "";
             return para[num];
         }
         json get(const size_t num)
@@ -79,7 +79,7 @@ class arguer
         }
         int sum()
         {
-            if((int)para.type()==0) return -1;
+            if(para.type()==json::value_t::null) return -1;
             return para[0];
         }
     };
