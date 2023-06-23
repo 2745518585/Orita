@@ -25,96 +25,22 @@ namespace Print
     }
     void print_result(const std::string name,const res result,const tim time,const int exit_code)
     {
-        if(name!="")
-        {
-            change_color("grey");
-            std::cout<<name<<":\n";
-            change_color("default");
-        }
-        if(result.is(res::type::SS))
-        {
-            change_color("green");
-            std::cout<<"Success\n";
-            change_color("default");
-        }
-        if(result.is(res::type::FL))
-        {
-            change_color("red");
-            std::cout<<"Fail\n";
-            change_color("default");
-        }
-        if(result.is(res::type::AC))
-        {
-            change_color("green");
-            std::cout<<"Accepted\n"<<time.count()<<"\n";
-            change_color("default");
-        }
-        if(result.is(res::type::WA))
-        {
-            change_color("red");
-            std::cout<<"Wrong Answer\n"<<time.count()<<"\n";
-            change_color("default");
-        }
-        if(result.is(res::type::RE))
-        {
-            change_color("purple");
-            std::cout<<"Runtime Error\nexit with code "<<exit_code<<"\n";
-            change_color("default");
-        }
-        if(result.is(res::type::TLE_CA))
-        {
-            change_color("blue");
-            std::cout<<"Time Limit Error with Correct Answer\n"<<time.count()<<"\n";
-            change_color("default");
-        }
-        if(result.is(res::type::TLE_WA))
-        {
-            change_color("blue");
-            std::cout<<"Time Limit Error with Wrong Answer\n"<<time.count()<<"\n";
-            change_color("default");
-        }
-        if(result.is(res::type::TLE_O))
-        {
-            change_color("blue");
-            std::cout<<"Time Limit Error\nover "<<time.count()<<"\n";
-            change_color("default");
-        }
-        if(result.is(res::type::CE))
-        {
-            change_color("yellow");
-            std::cout<<"Compile Error\n";
-            change_color("default");
-        }
-        if(result.is(res::type::SA))
-        {
-            change_color("green");
-            std::cout<<"Same Answer\n";
-            change_color("default");
-        }
-        if(result.is(res::type::DA))
-        {
-            change_color("red");
-            std::cout<<"Different Answer\n";
-            change_color("default");
-        }
-        if(result.is(res::type::TO))
-        {
-            change_color("blue");
-            std::cout<<"Timeout\n";
-            change_color("default");
-        }
-        if(result.is(res::type::NF))
-        {
-            change_color("orange");
-            std::cout<<"No such file\n";
-            change_color("default");
-        }
-        if(result.is(res::type::II))
-        {
-            change_color("orange");
-            std::cout<<"Invalid input\n";
-            change_color("default");
-        }
+        if(name!="") std::cout<<color_str("grey")<<name<<":\n";
+        if(result.is(res::type::SS)) std::cout<<color_str("green")<<"Success\n";
+        if(result.is(res::type::FL)) std::cout<<color_str("red")<<"Fail\n";
+        if(result.is(res::type::AC)) std::cout<<color_str("green")<<"Accepted\n"<<time<<"\n";
+        if(result.is(res::type::WA)) std::cout<<color_str("red")<<"Wrong Answer\n"<<time<<"\n";
+        if(result.is(res::type::RE)) std::cout<<color_str("purple")<<"Runtime Error\nexit with code "<<exit_code<<"\n";
+        if(result.is(res::type::TLE_CA)) std::cout<<color_str("blue")<<"Time Limit Error with Correct Answer\n"<<time<<"\n";
+        if(result.is(res::type::TLE_WA)) std::cout<<color_str("blue")<<"Time Limit Error with Wrong Answer\n"<<time<<"\n";
+        if(result.is(res::type::TLE_O)) std::cout<<color_str("blue")<<"Time Limit Error\nover "<<time<<"\n";
+        if(result.is(res::type::CE)) std::cout<<color_str("yellow")<<"Compile Error\n";
+        if(result.is(res::type::SA)) std::cout<<color_str("green")<<"Same Answer\n";
+        if(result.is(res::type::DA)) std::cout<<color_str("red")<<"Different Answer\n";
+        if(result.is(res::type::TO)) std::cout<<color_str("blue")<<"Timeout\n";
+        if(result.is(res::type::NF)) std::cout<<color_str("orange")<<"No such file\n";
+        if(result.is(res::type::II)) std::cout<<color_str("orange")<<"Invalid input\n";
+        change_color("default");
         std::cout.flush();
     }
     std::string get_resultname(const res result)
@@ -214,9 +140,6 @@ class printer
             while(str[i].size()<len) str[i]+=" ";
         }
     }
-    ~printer()
-    {
-        stop();
-    }
+    ~printer() {stop();}
 };
 #endif
