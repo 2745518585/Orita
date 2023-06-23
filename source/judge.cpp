@@ -29,7 +29,7 @@ int judge_main()
     }
     else chk=add_namesuf(get_file("%1"),".cpp");
     // init time
-    if(argus["t"].sum()==1) change_time_limit(stoi(argus["t"][1]));
+    if(argus["t"].sum()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // init data
     if(argus["d"].sum()==-1)
     {
@@ -40,7 +40,7 @@ int judge_main()
     if(find_file(ans)) {print_result(_ans_name,res::type::NF);return 0;}
     if(find_file(chk)) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
-    printer loading_printer({"Compiling.","Compiling..","Compiling..."},150);
+    printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
     loading_printer.start();
     compiler *run_compiler=new compiler(2);
     run_compiler->add({{_ans_name,ans},{_chk_name,chk}},get_compile_argu()+" -D JUDGING");

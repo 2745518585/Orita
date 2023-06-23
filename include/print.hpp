@@ -23,7 +23,7 @@ namespace Print
     {
         std::cout<<color_str(color);
     }
-    void print_result(const std::string name,const res result,const int time,const int exit_code)
+    void print_result(const std::string name,const res result,const tim time,const int exit_code)
     {
         if(name!="")
         {
@@ -46,13 +46,13 @@ namespace Print
         if(result.is(res::type::AC))
         {
             change_color("green");
-            std::cout<<"Accepted\n"<<time<<"ms\n";
+            std::cout<<"Accepted\n"<<time.count()<<"\n";
             change_color("default");
         }
         if(result.is(res::type::WA))
         {
             change_color("red");
-            std::cout<<"Wrong Answer\n"<<time<<"ms\n";
+            std::cout<<"Wrong Answer\n"<<time.count()<<"\n";
             change_color("default");
         }
         if(result.is(res::type::RE))
@@ -64,19 +64,19 @@ namespace Print
         if(result.is(res::type::TLE_CA))
         {
             change_color("blue");
-            std::cout<<"Time Limit Error with Correct Answer\n"<<time<<"ms\n";
+            std::cout<<"Time Limit Error with Correct Answer\n"<<time.count()<<"\n";
             change_color("default");
         }
         if(result.is(res::type::TLE_WA))
         {
             change_color("blue");
-            std::cout<<"Time Limit Error with Wrong Answer\n"<<time<<"ms\n";
+            std::cout<<"Time Limit Error with Wrong Answer\n"<<time.count()<<"\n";
             change_color("default");
         }
         if(result.is(res::type::TLE_O))
         {
             change_color("blue");
-            std::cout<<"Time Limit Error\nover "<<time<<"ms\n";
+            std::cout<<"Time Limit Error\nover "<<time.count()<<"\n";
             change_color("default");
         }
         if(result.is(res::type::CE))
@@ -160,14 +160,15 @@ void change_color(const int red,const int green,const int blue) {Print::change_c
 std::string color_str(const int red,const int green,const int blue) {return Print::color_str(red,green,blue);}
 void change_color(const std::string color) {Print::change_color(color);}
 std::string color_str(const std::string color) {return Print::color_str(color);}
-void print_result(const res result=res::type::NL,const int time=0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
-void print_result(const std::string name,const res result=res::type::NL,const int time=0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
+void print_result(const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
+void print_result(const std::string name,const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
 std::string get_resultname(const res result) {return Print::get_resultname(result);}
 std::string get_short_resultname(const res result) {return Print::get_short_resultname(result);}
 class printer
 {
   public:
-    int interval_time,len;
+    tim interval_time;
+    int len;
     std::vector<std::string> str;
     std::atomic<bool> if_end;
     std::mutex wait_lock;
@@ -182,7 +183,7 @@ class printer
             std::cout.flush();
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
-                wait.wait_for(lock,std::chrono::milliseconds(interval_time),[&](){return (bool)if_end;});
+                wait.wait_for(lock,interval_time,[&](){return (bool)if_end;});
                 lock.unlock();
             }
             for(int i=0;i<len;++i) std::cout<<"\b";
@@ -200,9 +201,9 @@ class printer
     {
         if_end=true;
         wait.notify_all();
-        ssleep(10);
+        ssleep((tim)10);
     }
-    printer(const std::initializer_list<std::string> _str,const int _interval_time)
+    printer(const std::initializer_list<std::string> _str,const tim _interval_time)
     {
         if_end=false;
         len=0;

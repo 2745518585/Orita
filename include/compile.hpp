@@ -52,7 +52,7 @@ class compiler
             if(if_end)
             {
                 --running_sum;
-                ssleep(10);
+                ssleep((tim)10);
                 if(running_sum==0) wait_end.notify_all();
                 read_lock1.unlock();
                 break;
@@ -84,7 +84,7 @@ class compiler
             wait_end.wait(lock,[&](){return running_sum==0;});
             lock.unlock();
         }
-        ssleep(10);
+        ssleep((tim)10);
     }
     void add(const std::string name,const std::string file,const std::string argu="")
     {

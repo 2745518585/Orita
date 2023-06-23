@@ -29,7 +29,7 @@ int chdata_main()
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
     }
-    if(argus["t"].sum()>=1) change_time_limit(stoi(argus["t"][1]));
+    if(argus["t"].sum()>=1) change_time_limit((tim)stoi(argus["t"][1]));
     print_result(res::type::SS);
     return 0;
 }

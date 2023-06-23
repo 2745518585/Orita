@@ -17,13 +17,13 @@ namespace Data
         file<<std::setw(4)<<data_json;
         file.close();
     }
-    void change_time_limit(const int time)
+    void change_time_limit(const tim time)
     {
-        data_json["time"]=time;
+        data_json["time"]=time.count();
     }
-    int get_time_limit()
+    tim get_time_limit()
     {
-        return data_json["time"];
+        return (tim)data_json["time"];
     }
     void change_compile_argu(const std::string para)
     {
@@ -34,8 +34,8 @@ namespace Data
         return UTF8tosys(data_json["compile_argu"]);
     }
 }
-void change_time_limit(const int time) {Data::change_time_limit(time);}
-int get_time_limit() {return Data::get_time_limit();}
+void change_time_limit(const tim time) {Data::change_time_limit(time);}
+tim get_time_limit() {return Data::get_time_limit();}
 void change_compile_argu(const std::string para) {Data::change_compile_argu(para);}
 std::string get_compile_argu() {return Data::get_compile_argu();}
 #endif

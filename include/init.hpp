@@ -210,11 +210,12 @@ class Log
 #define DEBUG(...) orita_log.print(_LOG_DEBUG,__VA_ARGS__)
 
 // time
-void ssleep(const unsigned time)
+using tim=std::chrono::milliseconds;
+void ssleep(const tim time)
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(time));
+    std::this_thread::sleep_for(time);
 }
-class stime
+class timer
 {
   public:
     std::chrono::_V2::system_clock::time_point begin_time;
@@ -222,13 +223,16 @@ class stime
     {
         begin_time=std::chrono::high_resolution_clock::now();
     }
-    int get_time()
+    tim get_time()
     {
         auto end_time=std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> time=end_time-begin_time;
-        return time.count()*1000;
+        return std::chrono::duration_cast<tim>(end_time-begin_time);
     }
 };
+std::ostream &operator<<(std::ostream &output,tim str)
+{
+    return output<<std::to_string(str.count())<<"ms";
+}
 
 // command
 #ifdef _WIN32

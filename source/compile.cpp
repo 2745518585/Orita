@@ -29,16 +29,16 @@ int compile_main()
         std::string file;
         file=get_file(add_namesuf(argus["r"][1],".cpp"));
         if(compile(file,compile_argu)) return 0;
-        runner runs(get_exefile(file),"","",run_argu,1000000);
+        runner runs(get_exefile(file),"","",run_argu,(tim)1000000);
         runs.run();
-        std::cout<<"\n"<<color_str("grey")<<"===== time: "<<color_str("blue")<<runs.time<<color_str("grey")<<" ms, exit code: "<<color_str(runs.exit_code?"purple":"green")<<runs.exit_code<<color_str("grey")<<" ====="<<color_str("default")<<"\n";
+        std::cout<<"\n"<<color_str("grey")<<"===== time: "<<color_str("blue")<<runs.time<<color_str("grey")<<", exit code: "<<color_str(runs.exit_code?"purple":"green")<<runs.exit_code<<color_str("grey")<<" ====="<<color_str("default")<<"\n";
     }
     else if(argus["t"].sum()!=-1)
     {
         std::string file=get_file(argus["t"][1]);
-        runner runs(file,"","",run_argu,1000000);
+        runner runs(file,"","",run_argu,(tim)1000000);
         runs.run();
-        std::cout<<"\n"<<color_str("grey")<<"===== time: "<<color_str("blue")<<runs.time<<color_str("grey")<<" ms, exit code: "<<color_str(runs.exit_code?"purple":"green")<<runs.exit_code<<color_str("grey")<<" ====="<<color_str("default")<<"\n";
+        std::cout<<"\n"<<color_str("grey")<<"===== time: "<<color_str("blue")<<runs.time<<color_str("grey")<<", exit code: "<<color_str(runs.exit_code?"purple":"green")<<runs.exit_code<<color_str("grey")<<" ====="<<color_str("default")<<"\n";
     }
     else
     {
