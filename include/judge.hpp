@@ -35,7 +35,7 @@ class runner
     const tim time_limit;
     tim time;
     int exit_code=0;
-    timer timer;
+    timer run_timer;
     std::atomic<bool> if_end;
     std::mutex wait_lock;
     std::condition_variable wait;
@@ -44,9 +44,9 @@ class runner
     {
         const std::string command=""+add_quotation(get_exefile(file))+" "+argu+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
         INFO("run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
-        timer.init();
+        run_timer.init();
         exit_code=ssystem(command)/sys_exit_code;
-        time=timer.get_time();
+        time=run_timer.get_time();
         if_end=true;
         wait.notify_all();
     }
