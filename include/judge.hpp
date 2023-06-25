@@ -62,7 +62,7 @@ class runner
         if(!if_end)
         {
             WARN("run timeout","file: "+add_quotation(get_exefile(file)));
-            ssystem("taskkill /f /pid "+get_exefilename(file)+system_to_nul);
+            kill_task(get_exefilename(file));
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
                 wait.wait(lock,[&](){return (bool)if_end;});

@@ -306,6 +306,18 @@ int move_file(const std::string file,const std::string move_path)
     else INFO("move file","file: "+add_quotation(file),"move_path: "+add_quotation(move_path));
     return result;
 }
+int kill_task(const std::string task)
+{
+    #ifdef _WIN32
+    const int result=ssystem("taskkill /f /im "+add_quotation(task)+system_to_nul);
+    #endif
+    #ifdef __linux__
+    const int result=ssystem("killall "+add_quotation(task)+system_to_nul);
+    #endif
+    if(result) WARN("fail kill task","task: "+add_quotation(task));
+    else INFO("kill task","task: "+add_quotation(task));
+    return result;
+}
 
 // settings
 json settings;
