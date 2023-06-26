@@ -14,8 +14,7 @@
 #include<atomic>
 #include<mutex>
 #include<condition_variable>
-#include"nlohmann/json.hpp"
-using json=nlohmann::json;
+#define NOMINMAX
 
 #ifdef _WIN32
 #include<windows.h>
@@ -27,6 +26,10 @@ using json=nlohmann::json;
 #include<limits.h>
 #include<sys/time.h>
 #endif
+
+#include"nlohmann/json.hpp"
+using json=nlohmann::json;
+#include"termcolor/termcolor.hpp"
 
 // code
 #ifdef _WIN32

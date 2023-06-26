@@ -88,11 +88,7 @@ int check_main()
         if(runned_sum-ac_sum!=0)
         {
             for(int j=1;j<=30-std::to_string(i).size();++j) std::cout<<"-";
-            change_color("grey");
-            std::cout<<" Unaccepted ";
-            change_color("red");
-            std::cout<<runned_sum-ac_sum<<" ";
-            change_color("default");
+            std::cout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
         }
         std::cout<<"\n";
         make_dir(makepath("data","others",std::to_string(i)));

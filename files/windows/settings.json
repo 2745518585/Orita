@@ -1,14 +1,4 @@
 {
-    "colors": {
-        "blue": "#00b0ff",
-        "green": "#20e707",
-        "grey": "#666666",
-        "orange": "#f0a000",
-        "purple": "#a000f0",
-        "red": "#f00000",
-        "white": "#cccccc",
-        "yellow": "#f0f000"
-    },
     "max_thread_num": 10,
     "runtime_limit": 1000,
     "exe_suf": ".exe"
