@@ -24,7 +24,7 @@ int run_main()
         add_file(_run_ans,ans_str);
         ans=add_namesuf(get_file(ans_str),".cpp");
     }
-    if(argus["c"].sum()!=-1)
+    if(argus["c"].size()!=-1)
     {
         const std::string chk_str=check_file(argus["c"].get(1),_run_chk);
         add_file(_run_chk,chk_str);

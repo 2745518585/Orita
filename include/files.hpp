@@ -77,6 +77,16 @@ namespace Files
     {
         return get_filepath(get_filestr(num));
     }
+    std::string get_filepre(const std::string file)
+    {
+        int pos=file.find_last_of(".");
+        if(pos==std::string::npos) return file;
+        return file.substr(0,pos);
+    }
+    std::string get_filepre(const file_number num)
+    {
+        return get_filepre(get_filestr(num));
+    }
     std::string get_filenamepre(const std::string file)
     {
         const std::string name=get_filename(file);
@@ -172,6 +182,8 @@ std::string get_filename(const std::string file) {return Files::get_filename(fil
 std::string get_filename(const int num) {return Files::get_filename(num);}
 std::string get_filepath(const std::string file) {return Files::get_filepath(file);}
 std::string get_filepath(const int num) {return Files::get_filepath(num);}
+std::string get_filepre(const std::string file) {return Files::get_filepre(file);}
+std::string get_filepre(const int num) {return Files::get_filepre(num);}
 std::string get_filenamepre(const std::string file) {return Files::get_filenamepre(file);}
 std::string get_filenamepre(const int num) {return Files::get_filenamepre(num);}
 std::string get_filenamesuf(const std::string file) {return Files::get_filenamesuf(file);}

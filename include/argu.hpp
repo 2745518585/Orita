@@ -7,7 +7,7 @@
 class arguer
 {
   public:
-    json argus;
+    json argus,sum_argus;
     bool check_if_argu(const std::string argu)
     {
         return std::regex_match(argu,std::regex("/([a-z]|[A-Z]|[0-9])+"));
@@ -24,7 +24,7 @@ class arguer
                 {
                     argus[argu][j]=argv[i+j];
                 }
-                argus[argu][0]=j-1;
+                sum_argus[argu]=j-1;
                 i+=j-1;
             }
             else return 1;
@@ -61,13 +61,15 @@ class arguer
     int get_sum_argu(const std::string name)
     {
         if(argus[name].type()==json::value_t::null) return -1;
-        return argus[name][0];
+        return sum_argus[name];
     }
     class parameter
     {
       public:
-        json para;
-        parameter(json _para):para(_para) {}
+        json para,sum;
+        parameter(json _para,json _sum):para(_para),sum(_sum) {}
+        auto begin() {return para.begin();}
+        auto end() {return para.end();}
         std::string operator[](const size_t num)
         {
             if(para.type()==json::value_t::null||para[num].type()==json::value_t::null) return "";
@@ -77,15 +79,15 @@ class arguer
         {
             return para[num];
         }
-        int sum()
+        int size()
         {
-            if(para.type()==json::value_t::null) return -1;
-            return para[0];
+            if(sum.type()==json::value_t::null) return -1;
+            return (int)sum;
         }
     };
     parameter operator[](const std::string name)
     {
-        return parameter(argus[name]);
+        return parameter(argus[name],sum_argus[name]);
     }
 }argus;
 #endif

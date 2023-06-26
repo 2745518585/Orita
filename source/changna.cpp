@@ -173,7 +173,7 @@ int changna_main(int argc,char **argv)
     }
     for(int i=1;i<=9;++i)
     {
-        if(argus[std::to_string(i)].sum()>=2)
+        if(argus[std::to_string(i)].size()>=2)
         {
             min_value[i]=stoi(argus[std::to_string(i)][1]);
             max_value[i]=stoi(argus[std::to_string(i)][2]);

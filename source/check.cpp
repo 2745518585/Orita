@@ -36,7 +36,7 @@ int check_main()
         add_file(_check_ans,ans_str);
         ans=add_namesuf(get_file(ans_str),".cpp");
     }
-    if(argus["c"].sum()!=-1)
+    if(argus["c"].size()!=-1)
     {
         const std::string chk_str=check_file(argus["c"].get(1),_check_chk);
         add_file(_check_chk,chk_str);
@@ -44,9 +44,9 @@ int check_main()
     }
     else chk=add_namesuf(get_file("%1"),".cpp");
     // init time
-    if(argus["t"].sum()==1) change_time_limit((tim)stoi(argus["t"][1]));
+    if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // init total sum
-    if(argus["n"].sum()==-1)
+    if(argus["n"].size()==-1)
     {
         print_result(res::type::SS);
         return 0;

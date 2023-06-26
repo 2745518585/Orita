@@ -5,7 +5,9 @@ json make_cor_argu()
         {"f",{_not_define,1}},
         {"c",{_not_define,0,1}},
         {"t",{_not_define,1}},
-        {"d",{_not_define,2}}
+        {"d",{_no_limit}},
+        {"is",{_not_define,1}},
+        {"os",{_not_define,1}}
     };
     return cor_argu;
 }
@@ -21,7 +23,7 @@ int judge_main()
         add_file(_run_ans,ans_str);
         ans=add_namesuf(get_file(ans_str),".cpp");
     }
-    if(argus["c"].sum()!=-1)
+    if(argus["c"].size()!=-1)
     {
         const std::string chk_str=check_file(argus["c"].get(1),_run_chk);
         add_file(_run_chk,chk_str);
@@ -29,9 +31,9 @@ int judge_main()
     }
     else chk=add_namesuf(get_file("%1"),".cpp");
     // init time
-    if(argus["t"].sum()==1) change_time_limit((tim)stoi(argus["t"][1]));
+    if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // init data
-    if(argus["d"].sum()==-1)
+    if(argus["d"].size()==-1)
     {
         print_result(res::type::SS);
         return 0;
@@ -56,24 +58,64 @@ int judge_main()
     }
     delete run_compiler;
     loading_printer.stop();
-    // judge
-    std::string name_pre=argus["d"][1];
-    std::ofstream file("result.txt");
-    int total_sum=stoi(argus["d"][2]),ac_sum=0;
-    for(int i=1;i<=total_sum;++i)
+    // find data
+    const std::string in_file_suf=argus["is"].size()==1?argus["is"][1]:".in",out_file_suf=argus["os"].size()==1?argus["os"][1]:".out";
+    json datas;
+    for(auto i:argus["d"])
     {
+        if(i.is_null()) continue;
+        std::string file=i;
+        if(get_filenamesuf(file)==in_file_suf)
+        {
+            datas[get_filepre(file)]["in"]=file;
+        }
+        if(get_filenamesuf(file)==out_file_suf)
+        {
+            datas[get_filepre(file)]["out"]=file;
+        }
+    }
+    // judge
+    remove_dir("data");
+    make_dir("data");
+    make_dir(makepath("data","others"));
+    int runned_sum=0,ac_sum=0;
+    for(auto i:datas.items())
+    {
+        // init file
+        if(i.value()["in"].is_null()&&i.value()["out"].is_null()) continue;
         for(int j=1;j<=50;++j) std::cout<<"-";
         for(int j=1;j<=50;++j) std::cout<<"\b";
-        std::cout<<"#"<<i<<"\n";
-        if(find_file(makepath(running_path,name_pre+std::to_string(i)+".in"))) {print_result(res::type::NF);continue;}
-        judger run_judger(ans,chk,makepath(running_path,name_pre+std::to_string(i)+".in"),makepath(running_path,name_pre+std::to_string(i)+".out"),makepath(running_path,name_pre+std::to_string(i)+".ans"),makepath(running_path,name_pre+std::to_string(i)+".txt"));
+        std::cout<<"#"<<(std::string)i.key()<<"\n";
+        ++runned_sum;
+        #define run_dir "data","others",std::to_string(runned_sum)
+        std::string in_file=system_nul,out_file=system_nul,ans_file=makepath(run_dir,"data.ans"),chk_file=makepath(run_dir,"data.txt");
+        make_dir(makepath(run_dir));
+        if(!i.value()["in"].is_null()) copy_file((std::string)i.value()["in"],in_file=makepath(run_dir,"data.in"));
+        if(!i.value()["out"].is_null()) copy_file((std::string)i.value()["out"],out_file=makepath(run_dir,"data.out"));
+        // judge
+        judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
         run_judger.judge();
         run_judger.print_result();
+        // print result
+        std::ofstream output_chk_file(chk_file,std::ios::app);
+        output_chk_file<<"\n";
+        for(int j=1;j<=50;++j) output_chk_file<<"*";
+        output_chk_file<<"\n";
+        output_chk_file<<"    infile: "<<add_quotation(i.value()["in"].is_null()?"nul":(std::string)i.value()["in"])<<", outfile: "<<add_quotation(i.value()["out"].is_null()?"nul":(std::string)i.value()["out"])<<"\n";
+        output_chk_file<<"    result: "<<get_resultname(run_judger.result)<<"\n";
+        output_chk_file<<"    "<<_ans_name<<":  "<<"time: "<<run_judger.time<<", exit_code: "<<run_judger.exit_code<<"\n";
+        output_chk_file<<"    "<<_chk_name<<":  "<<"time: "<<run_judger.chk_time<<", exit_code: "<<run_judger.chk_exit_code<<"\n";
+        for(int j=1;j<=50;++j) output_chk_file<<"*";
+        output_chk_file.close();
+        // copy result
         if(run_judger.result.istrue()) ++ac_sum;
-        file<<i<<":\t"<<get_short_resultname(run_judger.result)<<"\n";
+        if(run_judger.result.isfalse())
+        {
+            move_file(makepath(run_dir),makepath("data",std::to_string(runned_sum)+" - "+get_short_resultname(run_judger.result)));
+        }
+        #undef run_dir
     }
-    file.close();
-    std::cout<<ac_sum<<" / "<<total_sum;
+    std::cout<<ac_sum<<" / "<<runned_sum;
     return 0;
 }
 int main(int argc,char **argv)

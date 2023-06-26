@@ -19,7 +19,7 @@ int chdata_main()
     if(out_file!=""&&find_file(out_file)) {print_result(res::type::NF);return 0;}
     if(in_file!="") copy_file(in_file,makepath(appdata_path,"data","data.in"));
     if(out_file!="") copy_file(out_file,makepath(appdata_path,"data","data.out"));
-    if(argus["s"].sum()!=-1)
+    if(argus["s"].size()!=-1)
     {
         char str;
         FILE *file=fopen((makepath(appdata_path,"data","data.in")).c_str(),"w");
@@ -29,7 +29,7 @@ int chdata_main()
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
     }
-    if(argus["t"].sum()>=1) change_time_limit((tim)stoi(argus["t"][1]));
+    if(argus["t"].size()>=1) change_time_limit((tim)stoi(argus["t"][1]));
     print_result(res::type::SS);
     return 0;
 }
