@@ -58,6 +58,15 @@ int run_main()
     run_judger.judge();
     // print result
     run_judger.print_result();
+    std::ofstream output_chk_file(chk_file,std::ios::app);
+    output_chk_file<<"\n";
+    for(int j=1;j<=50;++j) output_chk_file<<"*";
+    output_chk_file<<"\n";
+    output_chk_file<<"    result: "<<get_resultname(run_judger.result)<<"\n";
+    output_chk_file<<"    "<<_ans_name<<":  "<<"time: "<<run_judger.time<<", exit_code: "<<run_judger.exit_code<<"\n";
+    output_chk_file<<"    "<<_chk_name<<":  "<<"time: "<<run_judger.chk_time<<", exit_code: "<<run_judger.chk_exit_code<<"\n";
+    for(int j=1;j<=50;++j) output_chk_file<<"*";
+    output_chk_file.close();
     // copy result
     make_dir("data");
     copy_file(in_file,makepath("data","data.in"));

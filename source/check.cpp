@@ -106,9 +106,10 @@ int check_main()
         output_chk_file<<"\n";
         for(int j=1;j<=50;++j) output_chk_file<<"*";
         output_chk_file<<"\n";
+        output_chk_file<<"    result: "<<get_resultname(ans_judger.result)<<"\n";
         output_chk_file<<"    "<<_in_name<<":  "<<"time: "<<in_runner.time<<", exit_code: "<<in_runner.exit_code<<"\n";
         output_chk_file<<"    "<<_out_name<<":  "<<"time: "<<out_runner.time<<", exit_code: "<<out_runner.exit_code<<"\n";
-        output_chk_file<<"    "<<_ans_name<<":  "<<"result: "<<get_resultname(ans_judger.result)<<", time: "<<ans_judger.time<<", exit_code: "<<ans_judger.exit_code<<"\n";
+        output_chk_file<<"    "<<_ans_name<<":  "<<"time: "<<ans_judger.time<<", exit_code: "<<ans_judger.exit_code<<"\n";
         output_chk_file<<"    "<<_chk_name<<":  "<<"time: "<<ans_judger.chk_time<<", exit_code: "<<ans_judger.chk_exit_code<<"\n";
         for(int j=1;j<=50;++j) output_chk_file<<"*";
         output_chk_file.close();
