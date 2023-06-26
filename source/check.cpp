@@ -91,8 +91,9 @@ int check_main()
             std::cout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
         }
         std::cout<<"\n";
-        make_dir(makepath("data","others",std::to_string(i)));
-        std::string in_file=makepath("data","others",std::to_string(i),std::to_string(i)+".in"),out_file=makepath("data","others",std::to_string(i),std::to_string(i)+".out"),ans_file=makepath("data","others",std::to_string(i),std::to_string(i)+".ans"),chk_file=makepath("data","others",std::to_string(i),std::to_string(i)+".txt");
+        #define run_dir "data","others",std::to_string(i)
+        make_dir(makepath(run_dir));
+        std::string in_file=makepath(run_dir,"data.in"),out_file=makepath(run_dir,"data.out"),ans_file=makepath(run_dir,"data.ans"),chk_file=makepath(run_dir,"data.txt");
         runner in_runner(in,system_nul,in_file,std::to_string(i));
         if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
         if(in_runner.exit_code) {print_result(_in_name,res::type::RE,(tim)0,in_runner.exit_code);continue;}
@@ -117,7 +118,7 @@ int check_main()
         if(ans_judger.result.istrue()) ++ac_sum;
         if(ans_judger.result.isfalse())
         {
-            move_file(makepath("data","others",std::to_string(i)),makepath("data",std::to_string(i)+" - "+get_short_resultname(ans_judger.result)));
+            move_file(makepath(run_dir),makepath("data",std::to_string(i)+" - "+get_short_resultname(ans_judger.result)));
         }
     }
     std::cout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
