@@ -11,6 +11,10 @@ json make_cor_argu()
 json cor_argu=make_cor_argu();
 const std::string _ans_name="ans";
 const std::string _chk_name="checker";
+std::string in_file=makepath(appdata_path,"data","data.in");
+std::string out_file=makepath(appdata_path,"data","data.out");
+std::string ans_file=makepath(appdata_path,"data","data.ans");
+std::string chk_file=makepath(appdata_path,"data","data.txt");
 int run_main()
 {
     // init name
@@ -50,16 +54,16 @@ int run_main()
     delete run_compiler;
     loading_printer.stop();
     // run
-    judger run_judger(ans,chk);
+    judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
     run_judger.judge();
     // print result
     run_judger.print_result();
     // copy result
     make_dir("data");
-    copy_file(makepath(appdata_path,"data","data.in"),makepath("data","data.in"));
-    copy_file(makepath(appdata_path,"data","data.out"),makepath("data","data.out"));
-    copy_file(makepath(appdata_path,"data","data.ans"),makepath("data","data.ans"));
-    copy_file(makepath(appdata_path,"data","data.txt"),makepath("data","data.txt"));
+    copy_file(in_file,makepath("data","data.in"));
+    copy_file(out_file,makepath("data","data.out"));
+    copy_file(ans_file,makepath("data","data.ans"));
+    copy_file(chk_file,makepath("data","data.txt"));
     return 0;
 }
 int main(int argc,char **argv)

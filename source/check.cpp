@@ -92,11 +92,8 @@ int check_main()
         }
         std::cout<<"\n";
         make_dir(makepath("data","others",std::to_string(i)));
-        std::string in_file=makepath("data","others",std::to_string(i),std::to_string(i)+".in"),
-        out_file=makepath("data","others",std::to_string(i),std::to_string(i)+".out"),
-        ans_file=makepath("data","others",std::to_string(i),std::to_string(i)+".ans"),
-        chk_file=makepath("data","others",std::to_string(i),std::to_string(i)+".txt");
-        runner in_runner(in,"",in_file,std::to_string(i));
+        std::string in_file=makepath("data","others",std::to_string(i),std::to_string(i)+".in"),out_file=makepath("data","others",std::to_string(i),std::to_string(i)+".out"),ans_file=makepath("data","others",std::to_string(i),std::to_string(i)+".ans"),chk_file=makepath("data","others",std::to_string(i),std::to_string(i)+".txt");
+        runner in_runner(in,system_nul,in_file,std::to_string(i));
         if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
         if(in_runner.exit_code) {print_result(_in_name,res::type::RE,(tim)0,in_runner.exit_code);continue;}
         runner out_runner(out,in_file,out_file);

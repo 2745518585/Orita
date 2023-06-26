@@ -239,10 +239,16 @@ std::ostream &operator<<(std::ostream &output,tim str)
 
 // command
 #ifdef _WIN32
+const std::string system_nul="nul";
 const std::string system_to_nul=" > nul 2>&1 ";
+const std::string system_con="con";
+const std::string system_to_con=" > con 2>&1 ";
 #endif
 #ifdef __linux__
+const std::string system_nul="/dev/null";
 const std::string system_to_nul=" > /dev/null 2>&1 ";
+const std::string system_con="/dev/tty";
+const std::string system_to_con=" > /dev/tty 2>&1 ";
 #endif
 #ifdef _WIN32
 const int sys_exit_code=1;

@@ -39,10 +39,10 @@ class runner
     std::atomic<bool> if_end;
     std::mutex wait_lock;
     std::condition_variable wait;
-    runner(const std::string _file,const std::string _in_file="",const std::string _out_file="",const std::string _argu="",const tim _time_limit=(tim)settings["runtime_limit"]):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
+    runner(const std::string _file,const std::string _in_file,const std::string _out_file,const std::string _argu="",const tim _time_limit=(tim)settings["runtime_limit"]):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
     void run_run()
     {
-        const std::string command=""+add_quotation(get_exefile(file))+" "+argu+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
+        const std::string command=""+add_quotation(get_exefile(file))+" "+argu+" < "+add_quotation(in_file)+" > "+add_quotation(out_file);
         INFO("run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
         run_timer.init();
         exit_code=ssystem(command)/sys_exit_code;
@@ -82,7 +82,7 @@ class judger
     tim time,chk_time;
     int exit_code=0,chk_exit_code=0;
     res result,chk_result;
-    judger(const std::string _ans,const std::string _chk,const std::string _in_file="",const std::string _out_file="",const std::string _ans_file="",const std::string _chk_file="",const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file==""?makepath(appdata_path,"data","data.in"):_in_file),out_file(_out_file==""?makepath(appdata_path,"data","data.out"):_out_file),ans_file(_ans_file==""?makepath(appdata_path,"data","data.ans"):_ans_file),chk_file(_chk_file==""?makepath(appdata_path,"data","data.txt"):_chk_file),time_limit(_time_limit) {}
+    judger(const std::string _ans,const std::string _chk,const std::string _in_file,const std::string _out_file,const std::string _ans_file,const std::string _chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
     res judge()
     {
         runner ans_runner(ans,in_file,ans_file,"",time_limit*2);
@@ -90,7 +90,7 @@ class judger
         time=ans_runner.time;
         exit_code=ans_runner.exit_code;
         if(exit_code) return result=res::type::RE;
-        runner chk_runner(chk,"",chk_file,""+add_quotation(in_file)+" "+add_quotation(out_file)+" \""+ans_file+"\"");
+        runner chk_runner(chk,system_nul,chk_file,add_quotation(in_file)+" "+add_quotation(out_file)+" "+add_quotation(ans_file));
         if(chk_runner.run()) return chk_time=chk_runner.time,chk_result=res::type::TO,result=res::type::NL;
         chk_time=chk_runner.time;
         chk_exit_code=chk_runner.exit_code;
