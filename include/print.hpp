@@ -82,19 +82,15 @@ class printer
         while(!if_end)
         {
             pos=(pos+1)%str.size();
-            std::cout<<str[pos];
-            std::cout.flush();
+            std::cout<<str[pos]<<"\r"<<std::flush;
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
                 wait.wait_for(lock,interval_time,[&](){return (bool)if_end;});
                 lock.unlock();
             }
-            for(int i=0;i<len;++i) std::cout<<"\b";
-            std::cout.flush();
         }
         for(int i=0;i<len;++i) std::cout<<" ";
-        for(int i=0;i<len;++i) std::cout<<"\b";
-        std::cout.flush();
+        std::cout<<"\r"<<std::flush;
     }
     void start()
     {

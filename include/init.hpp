@@ -336,10 +336,12 @@ namespace Init
     {
         orita_log.clear();
         (std::ifstream)(makepath(appdata_path,"settings.json"))>>settings;
+        std::cout<<"\033[?25l"<<std::flush;
     }
     void end()
     {
         (std::ofstream)(makepath(appdata_path,"settings.json"))<<std::setw(4)<<settings;
+        std::cout<<"\033[?25h"<<std::flush;
     }
 }
 #endif
