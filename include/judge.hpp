@@ -45,7 +45,9 @@ class runner
         const std::string command=""+add_quotation(get_exefile(file))+" "+argu+" < "+add_quotation(in_file)+" > "+add_quotation(out_file);
         INFO("run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
         run_timer.init();
+        std::cout<<"\033[?25h"<<std::flush;
         exit_code=ssystem(command)/sys_exit_code;
+        std::cout<<"\033[?25l"<<std::flush;
         time=run_timer.get_time();
         if_end=true;
         wait.notify_all();
