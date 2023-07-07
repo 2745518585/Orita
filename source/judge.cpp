@@ -2,12 +2,12 @@
 json make_cor_argu()
 {
     json cor_argu={
-        {"f",{_not_define,1}},
-        {"c",{_not_define,0,1}},
-        {"t",{_not_define,1}},
-        {"d",{_no_limit}},
-        {"is",{_not_define,1}},
-        {"os",{_not_define,1}}
+        {"f",{arguer::ND,1}},
+        {"c",{arguer::ND,0,1}},
+        {"t",{arguer::ND,1}},
+        {"d",{arguer::NL}},
+        {"is",{arguer::ND,1}},
+        {"os",{arguer::ND,1}}
     };
     return cor_argu;
 }
@@ -23,7 +23,7 @@ int judge_main()
         add_file(_run_ans,ans_str);
         ans=add_namesuf(get_file(ans_str),".cpp");
     }
-    if(argus["c"].size()!=-1)
+    if(argus["c"].appear())
     {
         const std::string chk_str=check_file(argus["c"].get(1),_run_chk);
         add_file(_run_chk,chk_str);
@@ -33,7 +33,7 @@ int judge_main()
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // init data
-    if(argus["d"].size()==-1)
+    if(argus["d"].not_appear())
     {
         print_result(res::type::SS);
         return 0;

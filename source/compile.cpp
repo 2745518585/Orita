@@ -2,11 +2,11 @@
 json make_cor_argu()
 {
     json cor_argu={
-        {"f",{_no_limit}},
-        {"r",{_not_define,1}},
-        {"t",{_not_define,1}},
-        {"o",{_no_limit}},
-        {"p",{_no_limit}}
+        {"f",{arguer::NL}},
+        {"r",{arguer::ND,1}},
+        {"t",{arguer::ND,1}},
+        {"o",{arguer::NL}},
+        {"p",{arguer::NL}}
     };
     return cor_argu;
 }
@@ -14,17 +14,17 @@ json cor_argu=make_cor_argu();
 int compile_main()
 {
     std::string compile_argu;
-    if(argus["o"].size()!=-1)
+    if(argus["o"].appear())
     {
         for(int i=1;i<=argus["o"].size();++i) compile_argu=compile_argu+" "+argus["o"][i];
     }
     else compile_argu=get_compile_argu();
     std::string run_argu;
-    if(argus["p"].size()!=-1)
+    if(argus["p"].appear())
     {
         for(int i=1;i<=argus["p"].size();++i) run_argu=run_argu+" "+argus["p"][i];
     }
-    if(argus["r"].size()!=-1)
+    if(argus["r"].appear())
     {
         std::string file;
         file=get_file(add_namesuf(argus["r"][1],".cpp"));
@@ -33,7 +33,7 @@ int compile_main()
         runs.run();
         std::cout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
     }
-    else if(argus["t"].size()!=-1)
+    else if(argus["t"].appear())
     {
         std::string file=get_file(argus["t"][1]);
         runner runs(file,"","",run_argu,(tim)1000000);

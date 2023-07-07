@@ -2,13 +2,13 @@
 json make_cor_argu()
 {
     json cor_argu={
-        {"f",{_not_define,3}},
-        {"if",{_not_define,1}},
-        {"of",{_not_define,1}},
-        {"af",{_not_define,1}},
-        {"c",{_not_define,0,1}},
-        {"n",{_not_define,1}},
-        {"t",{_not_define,1}}
+        {"f",{arguer::ND,3}},
+        {"if",{arguer::ND,1}},
+        {"of",{arguer::ND,1}},
+        {"af",{arguer::ND,1}},
+        {"c",{arguer::ND,0,1}},
+        {"n",{arguer::ND,1}},
+        {"t",{arguer::ND,1}}
     };
     return cor_argu;
 }
@@ -36,7 +36,7 @@ int check_main()
         add_file(_check_ans,ans_str);
         ans=add_namesuf(get_file(ans_str),".cpp");
     }
-    if(argus["c"].size()!=-1)
+    if(argus["c"].appear())
     {
         const std::string chk_str=check_file(argus["c"].get(1),_check_chk);
         add_file(_check_chk,chk_str);
@@ -46,7 +46,7 @@ int check_main()
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // init total sum
-    if(argus["n"].size()==-1)
+    if(argus["n"].not_appear())
     {
         print_result(res::type::SS);
         return 0;

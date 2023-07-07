@@ -2,7 +2,7 @@
 json make_cor_argu()
 {
     json cor_argu;
-    for(int i=0;i<=_max_file_num;++i) cor_argu[std::to_string(i)]={_not_define,1};
+    for(int i=0;i<=_max_file_num;++i) cor_argu[std::to_string(i)]={arguer::ND,1};
     return cor_argu;
 }
 json cor_argu=make_cor_argu();

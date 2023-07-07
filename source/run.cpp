@@ -2,9 +2,9 @@
 json make_cor_argu()
 {
     json cor_argu={
-        {"f",{_not_define,1}},
-        {"c",{_not_define,0,1}},
-        {"t",{_not_define,1}}
+        {"f",{arguer::ND,1}},
+        {"c",{arguer::ND,0,1}},
+        {"t",{arguer::ND,1}}
     };
     return cor_argu;
 }
@@ -24,7 +24,7 @@ int run_main()
         add_file(_run_ans,ans_str);
         ans=add_namesuf(get_file(ans_str),".cpp");
     }
-    if(argus["c"].size()!=-1)
+    if(argus["c"].appear())
     {
         const std::string chk_str=check_file(argus["c"].get(1),_run_chk);
         add_file(_run_chk,chk_str);

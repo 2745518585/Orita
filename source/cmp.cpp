@@ -2,7 +2,7 @@
 json make_cor_argu()
 {
     json cor_argu={
-        {"f",{_not_define,2}}
+        {"f",{arguer::ND,2}}
     };
     return cor_argu;
 }

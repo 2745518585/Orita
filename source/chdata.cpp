@@ -2,11 +2,11 @@
 json make_cor_argu()
 {
     json cor_argu={
-        {"f",{_not_define,2}},
-        {"if",{_not_define,1}},
-        {"of",{_not_define,1}},
-        {"s",{_not_define,0,1}},
-        {"t",{_not_define,1}}
+        {"f",{arguer::ND,2}},
+        {"if",{arguer::ND,1}},
+        {"of",{arguer::ND,1}},
+        {"s",{arguer::ND,0,1}},
+        {"t",{arguer::ND,1}}
     };
     return cor_argu;
 }
@@ -19,7 +19,7 @@ int chdata_main()
     if(out_file!=""&&find_file(out_file)) {print_result(res::type::NF);return 0;}
     if(in_file!="") copy_file(in_file,makepath(appdata_path,"data","data.in"));
     if(out_file!="") copy_file(out_file,makepath(appdata_path,"data","data.out"));
-    if(argus["s"].size()!=-1)
+    if(argus["s"].appear())
     {
         char str;
         FILE *file=fopen((makepath(appdata_path,"data","data.in")).c_str(),"w");

@@ -2,11 +2,10 @@
 #ifndef _FILE_ARGU
 #define _FILE_ARGU _FILE_ARGU
 #include"init.hpp"
-#define _not_define -1
-#define _no_limit -2
 class arguer
 {
   public:
+    static const size_t ND=-1,NL=-2;
     json argus,sum_argus;
     bool check_if_argu(const std::string argu)
     {
@@ -35,15 +34,15 @@ class arguer
     {
         for(auto argu:argus.items())
         {
-            if(cor_argu[argu.key()].type()==json::value_t::null) return 1;
+            if(cor_argu[argu.key()].is_null()) return 1;
         }
         for(auto argu:cor_argu.items())
         {
-            int sum=get_sum_argu(argu.key());
+            size_t sum=get_sum_argu(argu.key());
             bool if_cor=false;
-            for(auto cor_sum:argu.value().items())
+            for(auto cor_sum:argu.value())
             {
-                if(sum==cor_sum.value()||cor_sum.value()==_no_limit)
+                if(sum==cor_sum||cor_sum==arguer::NL)
                 {
                     if_cor=true;
                     break;
@@ -53,14 +52,14 @@ class arguer
         }
         return 0;
     }
-    std::string get_argu(const std::string name,const int num)
+    std::string get_argu(const std::string name,const size_t num)
     {
-        if(argus[name].type()==json::value_t::null||argus[name][num].type()==json::value_t::null) return "";
+        if(argus[name].is_null()||argus[name][num].is_null()) return "";
         return argus[name][num];
     }
-    int get_sum_argu(const std::string name)
+    size_t get_sum_argu(const std::string name)
     {
-        if(argus[name].type()==json::value_t::null) return -1;
+        if(argus[name].is_null()) return ND;
         return sum_argus[name];
     }
     class parameter
@@ -72,18 +71,17 @@ class arguer
         auto end() {return para.end();}
         std::string operator[](const size_t num)
         {
-            if(para.type()==json::value_t::null||para[num].type()==json::value_t::null) return "";
+            if(para.is_null()||para[num].is_null()) return "";
             return para[num];
         }
-        json get(const size_t num)
+        json get(const size_t num) {return para[num];}
+        size_t size()
         {
-            return para[num];
+            if(sum.is_null()) return ND;
+            return (size_t)sum;
         }
-        int size()
-        {
-            if(sum.type()==json::value_t::null) return -1;
-            return (int)sum;
-        }
+        bool appear() {return !sum.is_null();}
+        bool not_appear() {return sum.is_null();}
     };
     parameter operator[](const std::string name)
     {
