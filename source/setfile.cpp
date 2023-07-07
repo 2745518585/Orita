@@ -10,7 +10,7 @@ int setfile_main()
 {
     for(int i=0;i<=_max_file_num;++i)
     {
-        if(argus[std::to_string(i)].size()>=1)
+        if(argus[std::to_string(i)].size()==1)
         {
             add_file(i,argus[std::to_string(i)][1]);
         }
