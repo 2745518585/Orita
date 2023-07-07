@@ -237,6 +237,10 @@ std::ostream &operator<<(std::ostream &output,tim str)
     return output<<std::to_string(str.count())<<"ms";
 }
 
+// print
+void hide_cursor() {std::cout<<"\033[?25l"<<std::flush;}
+void show_cursor() {std::cout<<"\033[?25h"<<std::flush;}
+
 // command
 #ifdef _WIN32
 const std::string system_nul="nul";
@@ -336,12 +340,12 @@ namespace Init
     {
         orita_log.clear();
         (std::ifstream)(makepath(appdata_path,"settings.json"))>>settings;
-        std::cout<<"\033[?25l"<<std::flush;
+        hide_cursor();
     }
     void end()
     {
         (std::ofstream)(makepath(appdata_path,"settings.json"))<<std::setw(4)<<settings;
-        std::cout<<"\033[?25h"<<std::flush;
+        show_cursor();
     }
 }
 #endif

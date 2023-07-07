@@ -29,14 +29,14 @@ int compile_main()
         std::string file;
         file=get_file(add_namesuf(argus["r"][1],".cpp"));
         if(compile(file,compile_argu)) return 0;
-        runner runs(get_exefile(file),system_con,system_con,run_argu,(tim)1000000);
+        runner runs(get_exefile(file),"","",run_argu,(tim)1000000);
         runs.run();
         std::cout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
     }
     else if(argus["t"].size()!=-1)
     {
         std::string file=get_file(argus["t"][1]);
-        runner runs(file,system_con,system_con,run_argu,(tim)1000000);
+        runner runs(file,"","",run_argu,(tim)1000000);
         runs.run();
         std::cout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
     }

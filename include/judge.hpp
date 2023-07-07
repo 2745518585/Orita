@@ -42,12 +42,12 @@ class runner
     runner(const std::string _file,const std::string _in_file,const std::string _out_file,const std::string _argu="",const tim _time_limit=(tim)settings["runtime_limit"]):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
     void run_run()
     {
-        const std::string command=""+add_quotation(get_exefile(file))+" "+argu+" < "+add_quotation(in_file)+" > "+add_quotation(out_file);
+        const std::string command=""+add_quotation(get_exefile(file))+" "+argu+" "+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
         INFO("run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
         run_timer.init();
-        std::cout<<"\033[?25h"<<std::flush;
+        show_cursor();
         exit_code=ssystem(command)/sys_exit_code;
-        std::cout<<"\033[?25l"<<std::flush;
+        hide_cursor();
         time=run_timer.get_time();
         if_end=true;
         wait.notify_all();
