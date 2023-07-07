@@ -77,17 +77,16 @@ int judge_main()
     // judge
     remove_dir("data");
     make_dir("data");
-    make_dir(makepath("data","others"));
+    make_dir(makepath("data","datas"));
     int runned_sum=0,ac_sum=0;
     for(auto i:datas.items())
     {
         // init file
         if(i.value()["in"].is_null()&&i.value()["out"].is_null()) continue;
         for(int j=1;j<=50;++j) std::cout<<"-";
-        for(int j=1;j<=50;++j) std::cout<<"\b";
-        std::cout<<"#"<<(std::string)i.key()<<"\n";
+        std::cout<<"\r"<<"#"<<(std::string)i.key()<<"\n";
         ++runned_sum;
-        #define run_dir "data","others",std::to_string(runned_sum)
+        #define run_dir "data","datas",std::to_string(runned_sum)
         std::string in_file=system_nul,out_file=system_nul,ans_file=makepath(run_dir,"data.ans"),chk_file=makepath(run_dir,"data.txt");
         make_dir(makepath(run_dir));
         if(!i.value()["in"].is_null()) copy_file((std::string)i.value()["in"],in_file=makepath(run_dir,"data.in"));

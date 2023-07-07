@@ -55,7 +55,7 @@ int check_main()
     // init data dir
     remove_dir("data");
     make_dir("data");
-    make_dir(makepath("data","others"));
+    make_dir(makepath("data","datas"));
     // find file
     if(find_file(in)) {print_result(_in_name,res::type::NF);return 0;}
     if(find_file(out)) {print_result(_out_name,res::type::NF);return 0;}
@@ -91,7 +91,7 @@ int check_main()
             std::cout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
         }
         std::cout<<"\n";
-        #define run_dir "data","others",std::to_string(i)
+        #define run_dir "data","datas",std::to_string(i)
         make_dir(makepath(run_dir));
         std::string in_file=makepath(run_dir,"data.in"),out_file=makepath(run_dir,"data.out"),ans_file=makepath(run_dir,"data.ans"),chk_file=makepath(run_dir,"data.txt");
         runner in_runner(in,system_nul,in_file,std::to_string(i));
