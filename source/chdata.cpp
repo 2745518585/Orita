@@ -21,6 +21,7 @@ int chdata_main()
     if(out_file!="") copy_file(out_file,makepath(appdata_path,"data","data.out"));
     if(argus["s"].appear())
     {
+        show_cursor();
         char str;
         FILE *file=fopen((makepath(appdata_path,"data","data.in")).c_str(),"w");
         str=getchar();
@@ -28,6 +29,7 @@ int chdata_main()
         file=fopen((makepath(appdata_path,"data","data.out")).c_str(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
+        hide_cursor();
     }
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     print_result(res::type::SS);
