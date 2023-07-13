@@ -1,3 +1,4 @@
 .vscode
 build
-*.exe
+bin/orita
+bin/orita.exe
