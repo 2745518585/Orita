@@ -25,9 +25,9 @@ namespace Data
     {
         return (tim)data_json["time"];
     }
-    void change_compile_argu(const std::string para)
+    void change_compile_argu(const std::string &argu)
     {
-        data_json["compile_argu"]=systoUTF8(para);
+        data_json["compile_argu"]=systoUTF8(argu);
     }
     std::string get_compile_argu()
     {
@@ -36,6 +36,6 @@ namespace Data
 }
 void change_time_limit(const tim time) {Data::change_time_limit(time);}
 tim get_time_limit() {return Data::get_time_limit();}
-void change_compile_argu(const std::string para) {Data::change_compile_argu(para);}
+void change_compile_argu(const std::string &argu) {Data::change_compile_argu(argu);}
 std::string get_compile_argu() {return Data::get_compile_argu();}
 #endif

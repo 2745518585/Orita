@@ -4,7 +4,7 @@
 #include"init.hpp"
 namespace Print
 {
-    void print_result(const std::string name,const res result,const tim time,const int exit_code)
+    void print_result(const std::string &name,const res result,const tim time,const int exit_code)
     {
         if(name!="") std::cout<<termcolor::bright_grey<<name<<":\n";
         if(result.is(res::type::SS)) std::cout<<termcolor::bright_green<<"Success\n";
@@ -64,7 +64,7 @@ namespace Print
     }
 }
 void print_result(const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
-void print_result(const std::string name,const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
+void print_result(const std::string &name,const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
 std::string get_resultname(const res result) {return Print::get_resultname(result);}
 std::string get_short_resultname(const res result) {return Print::get_short_resultname(result);}
 class printer

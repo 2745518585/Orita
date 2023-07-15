@@ -6,7 +6,7 @@
 #include"print.hpp"
 namespace Judge
 {
-    int compare(const std::string file1,const std::string file2)
+    int compare(const std::string &file1,const std::string &file2)
     {
         std::ifstream infile1(file1),infile2(file2);
         std::string str1,str2;
@@ -27,7 +27,7 @@ namespace Judge
         return 0;
     }
 }
-int compare(const std::string file1,const std::string file2) {return Judge::compare(file1,file2);}
+int compare(const std::string &file1,const std::string &file2) {return Judge::compare(file1,file2);}
 class runner
 {
   public:
@@ -39,11 +39,11 @@ class runner
     std::atomic<bool> if_end;
     std::mutex wait_lock;
     std::condition_variable wait;
-    runner(const std::string _file,const std::string _in_file,const std::string _out_file,const std::string _argu="",const tim _time_limit=(tim)settings["runtime_limit"]):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
+    runner(const std::string &_file,const std::string &_in_file,const std::string &_out_file,const std::string &_argu="",const tim _time_limit=(tim)settings["runtime_limit"]):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
     void run_run()
     {
-        const std::string command=""+add_quotation(get_exefile(file))+" "+argu+" "+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
-        INFO("run","file: "+add_squotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_squotation(in_file)+"\nout_file: "+add_squotation(out_file)+"\ncommand: "+add_squotation(command));
+        const std::string command=""+add_quo(get_exefile(file))+" "+argu+" "+(in_file!=""?" < "+add_quo(in_file):"")+(out_file!=""?" > "+add_quo(out_file):"");
+        INFO("start run","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_squo(in_file)+"\nout_file: "+add_squo(out_file)+"\ncommand: "+add_squo(command));
         run_timer.init();
         show_cursor();
         exit_code=ssystem(command)/sys_exit_code;
@@ -63,7 +63,7 @@ class runner
         }
         if(!if_end)
         {
-            WARN("run timeout","file: "+add_squotation(get_exefile(file)));
+            WARN("run timeout","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file)));
             kill_task(get_exefilename(file));
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
@@ -73,6 +73,7 @@ class runner
             time=time_limit;
             return 1;
         }
+        INFO("success run","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file)));
         return 0;
     }
 };
@@ -84,7 +85,7 @@ class judger
     tim time,chk_time;
     int exit_code=0,chk_exit_code=0;
     res result,chk_result;
-    judger(const std::string _ans,const std::string _chk,const std::string _in_file,const std::string _out_file,const std::string _ans_file,const std::string _chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
+    judger(const std::string &_ans,const std::string &_chk,const std::string &_in_file,const std::string &_out_file,const std::string &_ans_file,const std::string &_chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
     res judge()
     {
         runner ans_runner(ans,in_file,ans_file,"",time_limit*2);
@@ -92,7 +93,7 @@ class judger
         time=ans_runner.time;
         exit_code=ans_runner.exit_code;
         if(exit_code) return result=res::type::RE;
-        runner chk_runner(chk,system_nul,chk_file,add_quotation(in_file)+" "+add_quotation(out_file)+" "+add_quotation(ans_file));
+        runner chk_runner(chk,system_nul,chk_file,add_quo(in_file)+" "+add_quo(out_file)+" "+add_quo(ans_file));
         if(chk_runner.run()) return chk_time=chk_runner.time,chk_result=res::type::TO,result=res::type::NL;
         chk_time=chk_runner.time;
         chk_exit_code=chk_runner.exit_code;
@@ -108,7 +109,7 @@ class judger
             else return result=res::type::TLE_CA;
         }
     }
-    void print_result(const std::string name="",const std::string chk_name="checker")
+    void print_result(const std::string &name="",const std::string &chk_name="checker")
     {
         if(result.is(res::type::NL)) Print::print_result(chk_name,chk_result,chk_time,chk_exit_code);
         Print::print_result(name,result,time,exit_code);

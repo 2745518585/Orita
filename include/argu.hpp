@@ -7,12 +7,15 @@ class arguer
   public:
     static const size_t ND=-1,NL=-2;
     json argus,sum_argus;
-    bool check_if_argu(const std::string argu)
+    bool check_if_argu(const std::string &argu)
     {
         return std::regex_match(argu,std::regex("/([a-z]|[A-Z]|[0-9])+"));
     }
     int init_argu(int argc,char **argv)
     {
+        std::string argu_str;
+        for(int i=1;i<=argc-1;++i) argu_str+=std::string(argv[i])+" ";
+        INFO("argu",argu_str);
         for(int i=1;i<=argc-1;++i)
         {
             if(check_if_argu(argv[i]))
@@ -52,12 +55,12 @@ class arguer
         }
         return 0;
     }
-    std::string get_argu(const std::string name,const size_t num)
+    std::string get_argu(const std::string &name,const size_t num)
     {
         if(argus[name].is_null()||argus[name][num].is_null()) return "";
         return argus[name][num];
     }
-    size_t get_sum_argu(const std::string name)
+    size_t get_sum_argu(const std::string &name)
     {
         if(argus[name].is_null()) return ND;
         return sum_argus[name];
@@ -83,7 +86,7 @@ class arguer
         bool appear() {return !sum.is_null();}
         bool not_appear() {return sum.is_null();}
     };
-    parameter operator[](const std::string name)
+    parameter operator[](const std::string &name)
     {
         return parameter(argus[name],sum_argus[name]);
     }
