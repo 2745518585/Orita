@@ -29,7 +29,7 @@ namespace Files
         {
             if(num<0||num>_max_file_num)
             {
-                ERROR("name invalid file_number","num: "+std::to_string(num));
+                ERROR("name invalid file_number","num: "+add_squotation("file"+to_string_len(num,number_len)));
                 class invalid_file_number {}error;
                 throw error;
             }
@@ -43,18 +43,18 @@ namespace Files
     void add_filestr(const file_number num,const std::string file)
     {
         files_json[num.str()]=systoUTF8(file);
-        INFO("name add filestr","num: "+add_quotation(num.str()),"file: "+add_quotation(file));
+        INFO("name add filestr","num: "+add_squotation(num.str()),"file: "+add_squotation(file));
     }
     std::string get_filestr(const file_number num)
     {
         if(files_json[num.str()].type()!=json::value_t::string)
         {
-            ERROR("name cannot get filestr","num: "+add_quotation(num.str()));
+            ERROR("name cannot get filestr","num: "+add_squotation(num.str()));
             class no_such_filestr {}error;
             throw error;
         }
         const std::string file=UTF8tosys(files_json[num.str()]);
-        INFO("name get filestr","num: "+add_quotation(num.str()),"file: "+add_quotation(file));
+        INFO("name get filestr","num: "+add_squotation(num.str()),"file: "+add_squotation(file));
         return file;
     }
     std::string get_filename(const std::string file)
@@ -122,7 +122,7 @@ namespace Files
     void add_file(const file_number num,const std::string file)
     {
         std::string file_result=get_path(file);
-        INFO("name add file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
+        INFO("name add file","name: "+add_squotation(file),"file: "+add_squotation(file_result));
         add_filestr(num,file_result);
     }
     std::string get_file(const std::string file)
@@ -147,7 +147,7 @@ namespace Files
                 file_result=file_result.substr(0,pos1)+getenv(file_result.substr(pos1+1,pos2-pos1-1).c_str())+file_result.substr(pos2+1,file_result.size()-pos2-1);
             }
         }
-        INFO("name get file","name: "+add_quotation(file),"file: "+add_quotation(file_result));
+        INFO("name get file","name: "+add_squotation(file),"file: "+add_squotation(file_result));
         return file_result;
     }
     std::string get_file(const file_number num)

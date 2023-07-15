@@ -14,8 +14,8 @@ namespace Compile
         }
         const std::string command="g++ "+add_quotation(file)+" -o "+add_quotation(get_exefile(file))+" "+compile_argu+" "+(if_print?"":system_to_nul);
         int result=ssystem(command)!=0;
-        if(result) WARN("fail compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
-        else INFO("compile","file: "+add_quotation(file),"argu: "+compile_argu,"command: "+command);
+        if(result) WARN("fail compile","file: "+add_squotation(file),"argu: "+add_squotation(compile_argu),"command: "+add_squotation(command));
+        else INFO("compile","file: "+add_squotation(file),"argu: "+add_squotation(compile_argu),"command: "+add_squotation(command));
         return result;
     }
 }

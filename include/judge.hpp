@@ -43,7 +43,7 @@ class runner
     void run_run()
     {
         const std::string command=""+add_quotation(get_exefile(file))+" "+argu+" "+(in_file!=""?" < "+add_quotation(in_file):"")+(out_file!=""?" > "+add_quotation(out_file):"");
-        INFO("run","file: "+add_quotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_quotation(in_file)+"\nout_file: "+add_quotation(out_file)+"\ncommand: "+command);
+        INFO("run","file: "+add_squotation(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_squotation(in_file)+"\nout_file: "+add_squotation(out_file)+"\ncommand: "+add_squotation(command));
         run_timer.init();
         show_cursor();
         exit_code=ssystem(command)/sys_exit_code;
@@ -63,7 +63,7 @@ class runner
         }
         if(!if_end)
         {
-            WARN("run timeout","file: "+add_quotation(get_exefile(file)));
+            WARN("run timeout","file: "+add_squotation(get_exefile(file)));
             kill_task(get_exefilename(file));
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
