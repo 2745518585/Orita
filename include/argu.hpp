@@ -15,7 +15,7 @@ class arguer
     {
         std::string argu_str;
         for(int i=1;i<=argc-1;++i) argu_str+=std::string(argv[i])+" ";
-        INFO("argu",argu_str);
+        INFO("argu",add_squo(argu_str));
         for(int i=1;i<=argc-1;++i)
         {
             if(check_if_argu(argv[i]))
