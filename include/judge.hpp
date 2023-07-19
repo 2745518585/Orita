@@ -43,7 +43,7 @@ class runner
     void run_run()
     {
         const std::string command=""+add_quo(get_exefile(file))+" "+argu+" "+(in_file!=""?" < "+add_quo(in_file):"")+(out_file!=""?" > "+add_quo(out_file):"");
-        INFO("start run","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file))+"\nargu: "+argu+"\nin_file: "+add_squo(in_file)+"\nout_file: "+add_squo(out_file)+"\ncommand: "+add_squo(command));
+        INFO("start run","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file)),"argu: "+add_squo(argu),"in_file: "+add_squo(in_file),"out_file: "+add_squo(out_file),"command: "+add_squo(command));
         run_timer.init();
         show_cursor();
         exit_code=ssystem(command)/sys_exit_code;
