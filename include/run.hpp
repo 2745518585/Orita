@@ -17,13 +17,11 @@ namespace Run
         {
             Init::begin();
             Files::begin();
-            Data::begin();
         }
         ~Init_run()
         {
             Init::end();
             Files::end();
-            Data::end();
         }
     }_Init_run;
 }

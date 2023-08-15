@@ -42,7 +42,7 @@ int check_main()
         add_file(_check_chk,chk_str);
         chk=add_namesuf(get_file(chk_str),".cpp");
     }
-    else chk=add_namesuf(get_file("%1"),".cpp");
+    else chk=add_namesuf(get_file(default_checker),".cpp");
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // init total sum

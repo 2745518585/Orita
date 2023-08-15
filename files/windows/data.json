@@ -1,4 +1,5 @@
 {
     "compile_argu": "-std=c++14 -O2",
+    "default_checker": "%1",
     "time": 1000
 }

@@ -30,7 +30,7 @@ int run_main()
         add_file(_run_chk,chk_str);
         chk=add_namesuf(get_file(chk_str),".cpp");
     }
-    else chk=add_namesuf(get_file("%1"),".cpp");
+    else chk=add_namesuf(get_file(default_checker),".cpp");
     // init time
     if(argus.get_sum_argu("t")==1) change_time_limit((tim)stoi(argus["t"][1]));
     // find file
