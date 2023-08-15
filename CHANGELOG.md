@@ -211,22 +211,16 @@ Orita 第一个正式版本。
 
 2023-05-23
 
-#### 新增
+#### Features
 
-- 添加 `LOG`。
-- 封装 `argu`。
-- `reset` 集成至 `orita` 中。
-- 清空配置文件。
-- 使用终端默认颜色，取消自定义颜色。
-- `judge` 自动读取数据。
-- 删除 `changna`。
-- 使用 `spdlog`。
+- Using [spdlog](https://github.com/gabime/spdlog) to output logs.
+- Replace command `reset_Orita` with `orita reset`.
+- Use default color in terminal.
+- Command `orita judge` read data using wildcards.
+- Delete command `orita changna`.
+- Add data settings `dafault_checker`.
 
-#### 修复
+#### Fixs
 
-- `compile` `/t` 无法使用。
-- `kill task` 在 `Linux` 下无法使用。
-
-#### 代码
-
-- 修改 `name` 实现。
+- `orita compile /t` didn't work。
+- Killing tasks cannot run successfully in Linux。
