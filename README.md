@@ -8,22 +8,38 @@
 
 Orita 的配套 vscode 拓展。
 
-## 初始化
+## 安装
 
-使用前需要保证环境为 `Windows` 或 `Linux` 环境，电脑中有支持 `C++20` 的 `g++` 且已加入环境变量（即可以在控制台运行 `g++`）。最好有版本 `3.15` 以上的 `CMake`。
+在安装 Orita 前，需要保证环境为 Windows 或 Linux 环境，计算机上需要安装以下应用程序：
 
-如果有 `CMake`，直接编译即可。否则运行 `Orita/` 目录下的 `init.bat`（`Windows`）或 `init.sh`（`Linux`）。
+- [CMake](https://cmake.org/)
 
-- 如果希望通过在所有命令前加上 `orita` 来调用（如 `orita run`，用于与其它命令冲突时），运行 `Orita/bin/` 目录下的 `init.bat`（`Windows`）或 `init.sh`（`Linux`），然后将 `Orita/bin/` 目录加入环境变量。
-- 否则将 `Orita/build/` 目录加入环境变量。
+通过以下命令获取 Orita 源代码：
+
+```
+$ git clone https://github.com/2745518585/Orita
+```
+
+在 `Orita/` 目录下运行以下命令来编译源代码：
+
+```
+$ mkdir build
+$ cd build
+$ cmake ..
+$ cmake --build .
+```
+
+请保证 `Orita/bin/` 中的程序能被全局调用。
+
+为了正常使用 Orita，请保证计算机上有支持 C++14 的 C++ 编译器 g++，并能在控制台中全局调用。
 
 使用 `orita reset` 命令初始化并清空配置。
 
-## 全局逻辑
+## 用法
 
 ### 参数系统
 
-所有命令的参数格式均为 `/i argu ...`，每个参数的范围为声明至下一个参数或结尾。
+所有命令的参数格式均为 `/i arg ...` 或 `-i arg`，每个参数的范围为声明至下一个参数或结尾。
 
 如参数中含空格需加引号，且参数中需要使用引号请使用 `\"`。
 
@@ -41,23 +57,21 @@ Orita 内置了一些文件来方便使用，其初始化后位于文件缓存�
 
 $0$ 槽位：空，总是返回 $0$。
 
-$1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，返回 `ans` 和 `out` 忽略行末空格和文末换行的比较结果。
+$1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，返回 `out` 和 `ans` 忽略行末空格和文末换行的比较结果。
 
 ## 命令
 
-### orita
+### reset
 
-`orita ...`
+`orita reset`
 
-#### 描述 
+重置配置。
 
-查看 Orita 相关信息。
+### clear
 
-`reset` 重置配置。
+`orita clear`
 
-`clear` 清空配置。
-
-否则运行命令。
+删除配置文件。
 
 ### run
 
@@ -143,7 +157,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 ### compile
 
-`compile [[/r <file>] | [/t <file>] | [/f file...]] [/o compile_argu] [/p run_argu]`
+`compile [[/r <file>] | [/t <file>] | [/f file...]] [/o compile_arg] [/p run_arg]`
 
 #### 描述
 
@@ -157,9 +171,9 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `ans` `out` 文件，�
 
 `/f file...`    给定多个编译源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。
 
-`/o compile_argu`    给定编译参数。
+`/o compile_arg`    给定编译参数。
 
-`/p run_argu`    给定运行参数。
+`/p run_arg`    给定运行参数。
 
 ### cmp
 
