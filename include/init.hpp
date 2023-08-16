@@ -342,18 +342,22 @@ int kill_task(const std::string &task)
 json settings;
 namespace Init
 {
-    void begin()
+    class Init
     {
-        orita_log.clear();
-        (std::ifstream)(makepath(appdata_path,"settings.json"))>>settings;
-        hide_cursor();
-        INFO("orita start");
-    }
-    void end()
-    {
-        (std::ofstream)(makepath(appdata_path,"settings.json"))<<std::setw(4)<<settings;
-        show_cursor();
-        INFO("orita end");
-    }
+      public:
+        Init()
+        {
+            orita_log.clear();
+            (std::ifstream)(makepath(appdata_path,"settings.json"))>>settings;
+            hide_cursor();
+            INFO("orita start");
+        }
+        ~Init()
+        {
+            (std::ofstream)(makepath(appdata_path,"settings.json"))<<std::setw(4)<<settings;
+            show_cursor();
+            INFO("orita end");
+        }
+    }_Init;
 }
 #endif

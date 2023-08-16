@@ -13,14 +13,18 @@ namespace Files
 {
     #define number_len 3
     json files_json;
-    void begin()
+    class Init_files
     {
-        (std::ifstream)(makepath(appdata_path,"file.json"))>>files_json;
-    }
-    void end()
-    {
-        (std::ofstream)(makepath(appdata_path,"file.json"))<<std::setw(4)<<files_json;
-    }
+      public:
+        Init_files()
+        {
+            (std::ifstream)(makepath(appdata_path,"file.json"))>>files_json;
+        }
+        ~Init_files()
+        {
+            (std::ofstream)(makepath(appdata_path,"file.json"))<<std::setw(4)<<files_json;
+        }
+    }_Init_files;
     class file_number
     {
       public:
