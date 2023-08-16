@@ -360,4 +360,34 @@ namespace Init
         }
     }_Init;
 }
+const unsigned max_thread_num=[]()
+{
+    if(settings["max_thread_num"].type()!=json::value_t::number_unsigned)
+    {
+        ERROR("invaild thread num");
+        class invaild_thread_num {}error;
+        throw error;
+    }
+    return (unsigned)settings["max_thread_num"];
+}();
+const tim runtime_limit=[]()
+{
+    if(settings["runtime_limit"].type()!=json::value_t::number_unsigned)
+    {
+        ERROR("invaild runtime limit");
+        class invaild_exe_suf {}error;
+        throw error;
+    }
+    return (tim)settings["runtime_limit"];
+}();
+const std::string exe_suf=[]()
+{
+    if(settings["exe_suf"].type()!=json::value_t::string)
+    {
+        ERROR("invaild exe suf");
+        class invaild_exe_suf {}error;
+        throw error;
+    }
+    return (std::string)settings["exe_suf"];
+}();
 #endif

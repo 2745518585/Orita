@@ -18,7 +18,7 @@ int compile_main()
     {
         for(int i=1;i<=argus["o"].size();++i) compile_argu=compile_argu+" "+argus["o"][i];
     }
-    else compile_argu=get_compile_argu();
+    else compile_argu=compile_argu;
     std::string run_argu;
     if(argus["p"].appear())
     {

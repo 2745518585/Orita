@@ -69,12 +69,12 @@ class compiler
             read_lock2.unlock();
         }
     }
-    compiler(int thread_sum)
+    compiler(unsigned thread_sum)
     {
-        thread_sum=std::min(thread_sum,(int)settings["max_thread_num"]);
+        thread_sum=std::min(thread_sum,max_thread_num);
         running_sum=0;
         if_end=false;
-        for(int i=1;i<=thread_sum;++i) std::thread(&compiler::auto_compile,this).detach();
+        for(unsigned i=1;i<=thread_sum;++i) std::thread(&compiler::auto_compile,this).detach();
         INFO("start compiler","id: "+to_string_hex(this),"thread sum: "+std::to_string(thread_sum));
     }
     ~compiler()

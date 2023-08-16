@@ -171,11 +171,11 @@ namespace Files
     }
     std::string get_exefile(const std::string &file)
     {
-        return makepath(get_filepath(file),get_filenamepre(file)+(std::string)settings["exe_suf"]);
+        return makepath(get_filepath(file),get_filenamepre(file)+exe_suf);
     }
     std::string get_exefilename(const std::string &file)
     {
-        return get_filenamepre(file)+(std::string)settings["exe_suf"];
+        return get_filenamepre(file)+exe_suf;
     }
     #undef number_len
 }

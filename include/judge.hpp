@@ -39,7 +39,7 @@ class runner
     std::atomic<bool> if_end;
     std::mutex wait_lock;
     std::condition_variable wait;
-    runner(const std::string &_file,const std::string &_in_file,const std::string &_out_file,const std::string &_argu="",const tim _time_limit=(tim)settings["runtime_limit"]):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
+    runner(const std::string &_file,const std::string &_in_file,const std::string &_out_file,const std::string &_argu="",const tim _time_limit=runtime_limit):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
     void run_run()
     {
         const std::string command=""+add_quo(get_exefile(file))+" "+argu+" "+(in_file!=""?" < "+add_quo(in_file):"")+(out_file!=""?" > "+add_quo(out_file):"");
