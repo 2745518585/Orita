@@ -2,7 +2,7 @@
 #ifndef _FILE_COMPILE
 #define _FILE_COMPILE _FILE_COMPILE
 #include"files.hpp"
-#include"data.hpp"
+#include"settings.hpp"
 namespace Compile
 {
     int compile(const std::string &file,const std::string &compile_argu="",const bool if_print=true)

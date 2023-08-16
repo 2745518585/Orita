@@ -2,7 +2,7 @@
 #ifndef _FILE_JUDGE
 #define _FILE_JUDGE _FILE_JUDGE
 #include"files.hpp"
-#include"data.hpp"
+#include"settings.hpp"
 #include"print.hpp"
 namespace Judge
 {

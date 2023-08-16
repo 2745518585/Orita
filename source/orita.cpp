@@ -17,20 +17,14 @@ int main(int argc,char **argv)
         #ifdef _WIN32
         ssystem("rmdir /s /Q "+add_quo(appdata_path)+system_to_nul);
         ssystem("mkdir "+add_quo(appdata_path)+system_to_nul);
-        ssystem("mkdir "+add_quo(makepath(appdata_path,"data"))+system_to_nul);
-        ssystem("echo 0 > "+add_quo(makepath(appdata_path,"data","data.in")));
-        ssystem("echo 0 > "+add_quo(makepath(appdata_path,"data","data.out")));
-        ssystem("mkdir "+add_quo(makepath(appdata_path,"random"))+system_to_nul);
-        ssystem("copy "+add_quo(makepath(file_path,"files","windows",""))+"* "+add_quo(appdata_path)+system_to_nul);
+        ssystem("echo "+makepath(file_path,"build")+" > "+add_quo(makepath(appdata_path,"path.txt")));
+        ssystem("xcopy /s /e /i /h /y "+add_quo(makepath(file_path,"files","windows",""))+"* "+add_quo(appdata_path)+system_to_nul);
         #endif
         #ifdef __linux__
         ssystem("rm -r "+add_quo(appdata_path)+system_to_nul);
         ssystem("mkdir "+add_quo(appdata_path)+system_to_nul);
-        ssystem("mkdir "+add_quo(makepath(appdata_path,"data"))+system_to_nul);
-        ssystem("echo 0 > "+add_quo(makepath(appdata_path,"data","data.in")));
-        ssystem("echo 0 > "+add_quo(makepath(appdata_path,"data","data.out")));
-        ssystem("mkdir "+add_quo(makepath(appdata_path,"random"))+system_to_nul);
-        ssystem("cp "+add_quo(makepath(file_path,"files","linux",""))+"* "+add_quo(appdata_path)+system_to_nul);
+        ssystem("echo "+makepath(file_path,"build")+" > "+add_quo(makepath(appdata_path,"path.txt")));
+        ssystem("cp -r "+add_quo(makepath(file_path,"files","linux",""))+"* "+add_quo(appdata_path)+system_to_nul);
         #endif
         return 0;
     }
