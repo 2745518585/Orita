@@ -213,12 +213,14 @@ Orita 第一个正式版本。
 
 #### Features
 
-- Using [spdlog](https://github.com/gabime/spdlog) to output logs.
+- Use [spdlog](https://github.com/gabime/spdlog) to output logs.
 - Replace command `reset_Orita` with `orita reset`.
 - Use default color in terminal.
-- Command `orita judge` read data using wildcards.
+- Command `orita judge` read data by wildcards.
 - Delete command `orita changna`.
 - Add data settings `dafault_checker`.
+- Add some error while reading settings.
+- Add `bin/`.
 
 #### Fixs
 

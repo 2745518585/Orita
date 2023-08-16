@@ -29,7 +29,7 @@ $ cmake ..
 $ cmake --build .
 ```
 
-请保证 `Orita/bin/` 中的程序能被全局调用。
+运行 `Orita/bin/` 目录下的 `init.bat | init.sh` 编译得到入口文件，请保证 `Orita/bin/` 中的可执行文件能被全局调用，可以任意移动可执行文件位置。使用 CMake 编译时会自动输出源文件所在位置，如果移动源文件后请执行 `Orita/` 目录下的 `init.bat | init.sh`。
 
 为了正常使用 Orita，请保证计算机上有支持 C++14 的 C++ 编译器 g++，并能在控制台中全局调用。
 

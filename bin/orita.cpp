@@ -1,36 +1,43 @@
-#include<iostream>
 #include<string>
+#include<fstream>
+
+std::string add_quo(const std::string &str)
+{
+    return "\""+str+"\"";
+}
+
 #ifdef _WIN32
-#include<windows.h>
 char PS='\\';
 #endif
 #ifdef __linux__
 char PS='/';
 #endif
-std::string get_file_path()
+std::string makepath(const std::string &path) {return path;}
+template<typename ...others_type> std::string makepath(const std::string &path,const others_type ...others) {return path+PS+makepath(others...);}
+
+std::string get_appdata_path()
 {
-    char tmp[10001];
     #ifdef _WIN32
-    GetModuleFileNameA(NULL,tmp,MAX_PATH);
+    return makepath(getenv("appdata"),"Orita");
     #endif
     #ifdef __linux__
-    realpath("/proc/self/exe",tmp);
+    return makepath(getenv("HOME"),".Orita");
     #endif
-    std::string path=tmp;
-    return path.substr(0,path.find_last_of(PS,path.find_last_of(PS)-1));
 }
 int main(int argc,char **argv)
 {
-    std::string command=get_file_path();
+    std::string path;
+    (std::ifstream)(makepath(get_appdata_path(),"path.txt"))>>path;
     #ifdef _WIN32
-    command="\""+command+PS+"build"+PS+"orita.exe"+"\"";
+    path=makepath(path,"orita.exe");
     #endif
     #ifdef __linux__
-    command="\""+command+PS+"build"+PS+"orita"+"\"";
+    path=makepath(path,"orita");
     #endif
+    std::string command=add_quo(path);
     for(int i=1;i<argc;++i) command+=" \""+std::string(argv[i])+"\" ";
     #ifdef _WIN32
-    system(("cmd /C \""+command+"\"").c_str());
+    system(("cmd /C "+add_quo(command)).c_str());
     #endif
     #ifdef __linux__
     system(command.c_str());

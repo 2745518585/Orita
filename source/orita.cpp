@@ -8,7 +8,7 @@ int main(int argc,char **argv)
         std::cout<<"  Orita - Useful OI Tools\n";
         std::cout<<"  Version: Dev "<<PROJECT_VERSION<<"\n";
         std::cout<<"  Repository: https://github.com/2745518585/Orita\n";
-        std::cout<<"  Local Address: "<<file_path<<"\n";
+        std::cout<<"  Local Path: "<<file_path<<"\n";
         std::cout<<"--------------------------------------------------\n";
         return 0;
     }

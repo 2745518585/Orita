@@ -1,0 +1,1 @@
+echo %~dp0build > %APPDATA%\Orita\path.txt 

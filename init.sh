@@ -1,0 +1,1 @@
+echo $(cd $(dirname $0); pwd)/build > $HOME/.Orita/path.txt
