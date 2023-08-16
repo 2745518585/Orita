@@ -1,5 +1,10 @@
 {
+    "data": {
+        "compile_argu": "-std=c++14 -O2",
+        "default_checker": "%1",
+        "time": 1000
+    },
+    "exe_suf": ".exe",
     "max_thread_num": 10,
-    "runtime_limit": 1000,
-    "exe_suf": ""
+    "runtime_limit": 1000
 }

@@ -4,43 +4,26 @@
 #include"init.hpp"
 namespace Data
 {
-    json data_json;
-    class Init_data
-    {
-      public:
-        Init_data()
-        {
-            std::ifstream file(makepath(appdata_path,"data.json"));
-            file>>data_json;
-            file.close();
-        }
-        ~Init_data()
-        {
-            std::ofstream file(makepath(appdata_path,"data.json"));
-            file<<std::setw(4)<<data_json;
-            file.close();
-        }
-    }_Init_data;
     void change_time_limit(const tim time)
     {
-        data_json["time"]=time.count();
+        settings["data"]["time"]=time.count();
     }
     tim get_time_limit()
     {
-        return (tim)data_json["time"];
+        return (tim)settings["data"]["time"];
     }
     void change_compile_argu(const std::string &argu)
     {
-        data_json["compile_argu"]=systoUTF8(argu);
+        settings["data"]["compile_argu"]=systoUTF8(argu);
     }
     std::string get_compile_argu()
     {
-        return UTF8tosys(data_json["compile_argu"]);
+        return UTF8tosys(settings["data"]["compile_argu"]);
     }
 }
 void change_time_limit(const tim time) {Data::change_time_limit(time);}
 tim get_time_limit() {return Data::get_time_limit();}
 void change_compile_argu(const std::string &argu) {Data::change_compile_argu(argu);}
 std::string get_compile_argu() {return Data::get_compile_argu();}
-const std::string default_checker=(std::string)Data::data_json["default_checker"];
+const std::string default_checker=(std::string)settings["data"]["default_checker"];
 #endif
