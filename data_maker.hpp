@@ -11,44 +11,34 @@
 #include<map>
 #include<random>
 #include<ctime>
-#define _NEQ 1
-#define _LES 2
-#define _GRE 3
-#define _LOE 4
-#define _GOE 5
 namespace Data_maker
 {
     #ifdef _WIN32
     char PS='\\';
-    std::string sPS="\\";
-    #define _PS "\\"
     #endif
     #ifdef __linux__
     char PS='/';
-    std::string sPS="/";
-    #define _PS "/"
     #endif
+    std::string makepath(const std::string &path) {return path;}
+    template<typename ...others_type> std::string makepath(const std::string &path,const others_type ...others) {return path+PS+makepath(others...);}
+
     std::string get_appdata_path()
     {
         #ifdef _WIN32
-        return getenv("appdata")+sPS+"Orita";
+        return makepath(getenv("appdata"),"Orita");
         #endif
         #ifdef __linux__
-        return getenv("HOME")+sPS+".Orita";
+        return makepath(getenv("HOME"),".Orita");
         #endif
     }
     typedef long long ll;
     typedef unsigned long long ull;
     unsigned int init_rnd()
     {
-        std::ifstream infile(get_appdata_path()+sPS+"random"+sPS+"seed.txt");
         unsigned int seed;
-        infile>>seed;
-        infile.close();
-        seed=seed+(seed<<7)+(seed>>11)+(seed<<13)+time(NULL);
-        std::ofstream outfile(get_appdata_path()+sPS+"random"+sPS+"seed.txt");
-        outfile<<seed;
-        outfile.close();
+        (std::ifstream)(makepath(get_appdata_path(),"random","seed.txt"))>>seed;
+        seed=((std::mt19937)(seed))();
+        (std::ofstream)(makepath(get_appdata_path(),"random","seed.txt"))<<seed;
         return seed;
     }
     std::mt19937 rd(init_rnd());
@@ -65,44 +55,26 @@ namespace Data_maker
         return rnd(ulim-llim+1)+llim;
     }
     std::map<int,std::pair<ll,ll>> pairs;
-    std::pair<ll,ll> rnd_pair(ll llim,ll ulim,int opra)
+    template<typename Type> std::pair<ll,ll> rnd_pair(ll llim,ll ulim,Type checker)
     {
-        auto checker=[&](ll s1,ll s2)
-        {
-            if(opra==_NEQ) return s1!=s2;
-            if(opra==_LES) return s1<s2;
-            if(opra==_GRE) return s1>s2;
-            if(opra==_LOE) return s1<=s2;
-            if(opra==_GOE) return s1>=s2;
-            return false;
-        };
         ll s1=rnd(llim,ulim),s2=rnd(llim,ulim);
         while(!checker(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
         return std::make_pair(s1,s2);
     }
-    std::pair<ll,ll> rnd_pair(ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
+    template<typename Type> std::pair<ll,ll> rnd_pair(ll llim1,ll ulim1,ll llim2,ll ulim2,Type checker)
     {
-        auto checker=[&](ll s1,ll s2)
-        {
-            if(opra==_NEQ) return s1!=s2;
-            if(opra==_LES) return s1<s2;
-            if(opra==_GRE) return s1>s2;
-            if(opra==_LOE) return s1<=s2;
-            if(opra==_GOE) return s1>=s2;
-            return false;
-        };
         ll s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
         while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
         return std::make_pair(s1,s2);
     }
-    std::pair<ll,ll> reg_pair(int num,ll llim,ll ulim,int opra)
+    template<typename Type> std::pair<ll,ll> reg_pair(int num,ll llim,ll ulim,Type checker)
     {
-        pairs[num]=rnd_pair(llim,ulim,opra);
+        pairs[num]=Data_maker::rnd_pair(llim,ulim,checker);
         return pairs[num];
     }
-    std::pair<ll,ll> reg_pair(int num,ll llim1,ll ulim1,ll llim2,ll ulim2,int opra)
+    template<typename Type> std::pair<ll,ll> reg_pair(int num,ll llim1,ll ulim1,ll llim2,ll ulim2,Type checker)
     {
-        pairs[num]=rnd_pair(llim1,ulim1,llim2,ulim2,opra);
+        pairs[num]=Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,checker);
         return pairs[num];
     }
     std::pair<ll,ll> reg_pair(int num)
@@ -110,6 +82,11 @@ namespace Data_maker
         if(!pairs.count(num)) return std::make_pair(0,0);
         return pairs[num];
     }
+    auto _NEQ=[](long long s1,long long s2) {return s1!=s2;};
+    auto _LES=[](long long s1,long long s2) {return s1<s2;};
+    auto _GRE=[](long long s1,long long s2) {return s1>s2;};
+    auto _LOE=[](long long s1,long long s2) {return s1<=s2;};
+    auto _GOE=[](long long s1,long long s2) {return s1>=s2;};
     std::vector<std::pair<int,int>> rnd_tree(int tot)
     {
         int *fa=new int[tot+1];
@@ -150,14 +127,20 @@ namespace Data_maker
         return ans;
     }
 }
+std::mt19937 rd=Data_maker::rd;
 unsigned long long rnd(){return Data_maker::rnd();}
 long long rnd(long long lim){return Data_maker::rnd(lim);}
 long long rnd(long long llim,long long ulim){return Data_maker::rnd(llim,ulim);}
-std::pair<long long,long long> rnd_pair(long long llim,long long ulim,int opra){return Data_maker::rnd_pair(llim,ulim,opra);}
-std::pair<long long,long long> rnd_pair(long long llim1,long long ulim1,long long llim2,long long ulim2,int opra){return Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,opra);}
-std::pair<long long,long long> reg_pair(int num,long long llim,long long ulim,int opra){return Data_maker::reg_pair(num,llim,ulim,opra);}
-std::pair<long long,long long> reg_pair(int num,long long llim1,long long ulim1,long long llim2,long long ulim2,int opra){return Data_maker::reg_pair(num,llim1,ulim1,llim2,ulim2,opra);}
+template<typename Type> std::pair<long long,long long> rnd_pair(long long llim,long long ulim,Type checker){return Data_maker::rnd_pair(llim,ulim,checker);}
+template<typename Type> std::pair<long long,long long> rnd_pair(long long llim1,long long ulim1,long long llim2,long long ulim2,Type checker){return Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,checker);}
+template<typename Type> std::pair<long long,long long> reg_pair(int num,long long llim,long long ulim,Type checker){return Data_maker::reg_pair(num,llim,ulim,checker);}
+template<typename Type> std::pair<long long,long long> reg_pair(int num,long long llim1,long long ulim1,long long llim2,long long ulim2,Type checker){return Data_maker::reg_pair(num,llim1,ulim1,llim2,ulim2,checker);}
 std::pair<long long,long long> reg_pair(int num){return Data_maker::reg_pair(num);}
+auto _NEQ=[](long long s1,long long s2) {return s1!=s2;};
+auto _LES=[](long long s1,long long s2) {return s1<s2;};
+auto _GRE=[](long long s1,long long s2) {return s1>s2;};
+auto _LOE=[](long long s1,long long s2) {return s1<=s2;};
+auto _GOE=[](long long s1,long long s2) {return s1>=s2;};
 std::vector<std::pair<int,int>> rnd_tree(int tot){return Data_maker::rnd_tree(tot);}
 std::vector<std::pair<int,int>> rnd_ucgraph(int totp,int tote){return Data_maker::rnd_ucgraph(totp,tote);}
 #endif
