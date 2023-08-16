@@ -51,7 +51,7 @@ namespace Print
         if(result.is(res::type::WA)) return "WA";
         if(result.is(res::type::RE)) return "RE";
         if(result.is(res::type::TLE_CA)) return "TLE_CA";
-        if(result.is(res::type::TLE_WA)) return "TLEres::type::WA";
+        if(result.is(res::type::TLE_WA)) return "TLE_WA";
         if(result.is(res::type::TLE_O)) return "TLE_O";
         if(result.is(res::type::CE)) return "CE";
         if(result.is(res::type::SA)) return "SA";
