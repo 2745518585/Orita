@@ -1,9 +1,20 @@
 #include<string>
 #include<fstream>
+#include<regex>
 
 std::string add_quo(const std::string &str)
 {
     return "\""+str+"\"";
+}
+
+int ssystem(const std::string &command)
+{
+    #ifdef _WIN32
+    return system(("cmd /C "+add_quo(command)).c_str());
+    #endif
+    #ifdef __linux__
+    return system(command.c_str());
+    #endif
 }
 
 #ifdef _WIN32
@@ -35,12 +46,7 @@ int main(int argc,char **argv)
     path=makepath(path,"orita");
     #endif
     std::string command=add_quo(path);
-    for(int i=1;i<argc;++i) command+=" \""+std::string(argv[i])+"\" ";
-    #ifdef _WIN32
-    system(("cmd /C "+add_quo(command)).c_str());
-    #endif
-    #ifdef __linux__
-    system(command.c_str());
-    #endif
+    for(int i=1;i<argc;++i) command+=" "+add_quo(std::regex_replace(argv[i],std::regex("\""),"\\\""))+" ";
+    ssystem(command);
     return 0;
 }

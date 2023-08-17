@@ -233,3 +233,4 @@ Orita 第一个正式版本。
 
 - `data_maker` can use custom function.
 - Delete `orita cmp`.
+- replace `setfile` with `config`.

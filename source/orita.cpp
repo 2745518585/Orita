@@ -44,12 +44,7 @@ int main(int argc,char **argv)
     #ifdef __linux__
     std::string command=add_quo(makepath(file_path,"build",argv[1]));
     #endif
-    for(int i=2;i<argc;++i) command+=" "+add_quo(std::string(argv[i]))+" ";
-    #ifdef _WIN32
-    system(("cmd /C "+add_quo(command)).c_str());
-    #endif
-    #ifdef __linux__
-    system(command.c_str());
-    #endif
+    for(int i=2;i<argc;++i) command+=" "+add_quo(std::regex_replace(argv[i],std::regex("\""),"\\\""))+" ";
+    ssystem(command);
     return 0;
 }
