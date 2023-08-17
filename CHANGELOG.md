@@ -226,3 +226,10 @@ Orita 第一个正式版本。
 
 - `orita compile /t` didn't work。
 - Killing tasks cannot run successfully in Linux。
+
+### Dev 0.1.4
+
+#### Features
+
+- `data_maker` can use custom function.
+- Delete `orita cmp`.

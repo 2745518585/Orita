@@ -14,10 +14,6 @@ project(check)
 add_executable(check source/check.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-project(cmp)
-add_executable(cmp source/cmp.cpp)
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
 project(compile)
 add_executable(compile source/compile.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
