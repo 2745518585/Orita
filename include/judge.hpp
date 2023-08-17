@@ -4,30 +4,6 @@
 #include"files.hpp"
 #include"settings.hpp"
 #include"print.hpp"
-namespace Judge
-{
-    int compare(const std::string &file1,const std::string &file2)
-    {
-        std::ifstream infile1(file1),infile2(file2);
-        std::string str1,str2;
-        bool empty1=0,empty2=0;
-        while(true)
-        {
-            bool end1=bool(!getline(infile1,str1)),end2=bool(!getline(infile2,str2));
-            if(end1&&end2) break;
-            while(str1[str1.size()-1]==' ') str1=str1.substr(0,str1.size()-1);
-            while(str2[str2.size()-1]==' ') str2=str2.substr(0,str2.size()-1);
-            if(end1||str1.size()==0) empty1=true;
-            else empty1=false;
-            if(end2||str2.size()==0) empty2=true;
-            else empty2=false;
-            if(empty1^empty2) return 1;
-            if(strcmp(str1.c_str(),str2.c_str())!=0) return 1;
-        }
-        return 0;
-    }
-}
-int compare(const std::string &file1,const std::string &file2) {return Judge::compare(file1,file2);}
 class runner
 {
   public:
