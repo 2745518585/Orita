@@ -272,10 +272,10 @@ const std::string system_con="/dev/tty";
 const std::string system_to_con=" > /dev/tty 2>&1 ";
 #endif
 #ifdef _WIN32
-const int sys_exit_code=1;
+const int sys_exit_code=0;
 #endif
 #ifdef __linux__
-const int sys_exit_code=256;
+const int sys_exit_code=8;
 #endif
 int ssystem(const std::string &command)
 {

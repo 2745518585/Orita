@@ -22,7 +22,7 @@ class runner
         INFO("start run","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file)),"argu: "+add_squo(argu),"in_file: "+add_squo(in_file),"out_file: "+add_squo(out_file),"command: "+add_squo(command));
         run_timer.init();
         show_cursor();
-        exit_code=ssystem(command)/sys_exit_code;
+        exit_code=ssystem(command)>>sys_exit_code;
         hide_cursor();
         time=run_timer.get_time();
         if_end=true;
