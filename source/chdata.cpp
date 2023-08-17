@@ -1,5 +1,5 @@
 #include"run.hpp"
-json make_cor_argu()
+const json make_cor_argu()
 {
     json cor_argu={
         {"f",{arguer::ND,2}},
@@ -10,7 +10,7 @@ json make_cor_argu()
     };
     return cor_argu;
 }
-json cor_argu=make_cor_argu();
+const json cor_argu=make_cor_argu();
 int chdata_main()
 {
     std::string in_file=check_file(argus["f"].get(1),argus["if"].get(1));

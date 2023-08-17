@@ -1,5 +1,5 @@
 #include"run.hpp"
-json make_cor_argu()
+const json make_cor_argu()
 {
     json cor_argu={
         {"f",{arguer::ND,3}},
@@ -12,7 +12,7 @@ json make_cor_argu()
     };
     return cor_argu;
 }
-json cor_argu=make_cor_argu();
+const json cor_argu=make_cor_argu();
 const std::string _in_name="data_maker";
 const std::string _out_name="std";
 const std::string _ans_name="ans";

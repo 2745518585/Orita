@@ -1,5 +1,5 @@
 #include"run.hpp"
-json make_cor_argu()
+const json make_cor_argu()
 {
     json cor_argu={
         {"f",{arguer::ND,1}},
@@ -11,7 +11,7 @@ json make_cor_argu()
     };
     return cor_argu;
 }
-json cor_argu=make_cor_argu();
+const json cor_argu=make_cor_argu();
 const std::string _ans_name="ans";
 const std::string _chk_name="checker";
 int judge_main()

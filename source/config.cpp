@@ -1,5 +1,5 @@
 #include"run.hpp"
-json make_cor_argu()
+const json make_cor_argu()
 {
     json cor_argu={
         {"s",{arguer::ND,0,1,2}},
@@ -7,7 +7,7 @@ json make_cor_argu()
     };
     return cor_argu;
 }
-json cor_argu=make_cor_argu();
+const json cor_argu=make_cor_argu();
 int config_main()
 {
     if(argus["s"].appear())
