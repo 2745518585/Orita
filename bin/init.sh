@@ -1,1 +1,0 @@
-g++ orita.cpp -o orita -std=c++14 -O2 -I ${dir}/include -w;
