@@ -14,7 +14,7 @@ int config_main()
     {
         if(argus["s"].size()==0)
         {
-            std::cout<<std::setw(4)<<settings;
+            std::cout<<std::setw(4)<<settings<<"\n";
         }
         else if(argus["s"].size()==1)
         {
@@ -29,7 +29,7 @@ int config_main()
     {
         if(argus["f"].size()==0)
         {
-            std::cout<<std::setw(4)<<Files::files_json;
+            std::cout<<std::setw(4)<<Files::files_json<<"\n";
         }
         else if(argus["f"].size()==1)
         {
