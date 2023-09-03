@@ -15,7 +15,7 @@ class arguer
     {
         std::string argu_str;
         for(int i=1;i<=argc-1;++i) argu_str+=std::string(argv[i])+" ";
-        INFO("argu",add_squo(argu_str));
+        INFO("argu",add_squo(systoUTF8(argu_str)));
         for(int i=1;i<=argc-1;++i)
         {
             if(check_if_argu(argv[i]))
@@ -24,7 +24,7 @@ class arguer
                 int j=1;
                 for(;i+j<=argc-1&&!check_if_argu(argv[i+j]);++j)
                 {
-                    argus[argu][j]=argv[i+j];
+                    argus[argu][j]=systoUTF8(argv[i+j]);
                 }
                 sum_argus[argu]=j-1;
                 i+=j-1;
@@ -37,6 +37,7 @@ class arguer
     {
         for(auto argu:argus.items())
         {
+            DEBUG((std::string)argu.key());
             if(cor_argu[argu.key()].is_null()) return 1;
         }
         for(auto argu:cor_argu.items())

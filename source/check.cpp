@@ -20,29 +20,34 @@ const std::string _chk_name="checker";
 int check_main()
 {
     // init name
-    std::string in,out,ans,chk;
+    const pat in=[]()
     {
-        const std::string in_str=check_file(argus["f"].get(1),argus["if"].get(1),_check_in);
+        const pat in_str=check_file(argus["f"].get(1),argus["if"].get(1),_check_in);
         add_file(_check_in,in_str);
-        in=add_namesuf(get_file(in_str),".cpp");
-    }
+        return add_namesuf(get_file(in_str),".cpp");
+    }();
+    const pat out=[]()
     {
-        const std::string out_str=check_file(argus["f"].get(2),argus["of"].get(1),_check_out);
+        const pat out_str=check_file(argus["f"].get(2),argus["of"].get(1),_check_out);
         add_file(_check_out,out_str);
-        out=add_namesuf(get_file(out_str),".cpp");
-    }
+        return add_namesuf(get_file(out_str),".cpp");
+    }();
+    const pat ans=[]()
     {
-        const std::string ans_str=check_file(argus["f"].get(3),argus["af"].get(1),_check_ans);
+        const pat ans_str=check_file(argus["f"].get(3),argus["af"].get(1),_check_ans);
         add_file(_check_ans,ans_str);
-        ans=add_namesuf(get_file(ans_str),".cpp");
-    }
-    if(argus["c"].appear())
+        return add_namesuf(get_file(ans_str),".cpp");
+    }();
+    const pat chk=[]()
     {
-        const std::string chk_str=check_file(argus["c"].get(1),_check_chk);
-        add_file(_check_chk,chk_str);
-        chk=add_namesuf(get_file(chk_str),".cpp");
-    }
-    else chk=add_namesuf(get_file(default_checker),".cpp");
+        if(argus["c"].appear())
+        {
+            const pat chk_str=check_file(argus["c"].get(1),_check_chk);
+            add_file(_check_chk,chk_str);
+            return add_namesuf(get_file(chk_str),".cpp");
+        }
+        else return add_namesuf(get_file(default_checker),".cpp");
+    }();
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // init total sum
@@ -51,16 +56,21 @@ int check_main()
         print_result(res::type::SS);
         return 0;
     }
-    int total_sum=stoi(argus["n"][1]);
+    unsigned total_sum=stoi(argus["n"][1]);
     // init data dir
-    remove_dir("data");
-    make_dir("data");
-    make_dir(makepath("data","datas"));
+    std::filesystem::remove_all("data");
+    std::filesystem::create_directory("data");
+    std::filesystem::create_directory((pat)"data"/"datas");
+    // find name
+    if(in==pat()) {print_result(_in_name,res::type::NF);return 0;}
+    if(out==pat()) {print_result(_out_name,res::type::NF);return 0;}
+    if(ans==pat()) {print_result(_ans_name,res::type::NF);return 0;}
+    if(chk==pat()) {print_result(_chk_name,res::type::NF);return 0;}
     // find file
-    if(find_file(in)) {print_result(_in_name,res::type::NF);return 0;}
-    if(find_file(out)) {print_result(_out_name,res::type::NF);return 0;}
-    if(find_file(ans)) {print_result(_ans_name,res::type::NF);return 0;}
-    if(find_file(chk)) {print_result(_chk_name,res::type::NF);return 0;}
+    if(!std::filesystem::exists(in)) {print_result(_in_name,res::type::NF);return 0;}
+    if(!std::filesystem::exists(out)) {print_result(_out_name,res::type::NF);return 0;}
+    if(!std::filesystem::exists(ans)) {print_result(_ans_name,res::type::NF);return 0;}
+    if(!std::filesystem::exists(chk)) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
     loading_printer.start();
@@ -79,21 +89,20 @@ int check_main()
     delete run_compiler;
     loading_printer.stop();
     // check
-    int ac_sum=0,runned_sum=0;
+    unsigned ac_sum=0,runned_sum=0;
     for(int i=1;i<=total_sum;++i)
     {
-        for(int j=1;j<=50;++j) std::cout<<"-";
-        for(int j=1;j<=50;++j) std::cout<<"\b";
-        std::cout<<"#"<<i;
+        for(int j=1;j<=50;++j) scout<<"-";
+        scout<<"\r"<<"#"<<i;
         if(runned_sum-ac_sum!=0)
         {
-            for(int j=1;j<=30-std::to_string(i).size();++j) std::cout<<"-";
-            std::cout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
+            for(int j=1;j<=30-std::to_string(i).size();++j) scout<<"-";
+            scout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
         }
-        std::cout<<"\n";
-        #define run_dir "data","datas",std::to_string(i)
-        make_dir(makepath(run_dir));
-        std::string in_file=makepath(run_dir,"data.in"),out_file=makepath(run_dir,"data.out"),ans_file=makepath(run_dir,"data.ans"),chk_file=makepath(run_dir,"data.txt");
+        scout<<"\n";
+        pat run_dir=(pat)"data"/"datas"/std::to_string(i);
+        std::filesystem::create_directory(run_dir);
+        pat in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
         runner in_runner(in,system_nul,in_file,std::to_string(i));
         if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
         if(in_runner.exit_code) {print_result(_in_name,res::type::RE,(tim)0,in_runner.exit_code);continue;}
@@ -103,7 +112,7 @@ int check_main()
         judger ans_judger(ans,chk,in_file,out_file,ans_file,chk_file);
         ans_judger.judge();
         ans_judger.print_result();
-        std::ofstream output_chk_file(chk_file,std::ios::app);
+        sofstream output_chk_file(chk_file,std::ios::app);
         output_chk_file<<"\n";
         for(int j=1;j<=50;++j) output_chk_file<<"*";
         output_chk_file<<"\n";
@@ -118,10 +127,10 @@ int check_main()
         if(ans_judger.result.istrue()) ++ac_sum;
         if(ans_judger.result.isfalse())
         {
-            move_file(makepath(run_dir),makepath("data",std::to_string(i)+" - "+get_short_resultname(ans_judger.result)));
+            std::filesystem::copy(run_dir,(pat)"data"/(std::to_string(i)+" - "+get_short_resultname(ans_judger.result)),std::filesystem::copy_options::recursive);
         }
     }
-    std::cout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
+    scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
     return 0;
 }
 int main(int argc,char **argv)

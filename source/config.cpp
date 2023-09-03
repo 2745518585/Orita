@@ -14,11 +14,11 @@ int config_main()
     {
         if(argus["s"].size()==0)
         {
-            std::cout<<std::setw(4)<<settings<<"\n";
+            scout<<std::setw(4)<<settings;
         }
         else if(argus["s"].size()==1)
         {
-            std::cout<<settings[(json::json_pointer)("/"+argus["s"][1])]<<"\n";
+            scout<<settings[(json::json_pointer)("/"+argus["s"][1])]<<"\n";
         }
         else
         {
@@ -29,11 +29,11 @@ int config_main()
     {
         if(argus["f"].size()==0)
         {
-            std::cout<<std::setw(4)<<Files::files_json<<"\n";
+            scout<<std::setw(4)<<Files::files_json;
         }
         else if(argus["f"].size()==1)
         {
-            std::cout<<get_filestr(stoi(argus["f"][1]))<<"\n";
+            scout<<get_filestr(stoi(argus["f"][1]))<<"\n";
         }
         else
         {

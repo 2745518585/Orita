@@ -2,7 +2,6 @@
 #ifndef _FILE_SETTINGS
 #define _FILE_SETTINGS _FILE_SETTINGS
 #include"init.hpp"
-
 json settings;
 namespace Settings
 {
@@ -11,53 +10,27 @@ namespace Settings
       public:
         Init()
         {
-            orita_log.clear();
-            (std::ifstream)(makepath(appdata_path,"settings.json"))>>settings;
-            hide_cursor();
-            INFO("orita start");
+            (sifstream(appdata_path/"settings.json",false))>>settings;
         }
         ~Init()
         {
-            (std::ofstream)(makepath(appdata_path,"settings.json"))<<std::setw(4)<<settings;
-            show_cursor();
-            INFO("orita end");
+            (sofstream(appdata_path/"settings.json",false))<<std::setw(4)<<settings;
         }
     }_Init;
 }
-
-const unsigned max_thread_num=[]()
+template<typename Type> Type get_settings(std::string path,json::value_t type)
 {
-    if(settings["max_thread_num"].type()!=json::value_t::number_unsigned)
+    if(settings[json::json_pointer(path)].type()!=type)
     {
-        ERROR("invaild thread num");
-        class invaild_thread_num {}error;
+        ERROR("invaild settings",path);
+        class invaild_settings {}error;
         throw error;
     }
-    return (unsigned)settings["max_thread_num"];
-}();
-
-const tim runtime_limit=[]()
-{
-    if(settings["runtime_limit"].type()!=json::value_t::number_unsigned)
-    {
-        ERROR("invaild runtime limit");
-        class invaild_exe_suf {}error;
-        throw error;
-    }
-    return (tim)settings["runtime_limit"];
-}();
-
-const std::string exe_suf=[]()
-{
-    if(settings["exe_suf"].type()!=json::value_t::string)
-    {
-        ERROR("invaild exe suf");
-        class invaild_exe_suf {}error;
-        throw error;
-    }
-    return (std::string)settings["exe_suf"];
-}();
-
+    return (Type)settings[json::json_pointer(path)];
+}
+const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num",json::value_t::number_unsigned);
+const tim runtime_limit=get_settings<tim>("/runtime_limit",json::value_t::number_unsigned);
+const pat exe_suf=get_settings<pat>("/exe_suf",json::value_t::string);
 namespace Settings
 {
     void change_time_limit(const tim time)
@@ -66,38 +39,15 @@ namespace Settings
     }
     tim get_time_limit()
     {
-        if(settings["data"]["time"].type()!=json::value_t::number_unsigned)
-        {
-            ERROR("invaild time limit");
-            class invaild_time_limit {}error;
-            throw error;
-        }
-        return (tim)settings["data"]["time"];
+        return get_settings<tim>("/data/time",json::value_t::number_unsigned);
     }
 }
 void change_time_limit(const tim time) {Settings::change_time_limit(time);}
 tim get_time_limit() {return Settings::get_time_limit();}
-
-const std::string compile_argu=[]()
-{
-    if(settings["data"]["compile_argu"].type()!=json::value_t::string)
-    {
-        ERROR("invaild compile argu");
-        class invaild_compile_argu {}error;
-        throw error;
-    }
-    return UTF8tosys(settings["data"]["compile_argu"]);
-}();
-
-const std::string default_checker=[]()
-{
-    if(settings["data"]["default_checker"].type()!=json::value_t::string)
-    {
-        ERROR("invaild default checker");
-        class invaild_default_checker {}error;
-        throw error;
-    }
-    return UTF8tosys(settings["data"]["default_checker"]);
-}();
-
+const std::string compile_argu=get_settings<std::string>("/data/compile_argu",json::value_t::string);
+const pat default_checker=get_settings<std::string>("/data/default_checker",json::value_t::string);
+const pat default_infile=get_settings<std::string>("/data/default_infile",json::value_t::string);
+const pat default_outfile=get_settings<std::string>("/data/default_outfile",json::value_t::string);
+const pat default_ansfile=get_settings<std::string>("/data/default_ansfile",json::value_t::string);
+const pat default_chkfile=get_settings<std::string>("/data/default_chkfile",json::value_t::string);
 #endif

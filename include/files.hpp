@@ -2,6 +2,7 @@
 #ifndef _FILE_FILES
 #define _FILE_FILES _FILE_FILES
 #include"init.hpp"
+#include"settings.hpp"
 #define _run_ans 101
 #define _run_chk 102
 #define _check_in 111
@@ -13,23 +14,23 @@ namespace Files
 {
     #define number_len 3
     json files_json;
-    class Init_files
+    class Init
     {
       public:
-        Init_files()
+        Init()
         {
-            (std::ifstream)(makepath(appdata_path,"file.json"))>>files_json;
+            (sifstream(appdata_path/"file.json",false))>>files_json;
         }
-        ~Init_files()
+        ~Init()
         {
-            (std::ofstream)(makepath(appdata_path,"file.json"))<<std::setw(4)<<files_json;
+            (sofstream(appdata_path/"file.json",false))<<std::setw(4)<<files_json;
         }
     }_Init_files;
     class file_number
     {
       public:
-        const int num;
-        file_number(const int _num):num(_num)
+        const unsigned num;
+        file_number(const unsigned _num):num(_num)
         {
             if(num<0||num>_max_file_num)
             {
@@ -40,16 +41,16 @@ namespace Files
         }
         std::string str()const {return "file"+to_string_len(num,number_len);}
     };
-    int find_filestr(const file_number num)
+    bool find_filestr(const file_number &num)
     {
-        return files_json[num.str()].type()!=json::value_t::string;
+        return files_json[num.str()].type()==json::value_t::string;
     }
-    void add_filestr(const file_number num,const std::string &file)
+    void add_filestr(const file_number &num,const pat &file)
     {
-        files_json[num.str()]=systoUTF8(file);
+        files_json[num.str()]=file.string();
         INFO("name add filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
     }
-    std::string get_filestr(const file_number num)
+    pat get_filestr(const file_number &num)
     {
         if(files_json[num.str()].type()!=json::value_t::string)
         {
@@ -57,146 +58,75 @@ namespace Files
             class no_such_filestr {}error;
             throw error;
         }
-        const std::string file=UTF8tosys(files_json[num.str()]);
+        const pat file=files_json[num.str()];
         INFO("name get filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
         return file;
     }
-    std::string get_filename(const std::string &file)
+    pat get_path(const pat &file)
     {
-        int pos=file.find_last_of(PS);
-        if(pos==std::string::npos) return file;
-        return file.substr(pos+1,file.size()-pos-1);
+        if(file==pat()||std::regex_match(file.string(),std::regex("^%([^%]|$).*"))) return file;
+        else return std::filesystem::absolute(file);
     }
-    std::string get_filename(const file_number num)
+    void add_file(const file_number &num,const pat &file)
     {
-        return get_filename(get_filestr(num));
-    }
-    std::string get_filepath(const std::string &file)
-    {
-        int pos=file.find_last_of(PS);
-        if(pos==std::string::npos) return "";
-        return file.substr(0,pos);
-    }
-    std::string get_filepath(const file_number num)
-    {
-        return get_filepath(get_filestr(num));
-    }
-    std::string get_filepre(const std::string &file)
-    {
-        int pos=file.find_last_of(".");
-        if(pos==std::string::npos) return file;
-        return file.substr(0,pos);
-    }
-    std::string get_filepre(const file_number num)
-    {
-        return get_filepre(get_filestr(num));
-    }
-    std::string get_filenamepre(const std::string &file)
-    {
-        const std::string name=get_filename(file);
-        int pos=name.find_last_of(".");
-        if(pos==std::string::npos) return name;
-        return name.substr(0,pos);
-    }
-    std::string get_filenamepre(const file_number num)
-    {
-        return get_filenamepre(get_filestr(num));
-    }
-    std::string get_filenamesuf(const std::string &file)
-    {
-        const std::string name=get_filename(file);
-        int pos=name.find_last_of(".");
-        if(pos==std::string::npos) return "";
-        return name.substr(pos,name.size()-pos);
-    }
-    std::string get_filenamesuf(const file_number num)
-    {
-        return get_filenamesuf(get_filestr(num));
-    }
-    std::string get_path(const std::string &file)
-    {
-        #ifdef _WIN32
-        if(std::regex_match(file,std::regex("(%([^%]|$)|([a-z]|[A-Z]):|\\\\).*"))) return file;
-        #endif
-        #ifdef __linux__
-        if(std::regex_match(file,std::regex("(%([^%]|$)|/).*"))) return file;
-        #endif
-        return makepath(running_path,file);
-    }
-    void add_file(const file_number num,const std::string &file)
-    {
-        std::string file_result=get_path(file);
+        pat file_result=get_path(file);
         INFO("name add file","name: "+add_squo(file),"file: "+add_squo(file_result));
-        add_filestr(num,file_result);
+        add_filestr(num,file_result.string());
     }
-    std::string get_file(const std::string &file)
+    pat get_file(const file_number &num);
+    pat get_file(const pat &file)
     {
-        std::string file_result=get_path(file);
-        if(file_result.size()>0&&file_result[0]=='%'&&file_result.find('%',1)==std::string::npos)
+        pat tmp=get_path(file),final_path;
+        for(const auto &dir:tmp)
         {
-            file_result=get_file(get_filestr(std::stoi(file_result.substr(1,file_result.size()-1))));
+            if(std::regex_match(dir.string(),std::regex("^%[^%]*"))) final_path/=get_file(stoi(dir.string().substr(1)));
+            else if(std::regex_match(dir.string(),std::regex("^%[^%]*%$"))) final_path/=sgetenv(dir.string().substr(1,dir.string().length()-2).c_str());
+            else final_path/=dir;
         }
-        else
-        {
-            int pos=0;
-            while(file_result.find('%',pos)!=std::string::npos)
-            {
-                int pos1=file_result.find('%',pos),pos2=file_result.find('%',pos1+1);
-                if(pos2-pos1==1)
-                {
-                    file_result=file_result.substr(0,pos1)+"%"+file_result.substr(pos2+1,file_result.size()-pos2-1);
-                    pos=pos1+1;
-                    continue;
-                }
-                file_result=file_result.substr(0,pos1)+getenv(file_result.substr(pos1+1,pos2-pos1-1).c_str())+file_result.substr(pos2+1,file_result.size()-pos2-1);
-            }
-        }
-        INFO("name get file","name: "+add_squo(file),"file: "+add_squo(file_result));
-        return file_result;
+        INFO("name get file","name: "+add_squo(file),"file: "+add_squo(final_path));
+        return final_path;
     }
-    std::string get_file(const file_number num)
+    pat get_file(const file_number &num)
     {
         return get_file(get_filestr(num));
     }
-    std::string check_file(const int str) {if(!find_filestr(str)) return get_filestr(str);return "";}
-    std::string check_file(const std::string &str) {return str;}
-    std::string check_file(json str) {if(str.type()==json::value_t::string) return (std::string)str;return "";}
-    template<typename ...others_type> std::string check_file(const int str,const others_type ...others) {if(!find_filestr(str)) return get_filestr(str);return check_file(others...);}
-    template<typename ...others_type> std::string check_file(const std::string &str,const others_type ...others) {return str;}
-    template<typename ...others_type> std::string check_file(json str,const others_type ...others) {if(str.type()==json::value_t::string) return (std::string)str;return check_file(others...);}
-    std::string add_namesuf(const std::string &file,const std::string &namesuf)
+    pat check_file() {return pat();}
+    template<typename Type> pat check_file(const Type &str)
     {
-        if(get_filenamesuf(file)!=namesuf) return file+namesuf;
+        if constexpr(std::is_same_v<Type,json>)
+        {
+            if(str.type()==json::value_t::string) return (std::string)str;
+            else return pat();
+        }
+        else if constexpr(std::is_convertible<Type,pat>::value) return str;
+        else if constexpr(std::is_convertible<Type,file_number>::value)
+        {
+            if(find_filestr(str)) return get_filestr(str);
+            return pat();
+        }
+        else return pat();
+    }
+    template<typename Type,typename ...others_type> pat check_file(const Type &str,const others_type ...others)
+    {
+        pat result=check_file(str);
+        if(result==pat()) return check_file(others...);
+        else return result;
+    }
+    pat add_namesuf(const pat &file,const pat &namesuf)
+    {
+        if(file==pat()) return pat();
+        if(file.extension()!=namesuf) return replace_extension(file,namesuf);
         return file;
-    }
-    std::string get_exefile(const std::string &file)
-    {
-        return makepath(get_filepath(file),get_filenamepre(file)+exe_suf);
-    }
-    std::string get_exefilename(const std::string &file)
-    {
-        return get_filenamepre(file)+exe_suf;
     }
     #undef number_len
 }
-int find_filestr(const int num) {return Files::find_filestr(num);}
-void add_filestr(const int num,const std::string &file) {return Files::add_filestr(num,file);}
-std::string get_filestr(const int num) {return Files::get_filestr(num);}
-std::string get_filename(const std::string &file) {return Files::get_filename(file);}
-std::string get_filename(const int num) {return Files::get_filename(num);}
-std::string get_filepath(const std::string &file) {return Files::get_filepath(file);}
-std::string get_filepath(const int num) {return Files::get_filepath(num);}
-std::string get_filepre(const std::string &file) {return Files::get_filepre(file);}
-std::string get_filepre(const int num) {return Files::get_filepre(num);}
-std::string get_filenamepre(const std::string &file) {return Files::get_filenamepre(file);}
-std::string get_filenamepre(const int num) {return Files::get_filenamepre(num);}
-std::string get_filenamesuf(const std::string &file) {return Files::get_filenamesuf(file);}
-std::string get_filenamesuf(const int num) {return Files::get_filenamesuf(num);}
-void add_file(const int num,const std::string &file) {return Files::add_file(num,file);}
-std::string get_file(const std::string &file) {return Files::get_file(file);}
-std::string get_file(const int num) {return Files::get_file(num);}
-template<typename ...others_type> std::string check_file(const others_type ...others) {return Files::check_file(others...);}
-std::string add_namesuf(const std::string &file,const std::string &namesuf) {return Files::add_namesuf(file,namesuf);}
-std::string get_exefile(const std::string &file) {return Files::get_exefile(file);}
-std::string get_exefilename(std::string file) {return Files::get_exefilename(file);}
+bool find_filestr(const unsigned num) {return Files::find_filestr(num);}
+void add_filestr(const unsigned num,const pat &file) {return Files::add_filestr(num,file);}
+pat get_filestr(const unsigned num) {return Files::get_filestr(num);}
+void add_file(const unsigned num,const pat &file) {return Files::add_file(num,file);}
+pat get_file(const pat &file) {return Files::get_file(file);}
+pat get_file(const unsigned num) {return Files::get_file(num);}
+template<typename ...others_type> pat check_file(const others_type ...others) {return Files::check_file(others...);}
+pat add_namesuf(const pat &file,const pat &namesuf) {return Files::add_namesuf(file,namesuf);}
+
 #endif

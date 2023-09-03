@@ -6,23 +6,23 @@ namespace Print
 {
     void print_result(const std::string &name,const res result,const tim time,const int exit_code)
     {
-        if(name!="") std::cout<<termcolor::bright_grey<<name<<":\n";
-        if(result.is(res::type::SS)) std::cout<<termcolor::bright_green<<"Success\n";
-        if(result.is(res::type::FL)) std::cout<<termcolor::bright_red<<"Fail\n";
-        if(result.is(res::type::AC)) std::cout<<termcolor::bright_green<<"Accepted\n"<<time<<"\n";
-        if(result.is(res::type::WA)) std::cout<<termcolor::bright_red<<"Wrong Answer\n"<<time<<"\n";
-        if(result.is(res::type::RE)) std::cout<<termcolor::magenta<<"Runtime Error\nexit with code "<<exit_code<<"\n";
-        if(result.is(res::type::TLE_CA)) std::cout<<termcolor::bright_cyan<<"Time Limit Error with Correct Answer\n"<<time<<"\n";
-        if(result.is(res::type::TLE_WA)) std::cout<<termcolor::bright_cyan<<"Time Limit Error with Wrong Answer\n"<<time<<"\n";
-        if(result.is(res::type::TLE_O)) std::cout<<termcolor::bright_cyan<<"Time Limit Error\nover "<<time<<"\n";
-        if(result.is(res::type::CE)) std::cout<<termcolor::bright_yellow<<"Compile Error\n";
-        if(result.is(res::type::SA)) std::cout<<termcolor::bright_green<<"Same Answer\n";
-        if(result.is(res::type::DA)) std::cout<<termcolor::bright_red<<"Different Answer\n";
-        if(result.is(res::type::TO)) std::cout<<termcolor::bright_cyan<<"Timeout\n";
-        if(result.is(res::type::NF)) std::cout<<termcolor::blue<<"No such file\n";
-        if(result.is(res::type::II)) std::cout<<termcolor::blue<<"Invalid input\n";
-        std::cout<<termcolor::reset;
-        std::cout.flush();
+        if(name!="") scout<<termcolor::bright_grey<<name<<":\n";
+        if(result.is(res::type::SS)) scout<<termcolor::bright_green<<"Success\n";
+        if(result.is(res::type::FL)) scout<<termcolor::bright_red<<"Fail\n";
+        if(result.is(res::type::AC)) scout<<termcolor::bright_green<<"Accepted\n"<<time<<"\n";
+        if(result.is(res::type::WA)) scout<<termcolor::bright_red<<"Wrong Answer\n"<<time<<"\n";
+        if(result.is(res::type::RE)) scout<<termcolor::magenta<<"Runtime Error\nexit with code "<<exit_code<<"\n";
+        if(result.is(res::type::TLE_CA)) scout<<termcolor::bright_cyan<<"Time Limit Error with Correct Answer\n"<<time<<"\n";
+        if(result.is(res::type::TLE_WA)) scout<<termcolor::bright_cyan<<"Time Limit Error with Wrong Answer\n"<<time<<"\n";
+        if(result.is(res::type::TLE_O)) scout<<termcolor::bright_cyan<<"Time Limit Error\nover "<<time<<"\n";
+        if(result.is(res::type::CE)) scout<<termcolor::bright_yellow<<"Compile Error\n";
+        if(result.is(res::type::SA)) scout<<termcolor::bright_green<<"Same Answer\n";
+        if(result.is(res::type::DA)) scout<<termcolor::bright_red<<"Different Answer\n";
+        if(result.is(res::type::TO)) scout<<termcolor::bright_cyan<<"Timeout\n";
+        if(result.is(res::type::NF)) scout<<termcolor::blue<<"No such file\n";
+        if(result.is(res::type::II)) scout<<termcolor::blue<<"Invalid input\n";
+        scout<<termcolor::reset;
+        scout.flush();
     }
     std::string get_resultname(const res result)
     {
@@ -82,15 +82,15 @@ class printer
         while(!if_end)
         {
             pos=(pos+1)%str.size();
-            std::cout<<str[pos]<<"\r"<<std::flush;
+            scout<<str[pos]<<"\r"<<std::flush;
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
                 wait.wait_for(lock,interval_time,[&](){return (bool)if_end;});
                 lock.unlock();
             }
         }
-        for(int i=0;i<len;++i) std::cout<<" ";
-        std::cout<<"\r"<<std::flush;
+        for(int i=0;i<len;++i) scout<<" ";
+        scout<<"\r"<<std::flush;
     }
     void start()
     {

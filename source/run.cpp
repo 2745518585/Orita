@@ -11,31 +11,37 @@ const json make_cor_argu()
 const json cor_argu=make_cor_argu();
 const std::string _ans_name="ans";
 const std::string _chk_name="checker";
-std::string in_file=makepath(appdata_path,"data","data.in");
-std::string out_file=makepath(appdata_path,"data","data.out");
-std::string ans_file=makepath(appdata_path,"data","data.ans");
-std::string chk_file=makepath(appdata_path,"data","data.txt");
+pat in_file=get_file(default_infile);
+pat out_file=get_file(default_outfile);
+pat ans_file=get_file(default_ansfile);
+pat chk_file=get_file(default_chkfile);
 int run_main()
 {
     // init name
-    std::string ans,chk;
+    const pat ans=[]()
     {
-        const std::string ans_str=check_file(argus["f"].get(1),_run_ans);
+        const pat ans_str=check_file(argus["f"].get(1),_run_ans);
         add_file(_run_ans,ans_str);
-        ans=add_namesuf(get_file(ans_str),".cpp");
-    }
-    if(argus["c"].appear())
+        return add_namesuf(get_file(ans_str),".cpp");
+    }();
+    const pat chk=[]()
     {
-        const std::string chk_str=check_file(argus["c"].get(1),_run_chk);
-        add_file(_run_chk,chk_str);
-        chk=add_namesuf(get_file(chk_str),".cpp");
-    }
-    else chk=add_namesuf(get_file(default_checker),".cpp");
+        if(argus["c"].appear())
+        {
+            const pat chk_str=check_file(argus["c"].get(1),_run_chk);
+            add_file(_run_chk,chk_str);
+            return add_namesuf(get_file(chk_str),".cpp");
+        }
+        else return add_namesuf(get_file(default_checker),".cpp");
+    }();
     // init time
-    if(argus.get_sum_argu("t")==1) change_time_limit((tim)stoi(argus["t"][1]));
+    if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
+    // find name
+    if(ans==pat()) {print_result(_ans_name,res::type::NF);return 0;}
+    if(chk==pat()) {print_result(_chk_name,res::type::NF);return 0;}
     // find file
-    if(find_file(ans)) {print_result(_ans_name,res::type::NF);return 0;}
-    if(find_file(chk)) {print_result(_chk_name,res::type::NF);return 0;}
+    if(!std::filesystem::exists(ans)) {print_result(_ans_name,res::type::NF);return 0;}
+    if(!std::filesystem::exists(chk)) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
     loading_printer.start();
@@ -58,7 +64,7 @@ int run_main()
     run_judger.judge();
     // print result
     run_judger.print_result();
-    std::ofstream output_chk_file(chk_file,std::ios::app);
+    sofstream output_chk_file(chk_file,std::ios::app);
     output_chk_file<<"\n";
     for(int j=1;j<=50;++j) output_chk_file<<"*";
     output_chk_file<<"\n";
@@ -68,11 +74,11 @@ int run_main()
     for(int j=1;j<=50;++j) output_chk_file<<"*";
     output_chk_file.close();
     // copy result
-    make_dir("data");
-    copy_file(in_file,makepath("data","data.in"));
-    copy_file(out_file,makepath("data","data.out"));
-    copy_file(ans_file,makepath("data","data.ans"));
-    copy_file(chk_file,makepath("data","data.txt"));
+    std::filesystem::create_directory("data");
+    std::filesystem::copy_file(in_file,(pat)"data"/"data.in",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(out_file,(pat)"data"/"data.out",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(ans_file,(pat)"data"/"data.ans",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(chk_file,(pat)"data"/"data.txt",std::filesystem::copy_options::overwrite_existing);
     return 0;
 }
 int main(int argc,char **argv)

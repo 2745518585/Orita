@@ -5,14 +5,14 @@
 #include"settings.hpp"
 namespace Compile
 {
-    int compile(const std::string &file,const std::string &compile_argu="",const bool if_print=true)
+    int compile(pat file,const std::string &compile_argu="",const bool if_print=true)
     {
-        if(get_filenamesuf(file)!=".cpp")
+        if(file.extension()!=".cpp")
         {
             WARN("fail compile","file: "+add_quo(file));
             return -1;
         }
-        const std::string command="g++ "+add_quo(file)+" -o "+add_quo(get_exefile(file))+" "+compile_argu+" "+(if_print?"":system_to_nul);
+        const std::string command="g++ "+add_quo(file)+" -o "+add_quo(replace_extension(file,exe_suf))+" "+compile_argu+" "+(if_print?"":system_to_nul);
         INFO("start compile","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
         int result=ssystem(command);
         if(result) WARN("fail compile","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
@@ -20,9 +20,9 @@ namespace Compile
         return result!=0;
     }
 }
-int compile(const std::string &file) {return Compile::compile(file);}
-int compile(const std::string &file,const std::string &compile_argu) {return Compile::compile(file,compile_argu);}
-int compile(const std::string &file,const std::string &compile_argu,const bool if_print) {return Compile::compile(file,compile_argu,if_print);}
+int compile(const pat &file) {return Compile::compile(file);}
+int compile(const pat &file,const std::string &compile_argu) {return Compile::compile(file,compile_argu);}
+int compile(const pat &file,const std::string &compile_argu,const bool if_print) {return Compile::compile(file,compile_argu,if_print);}
 class compiler
 {
   public:
@@ -33,9 +33,10 @@ class compiler
     class comp_file
     {
       public:
-        std::string name,file,argu;
+        std::string name,argu;
+        pat file;
         comp_file(){}
-        comp_file(const std::string &name,const std::string &file,const std::string &argu):name(name),file(file),argu(argu){}
+        comp_file(const std::string &name,const pat &file,const std::string &argu):name(name),file(file),argu(argu){}
     };
     std::queue<comp_file> compile_que;
     std::map<std::string,int> results;
@@ -89,18 +90,17 @@ class compiler
         ssleep((tim)10);
         INFO("end compiler","id: "+to_string_hex(this));
     }
-    void add(const std::string &name,const std::string &file,const std::string &argu="")
+    void add(const std::string &name,const pat &file,const std::string &argu="")
     {
         compile_que.push(comp_file(name,file,argu));
         wait_que.notify_one();
         INFO("add compile task","id: "+to_string_hex(this),"name: "+add_squo(name),"file: "+add_squo(file),"argu: "+add_squo(argu));
     }
-    void add(const std::initializer_list<std::initializer_list<std::string>> file,const std::string &argu="")
+    void add(const std::initializer_list<std::pair<std::string,pat>> file,const std::string &argu="")
     {
         for(auto i:file)
         {
-            if(i.size()!=2) continue;
-            add(*i.begin(),*next(i.begin()),argu);
+            add(i.first,i.second,argu);
         }
     }
     void wait(const std::initializer_list<std::string> name)

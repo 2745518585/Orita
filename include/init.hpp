@@ -7,6 +7,7 @@
 #include<algorithm>
 #include<queue>
 #include<string>
+#include<filesystem>
 #include<typeinfo>
 #include<regex>
 #include<sstream>
@@ -69,23 +70,33 @@ std::string GBtoUTF8(const std::string &gb2312)
     delete []str;
     return ss.str();
 }
-std::string UTF8tosys(const std::string &str) {return UTF8toGB(str);}
-std::string systoUTF8(const std::string &str) {return GBtoUTF8(str);}
+const UINT codepage=GetACP();
+std::string UTF8tosys(const std::string &str)
+{
+    if(codepage==936) return UTF8toGB(str);
+    else return str;
+}
+std::string systoUTF8(const std::string &str)
+{
+    if(codepage==936) return GBtoUTF8(str);
+    else return str;
+}
 #endif
 #ifdef __linux__
-std::string UTF8tosys(const std::string &str) {return str;}
-std::string systoUTF8(const std::string &str) {return str;}
+const UINT codepage=65001;
+std::string UTF8tosys(const std::string &str)
+{
+    return str;
+}
+std::string systoUTF8(const std::string &str)
+{
+    return str;
+}
 #endif
-
-// path
-#ifdef _WIN32
-char PS='\\';
-#endif
-#ifdef __linux__
-char PS='/';
-#endif
-std::string makepath(const std::string &path) {return path;}
-template<typename ...others_type> std::string makepath(const std::string &path,const others_type ...others) {return path+PS+makepath(others...);}
+std::string sgetenv(const std::string &str)
+{
+    return systoUTF8(getenv(str.c_str()));
+}
 
 // result
 class res
@@ -127,50 +138,178 @@ std::string add_squo(const std::string &str)
 {
     return "'"+str+"'";
 }
-std::string replace_all(std::string str,const std::string &from,const std::string &to)
-{
-    size_t pos=0;
-    while((pos=str.find(from,pos))!=std::string::npos)
-    {
-        str.replace(pos,from.length(),to);
-        pos+=to.length();
-    }
-    return str;
-}
 
-
-// local path
-namespace Init
+// path
+using pat=std::filesystem::path;
+const char path_separator=std::filesystem::path::preferred_separator;
+std::string add_quo(const pat &path)
 {
-    std::string get_running_path()
-    {
-        char path[1001];
-        getcwd(path,1000);
-        return path;
-    }
-    std::string get_file_path()
-    {
-        char tmp[10001];
-        #ifdef _WIN32
-        GetModuleFileNameA(NULL,tmp,MAX_PATH);
-        #endif
-        #ifdef __linux__
-        realpath("/proc/self/exe",tmp);
-        #endif
-        std::string path=tmp;
-        return path.substr(0,path.find_last_of(PS,path.find_last_of(PS)-1));
-    }
-    std::string get_appdata_path()
-    {
-        #ifdef _WIN32
-        return makepath(getenv("appdata"),"Orita");
-        #endif
-        #ifdef __linux__
-        return makepath(getenv("HOME"),".Orita");
-        #endif
-    }
+    return "\""+path.string()+"\"";
 }
-const std::string running_path=Init::get_running_path(),file_path=Init::get_file_path(),appdata_path=Init::get_appdata_path();
+std::string add_squo(const pat &path)
+{
+    return "'"+path.string()+"'";
+}
+pat replace_extension(pat file,const pat suf=pat())
+{
+    return file.replace_extension(suf);
+}
+const pat running_path=[]()
+{
+    char path[1001];
+    getcwd(path,1000);
+    return (pat)(systoUTF8(path));
+}();
+const pat file_path=[]()
+{
+    char tmp[10001];
+    #ifdef _WIN32
+    GetModuleFileNameA(NULL,tmp,MAX_PATH);
+    #endif
+    #ifdef __linux__
+    realpath("/proc/self/exe",tmp);
+    #endif
+    pat path=systoUTF8(tmp);
+    return path.parent_path().parent_path();
+}();
+const pat appdata_path=[]()
+{
+    #ifdef _WIN32
+    return pat(sgetenv("APPDATA"))/"Orita";
+    #endif
+    #ifdef __linux__
+    return pat(sgetenv("HOME"))/".Orita";
+    #endif
+}();
+
+// time
+using tim=std::chrono::milliseconds;
+void ssleep(const tim time)
+{
+    std::this_thread::sleep_for(time);
+}
+class timer
+{
+  public:
+    std::chrono::_V2::system_clock::time_point begin_time;
+    void init()
+    {
+        begin_time=std::chrono::high_resolution_clock::now();
+    }
+    tim get_time()
+    {
+        auto end_time=std::chrono::high_resolution_clock::now();
+        return std::chrono::duration_cast<tim>(end_time-begin_time);
+    }
+};
+std::ofstream &operator<<(std::ofstream &output,tim str)
+{
+    output<<std::to_string(str.count())<<"ms";
+    return output;
+}
+// print
+#ifdef _WIN32
+const pat system_nul="nul";
+const pat system_con="con";
+#endif
+#ifdef __linux__
+const pat system_nul="/dev/null";
+const pat system_con="/dev/tty";
+#endif
+class sifstream
+{
+  public:
+    std::ifstream stream;
+    bool if_sys;
+    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
+    {
+        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).string()));
+        else if constexpr(std::is_convertible<Type,std::ifstream>::value) stream.open(file);
+    }
+    sifstream() {}
+    template<typename Type> sifstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
+    template<typename Type> sifstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
+    void close() {stream.close();}
+    template<typename Type> sifstream &operator>>(Type &val)
+    {
+        stream>>val;
+        return *this;
+    }
+    sifstream &operator>>(std::string &str)
+    {
+        stream>>str;
+        if(if_sys) str=systoUTF8(str);
+        return *this;
+    }
+};
+class sofstream
+{
+  public:
+    std::ofstream stream;
+    bool if_sys;
+    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
+    {
+        stream.close();
+        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).string()),mode);
+        else if constexpr(std::is_convertible<Type,std::ofstream>::value) stream.open(file,mode);
+    }
+    sofstream() {}
+    template<typename Type> sofstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
+    template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
+    void close() {stream.close();}
+    void flush() {stream.flush();}
+    template<typename Type> sofstream &operator<<(const Type &val)
+    {
+        stream<<val;
+        return *this;
+    }
+    sofstream &operator<<(std::ostream &(*manipulator)(std::ostream&))
+    {
+        stream<<manipulator;
+        return *this;
+    }
+    sofstream &operator<<(const std::string &str)
+    {
+        if(if_sys) stream<<UTF8tosys(str);
+        else stream<<str;
+        return *this;
+    }
+};
+class sostream
+{
+  public:
+    std::ostream &stream;
+    bool if_sys;
+    template<typename Type> sostream(Type &_stream,bool _if_sys=true):stream(_stream),if_sys(_if_sys) {}
+    void flush() {stream.flush();}
+    template<typename Type> sostream &operator<<(const Type &val)
+    {
+        stream<<val;
+        return *this;
+    }
+    sostream &operator<<(std::ostream &(*manipulator)(std::ostream&))
+    {
+        stream<<manipulator;
+        return *this;
+    }
+    sostream &operator<<(const std::string &str)
+    {
+        if(if_sys) stream<<UTF8tosys(str);
+        else stream<<str;
+        return *this;
+    }
+}scout(std::cout);
+FILE *sfopen(const std::string &file,const std::string mode)
+{
+    return fopen(UTF8tosys(file).c_str(),mode.c_str());
+}
+int sfclose(FILE *file)
+{
+    return fclose(file);
+}
+void hide_cursor() {scout<<"\033[?25l"<<std::flush;}
+void show_cursor() {scout<<"\033[?25h"<<std::flush;}
+
 
 // log
 class logger
@@ -180,11 +319,12 @@ class logger
     #define _LOG_ERROR 3
     #define _LOG_DEBUG 4
   private:
-    const std::string output_file;
+    const pat output_file;
+    const std::string name;
     std::mutex read_lock;
     std::shared_ptr<spdlog::logger> output;
   public:
-    logger(const std::string &_output_file=makepath(appdata_path,"Orita.log")):output_file(_output_file) {}
+    logger(const pat &_output_file=appdata_path/"Orita.log",const std::string _name="Orita LOG"):output_file(_output_file),name(_name) {}
     const std::string get_str(const std::string &str)
     {
         return "\n>> "+str;
@@ -215,13 +355,11 @@ class logger
     void clear()
     {
         read_lock.lock();
-        (std::ofstream)(output_file)<<"Orita LOG\n";
-        spdlog::drop_all();
-        output=spdlog::basic_logger_mt("",output_file);
+        (sofstream)(output_file)<<"Orita LOG\n";
+        output=spdlog::basic_logger_mt(name,UTF8tosys(output_file.string()));
+        output->set_level(spdlog::level::debug);
+        output->flush_on(spdlog::level::trace);
         read_lock.unlock();
-        print(_LOG_INFO,"running_path","path: "+add_squo(running_path));
-        print(_LOG_INFO,"appdata_path","path: "+add_squo(appdata_path));
-        print(_LOG_INFO,"file_path","path: "+add_squo(file_path));
     }
 }orita_log;
 #define INFO(...) orita_log.print(_LOG_INFO,__VA_ARGS__)
@@ -229,114 +367,27 @@ class logger
 #define ERROR(...) orita_log.print(_LOG_ERROR,__VA_ARGS__)
 #define DEBUG(...) orita_log.print(_LOG_DEBUG,__VA_ARGS__)
 
-// time
-using tim=std::chrono::milliseconds;
-void ssleep(const tim time)
-{
-    std::this_thread::sleep_for(time);
-}
-class timer
-{
-  public:
-    std::chrono::_V2::system_clock::time_point begin_time;
-    void init()
-    {
-        begin_time=std::chrono::high_resolution_clock::now();
-    }
-    tim get_time()
-    {
-        auto end_time=std::chrono::high_resolution_clock::now();
-        return std::chrono::duration_cast<tim>(end_time-begin_time);
-    }
-};
-std::ostream &operator<<(std::ostream &output,tim str)
-{
-    return output<<std::to_string(str.count())<<"ms";
-}
-
-// print
-void hide_cursor() {std::cout<<"\033[?25l"<<std::flush;}
-void show_cursor() {std::cout<<"\033[?25h"<<std::flush;}
-
 // command
 #ifdef _WIN32
-const std::string system_nul="nul";
 const std::string system_to_nul=" > nul 2>&1 ";
-const std::string system_con="con";
 const std::string system_to_con=" > con 2>&1 ";
-#endif
-#ifdef __linux__
-const std::string system_nul="/dev/null";
-const std::string system_to_nul=" > /dev/null 2>&1 ";
-const std::string system_con="/dev/tty";
-const std::string system_to_con=" > /dev/tty 2>&1 ";
-#endif
-#ifdef _WIN32
 const int sys_exit_code=0;
 #endif
 #ifdef __linux__
+const std::string system_to_nul=" > /dev/null 2>&1 ";
+const std::string system_to_con=" > /dev/tty 2>&1 ";
 const int sys_exit_code=8;
 #endif
 int ssystem(const std::string &command)
 {
     #ifdef _WIN32
-    return system(("cmd /C "+add_quo(command)).c_str());
+    return system(("cmd /C "+add_quo(UTF8tosys(command))).c_str());
     #endif
     #ifdef __linux__
-    return system(command.c_str());
+    return system(UTF8tosys(command).c_str());
     #endif
 }
-int find_file(const std::string &file)
-{
-    const int result=ssystem("dir "+add_quo(file)+system_to_nul);
-    if(result) WARN("fail find file","file: "+add_squo(file));
-    else INFO("find file","file: "+add_squo(file));
-    return result;
-}
-int copy_file(const std::string &file,const std::string &copy_path)
-{
-    #ifdef _WIN32
-    const int result=ssystem("copy "+add_quo(file)+" "+add_quo(copy_path)+system_to_nul);
-    #endif
-    #ifdef __linux__
-    const int result=ssystem("cp "+add_quo(file)+" "+add_quo(copy_path)+system_to_nul);
-    #endif
-    if(result) WARN("fail copy file","file: "+add_squo(file),"copy_path: "+add_squo(copy_path));
-    else INFO("copy file","file: "+add_squo(file),"copy_path: "+add_squo(copy_path));
-    return result;
-}
-int make_dir(const std::string &dir)
-{
-    const int result=ssystem("mkdir "+add_quo(dir)+system_to_nul);
-    if(result) WARN("fail make dir","dir: "+add_squo(dir));
-    else INFO("make dir","dir: "+add_squo(dir));
-    return result;
-}
-int remove_dir(const std::string &dir)
-{
-    #ifdef _WIN32
-    const int result=ssystem("rmdir /S /Q "+add_quo(dir)+system_to_nul);
-    #endif
-    #ifdef __linux__
-    const int result=ssystem("rm -r "+add_quo(dir)+system_to_nul);
-    #endif
-    if(result) WARN("fail remove dir","dir: "+add_squo(dir));
-    else INFO("remove dir","dir: "+add_squo(dir));
-    return result;
-}
-int move_file(const std::string &file,const std::string &move_path)
-{
-    #ifdef _WIN32
-    const int result=ssystem("move "+add_quo(file)+" "+add_quo(move_path)+system_to_nul);
-    #endif
-    #ifdef __linux__
-    const int result=ssystem("mv -f "+add_quo(file)+" "+add_quo(move_path)+system_to_nul);
-    #endif
-    if(result) WARN("fail move file","file: "+add_squo(file),"move_path: "+add_squo(move_path));
-    else INFO("move file","file: "+add_squo(file),"move_path: "+add_squo(move_path));
-    return result;
-}
-int kill_task(const std::string &task)
+int kill_task(const pat &task)
 {
     #ifdef _WIN32
     const int result=ssystem("taskkill /f /im "+add_quo(task)+system_to_nul);
@@ -349,3 +400,23 @@ int kill_task(const std::string &task)
     return result;
 }
 #endif
+
+namespace Init
+{
+    class Init
+    {
+      public:
+        Init()
+        {
+            orita_log.clear();
+            INFO("running_path","path: "+add_squo(running_path));
+            INFO("appdata_path","path: "+add_squo(appdata_path));
+            INFO("file_path","path: "+add_squo(file_path));
+            hide_cursor();
+        }
+        ~Init()
+        {
+            show_cursor();
+        }
+    }_Init;
+}

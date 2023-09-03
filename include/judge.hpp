@@ -7,7 +7,8 @@
 class runner
 {
   public:
-    const std::string file,argu,in_file,out_file;
+    const pat file,in_file,out_file;
+    std::string argu;
     const tim time_limit;
     tim time;
     int exit_code=0;
@@ -15,11 +16,11 @@ class runner
     std::atomic<bool> if_end;
     std::mutex wait_lock;
     std::condition_variable wait;
-    runner(const std::string &_file,const std::string &_in_file,const std::string &_out_file,const std::string &_argu="",const tim _time_limit=runtime_limit):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
+    runner(const pat &_file,const pat &_in_file,const pat &_out_file,const std::string &_argu="",const tim _time_limit=runtime_limit):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
     void run_run()
     {
-        const std::string command=""+add_quo(get_exefile(file))+" "+argu+" "+(in_file!=""?" < "+add_quo(in_file):"")+(out_file!=""?" > "+add_quo(out_file):"");
-        INFO("start run","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file)),"argu: "+add_squo(argu),"in_file: "+add_squo(in_file),"out_file: "+add_squo(out_file),"command: "+add_squo(command));
+        const std::string command=add_quo(replace_extension(file,exe_suf))+" "+argu+" "+(in_file!=""?" < "+add_quo(in_file):"")+(out_file!=""?" > "+add_quo(out_file):"");
+        INFO("start run","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)),"argu: "+add_squo(argu),"in_file: "+add_squo(in_file),"out_file: "+add_squo(out_file),"command: "+add_squo(command));
         run_timer.init();
         show_cursor();
         exit_code=ssystem(command)>>sys_exit_code;
@@ -39,8 +40,8 @@ class runner
         }
         if(!if_end)
         {
-            WARN("run timeout","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file)));
-            kill_task(get_exefilename(file));
+            WARN("run timeout","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
+            kill_task(replace_extension(file.filename(),exe_suf));
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
                 wait.wait(lock,[&](){return (bool)if_end;});
@@ -49,19 +50,19 @@ class runner
             time=time_limit;
             return 1;
         }
-        INFO("success run","id: "+to_string_hex(this),"file: "+add_squo(get_exefile(file)));
+        INFO("success run","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
         return 0;
     }
 };
 class judger
 {
   public:
-    const std::string ans,chk,in_file,out_file,ans_file,chk_file;
+    const pat ans,chk,in_file,out_file,ans_file,chk_file;
     const tim time_limit;
     tim time,chk_time;
     int exit_code=0,chk_exit_code=0;
     res result,chk_result;
-    judger(const std::string &_ans,const std::string &_chk,const std::string &_in_file,const std::string &_out_file,const std::string &_ans_file,const std::string &_chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
+    judger(const pat &_ans,const pat &_chk,const pat &_in_file,const pat &_out_file,const pat &_ans_file,const pat &_chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
     res judge()
     {
         runner ans_runner(ans,in_file,ans_file,"",time_limit*2);

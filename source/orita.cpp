@@ -4,47 +4,38 @@ int main(int argc,char **argv)
 {
     if(argc==1)
     {
-        std::cout<<"--------------------------------------------------\n";
-        std::cout<<"  Orita - Useful OI Tools\n";
-        std::cout<<"  Version: Dev "<<PROJECT_VERSION<<"\n";
-        std::cout<<"  Repository: https://github.com/2745518585/Orita\n";
-        std::cout<<"  Local Path: "<<file_path<<"\n";
-        std::cout<<"--------------------------------------------------\n";
+        scout<<"--------------------------------------------------\n";
+        scout<<"  Orita - Useful OI Tools\n";
+        scout<<"  Version: Dev "<<PROJECT_VERSION<<"\n";
+        scout<<"  Repository: https://github.com/2745518585/Orita\n";
+        scout<<"  Local Path: "<<file_path.string()<<"\n";
+        scout<<"--------------------------------------------------\n";
         return 0;
     }
     if(std::string(argv[1])=="reset")
     {
+        std::filesystem::remove_all(appdata_path);
         #ifdef _WIN32
-        ssystem("rmdir /s /Q "+add_quo(appdata_path)+system_to_nul);
-        ssystem("mkdir "+add_quo(appdata_path)+system_to_nul);
-        ssystem("echo "+makepath(file_path,"build")+" > "+add_quo(makepath(appdata_path,"path.txt")));
-        ssystem("xcopy /s /e /i /h /y "+add_quo(makepath(file_path,"files","windows",""))+"* "+add_quo(appdata_path)+system_to_nul);
+        std::filesystem::copy(file_path/"files"/"windows",appdata_path,std::filesystem::copy_options::recursive);
         #endif
         #ifdef __linux__
-        ssystem("rm -r "+add_quo(appdata_path)+system_to_nul);
-        ssystem("mkdir "+add_quo(appdata_path)+system_to_nul);
-        ssystem("echo "+makepath(file_path,"build")+" > "+add_quo(makepath(appdata_path,"path.txt")));
-        ssystem("cp -r "+add_quo(makepath(file_path,"files","linux",""))+"* "+add_quo(appdata_path)+system_to_nul);
+        std::filesystem::copy(file_path/"files"/"linux",appdata_path,std::filesystem::copy_options::recursive);
         #endif
+        ssystem("echo "+(file_path/"build").string()+" > "+add_quo(appdata_path/"path.txt"));
         return 0;
     }
     if(std::string(argv[1])=="clear")
     {
-        #ifdef _WIN32
-        ssystem("rmdir /s /Q "+add_quo(appdata_path)+system_to_nul);
-        #endif
-        #ifdef __linux__
-        ssystem("rm -r "+add_quo(appdata_path)+system_to_nul);
-        #endif
+        std::filesystem::remove_all(appdata_path);
         return 0;
     }
     #ifdef _WIN32
-    std::string command=add_quo(makepath(file_path,"build",std::string(argv[1])+".exe"));
+    std::string command=add_quo(file_path/"build"/(std::string(argv[1])+".exe"));
     #endif
     #ifdef __linux__
-    std::string command=add_quo(makepath(file_path,"build",argv[1]));
+    std::string command=add_quo(file_path/"build"/argv[1]);
     #endif
-    for(int i=2;i<argc;++i) command+=" "+add_quo(std::regex_replace(argv[i],std::regex("\""),"\\\""))+" ";
+    for(int i=2;i<argc;++i) command+=" "+add_quo(std::regex_replace(systoUTF8(argv[i]),std::regex("\""),"\\\""))+" ";
     ssystem(command);
     return 0;
 }
