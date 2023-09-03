@@ -35,9 +35,8 @@ class arguer
     }
     int check_argu(json cor_argu)
     {
-        for(auto argu:argus.items())
+        for(auto argu:sum_argus.items())
         {
-            DEBUG((std::string)argu.key());
             if(cor_argu[argu.key()].is_null()) return 1;
         }
         for(auto argu:cor_argu.items())

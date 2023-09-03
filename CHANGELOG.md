@@ -239,3 +239,7 @@ Orita 第一个正式版本。
 #### Changes
 
 - Use `std::filesystem`.
+
+#### Fixs
+
+- Cannot check empty invaild args.
