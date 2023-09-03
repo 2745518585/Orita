@@ -1,3 +1,5 @@
+zh-CN | [en-CN](./README_en-CN.md)
+
 # Orita
 
 [Orita](https://github.com/2745518585/Orita)
