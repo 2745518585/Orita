@@ -70,7 +70,7 @@ std::string GBtoUTF8(const std::string &gb2312)
     delete []str;
     return ss.str();
 }
-const UINT codepage=GetACP();
+const unsigned codepage=GetACP();
 std::string UTF8tosys(const std::string &str)
 {
     if(codepage==936) return UTF8toGB(str);
@@ -83,7 +83,7 @@ std::string systoUTF8(const std::string &str)
 }
 #endif
 #ifdef __linux__
-const UINT codepage=65001;
+const unsigned codepage=65001;
 std::string UTF8tosys(const std::string &str)
 {
     return str;
@@ -202,11 +202,17 @@ class timer
         return std::chrono::duration_cast<tim>(end_time-begin_time);
     }
 };
+std::ostream &operator<<(std::ostream &output,tim str)
+{
+    output<<std::to_string(str.count())<<"ms";
+    return output;
+}
 std::ofstream &operator<<(std::ofstream &output,tim str)
 {
     output<<std::to_string(str.count())<<"ms";
     return output;
 }
+
 // print
 #ifdef _WIN32
 const pat system_nul="nul";
