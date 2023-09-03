@@ -235,6 +235,7 @@ Orita 第一个正式版本。
 - Delete `orita cmp`.
 - Replace `setfile` with `config`.
 - Is able to change default data files in settings.
+- `check` output seed in `chk_file`.
 
 #### Changes
 

@@ -9,6 +9,7 @@
 #include<string>
 #include<filesystem>
 #include<typeinfo>
+#include<random>
 #include<regex>
 #include<sstream>
 #include<thread>
@@ -407,6 +408,15 @@ int kill_task(const pat &task)
 }
 #endif
 
+// random
+unsigned rnd()
+{
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    return gen();
+}
+
+//init
 namespace Init
 {
     class Init

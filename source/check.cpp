@@ -103,7 +103,8 @@ int check_main()
         pat run_dir=(pat)"data"/"datas"/std::to_string(i);
         std::filesystem::create_directory(run_dir);
         pat in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
-        runner in_runner(in,system_nul,in_file,std::to_string(i));
+        unsigned seed=rnd();
+        runner in_runner(in,system_nul,in_file,std::to_string(seed));
         if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
         if(in_runner.exit_code) {print_result(_in_name,res::type::RE,(tim)0,in_runner.exit_code);continue;}
         runner out_runner(out,in_file,out_file);
@@ -114,9 +115,9 @@ int check_main()
         ans_judger.print_result();
         sofstream output_chk_file(chk_file,std::ios::app);
         output_chk_file<<"\n";
-        for(int j=1;j<=50;++j) output_chk_file<<"*";
-        output_chk_file<<"\n";
+        for(int j=1;j<=50;++j) output_chk_file<<"*";output_chk_file<<"\n";
         output_chk_file<<"    result: "<<get_resultname(ans_judger.result)<<"\n";
+        output_chk_file<<"    seed: "<<seed<<"\n";
         output_chk_file<<"    "<<_in_name<<":  "<<"time: "<<in_runner.time<<", exit_code: "<<in_runner.exit_code<<"\n";
         output_chk_file<<"    "<<_out_name<<":  "<<"time: "<<out_runner.time<<", exit_code: "<<out_runner.exit_code<<"\n";
         output_chk_file<<"    "<<_ans_name<<":  "<<"time: "<<ans_judger.time<<", exit_code: "<<ans_judger.exit_code<<"\n";
