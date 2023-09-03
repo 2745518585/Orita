@@ -49,13 +49,13 @@ If a parameter contains spaces, enclose it in quotes, and use `\"` to include qu
 
 Orita includes some built-in files for convenience, which are located in the file cache after initialization. If you manually modify the files in the following slots, some commands may produce errors.
 
-Slot `$0$`: Empty, always returns `$0$`.
+Slot $0$: Empty, always returns $0$.
 
-Slot `$1$`: File comparator, takes three parameters: `in`, `out`, and `ans` files, and returns the comparison result between `out` and `ans`, ignoring trailing spaces and line endings.
+Slot $1$: File comparator, takes three parameters: `in`, `out`, and `ans` files, and returns the comparison result between `out` and `ans`, ignoring trailing spaces and line endings.
 
 ### File Name Replacement
 
-Use `%[0-999]` to replace it with the file name in the slot, such as `%1`, which represents the file stored in slot `$1$`.
+Use `%[0-999]` to replace it with the file name in the slot, such as `%1`, which represents the file stored in slot $1$.
 
 Use `%...%` in file names to replace it with environment variables `...`.
 
