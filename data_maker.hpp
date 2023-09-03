@@ -15,6 +15,10 @@ namespace Data_maker
     {
         if(argc>=2) rd.seed(std::stoul(argv[1]));
     }
+    void register_rnd(unsigned seed)
+    {
+        rd.seed(seed);
+    }
     unsigned long long rnd()
     {
         return (std::uniform_int_distribution<unsigned long long>(0,-1))(rd);
@@ -102,6 +106,7 @@ namespace Data_maker
 }
 std::mt19937 rd=Data_maker::rd;
 void register_rnd(int argc,char **argv) {return Data_maker::register_rnd(argc,argv);}
+void register_rnd(unsigned seed) {return Data_maker::register_rnd(seed);}
 unsigned long long rnd(){return Data_maker::rnd();}
 long long rnd(long long lim){return Data_maker::rnd(lim);}
 long long rnd(long long llim,long long ulim){return Data_maker::rnd(llim,ulim);}
