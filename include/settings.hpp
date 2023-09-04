@@ -23,7 +23,7 @@ template<typename Type> Type get_settings(std::string path,json::value_t type)
 {
     if(settings[json::json_pointer(path)].type()!=type)
     {
-        ERROR("invaild settings",path);
+        ERROR("invaild settings",path,settings[json::json_pointer(path)].type_name());
         class invaild_settings {}error;
         throw error;
     }
@@ -36,7 +36,7 @@ namespace Settings
 {
     void change_time_limit(const tim time)
     {
-        settings["data"]["time"]=time.count();
+        settings["data"]["time"]=(unsigned)time.count();
     }
     tim get_time_limit()
     {
