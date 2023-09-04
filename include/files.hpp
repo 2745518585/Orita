@@ -81,8 +81,8 @@ namespace Files
         for(const auto &dir:tmp)
         {
             if(std::regex_match(dir.string(),std::regex("^%[^%]*"))) final_path/=get_file(stoi(dir.string().substr(1)));
-            else if(std::regex_match(dir.string(),std::regex("^%[^%]*%$"))) final_path/=sgetenv(dir.string().substr(1,dir.string().length()-2).c_str());
-            else final_path/=dir;
+            else if(std::regex_match(dir.string(),std::regex("^%[^%]+%$"))) final_path/=sgetenv(dir.string().substr(1,dir.string().length()-2).c_str());
+            else final_path/=std::regex_replace(dir.string(),std::regex("%%"),"%");
         }
         INFO("name get file","name: "+add_squo(file),"file: "+add_squo(final_path));
         return final_path;
