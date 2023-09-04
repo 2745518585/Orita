@@ -1,6 +1,8 @@
 #pragma once
 #ifndef _FILE_COMPILE
 #define _FILE_COMPILE _FILE_COMPILE
+#include"init.hpp"
+#include"log.hpp"
 #include"files.hpp"
 #include"settings.hpp"
 namespace Compile

@@ -2,6 +2,7 @@
 #ifndef _FILE_PRINT
 #define _FILE_PRINT _FILE_PRINT
 #include"init.hpp"
+#include"log.hpp"
 namespace Print
 {
     void print_result(const std::string &name,const res result,const tim time,const int exit_code)

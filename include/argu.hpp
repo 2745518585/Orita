@@ -2,6 +2,7 @@
 #ifndef _FILE_ARGU
 #define _FILE_ARGU _FILE_ARGU
 #include"init.hpp"
+#include"log.hpp"
 class arguer
 {
   public:

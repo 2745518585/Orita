@@ -244,3 +244,4 @@ Orita 第一个正式版本。
 #### Fixs
 
 - Cannot check empty invaild args.
+- Cannot remove files while logger is running.

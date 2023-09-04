@@ -1,6 +1,8 @@
 #pragma once
 #ifndef _FILE_JUDGE
 #define _FILE_JUDGE _FILE_JUDGE
+#include"init.hpp"
+#include"log.hpp"
 #include"files.hpp"
 #include"settings.hpp"
 #include"print.hpp"
