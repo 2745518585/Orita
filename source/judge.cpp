@@ -19,7 +19,7 @@ int judge_main()
     // init name
     const pat ans=[]()
     {
-        const pat ans_str=check_file(argus["f"].get(1),_run_ans);
+        const pat ans_str=check_file(argus["f"][1],_run_ans);
         add_file(_run_ans,ans_str);
         return add_namesuf(get_file(ans_str),".cpp");
     }();
@@ -27,7 +27,7 @@ int judge_main()
     {
         if(argus["c"].appear())
         {
-            const pat chk_str=check_file(argus["c"].get(1),_run_chk);
+            const pat chk_str=check_file(argus["c"][1],_run_chk);
             add_file(_run_chk,chk_str);
             return add_namesuf(get_file(chk_str),".cpp");
         }

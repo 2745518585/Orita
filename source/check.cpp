@@ -22,19 +22,19 @@ int check_main()
     // init name
     const pat in=[]()
     {
-        const pat in_str=check_file(argus["f"].get(1),argus["if"].get(1),_check_in);
+        const pat in_str=check_file(argus["f"][1],argus["if"][1],_check_in);
         add_file(_check_in,in_str);
         return add_namesuf(get_file(in_str),".cpp");
     }();
     const pat out=[]()
     {
-        const pat out_str=check_file(argus["f"].get(2),argus["of"].get(1),_check_out);
+        const pat out_str=check_file(argus["f"][2],argus["of"][1],_check_out);
         add_file(_check_out,out_str);
         return add_namesuf(get_file(out_str),".cpp");
     }();
     const pat ans=[]()
     {
-        const pat ans_str=check_file(argus["f"].get(3),argus["af"].get(1),_check_ans);
+        const pat ans_str=check_file(argus["f"][3],argus["af"][1],_check_ans);
         add_file(_check_ans,ans_str);
         return add_namesuf(get_file(ans_str),".cpp");
     }();
@@ -42,7 +42,7 @@ int check_main()
     {
         if(argus["c"].appear())
         {
-            const pat chk_str=check_file(argus["c"].get(1),_check_chk);
+            const pat chk_str=check_file(argus["c"][1],_check_chk);
             add_file(_check_chk,chk_str);
             return add_namesuf(get_file(chk_str),".cpp");
         }

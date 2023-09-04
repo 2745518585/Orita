@@ -13,8 +13,8 @@ const json make_cor_argu()
 const json cor_argu=make_cor_argu();
 int chdata_main()
 {
-    pat in_file=check_file(argus["f"].get(1),argus["if"].get(1));
-    pat out_file=check_file(argus["f"].get(2),argus["of"].get(1));
+    pat in_file=check_file(argus["f"][1],argus["if"][1]);
+    pat out_file=check_file(argus["f"][2],argus["of"][1]);
     if(in_file!=""&&!std::filesystem::exists(in_file)) {print_result(res::type::NF);return 0;}
     if(out_file!=""&&!std::filesystem::exists(out_file)) {print_result(res::type::NF);return 0;}
     if(in_file!="") std::filesystem::copy_file(in_file,get_file(default_infile),std::filesystem::copy_options::overwrite_existing);

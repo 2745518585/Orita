@@ -78,7 +78,6 @@ class arguer
             if(para.is_null()||para[num].is_null()) return "";
             return para[num];
         }
-        json get(const size_t num) {return para[num];}
         size_t size()
         {
             if(sum.is_null()) return ND;

@@ -94,12 +94,7 @@ namespace Files
     pat check_file() {return pat();}
     template<typename Type> pat check_file(const Type &str)
     {
-        if constexpr(std::is_same_v<Type,json>)
-        {
-            if(str.type()==json::value_t::string) return (std::string)str;
-            else return pat();
-        }
-        else if constexpr(std::is_convertible<Type,pat>::value) return str;
+        if constexpr(std::is_convertible<Type,pat>::value) return str;
         else if constexpr(std::is_convertible<Type,file_number>::value)
         {
             if(find_filestr(str)) return get_filestr(str);
@@ -129,5 +124,4 @@ pat get_file(const pat &file) {return Files::get_file(file);}
 pat get_file(const unsigned num) {return Files::get_file(num);}
 template<typename ...others_type> pat check_file(const others_type ...others) {return Files::check_file(others...);}
 pat add_namesuf(const pat &file,const pat &namesuf) {return Files::add_namesuf(file,namesuf);}
-
 #endif
