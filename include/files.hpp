@@ -3,7 +3,6 @@
 #define _FILE_FILES _FILE_FILES
 #include"init.hpp"
 #include"log.hpp"
-#include"settings.hpp"
 #define _run_ans 101
 #define _run_chk 102
 #define _check_in 111

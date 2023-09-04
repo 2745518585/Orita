@@ -3,6 +3,7 @@
 #define _FILE_SETTINGS _FILE_SETTINGS
 #include"init.hpp"
 #include"log.hpp"
+#include"files.hpp"
 json settings;
 namespace Settings
 {
@@ -46,9 +47,10 @@ namespace Settings
 void change_time_limit(const tim time) {Settings::change_time_limit(time);}
 tim get_time_limit() {return Settings::get_time_limit();}
 const std::string compile_argu=get_settings<std::string>("/data/compile_argu",json::value_t::string);
-const pat default_checker=get_settings<std::string>("/data/default_checker",json::value_t::string);
-const pat default_infile=get_settings<std::string>("/data/default_infile",json::value_t::string);
-const pat default_outfile=get_settings<std::string>("/data/default_outfile",json::value_t::string);
-const pat default_ansfile=get_settings<std::string>("/data/default_ansfile",json::value_t::string);
-const pat default_chkfile=get_settings<std::string>("/data/default_chkfile",json::value_t::string);
+const pat default_checker=get_file(get_settings<pat>("/data/default_checker",json::value_t::string));
+const pat default_infile=get_file(get_settings<pat>("/data/default_infile",json::value_t::string));
+const pat default_outfile=get_file(get_settings<pat>("/data/default_outfile",json::value_t::string));
+const pat default_ansfile=get_file(get_settings<pat>("/data/default_ansfile",json::value_t::string));
+const pat default_chkfile=get_file(get_settings<pat>("/data/default_chkfile",json::value_t::string));
+const pat default_data_dir=get_file(get_settings<pat>("/data/default_data_dir",json::value_t::string));
 #endif

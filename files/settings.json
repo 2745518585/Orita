@@ -4,11 +4,12 @@
         "default_ansfile": "%12",
         "default_checker": "%1",
         "default_chkfile": "%13",
+        "default_data_dir": "%{RUNNING_PATH}%\\.data",
         "default_infile": "%10",
         "default_outfile": "%11",
         "time": 1000
     },
     "exe_suf": ".exe",
     "max_thread_num": 10,
-    "runtime_limit": 1000
+    "runtime_limit": 5000
 }

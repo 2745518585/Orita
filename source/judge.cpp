@@ -78,9 +78,9 @@ int judge_main()
         }
     }
     // judge
-    std::filesystem::remove_all("data");
-    std::filesystem::create_directory("data");
-    std::filesystem::create_directory((pat)"data"/"datas");
+    std::filesystem::remove_all(default_data_dir);
+    std::filesystem::create_directory(default_data_dir);
+    std::filesystem::create_directory(default_data_dir/"datas");
     int runned_sum=0,ac_sum=0;
     for(auto i:datas.items())
     {
@@ -89,7 +89,7 @@ int judge_main()
         for(int j=1;j<=50;++j) scout<<"-";
         scout<<"\r"<<"#"<<(std::string)i.key()<<"\n";
         ++runned_sum;
-        pat run_dir=(pat)"data"/"datas"/std::to_string(runned_sum);
+        pat run_dir=default_data_dir/"datas"/std::to_string(runned_sum);
         pat in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
         std::filesystem::create_directory(run_dir);
         if(!i.value()["in"].is_null()) std::filesystem::copy_file((std::string)i.value()["in"],in_file=run_dir/"data.in",std::filesystem::copy_options::overwrite_existing);
@@ -113,7 +113,7 @@ int judge_main()
         if(run_judger.result.istrue()) ++ac_sum;
         if(run_judger.result.isfalse())
         {
-            std::filesystem::copy(run_dir,(pat)"data"/(std::to_string(runned_sum)+" - "+get_short_resultname(run_judger.result)),std::filesystem::copy_options::recursive);
+            std::filesystem::copy(run_dir,default_data_dir/(std::to_string(runned_sum)+" - "+get_short_resultname(run_judger.result)),std::filesystem::copy_options::recursive);
         }
         #undef run_dir
     }

@@ -11,10 +11,10 @@ const json make_cor_argu()
 const json cor_argu=make_cor_argu();
 const std::string _ans_name="ans";
 const std::string _chk_name="checker";
-pat in_file=get_file(default_infile);
-pat out_file=get_file(default_outfile);
-pat ans_file=get_file(default_ansfile);
-pat chk_file=get_file(default_chkfile);
+pat in_file=default_infile;
+pat out_file=default_outfile;
+pat ans_file=default_ansfile;
+pat chk_file=default_chkfile;
 int run_main()
 {
     // init name
@@ -74,11 +74,11 @@ int run_main()
     for(int j=1;j<=50;++j) output_chk_file<<"*";
     output_chk_file.close();
     // copy result
-    std::filesystem::create_directory("data");
-    std::filesystem::copy_file(in_file,(pat)"data"/"data.in",std::filesystem::copy_options::overwrite_existing);
-    std::filesystem::copy_file(out_file,(pat)"data"/"data.out",std::filesystem::copy_options::overwrite_existing);
-    std::filesystem::copy_file(ans_file,(pat)"data"/"data.ans",std::filesystem::copy_options::overwrite_existing);
-    std::filesystem::copy_file(chk_file,(pat)"data"/"data.txt",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::create_directory(default_data_dir);
+    std::filesystem::copy_file(in_file,default_data_dir/"data.in",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(out_file,default_data_dir/"data.out",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(ans_file,default_data_dir/"data.ans",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::copy_file(chk_file,default_data_dir/"data.txt",std::filesystem::copy_options::overwrite_existing);
     return 0;
 }
 int main(int argc,char **argv)

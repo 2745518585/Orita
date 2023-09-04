@@ -15,12 +15,7 @@ int main(int argc,char **argv)
     if(std::string(argv[1])=="reset")
     {
         std::filesystem::remove_all(appdata_path);
-        #ifdef _WIN32
-        std::filesystem::copy(file_path/"files"/"windows",appdata_path,std::filesystem::copy_options::recursive);
-        #endif
-        #ifdef __linux__
-        std::filesystem::copy(file_path/"files"/"linux",appdata_path,std::filesystem::copy_options::recursive);
-        #endif
+        std::filesystem::copy(file_path/"files",appdata_path,std::filesystem::copy_options::recursive);
         ssystem("echo "+(file_path/"build").string()+" > "+add_quo(appdata_path/"path.txt"));
         return 0;
     }

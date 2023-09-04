@@ -236,6 +236,7 @@ Orita 第一个正式版本。
 - Replace `setfile` with `config`.
 - Is able to change default data files in settings.
 - `check` output seed in `chk_file` and updata `data_maker`.
+- `%{RUNNING_PATH}%`,`%{FILE_PATH}%` and `%{APPDATA_PATH}%` can be used in file name.
 
 #### Changes
 

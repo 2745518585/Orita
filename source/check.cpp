@@ -58,9 +58,9 @@ int check_main()
     }
     unsigned total_sum=stoi(argus["n"][1]);
     // init data dir
-    std::filesystem::remove_all("data");
-    std::filesystem::create_directory("data");
-    std::filesystem::create_directory((pat)"data"/"datas");
+    std::filesystem::remove_all(default_data_dir);
+    std::filesystem::create_directory(default_data_dir);
+    std::filesystem::create_directory(default_data_dir/"datas");
     // find name
     if(in==pat()) {print_result(_in_name,res::type::NF);return 0;}
     if(out==pat()) {print_result(_out_name,res::type::NF);return 0;}
@@ -100,9 +100,9 @@ int check_main()
             scout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
         }
         scout<<"\n";
-        pat run_dir=(pat)"data"/"datas"/std::to_string(i);
+        const pat run_dir=default_data_dir/"datas"/std::to_string(i);
         std::filesystem::create_directory(run_dir);
-        pat in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+        const pat in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
         unsigned seed=rnd();
         runner in_runner(in,system_nul,in_file,std::to_string(seed));
         if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
@@ -128,7 +128,7 @@ int check_main()
         if(ans_judger.result.istrue()) ++ac_sum;
         if(ans_judger.result.isfalse())
         {
-            std::filesystem::copy(run_dir,(pat)"data"/(std::to_string(i)+" - "+get_short_resultname(ans_judger.result)),std::filesystem::copy_options::recursive);
+            std::filesystem::copy(run_dir,default_data_dir/(std::to_string(i)+" - "+get_short_resultname(ans_judger.result)),std::filesystem::copy_options::recursive);
         }
     }
     scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";

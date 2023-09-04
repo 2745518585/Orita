@@ -94,16 +94,6 @@ std::string systoUTF8(const std::string &str)
     return str;
 }
 #endif
-std::string sgetenv(const std::string &str)
-{
-    char *cstr=getenv(str.c_str());
-    if(cstr==NULL)
-    {
-        class empty_environment_variable {}error;
-        throw error;
-    }
-    return systoUTF8(cstr);
-}
 
 // result
 class res
@@ -161,6 +151,7 @@ pat replace_extension(pat file,const pat suf=pat())
 {
     return file.replace_extension(suf);
 }
+std::string sgetenv(const std::string &str);
 const pat running_path=[]()
 {
     char path[1001];
@@ -188,6 +179,22 @@ const pat appdata_path=[]()
     return pat(sgetenv("HOME"))/".Orita";
     #endif
 }();
+json enviroment_variable={
+    {"{RUNNING_PATH}",running_path},
+    {"{FILE_PATH}",file_path},
+    {"{APPDATA_PATH}",appdata_path}
+};
+std::string sgetenv(const std::string &str)
+{
+    if(!enviroment_variable[str].is_null()) return (std::string)enviroment_variable[str];
+    char *cstr=getenv(str.c_str());
+    if(cstr==NULL)
+    {
+        class empty_environment_variable {}error;
+        throw error;
+    }
+    return systoUTF8(cstr);
+}
 
 // time
 using tim=std::chrono::milliseconds;

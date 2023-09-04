@@ -17,17 +17,17 @@ int chdata_main()
     pat out_file=check_file(argus["f"][2],argus["of"][1]);
     if(in_file!=""&&!std::filesystem::exists(in_file)) {print_result(res::type::NF);return 0;}
     if(out_file!=""&&!std::filesystem::exists(out_file)) {print_result(res::type::NF);return 0;}
-    if(in_file!="") std::filesystem::copy_file(in_file,get_file(default_infile),std::filesystem::copy_options::overwrite_existing);
-    if(out_file!="") std::filesystem::copy_file(out_file,get_file(default_outfile),std::filesystem::copy_options::overwrite_existing);
+    if(in_file!="") std::filesystem::copy_file(in_file,default_infile,std::filesystem::copy_options::overwrite_existing);
+    if(out_file!="") std::filesystem::copy_file(out_file,default_outfile,std::filesystem::copy_options::overwrite_existing);
     if(argus["s"].appear())
     {
         show_cursor();
         char str;
-        FILE *file=sfopen(get_file(default_infile).string(),"w");
+        FILE *file=sfopen(default_infile.string(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
         sfclose(file);
-        file=sfopen(get_file(default_outfile).string(),"w");
+        file=sfopen(default_outfile.string(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
         sfclose(file);
