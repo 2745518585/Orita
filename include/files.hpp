@@ -31,16 +31,40 @@ namespace Files
     {
       public:
         const unsigned num;
+        std::string str()const {return "file"+to_string_len(num,number_len);}
         file_number(const unsigned _num):num(_num)
         {
             if(num<0||num>_max_file_num)
             {
-                ERROR("name invalid file_number","num: "+add_squo("file"+to_string_len(num,number_len)));
+                ERROR("file_number - invalid file_number","num: "+add_squo(this->str()));
                 class invalid_file_number {}error;
                 throw error;
             }
         }
-        std::string str()const {return "file"+to_string_len(num,number_len);}
+        file_number(const std::string &str):num([&]
+        {
+            if(str[0]!='%')
+            {
+                ERROR("file_number - invalid file_number","str: "+add_squo(str));
+                class invalid_file_number {}error;
+                throw error;
+            }
+            try {return std::stoul(str.substr(1));}
+            catch(...)
+            {
+                ERROR("file_number - invalid file_number","str: "+add_squo(str));
+                class invalid_file_number {}error;
+                throw error;
+            }
+        }())
+        {
+            if(num<0||num>_max_file_num)
+            {
+                ERROR("file_number - invalid file_number","num: "+add_squo(this->str()));
+                class invalid_file_number {}error;
+                throw error;
+            }
+        }
     };
     bool find_filestr(const file_number &num)
     {
@@ -49,18 +73,18 @@ namespace Files
     void add_filestr(const file_number &num,const pat &file)
     {
         files_json[num.str()]=file.string();
-        INFO("name add filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
+        INFO("add filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
     }
     pat get_filestr(const file_number &num)
     {
         if(files_json[num.str()].type()!=json::value_t::string)
         {
-            ERROR("name cannot get filestr","num: "+add_squo(num.str()));
-            class no_such_filestr {}error;
+            ERROR("get filestr - empty filename","num: "+add_squo(num.str()));
+            class empty_filename {}error;
             throw error;
         }
         const pat file=files_json[num.str()];
-        INFO("name get filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
+        INFO("get filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
         return file;
     }
     pat get_path(const pat &file)
@@ -71,7 +95,7 @@ namespace Files
     void add_file(const file_number &num,const pat &file)
     {
         pat file_result=get_path(file);
-        INFO("name add file","name: "+add_squo(file),"file: "+add_squo(file_result));
+        INFO("add file","name: "+add_squo(file),"file: "+add_squo(file_result));
         add_filestr(num,file_result.string());
     }
     pat get_file(const file_number &num);
@@ -80,11 +104,23 @@ namespace Files
         pat tmp=get_path(file),final_path;
         for(const auto &dir:tmp)
         {
-            if(std::regex_match(dir.string(),std::regex("^%[^%]*"))) final_path/=get_file(stoi(dir.string().substr(1)));
+            if(std::regex_match(dir.string(),std::regex("^%[^%]*")))
+            {
+                final_path/=get_file((file_number)dir.string());
+            }
             else if(std::regex_match(dir.string(),std::regex("^%[^%]+%$"))) final_path/=sgetenv(dir.string().substr(1,dir.string().length()-2).c_str());
-            else final_path/=std::regex_replace(dir.string(),std::regex("%%"),"%");
+            else
+            {
+                if(std::regex_match(dir.string(),std::regex(".*(^|[^%])(%%)*%($|[^%]).*")))
+                {
+                    ERROR("get file - invaild path",tmp.string());
+                    class invaild_path {}error;
+                    throw error;
+                }
+                final_path/=std::regex_replace(dir.string(),std::regex("%%"),"%");
+            }
         }
-        INFO("name get file","name: "+add_squo(file),"file: "+add_squo(final_path));
+        INFO("get file","name: "+add_squo(file),"file: "+add_squo(final_path));
         return final_path;
     }
     pat get_file(const file_number &num)

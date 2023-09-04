@@ -96,7 +96,13 @@ std::string systoUTF8(const std::string &str)
 #endif
 std::string sgetenv(const std::string &str)
 {
-    return systoUTF8(getenv(str.c_str()));
+    char *cstr=getenv(str.c_str());
+    if(cstr==NULL)
+    {
+        class empty_environment_variable {}error;
+        throw error;
+    }
+    return systoUTF8(cstr);
 }
 
 // result

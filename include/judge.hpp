@@ -22,7 +22,7 @@ class runner
     void run_run()
     {
         const std::string command=add_quo(replace_extension(file,exe_suf))+" "+argu+" "+(in_file!=""?" < "+add_quo(in_file):"")+(out_file!=""?" > "+add_quo(out_file):"");
-        INFO("start run","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)),"argu: "+add_squo(argu),"in_file: "+add_squo(in_file),"out_file: "+add_squo(out_file),"command: "+add_squo(command));
+        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)),"argu: "+add_squo(argu),"in_file: "+add_squo(in_file),"out_file: "+add_squo(out_file),"command: "+add_squo(command));
         run_timer.init();
         show_cursor();
         exit_code=ssystem(command)>>sys_exit_code;
@@ -42,7 +42,7 @@ class runner
         }
         if(!if_end)
         {
-            WARN("run timeout","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
+            WARN("run - timeout","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
             kill_task(replace_extension(file.filename(),exe_suf));
             {
                 std::unique_lock<std::mutex> lock(wait_lock);
@@ -52,7 +52,7 @@ class runner
             time=time_limit;
             return 1;
         }
-        INFO("success run","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
+        INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
         return 0;
     }
 };

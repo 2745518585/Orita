@@ -23,7 +23,7 @@ template<typename Type> Type get_settings(std::string path,json::value_t type)
 {
     if(settings[json::json_pointer(path)].type()!=type)
     {
-        ERROR("invaild settings",path,settings[json::json_pointer(path)].type_name());
+        ERROR("get settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
         class invaild_settings {}error;
         throw error;
     }

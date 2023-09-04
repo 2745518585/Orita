@@ -11,14 +11,14 @@ namespace Compile
     {
         if(file.extension()!=".cpp")
         {
-            WARN("fail compile","file: "+add_quo(file));
+            WARN("compile - invaild file","file: "+add_quo(file));
             return -1;
         }
         const std::string command="g++ "+add_quo(file)+" -o "+add_quo(replace_extension(file,exe_suf))+" "+compile_argu+" "+(if_print?"":system_to_nul);
-        INFO("start compile","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
+        INFO("compile - start","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
         int result=ssystem(command);
-        if(result) WARN("fail compile","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
-        else INFO("success compile","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
+        if(result) WARN("compile - fail","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
+        else INFO("compile - success","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
         return result!=0;
     }
 }
@@ -78,7 +78,7 @@ class compiler
         running_sum=0;
         if_end=false;
         for(unsigned i=1;i<=thread_sum;++i) std::thread(&compiler::auto_compile,this).detach();
-        INFO("start compiler","id: "+to_string_hex(this),"thread sum: "+std::to_string(thread_sum));
+        INFO("compiler - start","id: "+to_string_hex(this),"thread sum: "+std::to_string(thread_sum));
     }
     ~compiler()
     {
@@ -90,13 +90,13 @@ class compiler
             lock.unlock();
         }
         ssleep((tim)10);
-        INFO("end compiler","id: "+to_string_hex(this));
+        INFO("compiler - end","id: "+to_string_hex(this));
     }
     void add(const std::string &name,const pat &file,const std::string &argu="")
     {
         compile_que.push(comp_file(name,file,argu));
         wait_que.notify_one();
-        INFO("add compile task","id: "+to_string_hex(this),"name: "+add_squo(name),"file: "+add_squo(file),"argu: "+add_squo(argu));
+        INFO("compiler - add compile task","id: "+to_string_hex(this),"name: "+add_squo(name),"file: "+add_squo(file),"argu: "+add_squo(argu));
     }
     void add(const std::initializer_list<std::pair<std::string,pat>> file,const std::string &argu="")
     {
