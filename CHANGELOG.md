@@ -241,6 +241,7 @@ Orita 第一个正式版本。
 #### Changes
 
 - Use `std::filesystem`.
+- `judge` use file name as data_name.
 
 #### Fixs
 
