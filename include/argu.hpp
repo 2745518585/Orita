@@ -58,12 +58,12 @@ class arguer
     }
     std::string get_argu(const std::string &name,const size_t num)
     {
-        if(argus[name].is_null()||argus[name][num].is_null()) return "";
+        if(argus[name][num].is_null()) return "";
         return argus[name][num];
     }
     size_t get_sum_argu(const std::string &name)
     {
-        if(argus[name].is_null()) return ND;
+        if(sum_argus[name].is_null()) return ND;
         return sum_argus[name];
     }
     class parameter
