@@ -231,20 +231,20 @@ Orita 第一个正式版本。
 
 #### Features
 
-- `data_maker` can use custom function.
-- Delete `orita cmp`.
-- Replace `setfile` with `config`.
-- Is able to change default data files in settings.
-- `check` output seed in `chk_file` and updata `data_maker`.
-- `%{RUNNING_PATH}%`,`%{FILE_PATH}%` and `%{APPDATA_PATH}%` can be used in file name.
+- `data_maker` can use custom functions. ([`a23ff62`](https://github.com/2745518585/Orita/commit/a23ff62a278be94587659aabe3f9aa007604e17d),[`f975896`](https://github.com/2745518585/Orita/commit/f975896982a6c078a62d0680da9939f86c22deac))
+- Replaced `setfile` with `config`. ([`d589944`](https://github.com/2745518585/Orita/commit/d5899446d5655d159bc9ed8606063cb1501eac87),[`c03793b`](https://github.com/2745518585/Orita/commit/c03793b2bc0ce0e3c4c01ba9ab3d4ebbbbb19105))
+- It is now possible to change default data files in settings. ([`bf3ae33`](https://github.com/2745518585/Orita/commit/bf3ae33e33f3ca3e9f31c88553b27fdfdf74a8ad))
+- `check` outputs the seed in `chk_file` and updates `data_maker`. ([`852d486`](https://github.com/2745518585/Orita/commit/852d486344ef9d2c06a44931c7d58bd1cd621f86))
+- `%{RUNNING_PATH}%`, `%{FILE_PATH}%`, and `%{APPDATA_PATH}%` can be used in file names. ([`6352cd5`](https://github.com/2745518585/Orita/commit/6352cd55d5d4275e76ebeec68454c2edc9020941))
 
 #### Changes
 
-- Use `std::filesystem`.
-- `judge` use file name as data_name.
-- `run`,`judge` and `check` will always use checker in `file.json`.
+- Deleted `orita cmp`. ([`388a863`](https://github.com/2745518585/Orita/commit/388a8639f43588fa73fb7fa62f14f96ae6844e68))
+- Now using `std::filesystem`. ([`bf3ae33`](https://github.com/2745518585/Orita/commit/bf3ae33e33f3ca3e9f31c88553b27fdfdf74a8ad))
+- `judge` uses the file name as the data_name. ([`67e20ac`](https://github.com/2745518585/Orita/commit/67e20aca856a048ec564d4a9cb6cca1bae63929d))
+- `run`, `judge`, and `check` will always use the checker in `file.json`. ([`b49b720`](https://github.com/2745518585/Orita/commit/b49b720ddc3353aeda9d1d591e14e8416f17a565))
 
-#### Fixs
+#### Fixes
 
-- Cannot check empty invaild args.
-- Cannot remove files while logger is running.
+- Empty invalid arguments could not be checked. ([`326f57a`](https://github.com/2745518585/Orita/commit/326f57a7994031fdda64cddb68d3d0d0847c3619),[`3d2cd12`](https://github.com/2745518585/Orita/commit/3d2cd128b64c404a99504841129d48e32e941087))
+- Files could not be removed while the logger is running. ([`4d7e4da`](https://github.com/2745518585/Orita/commit/4d7e4daa5248dc278425409ffce6a240cdcc3b0f))
