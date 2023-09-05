@@ -10,26 +10,49 @@ An OI (Olympiad in Informatics) tool developed by [赵悦岑](https://github.com
 
 The vscode extension for Orita.
 
-## Installation
+## Install
 
-Before installing Orita, ensure that your environment is either Windows or Linux, and that the following applications are installed on your computer:
+### Build
+
+Before installing Orita, ensure that your environment is a Windows or Linux environment, and the following applications are installed on your computer:
+
+- [CMake](https://cmake.org/) (`3.15+`)
+
+You also need to install `GCC 11.4+` or `MSVC 2022+`.
+
+For Windows computers, please go to the official websites to download and install:
 
 - [CMake](https://cmake.org/)
+- [MinGW](https://www.mingw-w64.org/downloads/)
+- [Visual Studio](https://visualstudio.microsoft.com/downloads/)
 
-Obtain the Orita source code with the following command:
+For Linux computers, execute the following commands to install CMake and GCC:
 
+```shell
+$ sudo apt-get install cmake
+$ sudo apt-get install g++
 ```
+
+After installation, use the following command to obtain the Orita source code:
+
+```shell
 $ git clone https://github.com/2745518585/Orita
 ```
 
 To compile the source code, run the following commands in the `Orita/` directory:
 
-```
+```shell
 $ mkdir build
 $ cd build
 $ cmake ..
 $ cmake --build .
 ```
+
+### Download
+
+You can find the latest release on [Github](https://github.com/2745518585/Orita/releases) and download the precompiled file package for your corresponding platform.
+
+### Initialization
 
 Run `init.bat | init.sh` in the `Orita/` directory to compile the entry file. Ensure that the executable files in the `Orita/bin/` directory can be globally accessed and can be moved to any location. When using CMake to generate, the location of the source files will be automatically output. If you move the source files, please run `init.bat | init.sh` in the `Orita/` directory.
 
@@ -190,3 +213,9 @@ View and modify configurations.
 `/s [key [value]]` If `key` is not given, output `settings.json` file. If `key` is given but `value` is not given, output the value of `key`. If `%{RESET}%` is appended after `key`, the item will be reset to the default value, which is read from `%{FILE_PATH}%/files/settings.json`. If `value` is appended after `key`, the value of `key` is changed to `value`. The key values of different layers in `key` are separated by `/`.
 
 `/f [num [value]]` If `num` is not given, output `file.json` file. If `num` is given but `value` is not given, output the value of the file numbered `num`. If `%{RESET}%` is appended after `num`, the file will be reset to the default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended after `num`, the file is set to `value`.
+
+## Uninstall
+
+To uninstall Orita, use `orita clear` to delete all configuration files, and then remove the source files under the `Orita` directory.
+
+If you no longer need `CMake`, `GCC`, `MSVC`, or other components, please uninstall them manually.

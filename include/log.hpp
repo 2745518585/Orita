@@ -48,10 +48,10 @@ class logger
         output=spdlog::basic_logger_mt(name,UTF8tosys(output_file.string()));
         output->set_level(spdlog::level::debug);
         output->flush_on(spdlog::level::trace);
+        read_lock.unlock();
         print(_LOG_INFO,"running_path","path: "+add_squo(running_path));
         print(_LOG_INFO,"appdata_path","path: "+add_squo(appdata_path));
         print(_LOG_INFO,"file_path","path: "+add_squo(file_path));
-        read_lock.unlock();
     }
 }orita_log;
 #define INFO(...) orita_log.print(_LOG_INFO,__VA_ARGS__)

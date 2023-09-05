@@ -205,7 +205,7 @@ void ssleep(const tim time)
 class timer
 {
   public:
-    std::chrono::_V2::system_clock::time_point begin_time;
+    decltype(std::chrono::high_resolution_clock::now()) begin_time;
     void init()
     {
         begin_time=std::chrono::high_resolution_clock::now();

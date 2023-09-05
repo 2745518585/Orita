@@ -12,24 +12,47 @@ Orita 的配套 vscode 拓展。
 
 ## 安装
 
+### 构建
+
 在安装 Orita 前，需要保证环境为 Windows 或 Linux 环境，计算机上需要安装以下应用程序：
 
+- [CMake](https://cmake.org/) (`3.15+`)
+
+同时需要安装 `GCC 11.4+` 或 `MSVC 2022+`。
+
+Windows 计算机请前往官网下载并安装：
+
 - [CMake](https://cmake.org/)
+- [MinGW](https://www.mingw-w64.org/downloads/)
+- [Visual Stuido](https://visualstudio.microsoft.com/downloads/)
 
-通过以下命令获取 Orita 源代码：
+Linux 计算机执行以下命令安装 CMake 和 GCC：
 
+```shell
+$ sudo apt-get install cmake
+$ sudo apt-get install g++
 ```
+
+安装完成后，通过以下命令获取 Orita 源代码：
+
+```shell
 $ git clone https://github.com/2745518585/Orita
 ```
 
 在 `Orita/` 目录下运行以下命令来编译源代码：
 
-```
+```shell
 $ mkdir build
 $ cd build
 $ cmake ..
 $ cmake --build .
 ```
+
+### 下载
+
+可以在 [Github](https://github.com/2745518585/Orita/releases) 上查找最新的发行版，下载对应平台的已编译文件压缩包。
+
+### 初始化
 
 运行 `Orita/` 目录下的 `init.bat | init.sh` 编译得到入口文件，请保证 `Orita/bin/` 中的可执行文件能被全局调用，可以任意移动可执行文件位置。使用 CMake 生成时会自动输出源文件所在位置，如果移动源文件后请执行 `Orita/` 目录下的 `init.bat | init.sh`。
 
@@ -190,3 +213,9 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 `/s [key [value]]`    如未给出 `key`，输出 `settings.json` 文件。如给出 `key` 未给出 `value`，输出 `key` 的值。如 `key` 后追加 `%{RESET}%`，则将该项重置为默认值，默认值从 `%{FILE_PATH}%/files/settings.json` 中读取。如 `key` 后追加 `value`，则修改 `key` 的值为 `value`。`key` 中不同层的键值用 `/` 分隔。
 
 `/f [num [value]]`    如未给出 `num`，输出 `file.json` 文件。如给出 `num` 未给出 `value`，输出编号为 `num` 的文件的值。如 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值从 `%{FILE_PATH}%/files/file.json` 中读取。如 `num` 后追加 `value`，则将该文件设为 `value`。
+
+## 卸载
+
+使用 `orita clear` 删除所有配置文件，再删除 `Orita` 目录下的源文件即可。
+
+如不再需要 `CMake`、`GCC`、`MSVC` 等请自行卸载。
