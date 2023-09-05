@@ -22,7 +22,8 @@ int config_main()
         }
         else
         {
-            settings[(json::json_pointer)("/"+argus["s"][1])]=json::parse(argus["s"][2]);
+            if(argus["s"][2]=="%{RESET}%") settings[(json::json_pointer)("/"+argus["s"][1])]=default_settings[(json::json_pointer)("/"+argus["s"][1])];
+            else settings[(json::json_pointer)("/"+argus["s"][1])]=json::parse(argus["s"][2]);
         }
     }
     else if(argus["f"].appear())
@@ -37,7 +38,9 @@ int config_main()
         }
         else
         {
-            add_filestr(stoi(argus["f"][1]),argus["f"][2]);
+            const unsigned num=std::stoul(argus["f"][1]);
+            if(argus["f"][2]=="%{RESET}%") add_filestr(num,get_default_filestr(num));
+            else add_filestr(num,argus["f"][2]);
         }
     }
     return 0;

@@ -179,7 +179,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 ### config
 
-`config [[/s [key [value]]] | [/f [key [value]]]]`
+`config [[/s [key [value | %{RESET}%]]] | [/f [key [value | %{RESET}%]]]]`
 
 #### 描述
 
@@ -187,6 +187,6 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 #### 参数列表
 
-`/s [key [value]]`    如未给出 `key`，输出 `settings.json` 文件。如给出 `key` 未给出 `value`，输出 `key` 的值。如给出 `value`，修改 `key` 的值为 `value`。`key` 中不同层的键值用 `/` 分隔。
+`/s [key [value]]`    如未给出 `key`，输出 `settings.json` 文件。如给出 `key` 未给出 `value`，输出 `key` 的值。如 `key` 后追加 `%{RESET}%`，则将该项重置为默认值，默认值从 `%{FILE_PATH}%/files/settings.json` 中读取。如 `key` 后追加 `value`，则修改 `key` 的值为 `value`。`key` 中不同层的键值用 `/` 分隔。
 
-`/f [num [value]]`    如未给出 `num`，输出 `file.json` 文件。如给出 `num` 未给出 `value`，输出编号为 `num` 的文件的值。如给出 `value`，将编号为 `num` 的文件设为 `value`。
+`/f [num [value]]`    如未给出 `num`，输出 `file.json` 文件。如给出 `num` 未给出 `value`，输出编号为 `num` 的文件的值。如 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值从 `%{FILE_PATH}%/files/file.json` 中读取。如 `num` 后追加 `value`，则将该文件设为 `value`。

@@ -181,7 +181,7 @@ Given source files and compilation parameters, compile the source files.
 
 ### config
 
-`config [[/s [key [value]]] | [/f [key [value]]]]`
+`config [[/s [key [value | %{RESET}%]]] | [/f [key [value | %{RESET}%]]]]`
 
 #### Description
 
@@ -189,6 +189,6 @@ View and modify configurations.
 
 #### Parameter List
 
-`/s [key [value]]`: If `key` is not provided, output the `settings.json` file. If `key` is provided and `value` is not provided, output the value of `key`. If `value` is provided, modify the value of `key` to `value`. Different layers of keys in `key` are separated by `/`.
+`/s [key [value]]` If `key` is not given, output `settings.json` file. If `key` is given but `value` is not given, output the value of `key`. If `%{RESET}%` is appended after `key`, the item will be reset to the default value, which is read from `%{FILE_PATH}%/files/settings.json`. If `value` is appended after `key`, the value of `key` is changed to `value`. The key values of different layers in `key` are separated by `/`.
 
-`/f [num [value]]`: If `num` is not provided, output the `file.json` file. If `num` is provided and `value` is not provided, output the value of the file with the number `num`. If `value` is provided, set the file with number `num` to `value`.
+`/f [num [value]]` If `num` is not given, output `file.json` file. If `num` is given but `value` is not given, output the value of the file numbered `num`. If `%{RESET}%` is appended after `num`, the file will be reset to the default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended after `num`, the file is set to `value`.

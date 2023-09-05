@@ -13,13 +13,14 @@
 namespace Files
 {
     #define number_len 3
-    json files_json;
+    json files_json,default_files_json;
     class Init
     {
       public:
         Init()
         {
             (sifstream(appdata_path/"file.json",false))>>files_json;
+            (sifstream(file_path/"files"/"file.json",false))>>default_files_json;
         }
         ~Init()
         {
@@ -84,6 +85,18 @@ namespace Files
         }
         const pat file=files_json[num.str()];
         INFO("get filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
+        return file;
+    }
+    pat get_default_filestr(const file_number &num)
+    {
+        if(default_files_json[num.str()].type()!=json::value_t::string)
+        {
+            ERROR("get default filestr - empty filename","num: "+add_squo(num.str()));
+            class empty_filename {}error;
+            throw error;
+        }
+        const pat file=default_files_json[num.str()];
+        INFO("get default filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
         return file;
     }
     pat get_path(const pat &file)
@@ -154,6 +167,7 @@ namespace Files
 bool find_filestr(const unsigned num) {return Files::find_filestr(num);}
 void add_filestr(const unsigned num,const pat &file) {return Files::add_filestr(num,file);}
 pat get_filestr(const unsigned num) {return Files::get_filestr(num);}
+pat get_default_filestr(const unsigned num) {return Files::get_default_filestr(num);}
 void add_file(const unsigned num,const pat &file) {return Files::add_file(num,file);}
 pat get_file(const pat &file) {return Files::get_file(file);}
 pat get_file(const unsigned num) {return Files::get_file(num);}

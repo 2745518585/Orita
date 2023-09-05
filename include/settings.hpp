@@ -4,7 +4,7 @@
 #include"init.hpp"
 #include"log.hpp"
 #include"files.hpp"
-json settings;
+json settings,default_settings;
 namespace Settings
 {
     class Init
@@ -13,6 +13,7 @@ namespace Settings
         Init()
         {
             (sifstream(appdata_path/"settings.json",false))>>settings;
+            (sifstream(file_path/"files"/"settings.json",false))>>default_settings;
         }
         ~Init()
         {
@@ -25,6 +26,16 @@ template<typename Type> Type get_settings(std::string path,json::value_t type)
     if(settings[json::json_pointer(path)].type()!=type)
     {
         ERROR("get settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
+        class invaild_settings {}error;
+        throw error;
+    }
+    return (Type)settings[json::json_pointer(path)];
+}
+template<typename Type> Type get_default_settings(std::string path,json::value_t type)
+{
+    if(settings[json::json_pointer(path)].type()!=type)
+    {
+        ERROR("get default settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
         class invaild_settings {}error;
         throw error;
     }
@@ -47,10 +58,10 @@ namespace Settings
 void change_time_limit(const tim time) {Settings::change_time_limit(time);}
 tim get_time_limit() {return Settings::get_time_limit();}
 const std::string compile_argu=get_settings<std::string>("/data/compile_argu",json::value_t::string);
-const pat default_checker=get_file(get_settings<pat>("/data/default_checker",json::value_t::string));
-const pat default_infile=get_file(get_settings<pat>("/data/default_infile",json::value_t::string));
-const pat default_outfile=get_file(get_settings<pat>("/data/default_outfile",json::value_t::string));
-const pat default_ansfile=get_file(get_settings<pat>("/data/default_ansfile",json::value_t::string));
-const pat default_chkfile=get_file(get_settings<pat>("/data/default_chkfile",json::value_t::string));
-const pat default_data_dir=get_file(get_settings<pat>("/data/default_data_dir",json::value_t::string));
+const pat default_checker=get_file(get_settings<pat>("/data/checker",json::value_t::string));
+const pat default_infile=get_file(get_settings<pat>("/data/infile",json::value_t::string));
+const pat default_outfile=get_file(get_settings<pat>("/data/outfile",json::value_t::string));
+const pat default_ansfile=get_file(get_settings<pat>("/data/ansfile",json::value_t::string));
+const pat default_chkfile=get_file(get_settings<pat>("/data/chkfile",json::value_t::string));
+const pat default_data_dir=get_file(get_settings<pat>("/data/data_dir",json::value_t::string));
 #endif

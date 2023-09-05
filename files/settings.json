@@ -1,12 +1,12 @@
 {
     "data": {
+        "ansfile": "%12",
+        "checker": "%1",
+        "chkfile": "%13",
         "compile_argu": "-std=c++14 -O2",
-        "default_ansfile": "%12",
-        "default_checker": "%1",
-        "default_chkfile": "%13",
-        "default_data_dir": "%{RUNNING_PATH}%\\.data",
-        "default_infile": "%10",
-        "default_outfile": "%11",
+        "data_dir": "%{RUNNING_PATH}%\\.data",
+        "infile": "%10",
+        "outfile": "%11",
         "time": 1000
     },
     "exe_suf": ".exe",
