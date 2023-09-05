@@ -242,6 +242,7 @@ Orita 第一个正式版本。
 
 - Use `std::filesystem`.
 - `judge` use file name as data_name.
+- `run`,`judge` and `check` will always use checker in `file.json`.
 
 #### Fixs
 

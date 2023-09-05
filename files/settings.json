@@ -1,7 +1,6 @@
 {
     "data": {
         "ansfile": "%12",
-        "checker": "%1",
         "chkfile": "%13",
         "compile_argu": "-std=c++14 -O2",
         "data_dir": "%{RUNNING_PATH}%\\.data",

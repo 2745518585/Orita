@@ -6,7 +6,7 @@ const json make_cor_argu()
         {"if",{arguer::ND,1}},
         {"of",{arguer::ND,1}},
         {"af",{arguer::ND,1}},
-        {"c",{arguer::ND,0,1}},
+        {"c",{arguer::ND,1}},
         {"n",{arguer::ND,1}},
         {"t",{arguer::ND,1}}
     };
@@ -40,13 +40,9 @@ int check_main()
     }();
     const pat chk=[]()
     {
-        if(argus["c"].appear())
-        {
-            const pat chk_str=check_file(argus["c"][1],_check_chk);
-            add_file(_check_chk,chk_str);
-            return add_namesuf(get_file(chk_str),".cpp");
-        }
-        else return add_namesuf(get_file(default_checker),".cpp");
+        const pat chk_str=check_file(argus["c"][1],_check_chk);
+        add_file(_check_chk,chk_str);
+        return add_namesuf(get_file(chk_str),".cpp");
     }();
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));

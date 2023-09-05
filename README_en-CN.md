@@ -77,7 +77,7 @@ Delete the configuration files.
 
 ### run
 
-`run [/f <file>] [/c [chk_file]] [/t <time>]`
+`run [/f <file>] [/c <chk_file>] [/t <time>]`
 
 #### Description
 
@@ -87,7 +87,7 @@ Run the given file with predefined standard input and output and provide the res
 
 `/f <file>`: Specify the source file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
 
-`/c [chk_file]`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set source file is used. If this parameter is not used, the `settings: default_checker` file is used.
+`/c <chk_file>`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
 
 `/t <time>`: Modify the default runtime limit (in milliseconds).
 
@@ -113,7 +113,7 @@ Used to modify standard input and output.
 
 ### check
 
-`check [/n <sum>] [/f <in_file> <out_file> <ans_file> | [[/if <in_file>] [/of <out_file>] [/af <ans_file>]]] [/c [chk_file]] [/t <time>]`
+`check [/n <sum>] [/f <in_file> <out_file> <ans_file> | [[/if <in_file>] [/of <out_file>] [/af <ans_file>]]] [/c <chk_file>] [/t <time>]`
 
 #### Description
 
@@ -125,7 +125,7 @@ Perform stress testing with a given data generator, standard code, and source co
 
 `/f <in_file> <out_file> <ans_file>`: Specify the source file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set source file is used.
 
-`/c <chk_file>`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set source file is used. If this parameter is not used, the `settings: default_checker` file is used.
+`/c <chk_file>`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
 
 `/if <in_file>`: Specify the `in` file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set `in` file is used. This parameter conflicts with `/f` and has lower priority than `/f`.
 
@@ -137,7 +137,7 @@ Perform stress testing with a given data generator, standard code, and source co
 
 ### judge
 
-`judge [/f <file>] [/c [chk_file]] [/d data...] [/is <infile_suf>] [/os <outfile_suf>] [/t <time>]`
+`judge [/f <file>] [/c <chk_file>] [/d data...] [/is <infile_suf>] [/os <outfile_suf>] [/t <time>]`
 
 #### Description
 
@@ -147,9 +147,7 @@ Given data files and source code, create data points by finding input and output
 
 `/f <file>`: Specify the source file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
 
-`/c [chk_file]`: Specify the `checker` file (autom
-
-atically adds a `.cpp` extension if not present). If no file is specified, the last set source file is used. If this parameter is not used, the `settings: default_checker` file is used.
+`/c <chk_file>`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
 
 `/d data...`: Specify data point files. If this parameter is not provided, judging will not begin and will be considered as parameter setting only.
 

@@ -77,7 +77,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 ### run
 
-`run [/f <file>] [/c [chk_file]] [/t <time>]`
+`run [/f <file>] [/c <chk_file>] [/t <time>]`
 
 #### 描述
 
@@ -87,7 +87,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 `/f <file>`    指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/c [chk_file]`    指定 `checker` 文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。未指定文件以上一次设置的源文件为准。无此参数使用使用 `settings: defualt_checker` 文件。
+`/c <chk_file>`    指定 `checker` 文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
 `/t <time>`    修改默认运行时间限制（单位 ms）。
 
@@ -113,7 +113,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 ### check
 
-`check [/n <sum>] [/f <in_file> <out_file> <ans_file> | [[/if <in_file>] [/of <out_file>] [/af <ans_file>]]] [/c [chk_file]] [/t <time>]`
+`check [/n <sum>] [/f <in_file> <out_file> <ans_file> | [[/if <in_file>] [/of <out_file>] [/af <ans_file>]]] [/c <chk_file>] [/t <time>]`
 
 #### 描述
 
@@ -125,7 +125,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 `/f <in_file> <out_file> <ans_file>`    指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/c <chk_file>`    指定 `checker` 的文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。未指定文件以上一次设置的源文件为准。无此参数使用使用 `settings: defualt_checker` 文件。
+`/c <chk_file>`    指定 `checker` 的文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
 `/if <in_file>`    指定 `in` 文件（后缀不为 `.cpp `自动添加 `.cpp `后缀）。如无此参数则以上一次设置的 `in` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
 
@@ -137,7 +137,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 ### judge
 
-`judge [/f <file>] [/c [chk_file]] [/d data...] [/is <infile_suf>] [/os <outfile_suf>] [/t <time>]`
+`judge [/f <file>] [/c <chk_file>] [/d data...] [/is <infile_suf>] [/os <outfile_suf>] [/t <time>]`
 
 #### 描述
 
@@ -147,7 +147,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 `/f <file>`    指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/c [chk_file]`    指定 `checker` 的文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。未指定文件以上一次设置的源文件为准。无此参数使用使用 `settings: defualt_checker` 文件。
+`/c <chk_file>`    指定 `checker` 的文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
 `/d data...`    指定数据点文件。如无此参数将不会开始评测，仅视为设置参数。
 

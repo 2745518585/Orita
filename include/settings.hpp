@@ -58,7 +58,6 @@ namespace Settings
 void change_time_limit(const tim time) {Settings::change_time_limit(time);}
 tim get_time_limit() {return Settings::get_time_limit();}
 const std::string compile_argu=get_settings<std::string>("/data/compile_argu",json::value_t::string);
-const pat default_checker=get_file(get_settings<pat>("/data/checker",json::value_t::string));
 const pat default_infile=get_file(get_settings<pat>("/data/infile",json::value_t::string));
 const pat default_outfile=get_file(get_settings<pat>("/data/outfile",json::value_t::string));
 const pat default_ansfile=get_file(get_settings<pat>("/data/ansfile",json::value_t::string));

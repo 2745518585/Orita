@@ -3,7 +3,7 @@ const json make_cor_argu()
 {
     json cor_argu={
         {"f",{arguer::ND,1}},
-        {"c",{arguer::ND,0,1}},
+        {"c",{arguer::ND,1}},
         {"t",{arguer::ND,1}},
         {"d",{arguer::NL}},
         {"is",{arguer::ND,1}},
@@ -25,13 +25,9 @@ int judge_main()
     }();
     const pat chk=[]()
     {
-        if(argus["c"].appear())
-        {
-            const pat chk_str=check_file(argus["c"][1],_run_chk);
-            add_file(_run_chk,chk_str);
-            return add_namesuf(get_file(chk_str),".cpp");
-        }
-        else return add_namesuf(get_file(default_checker),".cpp");
+        const pat chk_str=check_file(argus["c"][1],_run_chk);
+        add_file(_run_chk,chk_str);
+        return add_namesuf(get_file(chk_str),".cpp");
     }();
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
