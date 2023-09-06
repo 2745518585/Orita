@@ -219,3 +219,14 @@ View and modify configurations.
 To uninstall Orita, use `orita clear` to delete all configuration files, and then remove the source files under the `Orita` directory.
 
 If you no longer need `CMake`, `GCC`, `MSVC`, or other components, please uninstall them manually.
+
+## Thanks
+
+This project is supported by [Sukwants](https://github.com/Sukwants) and [Pond Ink](https://pond.ink/) teams.
+
+[![0](https://avatars.githubusercontent.com/u/95968907?s=64&v=4)](https://github.com/Sukwants)
+[<img src="https://pond.ink/images/avatar.png" height=64x width=64x alt>](https://pond.ink/)
+
+Related projects:
+- [vscode-Orita](https://github.com/2745518585/vscode-Orita) - Vscode extension for Orita
+- [Atiro](https://github.com/Sukwants/Atiro) - Useless OI Tools
