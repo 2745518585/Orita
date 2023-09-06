@@ -16,9 +16,9 @@ The vscode extension for Orita.
 
 Before installing Orita, ensure that your environment is a Windows or Linux environment, and the following applications are installed on your computer:
 
-- [CMake](https://cmake.org/) (`3.15+`)
+- [CMake](https://cmake.org/) (3.15+)
 
-You also need to install `GCC 11.4+` or `MSVC 2022+`.
+You also need to install GCC 11.4+ or MSVC 2022+.
 
 For Windows computers, please go to the official websites to download and install:
 
@@ -218,7 +218,7 @@ View and modify configurations.
 
 To uninstall Orita, use `orita clear` to delete all configuration files, and then remove the source files under the `Orita` directory.
 
-If you no longer need `CMake`, `GCC`, `MSVC`, or other components, please uninstall them manually.
+If you no longer need CMake, GCC, MSVC, or other components, please uninstall them manually.
 
 ## Thanks
 

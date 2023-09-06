@@ -16,9 +16,9 @@ Orita 的配套 vscode 拓展。
 
 在安装 Orita 前，需要保证环境为 Windows 或 Linux 环境，计算机上需要安装以下应用程序：
 
-- [CMake](https://cmake.org/) (`3.15+`)
+- [CMake](https://cmake.org/) (3.15+)
 
-同时需要安装 `GCC 11.4+` 或 `MSVC 2022+`。
+同时需要安装 GCC 11.4+ 或 MSVC 2022+。
 
 Windows 计算机请前往官网下载并安装：
 
@@ -218,7 +218,7 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 
 使用 `orita clear` 删除所有配置文件，再删除 `Orita` 目录下的源文件即可。
 
-如不再需要 `CMake`、`GCC`、`MSVC` 等请自行卸载。
+如不再需要 CMake、GCC、MSVC 等请自行卸载。
 
 ## 致谢
 
