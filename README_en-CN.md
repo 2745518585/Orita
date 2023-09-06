@@ -70,19 +70,21 @@ If a parameter contains spaces, enclose it in quotes, and use `\"` to include qu
 
 ### Built-in Files
 
-Orita includes some built-in files for convenience, which are located in the file cache after initialization. If you manually modify the files in the following slots, some commands may produce errors.
+Orita comes with some built-in files for convenience, and they are located in the configuration directory after initialization.
 
-Slot $0$: Empty, always returns $0$.
+`0.cpp`: Empty, always returns 0.
 
-Slot $1$: File comparator, takes three parameters: `in`, `out`, and `ans` files, and returns the comparison result between `out` and `ans`, ignoring trailing spaces and line endings.
+`1.cpp`: File comparator, takes three parameters - `in`, `out`, and `ans` files, and returns the comparison result between `out` and `ans`, ignoring trailing spaces and line endings.
 
 ### File Name Replacement
 
-Use `%[0-999]` to replace it with the file name in the slot, such as `%1`, which represents the file stored in slot $1$.
+File names in Orita can be replaced using specific patterns:
 
-Use `%...%` in file names to replace it with environment variables `...`.
+- `%[0-999]`: This will be replaced with the corresponding file name based on the `file.json` configuration. For example, `%1` represents the file name with the ID 1.
 
-Use `%%` in file names to replace it with `%`.
+- `%...%`: In file names, this pattern is replaced with environment variables `...`. It first attempts to match project-specific environment variables like `{APPDATA_PATH}`, `{FILE_PATH}`, and `{RUNNING_PATH}`. If no match is found, it falls back to system environment variables `...`.
+
+- `%%`: In file names, this pattern is replaced with `%`.
 
 ## Commands
 
