@@ -219,3 +219,14 @@ $1$ 槽位：文件比较器，三个参数分别为 `in` `out` `ans` 文件，�
 使用 `orita clear` 删除所有配置文件，再删除 `Orita` 目录下的源文件即可。
 
 如不再需要 `CMake`、`GCC`、`MSVC` 等请自行卸载。
+
+## 致谢
+
+本项目由 [Sukwants](https://github.com/Sukwants) 及 [Pond Ink](https://pond.ink/) 团队提供技术支持。
+
+[![0](https://avatars.githubusercontent.com/u/95968907?s=64&v=4)](https://github.com/Sukwants)
+[<img src="https://pond.ink/images/avatar.png" height=64x width=64x alt>](https://pond.ink/)
+
+相关项目：
+- [vscode-Orita](https://github.com/2745518585/vscode-Orita) - Vscode extension for Orita
+- [Atiro](https://github.com/Sukwants/Atiro) - Useless OI Tools
