@@ -24,7 +24,7 @@ Windows 计算机请前往官网下载并安装：
 
 - [CMake](https://cmake.org/)
 - [MinGW](https://www.mingw-w64.org/downloads/)
-- [Visual Stuido](https://visualstudio.microsoft.com/downloads/)
+- [Visual Studio](https://visualstudio.microsoft.com/downloads/)
 
 Linux 计算机执行以下命令安装 CMake 和 GCC：
 
