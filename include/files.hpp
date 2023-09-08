@@ -125,7 +125,7 @@ namespace Files
             {
                 if(std::regex_match(dir.string(),std::regex(".*(^|[^%])(%%)*%($|[^%]).*")))
                 {
-                    ERROR("get file - invaild path",tmp.string());
+                    ERROR("get file - invaild path",add_squo(tmp.string()));
                     class invaild_path {}error;
                     throw error;
                 }
