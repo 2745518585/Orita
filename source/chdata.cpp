@@ -17,8 +17,8 @@ int chdata_main()
     pat out_file=check_file(argus["f"][2],argus["of"][1]);
     if(in_file!=""&&!std::filesystem::exists(in_file)) {print_result(res::type::NF);return 0;}
     if(out_file!=""&&!std::filesystem::exists(out_file)) {print_result(res::type::NF);return 0;}
-    if(in_file!="") std::filesystem::copy_file(in_file,default_infile,std::filesystem::copy_options::overwrite_existing);
-    if(out_file!="") std::filesystem::copy_file(out_file,default_outfile,std::filesystem::copy_options::overwrite_existing);
+    if(in_file!="") std::filesystem::remove_all(default_infile),std::filesystem::copy_file(in_file,default_infile);
+    if(out_file!="") std::filesystem::remove_all(default_outfile),std::filesystem::copy_file(out_file,default_outfile);
     if(argus["s"].appear())
     {
         show_cursor();

@@ -89,8 +89,8 @@ int judge_main()
         const pat run_dir=default_data_dir/"datas"/data_name;
         pat in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
         std::filesystem::create_directory(run_dir);
-        if(!i.value()["in"].is_null()) std::filesystem::copy_file((std::string)i.value()["in"],in_file=run_dir/"data.in",std::filesystem::copy_options::overwrite_existing);
-        if(!i.value()["out"].is_null()) std::filesystem::copy_file((std::string)i.value()["out"],out_file=run_dir/"data.out",std::filesystem::copy_options::overwrite_existing);
+        if(!i.value()["in"].is_null()) std::filesystem::remove_all(in_file=run_dir/"data.in"),std::filesystem::copy_file((std::string)i.value()["in"],in_file);
+        if(!i.value()["out"].is_null()) std::filesystem::remove_all(out_file=run_dir/"data.out"),std::filesystem::copy_file((std::string)i.value()["out"],out_file);
         // judge
         judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
         run_judger.judge();

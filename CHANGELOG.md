@@ -256,3 +256,7 @@ Orita 第一个正式版本。
 #### Features
 
 - Supported `MSVC`.
+
+#### Fixes
+
+- Files could not be copied for unknown reasons.

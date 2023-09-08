@@ -71,10 +71,10 @@ int run_main()
     output_chk_file.close();
     // copy result
     std::filesystem::create_directory(default_data_dir);
-    std::filesystem::copy_file(in_file,default_data_dir/"data.in",std::filesystem::copy_options::overwrite_existing);
-    std::filesystem::copy_file(out_file,default_data_dir/"data.out",std::filesystem::copy_options::overwrite_existing);
-    std::filesystem::copy_file(ans_file,default_data_dir/"data.ans",std::filesystem::copy_options::overwrite_existing);
-    std::filesystem::copy_file(chk_file,default_data_dir/"data.txt",std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::remove_all(default_data_dir/"data.in"),std::filesystem::copy_file(in_file,default_data_dir/"data.in");
+    std::filesystem::remove_all(default_data_dir/"data.out"),std::filesystem::copy_file(out_file,default_data_dir/"data.out");
+    std::filesystem::remove_all(default_data_dir/"data.ans"),std::filesystem::copy_file(ans_file,default_data_dir/"data.ans");
+    std::filesystem::remove_all(default_data_dir/"data.txt"),std::filesystem::copy_file(chk_file,default_data_dir/"data.txt");
     return 0;
 }
 int main(int argc,char **argv)
