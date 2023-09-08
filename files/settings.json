@@ -3,7 +3,7 @@
         "ansfile": "%12",
         "chkfile": "%13",
         "compile_argu": "-std=c++14 -O2",
-        "data_dir": "%{RUNNING_PATH}%\\.data",
+        "data_dir": "%{RUNNING_PATH}%/.data",
         "infile": "%10",
         "outfile": "%11",
         "time": 1000
