@@ -41,7 +41,7 @@ namespace Files
                 throw error;
             }
         }
-        file_number(const std::string &str):num([&]
+        explicit file_number(const std::string &str):num([&]
         {
             if(str[0]!='%')
             {
@@ -164,13 +164,12 @@ namespace Files
     }
     #undef number_len
 }
-bool find_filestr(const unsigned num) {return Files::find_filestr(num);}
-void add_filestr(const unsigned num,const pat &file) {return Files::add_filestr(num,file);}
-pat get_filestr(const unsigned num) {return Files::get_filestr(num);}
-pat get_default_filestr(const unsigned num) {return Files::get_default_filestr(num);}
-void add_file(const unsigned num,const pat &file) {return Files::add_file(num,file);}
-pat get_file(const pat &file) {return Files::get_file(file);}
-pat get_file(const unsigned num) {return Files::get_file(num);}
-template<typename ...others_type> pat check_file(const others_type ...others) {return Files::check_file(others...);}
-pat add_namesuf(const pat &file,const pat &namesuf) {return Files::add_namesuf(file,namesuf);}
+using Files::find_filestr;
+using Files::add_filestr;
+using Files::get_filestr;
+using Files::get_default_filestr;
+using Files::add_file;
+using Files::get_file;
+using Files::check_file;
+using Files::add_namesuf;
 #endif

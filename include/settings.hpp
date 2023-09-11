@@ -20,27 +20,29 @@ namespace Settings
             (sofstream(appdata_path/"settings.json",false))<<std::setw(4)<<settings;
         }
     }_Init;
-}
-template<typename Type> Type get_settings(std::string path,json::value_t type)
-{
-    if(settings[json::json_pointer(path)].type()!=type)
+    template<typename Type> Type get_settings(std::string path,json::value_t type)
     {
-        ERROR("get settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
-        class invaild_settings {}error;
-        throw error;
+        if(settings[json::json_pointer(path)].type()!=type)
+        {
+            ERROR("get settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
+            class invaild_settings {}error;
+            throw error;
+        }
+        return (Type)settings[json::json_pointer(path)];
     }
-    return (Type)settings[json::json_pointer(path)];
-}
-template<typename Type> Type get_default_settings(std::string path,json::value_t type)
-{
-    if(settings[json::json_pointer(path)].type()!=type)
+    template<typename Type> Type get_default_settings(std::string path,json::value_t type)
     {
-        ERROR("get default settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
-        class invaild_settings {}error;
-        throw error;
+        if(settings[json::json_pointer(path)].type()!=type)
+        {
+            ERROR("get default settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
+            class invaild_settings {}error;
+            throw error;
+        }
+        return (Type)settings[json::json_pointer(path)];
     }
-    return (Type)settings[json::json_pointer(path)];
 }
+using Settings::get_settings;
+using Settings::get_default_settings;
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num",json::value_t::number_unsigned);
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit",json::value_t::number_unsigned);
 const pat exe_suf=get_settings<std::string>("/exe_suf",json::value_t::string);

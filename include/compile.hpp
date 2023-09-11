@@ -22,9 +22,7 @@ namespace Compile
         return result!=0;
     }
 }
-int compile(const pat &file) {return Compile::compile(file);}
-int compile(const pat &file,const std::string &compile_argu) {return Compile::compile(file,compile_argu);}
-int compile(const pat &file,const std::string &compile_argu,const bool if_print) {return Compile::compile(file,compile_argu,if_print);}
+using Compile::compile;
 class compiler
 {
   public:

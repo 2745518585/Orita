@@ -66,8 +66,8 @@ namespace Print
 }
 void print_result(const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
 void print_result(const std::string &name,const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
-std::string get_resultname(const res result) {return Print::get_resultname(result);}
-std::string get_short_resultname(const res result) {return Print::get_short_resultname(result);}
+using Print::get_resultname;
+using Print::get_short_resultname;
 class printer
 {
   public:
