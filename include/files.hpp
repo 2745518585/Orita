@@ -159,7 +159,7 @@ namespace Files
     pat add_namesuf(const pat &file,const pat &namesuf)
     {
         if(file==pat()) return pat();
-        if(file.extension()!=namesuf) return replace_extension(file,namesuf);
+        if(file.extension()!=namesuf) return file.string()+namesuf.string();
         return file;
     }
     #undef number_len
