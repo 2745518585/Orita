@@ -37,6 +37,8 @@ $ sudo apt-get install g++
 
 ```shell
 $ git clone https://github.com/2745518585/Orita
+$ git submodule init
+$ git submodule update
 ```
 
 在 `Orita/` 目录下运行以下命令来编译源代码：

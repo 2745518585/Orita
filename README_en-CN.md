@@ -37,6 +37,8 @@ After installation, use the following command to obtain the Orita source code:
 
 ```shell
 $ git clone https://github.com/2745518585/Orita
+$ git submodule init
+$ git submodule update
 ```
 
 To compile the source code, run the following commands in the `Orita/` directory:
