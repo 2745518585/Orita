@@ -1,9 +1,6 @@
 [submodule "poco"]
 	path = poco
 	url = https://github.com/pocoproject/poco
-[submodule "json"]
-	path = json
-	url = https://github.com/nlohmann/json
 [submodule "nlohmann"]
 	path = nlohmann
 	url = https://github.com/nlohmann/json
