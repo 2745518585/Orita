@@ -8,7 +8,7 @@ An OI (Olympiad in Informatics) tool developed by [赵悦岑](https://github.com
 
 [vscode-Orita](https://github.com/2745518585/vscode-Orita)
 
-The vscode extension for Orita.
+The VSCode extension for Orita.
 
 ## Install
 
@@ -239,5 +239,5 @@ This project is supported by [Sukwants](https://github.com/Sukwants) and [Pond I
 [<img src="https://pond.ink/images/avatar.png" height=64x width=64x alt>](https://pond.ink/)
 
 Related projects:
-- [vscode-Orita](https://github.com/2745518585/vscode-Orita) - Vscode extension for Orita
+- [vscode-Orita](https://github.com/2745518585/vscode-Orita) - VSCode extension for Orita
 - [Atiro](https://github.com/Sukwants/Atiro) - Useless OI Tools

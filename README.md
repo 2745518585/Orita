@@ -8,7 +8,7 @@ zh-CN | [en-CN](./README_en-CN.md)
 
 [vscode-Orita](https://github.com/2745518585/vscode-Orita)
 
-Orita 的配套 vscode 拓展。
+Orita 的配套 VSCode 拓展。
 
 ## 安装
 
@@ -237,5 +237,5 @@ Orita 内置了一些文件来方便使用，其初始化后位于配置文件�
 [<img src="https://pond.ink/images/avatar.png" height=64x width=64x alt>](https://pond.ink/)
 
 相关项目：
-- [vscode-Orita](https://github.com/2745518585/vscode-Orita) - Vscode extension for Orita
+- [vscode-Orita](https://github.com/2745518585/vscode-Orita) - VSCode extension for Orita
 - [Atiro](https://github.com/Sukwants/Atiro) - Useless OI Tools
