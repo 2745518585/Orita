@@ -33,7 +33,12 @@
 using json=nlohmann::json;
 #include"termcolor/termcolor.hpp"
 #include"spdlog/spdlog.h"
-#include "spdlog/sinks/basic_file_sink.h"
+#include"spdlog/sinks/basic_file_sink.h"
+#include"Poco/Process.h"
+#include"Poco/Pipe.h"
+#include"Poco/PipeStream.h"
+#include"Poco/File.h"
+#include"Poco/FileStream.h"
 
 // code
 #ifdef _WIN32

@@ -262,3 +262,4 @@ Orita 第一个正式版本。
 - Files could not be copied for unknown reasons.
 - File name could not be readed successfully because of use `\` as path separator in Linux.
 - File namesuf would be replaced unexpectedly.
+- The program always exit with code 0.
