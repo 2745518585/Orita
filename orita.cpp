@@ -47,6 +47,5 @@ int main(int argc,char **argv)
     #endif
     std::string command=add_quo(path);
     for(int i=1;i<argc;++i) command+=" "+add_quo(std::regex_replace(argv[i],std::regex("\""),"\\\""))+" ";
-    ssystem(command);
-    return 0;
+    return ssystem(command);
 }

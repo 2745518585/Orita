@@ -31,6 +31,5 @@ int main(int argc,char **argv)
     std::string command=add_quo(file_path/"build"/argv[1]);
     #endif
     for(int i=2;i<argc;++i) command+=" "+add_quo(std::regex_replace(systoUTF8(argv[i]),std::regex("\""),"\\\""))+" ";
-    ssystem(command);
-    return 0;
+    return ssystem(command);
 }
