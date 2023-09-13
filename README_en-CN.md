@@ -222,6 +222,15 @@ To uninstall Orita, use `orita clear` to delete all configuration files, and the
 
 If you no longer need CMake, GCC, MSVC, or other components, please uninstall them manually.
 
+## Dependencies
+
+This project uses the following third-party libraries:
+
+- [nlohmann/json](https://github.com/nlohmann/json)
+- [gabime/spdlog](https://github.com/gabime/spdlog)
+- [ikalnytskyi/termcolor](https://github.com/ikalnytskyi/termcolor)
+- [pocoproject/poco](https://github.com/pocoproject/poco)
+
 ## Thanks
 
 This project is supported by [Sukwants](https://github.com/Sukwants) and [Pond Ink](https://pond.ink/) teams.

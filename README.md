@@ -220,6 +220,15 @@ Orita 内置了一些文件来方便使用，其初始化后位于配置文件�
 
 如不再需要 CMake、GCC、MSVC 等请自行卸载。
 
+## 依赖项
+
+该项目使用了以下第三方库：
+
+- [nlohmann/json](https://github.com/nlohmann/json)
+- [gabime/spdlog](https://github.com/gabime/spdlog)
+- [ikalnytskyi/termcolor](https://github.com/ikalnytskyi/termcolor)
+- [pocoproject/poco](https://github.com/pocoproject/poco)
+
 ## 致谢
 
 本项目由 [Sukwants](https://github.com/Sukwants) 及 [Pond Ink](https://pond.ink/) 团队提供技术支持。
