@@ -267,3 +267,4 @@ Orita 第一个正式版本。
 #### Changes
 
 - Use submodules.
+- Moved Runtime outputs to `bin\`.

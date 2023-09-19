@@ -173,7 +173,7 @@ const pat file_path=[]()
     realpath("/proc/self/exe",tmp);
     #endif
     pat path=systoUTF8(tmp);
-    return path.parent_path().parent_path();
+    return path.parent_path().parent_path().parent_path();
 }();
 const pat appdata_path=[]()
 {

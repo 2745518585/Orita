@@ -25,10 +25,10 @@ int main(int argc,char **argv)
         return 0;
     }
     #ifdef _WIN32
-    std::string command=add_quo(file_path/"build"/(std::string(argv[1])+".exe"));
+    std::string command=add_quo(file_path/"build"/"bin"/(std::string(argv[1])+".exe"));
     #endif
     #ifdef __linux__
-    std::string command=add_quo(file_path/"build"/argv[1]);
+    std::string command=add_quo(file_path/"build"/"bin"/argv[1]);
     #endif
     for(int i=2;i<argc;++i) command+=" "+add_quo(std::regex_replace(systoUTF8(argv[i]),std::regex("\""),"\\\""))+" ";
     return ssystem(command);
