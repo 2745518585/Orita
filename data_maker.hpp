@@ -64,6 +64,13 @@ namespace Data_maker
     auto _GRE=[](long long s1,long long s2) {return s1>s2;};
     auto _LOE=[](long long s1,long long s2) {return s1<=s2;};
     auto _GOE=[](long long s1,long long s2) {return s1>=s2;};
+    std::vector<unsigned> rnd_range(unsigned tot)
+    {
+        std::vector<unsigned> ans;
+        for(unsigned i=1;i<=tot;++i) ans.push_back(i);
+        shuffle(ans.begin(),ans.end(),rd);
+        return ans;
+    }
     std::vector<std::pair<unsigned,unsigned>> rnd_tree(unsigned tot)
     {
         unsigned *fa=new unsigned[tot+1];
@@ -114,6 +121,7 @@ using Data_maker::_LES;
 using Data_maker::_GRE;
 using Data_maker::_LOE;
 using Data_maker::_GOE;
+using Data_maker::rnd_range;
 using Data_maker::rnd_tree;
 using Data_maker::rnd_ucgraph;
 #endif
