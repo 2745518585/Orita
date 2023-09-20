@@ -26,8 +26,8 @@ int compile_main()
     }
     if(argus["r"].appear())
     {
-        pat file;
-        file=get_file(add_namesuf(argus["r"][1],".cpp"));
+        fil file;
+        file=get_file(add_namesuf((pat)argus["r"][1],"cpp"));
         if(compile(file,compile_argu)) return 0;
         runner runs(replace_extension(file,exe_suf),"","",run_argu,(tim)1000000);
         runs.run();
@@ -35,7 +35,7 @@ int compile_main()
     }
     else if(argus["t"].appear())
     {
-        pat file=get_file(argus["t"][1]);
+        fil file=get_file(argus["t"][1]);
         runner runs(file,"","",run_argu,(tim)1000000);
         runs.run();
         scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
@@ -44,9 +44,9 @@ int compile_main()
     {
         for(int i=1;i<=argus["f"].size();++i)
         {
-            pat file=get_file(add_namesuf(argus["f"][i],".cpp"));
-            if(compile(file,compile_argu)) print_result(file.filename().string(),res::type::CE);
-            else print_result(file.filename().string(),res::type::SS);
+            fil file=get_file(add_namesuf((pat)argus["f"][i],"cpp"));
+            if(compile(file,compile_argu)) print_result(((pat)file.path()).getFileName(),res::type::CE);
+            else print_result(((pat)file.path()).getFileName(),res::type::SS);
         }
     }
     return 0;

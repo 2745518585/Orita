@@ -45,7 +45,7 @@ using Settings::get_settings;
 using Settings::get_default_settings;
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num",json::value_t::number_unsigned);
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit",json::value_t::number_unsigned);
-const pat exe_suf=get_settings<std::string>("/exe_suf",json::value_t::string);
+const std::string exe_suf=get_settings<std::string>("/exe_suf",json::value_t::string);
 namespace Settings
 {
     void change_time_limit(const tim time)
@@ -60,9 +60,9 @@ namespace Settings
 void change_time_limit(const tim time) {Settings::change_time_limit(time);}
 tim get_time_limit() {return Settings::get_time_limit();}
 const std::string compile_argu=get_settings<std::string>("/data/compile_argu",json::value_t::string);
-const pat default_infile=get_file(get_settings<std::string>("/data/infile",json::value_t::string));
-const pat default_outfile=get_file(get_settings<std::string>("/data/outfile",json::value_t::string));
-const pat default_ansfile=get_file(get_settings<std::string>("/data/ansfile",json::value_t::string));
-const pat default_chkfile=get_file(get_settings<std::string>("/data/chkfile",json::value_t::string));
-const pat default_data_dir=get_file(get_settings<std::string>("/data/data_dir",json::value_t::string));
+fil default_infile=get_file(get_settings<std::string>("/data/infile",json::value_t::string));
+fil default_outfile=get_file(get_settings<std::string>("/data/outfile",json::value_t::string));
+fil default_ansfile=get_file(get_settings<std::string>("/data/ansfile",json::value_t::string));
+fil default_chkfile=get_file(get_settings<std::string>("/data/chkfile",json::value_t::string));
+fil default_data_dir=get_file(get_settings<std::string>("/data/data_dir",json::value_t::string)).path();
 #endif

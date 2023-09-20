@@ -11,33 +11,33 @@ const json make_cor_argu()
 const json cor_argu=make_cor_argu();
 const std::string _ans_name="ans";
 const std::string _chk_name="checker";
-pat in_file=default_infile;
-pat out_file=default_outfile;
-pat ans_file=default_ansfile;
-pat chk_file=default_chkfile;
+fil in_file=default_infile;
+fil out_file=default_outfile;
+fil ans_file=default_ansfile;
+fil chk_file=default_chkfile;
 int run_main()
 {
     // init name
-    const pat ans=[]()
+    fil ans=[]()
     {
-        const pat ans_str=check_file(argus["f"][1],_run_ans);
+        pat ans_str=check_file(argus["f"][1],_run_ans);
         add_file(_run_ans,ans_str);
-        return add_namesuf(get_file(ans_str),".cpp");
+        return add_namesuf(get_file(ans_str),"cpp");
     }();
-    const pat chk=[]()
+    fil chk=[]()
     {
-        const pat chk_str=check_file(argus["c"][1],_run_chk);
+        pat chk_str=check_file(argus["c"][1],_run_chk);
         add_file(_run_chk,chk_str);
-        return add_namesuf(get_file(chk_str),".cpp");
+        return add_namesuf(get_file(chk_str),"cpp");
     }();
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
     // find name
-    if(ans==pat()) {print_result(_ans_name,res::type::NF);return 0;}
-    if(chk==pat()) {print_result(_chk_name,res::type::NF);return 0;}
+    if(ans==fil()) {print_result(_ans_name,res::type::NF);return 0;}
+    if(chk==fil()) {print_result(_chk_name,res::type::NF);return 0;}
     // find file
-    if(!std::filesystem::exists(ans)) {print_result(_ans_name,res::type::NF);return 0;}
-    if(!std::filesystem::exists(chk)) {print_result(_chk_name,res::type::NF);return 0;}
+    if(!ans.exists()) {print_result(_ans_name,res::type::NF);return 0;}
+    if(!chk.exists()) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
     loading_printer.start();
@@ -70,11 +70,16 @@ int run_main()
     for(int j=1;j<=50;++j) output_chk_file<<"*";
     output_chk_file.close();
     // copy result
-    std::filesystem::create_directory(default_data_dir);
-    std::filesystem::remove_all(default_data_dir/"data.in"),std::filesystem::copy_file(in_file,default_data_dir/"data.in");
-    std::filesystem::remove_all(default_data_dir/"data.out"),std::filesystem::copy_file(out_file,default_data_dir/"data.out");
-    std::filesystem::remove_all(default_data_dir/"data.ans"),std::filesystem::copy_file(ans_file,default_data_dir/"data.ans");
-    std::filesystem::remove_all(default_data_dir/"data.txt"),std::filesystem::copy_file(chk_file,default_data_dir/"data.txt");
+    try
+    {
+        default_data_dir.createDirectory();
+        in_file.copyTo((default_data_dir/"data.in").path());
+        out_file.copyTo((default_data_dir/"data.out").path());
+        ans_file.copyTo((default_data_dir/"data.ans").path());
+        chk_file.copyTo((default_data_dir/"data.txt").path());
+        INFO("copy result",add_squo(default_data_dir.path()));
+    }
+    catch(...) {WARN("copy result - fail",add_squo(default_data_dir.path()));}
     return 0;
 }
 int main(int argc,char **argv)

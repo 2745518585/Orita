@@ -8,20 +8,20 @@ int main(int argc,char **argv)
         scout<<"  Orita - Useful OI Tools\n";
         scout<<"  Version: Dev "<<PROJECT_VERSION<<"\n";
         scout<<"  Repository: https://github.com/2745518585/Orita\n";
-        scout<<"  Local Path: "<<file_path.string()<<"\n";
+        scout<<"  Local Path: "<<file_path.toString()<<"\n";
         scout<<"--------------------------------------------------\n";
         return 0;
     }
     if(std::string(argv[1])=="reset")
     {
-        std::filesystem::remove_all(appdata_path);
-        std::filesystem::copy(file_path/"files",appdata_path,std::filesystem::copy_options::recursive);
-        ssystem("echo "+(file_path/"build").string()+" > "+add_quo(appdata_path/"path.txt"));
+        ((fil)appdata_path).remove(true);
+        ((fil)file_path/"files").copyTo(appdata_path.toString());
+        ssystem("echo "+(file_path/"build").toString()+" > "+add_quo(appdata_path/"path.txt"));
         return 0;
     }
     if(std::string(argv[1])=="clear")
     {
-        std::filesystem::remove_all(appdata_path);
+        ((fil)appdata_path).remove(true);
         return 0;
     }
     #ifdef _WIN32

@@ -13,21 +13,21 @@ const json make_cor_argu()
 const json cor_argu=make_cor_argu();
 int chdata_main()
 {
-    pat in_file=check_file(argus["f"][1],argus["if"][1]);
-    pat out_file=check_file(argus["f"][2],argus["of"][1]);
-    if(in_file!=""&&!std::filesystem::exists(in_file)) {print_result(res::type::NF);return 0;}
-    if(out_file!=""&&!std::filesystem::exists(out_file)) {print_result(res::type::NF);return 0;}
-    if(in_file!="") std::filesystem::remove_all(default_infile),std::filesystem::copy_file(in_file,default_infile);
-    if(out_file!="") std::filesystem::remove_all(default_outfile),std::filesystem::copy_file(out_file,default_outfile);
+    fil in_file=check_file(argus["f"][1],argus["if"][1]);
+    fil out_file=check_file(argus["f"][2],argus["of"][1]);
+    if(in_file!=fil()&&!in_file.exists()) {print_result(res::type::NF);return 0;}
+    if(out_file!=fil()&&!out_file.exists()) {print_result(res::type::NF);return 0;}
+    if(in_file!=fil()) in_file.copyTo(default_infile.path());
+    if(out_file!=fil()) out_file.copyTo(default_outfile.path());
     if(argus["s"].appear())
     {
         show_cursor();
         char str;
-        FILE *file=sfopen(default_infile.string(),"w");
+        FILE *file=sfopen(default_infile.path(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
         sfclose(file);
-        file=sfopen(default_outfile.string(),"w");
+        file=sfopen(default_outfile.path(),"w");
         str=getchar();
         while(str!=EOF) fputc(str,file),str=getchar();
         sfclose(file);

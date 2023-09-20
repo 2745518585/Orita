@@ -20,29 +20,29 @@ const std::string _chk_name="checker";
 int check_main()
 {
     // init name
-    const pat in=[]()
+    fil in=[]()
     {
-        const pat in_str=check_file(argus["f"][1],argus["if"][1],_check_in);
+        pat in_str=check_file(argus["f"][1],argus["if"][1],_check_in);
         add_file(_check_in,in_str);
-        return add_namesuf(get_file(in_str),".cpp");
+        return add_namesuf(get_file(in_str),"cpp");
     }();
-    const pat out=[]()
+    fil out=[]()
     {
-        const pat out_str=check_file(argus["f"][2],argus["of"][1],_check_out);
+        pat out_str=check_file(argus["f"][2],argus["of"][1],_check_out);
         add_file(_check_out,out_str);
-        return add_namesuf(get_file(out_str),".cpp");
+        return add_namesuf(get_file(out_str),"cpp");
     }();
-    const pat ans=[]()
+    fil ans=[]()
     {
-        const pat ans_str=check_file(argus["f"][3],argus["af"][1],_check_ans);
+        pat ans_str=check_file(argus["f"][3],argus["af"][1],_check_ans);
         add_file(_check_ans,ans_str);
-        return add_namesuf(get_file(ans_str),".cpp");
+        return add_namesuf(get_file(ans_str),"cpp");
     }();
-    const pat chk=[]()
+    fil chk=[]()
     {
-        const pat chk_str=check_file(argus["c"][1],_check_chk);
+        pat chk_str=check_file(argus["c"][1],_check_chk);
         add_file(_check_chk,chk_str);
-        return add_namesuf(get_file(chk_str),".cpp");
+        return add_namesuf(get_file(chk_str),"cpp");
     }();
     // init time
     if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
@@ -54,19 +54,29 @@ int check_main()
     }
     unsigned total_sum=stoi(argus["n"][1]);
     // init data dir
-    std::filesystem::remove_all(default_data_dir);
-    std::filesystem::create_directory(default_data_dir);
-    std::filesystem::create_directory(default_data_dir/"datas");
+    try
+    {
+        default_data_dir.remove(true);
+        default_data_dir.createDirectory();
+        (default_data_dir/"datas").createDirectory();
+        INFO("make data dir",add_squo(default_data_dir.path()));
+    }
+    catch(...)
+    {
+        ERROR("make data dir - fail",add_squo(default_data_dir.path()));
+        class fail_make_data_dir {}error;
+        throw error;
+    }
     // find name
-    if(in==pat()) {print_result(_in_name,res::type::NF);return 0;}
-    if(out==pat()) {print_result(_out_name,res::type::NF);return 0;}
-    if(ans==pat()) {print_result(_ans_name,res::type::NF);return 0;}
-    if(chk==pat()) {print_result(_chk_name,res::type::NF);return 0;}
+    if(in==fil()) {print_result(_in_name,res::type::NF);return 0;}
+    if(out==fil()) {print_result(_out_name,res::type::NF);return 0;}
+    if(ans==fil()) {print_result(_ans_name,res::type::NF);return 0;}
+    if(chk==fil()) {print_result(_chk_name,res::type::NF);return 0;}
     // find file
-    if(!std::filesystem::exists(in)) {print_result(_in_name,res::type::NF);return 0;}
-    if(!std::filesystem::exists(out)) {print_result(_out_name,res::type::NF);return 0;}
-    if(!std::filesystem::exists(ans)) {print_result(_ans_name,res::type::NF);return 0;}
-    if(!std::filesystem::exists(chk)) {print_result(_chk_name,res::type::NF);return 0;}
+    if(!in.exists()) {print_result(_in_name,res::type::NF);return 0;}
+    if(!out.exists()) {print_result(_out_name,res::type::NF);return 0;}
+    if(!ans.exists()) {print_result(_ans_name,res::type::NF);return 0;}
+    if(!chk.exists()) {print_result(_chk_name,res::type::NF);return 0;}
     // compile file
     printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
     loading_printer.start();
@@ -96,9 +106,9 @@ int check_main()
             scout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
         }
         scout<<"\n";
-        const pat run_dir=default_data_dir/"datas"/std::to_string(i);
-        std::filesystem::create_directory(run_dir);
-        const pat in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+        fil run_dir=default_data_dir/"datas"/std::to_string(i);
+        run_dir.createDirectory();
+        fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
         unsigned seed=rnd();
         runner in_runner(in,system_nul,in_file,std::to_string(seed));
         if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
@@ -124,7 +134,7 @@ int check_main()
         if(ans_judger.result.istrue()) ++ac_sum;
         if(ans_judger.result.isfalse())
         {
-            std::filesystem::copy(run_dir,default_data_dir/(std::to_string(i)+" - "+get_short_resultname(ans_judger.result)),std::filesystem::copy_options::recursive);
+            run_dir.copyTo((default_data_dir/(std::to_string(i)+" - "+get_short_resultname(ans_judger.result))).path());
         }
     }
     scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";

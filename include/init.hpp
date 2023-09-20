@@ -34,11 +34,13 @@ using json=nlohmann::json;
 #include"termcolor/termcolor.hpp"
 #include"spdlog/spdlog.h"
 #include"spdlog/sinks/basic_file_sink.h"
+#include"Poco/File.h"
+#include"Poco/Path.h"
+#include"Poco/Environment.h"
 #include"Poco/Process.h"
 #include"Poco/Pipe.h"
 #include"Poco/PipeStream.h"
-#include"Poco/File.h"
-#include"Poco/FileStream.h"
+#include"Poco/StreamCopier.h"
 
 // code
 #ifdef _WIN32
@@ -142,26 +144,62 @@ std::string add_squo(const std::string &str)
 }
 
 // path
-using pat=std::filesystem::path;
-const char path_separator=std::filesystem::path::preferred_separator;
+using pat=Poco::Path;
+using fil=Poco::File;
+const char path_separator=pat::separator();
+pat operator/(pat path1,const pat &path2)
+{
+    return path1.append(path2);
+}
+pat &operator/=(pat &path1,const pat &path2)
+{
+    return path1=path1/path2;
+}
+fil operator/(const fil &path1,const fil &path2)
+{
+    pat tmp=path1.path();
+    return tmp.append(path2.path()).toString();
+}
+fil &operator/=(fil &path1,const fil &path2)
+{
+    return path1=path1/path2;
+}
+bool operator==(const pat &path1,const pat &path2)
+{
+    return path1.toString()==path2.toString();
+}
+bool operator!=(const pat &path1,const pat &path2)
+{
+    return path1.toString()!=path2.toString();
+}
 std::string add_quo(const pat &path)
 {
-    return "\""+path.string()+"\"";
+    return "\""+path.toString()+"\"";
+}
+std::string add_quo(const fil &path)
+{
+    return "\""+path.path()+"\"";
 }
 std::string add_squo(const pat &path)
 {
-    return "'"+path.string()+"'";
+    return "'"+path.toString()+"'";
 }
-pat replace_extension(pat file,const pat suf=pat())
+std::string add_squo(const fil &path)
 {
-    return file.replace_extension(suf);
+    return "'"+path.path()+"'";
+}
+pat replace_extension(pat file,const std::string suf="")
+{
+    return file.setExtension(suf);
+}
+pat replace_extension(fil file,const std::string suf="")
+{
+    return ((pat)file.path()).setExtension(suf).toString();
 }
 std::string sgetenv(const std::string &str);
 const pat running_path=[]()
 {
-    char path[1001];
-    getcwd(path,1000);
-    return (pat)(systoUTF8(path));
+    return (pat)(systoUTF8(pat::current()));
 }();
 const pat file_path=[]()
 {
@@ -173,7 +211,7 @@ const pat file_path=[]()
     realpath("/proc/self/exe",tmp);
     #endif
     pat path=systoUTF8(tmp);
-    return path.parent_path().parent_path().parent_path();
+    return path.parent().parent().parent();
 }();
 const pat appdata_path=[]()
 {
@@ -185,20 +223,19 @@ const pat appdata_path=[]()
     #endif
 }();
 json enviroment_variable={
-    {"{RUNNING_PATH}",running_path},
-    {"{FILE_PATH}",file_path},
-    {"{APPDATA_PATH}",appdata_path}
+    {"{RUNNING_PATH}",running_path.toString()},
+    {"{FILE_PATH}",file_path.toString()},
+    {"{APPDATA_PATH}",appdata_path.toString()}
 };
 std::string sgetenv(const std::string &str)
 {
     if(!enviroment_variable[str].is_null()) return (std::string)enviroment_variable[str];
-    char *cstr=getenv(str.c_str());
-    if(cstr==NULL)
+    if(!Poco::Environment::has(str))
     {
         class empty_environment_variable {}error;
         throw error;
     }
-    return systoUTF8(cstr);
+    return systoUTF8(Poco::Environment::get(str));
 }
 
 // time
@@ -248,7 +285,8 @@ class sifstream
     bool if_sys;
     template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
     {
-        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).string()));
+        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).toString()));
+        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(UTF8tosys(fil(file).path()));
         else if constexpr(std::is_convertible<Type,std::ifstream>::value) stream.open(file);
     }
     sifstream() {}
@@ -275,7 +313,8 @@ class sofstream
     template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
     {
         stream.close();
-        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).string()),mode);
+        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).toString()),mode);
+        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(UTF8tosys(fil(file).path()),mode);
         else if constexpr(std::is_convertible<Type,std::ofstream>::value) stream.open(file,mode);
     }
     sofstream() {}

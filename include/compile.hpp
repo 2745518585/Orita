@@ -7,9 +7,9 @@
 #include"settings.hpp"
 namespace Compile
 {
-    int compile(pat file,const std::string &compile_argu="",const bool if_print=true)
+    int compile(fil file,const std::string &compile_argu="",const bool if_print=true)
     {
-        if(file.extension()!=".cpp")
+        if(((pat)file.path()).getExtension()!="cpp")
         {
             WARN("compile - invaild file","file: "+add_quo(file));
             return -1;
@@ -34,9 +34,9 @@ class compiler
     {
       public:
         std::string name,argu;
-        pat file;
+        fil file;
         comp_file(){}
-        comp_file(const std::string &name,const pat &file,const std::string &argu):name(name),file(file),argu(argu){}
+        comp_file(const std::string &name,const fil &file,const std::string &argu):name(name),file(file),argu(argu){}
     };
     std::queue<comp_file> compile_que;
     std::map<std::string,int> results;
@@ -90,18 +90,15 @@ class compiler
         ssleep((tim)10);
         INFO("compiler - end","id: "+to_string_hex(this));
     }
-    void add(const std::string &name,const pat &file,const std::string &argu="")
+    void add(const std::string &name,const fil &file,const std::string &argu="")
     {
-        compile_que.push(comp_file(name,file,argu));
+        compile_que.push(comp_file(name,file.path(),argu));
         wait_que.notify_one();
         INFO("compiler - add compile task","id: "+to_string_hex(this),"name: "+add_squo(name),"file: "+add_squo(file),"argu: "+add_squo(argu));
     }
-    void add(const std::initializer_list<std::pair<std::string,pat>> file,const std::string &argu="")
+    void add(const std::initializer_list<std::pair<std::string,fil>> file,const std::string &argu="")
     {
-        for(auto i:file)
-        {
-            add(i.first,i.second,argu);
-        }
+        for(auto i:file) add(i.first,i.second,argu);
     }
     void wait(const std::initializer_list<std::string> name)
     {

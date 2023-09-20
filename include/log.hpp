@@ -45,7 +45,7 @@ class logger
     {
         read_lock.lock();
         (sofstream)(output_file)<<name<<"\n";
-        output=spdlog::basic_logger_mt(name,UTF8tosys(output_file.string()));
+        output=spdlog::basic_logger_mt(name,UTF8tosys(output_file.toString()));
         output->set_level(spdlog::level::debug);
         output->flush_on(spdlog::level::trace);
         read_lock.unlock();
