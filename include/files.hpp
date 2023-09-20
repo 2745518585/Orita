@@ -113,7 +113,7 @@ namespace Files
     fil get_file(const file_number &num);
     fil get_file(const pat &file)
     {
-        pat tmp=get_path(file),final_path;
+        pat tmp=get_path(file),final_path=pat("/");
         final_path.setDevice(tmp.getDevice());
         final_path.setNode(tmp.getNode());
         for(int i=0;i<=tmp.depth();++i)
@@ -178,14 +178,14 @@ namespace Files
     pat add_namesuf(const pat &file,const std::string &namesuf)
     {
         if(file==pat()) return pat();
-        if(file.getExtension()!=namesuf) return file.toString()+namesuf;
+        if(file.getExtension()!=namesuf) return file.toString()+"."+namesuf;
         return file;
     }
     fil add_namesuf(const fil &file,const std::string &namesuf)
     {
         const pat path=file.path();
         if(path==pat()) return pat();
-        if(path.getExtension()!=namesuf) return path.toString()+namesuf;
+        if(path.getExtension()!=namesuf) return path.toString()+"."+namesuf;
         return (fil)path;
     }
     #undef number_len
