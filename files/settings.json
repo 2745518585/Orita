@@ -8,7 +8,7 @@
         "outfile": "%11",
         "time": 1000
     },
-    "exe_suf": ".exe",
+    "exe_suf": "exe",
     "max_thread_num": 10,
     "runtime_limit": 5000
 }
