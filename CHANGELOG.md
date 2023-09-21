@@ -256,6 +256,7 @@ Orita 第一个正式版本。
 #### Features
 
 - Supported `MSVC`.
+- Add Github Actions.
 
 #### Fixes
 
