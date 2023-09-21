@@ -41,57 +41,15 @@ using json=nlohmann::json;
 #include"Poco/Pipe.h"
 #include"Poco/PipeStream.h"
 #include"Poco/StreamCopier.h"
+#include"Poco/Util/Application.h"
+#include"Poco/Util/Option.h"
+#include"Poco/Util/OptionSet.h"
+#include"Poco/Util/OptionCallback.h"
+#include"Poco/Util/OptionProcessor.h"
+#include"Poco/Util/OptionException.h"
+#include"Poco/Util/HelpFormatter.h"
 
 // code
-#ifdef _WIN32
-std::string UTF8toGB(const std::string &utf8)
-{
-    if(utf8.empty()) return "";
-    std::stringstream ss;
-    int len=MultiByteToWideChar(CP_UTF8,0,utf8.c_str(),-1,NULL,0);
-    wchar_t*wstr=new wchar_t[len+1];
-    memset(wstr,0,len+1);
-    MultiByteToWideChar(CP_UTF8,0,utf8.c_str(),-1,wstr,len);
-    len=WideCharToMultiByte(CP_ACP,0,wstr,-1,NULL,0,NULL,NULL);
-    char *str=new char[len+1];
-    memset(str,0,len+1);
-    WideCharToMultiByte(CP_ACP,0,wstr,-1,str,len,NULL,NULL);
-    ss<<str;
-    delete []wstr;
-    delete []str;
-    return ss.str();
-}
-std::string GBtoUTF8(const std::string &gb2312)
-{
-    if(gb2312.empty()) return "";
-    std::stringstream ss;
-    int len=MultiByteToWideChar(CP_ACP,0,gb2312.c_str(),-1,NULL,0);
-    wchar_t*wstr=new wchar_t[len+1];
-    memset(wstr,0,len+1);
-    MultiByteToWideChar(CP_ACP,0,gb2312.c_str(),-1,wstr,len);
-    len=WideCharToMultiByte(CP_UTF8,0,wstr,-1,NULL,0,NULL,NULL);
-    char *str=new char[len+1];
-    memset(str,0,len+1);
-    WideCharToMultiByte(CP_UTF8,0,wstr,-1,str,len,NULL,NULL);
-    ss<<str;
-    delete []wstr;
-    delete []str;
-    return ss.str();
-}
-const unsigned codepage=GetACP();
-std::string UTF8tosys(const std::string &str)
-{
-    if(codepage==936) return UTF8toGB(str);
-    else return str;
-}
-std::string systoUTF8(const std::string &str)
-{
-    if(codepage==936) return GBtoUTF8(str);
-    else return str;
-}
-#endif
-#ifdef __linux__
-const unsigned codepage=65001;
 std::string UTF8tosys(const std::string &str)
 {
     return str;
@@ -100,7 +58,6 @@ std::string systoUTF8(const std::string &str)
 {
     return str;
 }
-#endif
 
 // result
 class res
@@ -199,7 +156,7 @@ pat replace_extension(fil file,const std::string suf="")
 std::string sgetenv(const std::string &str);
 const pat running_path=[]()
 {
-    return (pat)(systoUTF8(pat::current()));
+    return (pat)(pat::current());
 }();
 const pat file_path=[]()
 {
@@ -210,7 +167,7 @@ const pat file_path=[]()
     #ifdef __linux__
     realpath("/proc/self/exe",tmp);
     #endif
-    pat path=systoUTF8(tmp);
+    pat path=tmp;
     return path.parent().parent().parent();
 }();
 const pat appdata_path=[]()
@@ -235,7 +192,7 @@ std::string sgetenv(const std::string &str)
         class empty_environment_variable {}error;
         throw error;
     }
-    return systoUTF8(Poco::Environment::get(str));
+    return Poco::Environment::get(str);
 }
 
 // time
@@ -271,8 +228,8 @@ std::ofstream &operator<<(std::ofstream &output,tim str)
 
 // print
 #ifdef _WIN32
-const pat system_nul="nul";
-const pat system_con="con";
+const pat system_nul="\\\\.\\nul";
+const pat system_con="\\\\.\\con";
 #endif
 #ifdef __linux__
 const pat system_nul="/dev/null";
@@ -285,8 +242,8 @@ class sifstream
     bool if_sys;
     template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
     {
-        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).toString()));
-        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(UTF8tosys(fil(file).path()));
+        if constexpr(std::is_convertible<Type,pat>::value) stream.open(pat(file).toString());
+        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(fil(file).path());
         else if constexpr(std::is_convertible<Type,std::ifstream>::value) stream.open(file);
     }
     sifstream() {}
@@ -298,12 +255,6 @@ class sifstream
         stream>>val;
         return *this;
     }
-    sifstream &operator>>(std::string &str)
-    {
-        stream>>str;
-        if(if_sys) str=systoUTF8(str);
-        return *this;
-    }
 };
 class sofstream
 {
@@ -313,8 +264,8 @@ class sofstream
     template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
     {
         stream.close();
-        if constexpr(std::is_convertible<Type,pat>::value) stream.open(UTF8tosys(pat(file).toString()),mode);
-        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(UTF8tosys(fil(file).path()),mode);
+        if constexpr(std::is_convertible<Type,pat>::value) stream.open(pat(file).toString(),mode);
+        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(fil(file).path(),mode);
         else if constexpr(std::is_convertible<Type,std::ofstream>::value) stream.open(file,mode);
     }
     sofstream() {}
@@ -330,12 +281,6 @@ class sofstream
     sofstream &operator<<(std::ostream &(*manipulator)(std::ostream&))
     {
         stream<<manipulator;
-        return *this;
-    }
-    sofstream &operator<<(const std::string &str)
-    {
-        if(if_sys) stream<<UTF8tosys(str);
-        else stream<<str;
         return *this;
     }
 };
@@ -356,16 +301,10 @@ class sostream
         stream<<manipulator;
         return *this;
     }
-    sostream &operator<<(const std::string &str)
-    {
-        if(if_sys) stream<<UTF8tosys(str);
-        else stream<<str;
-        return *this;
-    }
-}scout(std::cout);
+}scout(std::cout),scerr(std::cerr);
 FILE *sfopen(const std::string &file,const std::string mode)
 {
-    return fopen(UTF8tosys(file).c_str(),mode.c_str());
+    return fopen(file.c_str(),mode.c_str());
 }
 int sfclose(FILE *file)
 {
@@ -388,10 +327,10 @@ const int sys_exit_code=8;
 int ssystem(const std::string &command)
 {
     #ifdef _WIN32
-    return system(("cmd /C "+add_quo(UTF8tosys(command))).c_str());
+    return system(("cmd /C "+add_quo(command)).c_str());
     #endif
     #ifdef __linux__
-    return system(UTF8tosys(command).c_str());
+    return system(command.c_str());
     #endif
 }
 int kill_task(const pat &task)

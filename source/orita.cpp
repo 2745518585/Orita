@@ -1,35 +1,71 @@
-#include"init.hpp"
+#include"orita.hpp"
 #include"Oritaconfig.hpp"
-int main(int argc,char **argv)
+#include"chdata.cpp"
+#include"check.cpp"
+#include"compile.cpp"
+#include"config.cpp"
+#include"judge.cpp"
+#include"run.cpp"
+class Command_orita: public App
 {
-    if(argc==1)
+  protected:
+    Poco::Util::HelpFormatter *helpFormatter;
+    void defineOptions(Poco::Util::OptionSet &options)
     {
+        options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
+        options.addOption(Poco::Util::Option("reset","r","reset Configuration").noArgument());
+        options.addOption(Poco::Util::Option("clear","c","clear Configuration").noArgument());
+        App::defineOptions(options);
+    }
+    void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
+    {
+        helpFormatter->setHeader("Orita - Useful OI Tools");
+        helpFormatter->setFooter("Turn to https://github.com/2745518585/Orita#readme to get more information!\n");
+        helpFormatter->setUsage("[options]\n");
+        helpFormatter->setCommand(commandName());
+        helpFormatter->format(std::cout);
+    }
+    int main(const std::vector<std::string> &args)
+    {
+        loadConfiguration();
+        if(check_option("error options")) return EXIT_USAGE;
+        if(check_option("help")) return Application::EXIT_OK;
+
+        
+        if(check_option("reset"))
+        {
+            delete orita_log;
+            ((fil)appdata_path).remove(true);
+            ((fil)file_path/"files").copyTo(appdata_path.toString());
+            ssystem("echo "+(file_path/"build").toString()+" > "+add_quo(appdata_path/"path.txt"));
+            settings=default_settings;
+            Files::files_json=Files::default_files_json;
+            return Application::EXIT_OK;
+        }
+        else if(check_option("clear"))
+        {
+            delete orita_log;
+            ((fil)appdata_path).remove(true);
+            return Application::EXIT_OK;
+        }
         scout<<"--------------------------------------------------\n";
         scout<<"  Orita - Useful OI Tools\n";
         scout<<"  Version: Dev "<<PROJECT_VERSION<<"\n";
         scout<<"  Repository: https://github.com/2745518585/Orita\n";
         scout<<"  Local Path: "<<file_path.toString()<<"\n";
         scout<<"--------------------------------------------------\n";
-        return 0;
+        return Application::EXIT_OK;
     }
-    if(std::string(argv[1])=="reset")
-    {
-        ((fil)appdata_path).remove(true);
-        ((fil)file_path/"files").copyTo(appdata_path.toString());
-        ssystem("echo "+(file_path/"build").toString()+" > "+add_quo(appdata_path/"path.txt"));
-        return 0;
-    }
-    if(std::string(argv[1])=="clear")
-    {
-        ((fil)appdata_path).remove(true);
-        return 0;
-    }
-    #ifdef _WIN32
-    std::string command=add_quo(file_path/"build"/"bin"/(std::string(argv[1])+".exe"));
-    #endif
-    #ifdef __linux__
-    std::string command=add_quo(file_path/"build"/"bin"/argv[1]);
-    #endif
-    for(int i=2;i<argc;++i) command+=" "+add_quo(std::regex_replace(systoUTF8(argv[i]),std::regex("\""),"\\\""))+" ";
-    return ssystem(command);
+};
+int main(int argc,char **argv)
+{
+    if(argc>1&&(std::string)argv[1]=="chdata") {Command_chdata Chdata;Chdata.init(argc-1,argv+1);return Chdata.run();}
+    if(argc>1&&(std::string)argv[1]=="check") {Command_check Check;Check.init(argc-1,argv+1);return Check.run();}
+    if(argc>1&&(std::string)argv[1]=="compile") {Command_compile Compile;Compile.init(argc-1,argv+1);return Compile.run();}
+    if(argc>1&&(std::string)argv[1]=="config") {Command_config Config;Config.init(argc-1,argv+1);return Config.run();}
+    if(argc>1&&(std::string)argv[1]=="judge") {Command_judge Judge;Judge.init(argc-1,argv+1);return Judge.run();}
+    if(argc>1&&(std::string)argv[1]=="run") {Command_run Run;Run.init(argc-1,argv+1);return Run.run();}
+    Command_orita Orita;
+    Orita.init(argc,argv);
+    return Orita.run();
 }

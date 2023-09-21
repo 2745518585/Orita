@@ -1,54 +1,66 @@
-#include"run.hpp"
-const json make_cor_argu()
+#pragma once
+#ifndef _COMMAND_CONFIG
+#define _COMMAND_CONFIG _COMMAND_CONFIG
+#include"orita.hpp"
+class Command_config: public App
 {
-    json cor_argu={
-        {"s",{arguer::ND,0,1,2}},
-        {"f",{arguer::ND,0,1,2}}
-    };
-    return cor_argu;
-}
-const json cor_argu=make_cor_argu();
-int config_main()
-{
-    if(argus["s"].appear())
+  protected:
+    void defineOptions(Poco::Util::OptionSet &options)
     {
-        if(argus["s"].size()==0)
-        {
-            scout<<std::setw(4)<<settings;
-        }
-        else if(argus["s"].size()==1)
-        {
-            scout<<settings[(json::json_pointer)("/"+argus["s"][1])]<<"\n";
-        }
-        else
-        {
-            if(argus["s"][2]=="%{RESET}%") settings[(json::json_pointer)("/"+argus["s"][1])]=default_settings[(json::json_pointer)("/"+argus["s"][1])];
-            else settings[(json::json_pointer)("/"+argus["s"][1])]=json::parse(argus["s"][2]);
-        }
+        options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
+        options.addOption(Poco::Util::Option("settings","s","settings").noArgument());
+        options.addOption(Poco::Util::Option("files","f","files").noArgument());
+        App::defineOptions(options);
     }
-    else if(argus["f"].appear())
+    void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
-        if(argus["f"].size()==0)
-        {
-            scout<<std::setw(4)<<Files::files_json;
-        }
-        else if(argus["f"].size()==1)
-        {
-            scout<<get_filestr(stoi(argus["f"][1]))<<"\n";
-        }
-        else
-        {
-            const unsigned num=std::stoul(argus["f"][1]);
-            if(argus["f"][2]=="%{RESET}%") add_filestr(num,get_default_filestr(num));
-            else add_filestr(num,argus["f"][2]);
-        }
+        helpFormatter->setHeader("Orita - Config");
+        helpFormatter->setUsage("[file]... [options]\n");
+        helpFormatter->setFooter(" ");
+        helpFormatter->setCommand(commandName());
+        helpFormatter->format(std::cout);
     }
-    return 0;
-}
-int main(int argc,char **argv)
-{
-    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
-    int exit_code=config_main();
-    return exit_code;
-}
+    int main(const std::vector<std::string>& args)
+    {
+        loadConfiguration();
+        if(check_option("error options")) return EXIT_USAGE;
+        if(check_option("help")) return Application::EXIT_OK;
+
+
+        if(check_option("settings"))
+        {
+            if(args.size()==0)
+            {
+                scout<<std::setw(4)<<settings;
+            }
+            else if(args.size()==1)
+            {
+                scout<<settings[(json::json_pointer)("/"+args[0])]<<"\n";
+            }
+            else
+            {
+                if(args[1]=="%{RESET}%") settings[(json::json_pointer)("/"+args[0])]=default_settings[(json::json_pointer)("/"+args[0])];
+                else settings[(json::json_pointer)("/"+args[0])]=json::parse(args[1]);
+            }
+        }
+        else if(check_option("files"))
+        {
+            if(args.size()==0)
+            {
+                scout<<std::setw(4)<<Files::files_json;
+            }
+            else if(args.size()==1)
+            {
+                scout<<get_filestr(std::stoi(args[0]))<<"\n";
+            }
+            else
+            {
+                const unsigned num=std::stoul(args[0]);
+                if(args[1]=="%{RESET}%") add_filestr(num,get_default_filestr(num));
+                else add_filestr(num,args[1]);
+            }
+        }
+        return EXIT_OK;
+    }
+};
+#endif

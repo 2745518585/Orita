@@ -18,12 +18,6 @@ add_subdirectory(poco)
 add_subdirectory(spdlog)
 add_subdirectory(termcolor)
 
-foreach(project chdata check config compile judge run)
-    add_executable(${project} source/${project}.cpp)
-    target_link_libraries(${project} Poco::Foundation Poco::Util nlohmann_json::nlohmann_json spdlog::spdlog termcolor::termcolor)
-    target_include_directories(${project} PUBLIC ${PROJECT_SOURCE_DIR}/include)
-endforeach()
-
 add_executable(${PROJECT_NAME} source/${PROJECT_NAME}.cpp)
 target_link_libraries(${PROJECT_NAME} Poco::Foundation Poco::Util nlohmann_json::nlohmann_json spdlog::spdlog termcolor::termcolor)
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/include)

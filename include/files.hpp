@@ -19,8 +19,8 @@ namespace Files
       public:
         Init()
         {
-            (sifstream(appdata_path/"file.json",false))>>files_json;
             (sifstream(file_path/"files"/"file.json",false))>>default_files_json;
+            try {(sifstream(appdata_path/"file.json",false))>>files_json;} catch(...) {}
         }
         ~Init()
         {
@@ -148,6 +148,11 @@ namespace Files
     fil get_file(const file_number &num)
     {
         return get_file(get_filestr(num));
+    }
+    template<typename Type> fil get_file(const Type &str,bool err)
+    {
+        try {return get_file(str);}
+        catch(...) {return fil();}
     }
     pat check_file() {return pat();}
     template<typename Type> pat check_file(const Type &str)

@@ -12,40 +12,29 @@ namespace Settings
       public:
         Init()
         {
-            (sifstream(appdata_path/"settings.json",false))>>settings;
             (sifstream(file_path/"files"/"settings.json",false))>>default_settings;
+            try {(sifstream(appdata_path/"settings.json",false))>>settings;} catch(...) {};
         }
         ~Init()
         {
             (sofstream(appdata_path/"settings.json",false))<<std::setw(4)<<settings;
         }
     }_Init;
-    template<typename Type> Type get_settings(std::string path,json::value_t type)
+    template<typename Type> Type get_settings(std::string path)
     {
-        if(settings[json::json_pointer(path)].type()!=type)
+        if(settings[json::json_pointer(path)].type()!=default_settings[json::json_pointer(path)].type())
         {
             ERROR("get settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
-            class invaild_settings {}error;
-            throw error;
+            settings[json::json_pointer(path)]=default_settings[json::json_pointer(path)];
         }
-        return (Type)settings[json::json_pointer(path)];
-    }
-    template<typename Type> Type get_default_settings(std::string path,json::value_t type)
-    {
-        if(settings[json::json_pointer(path)].type()!=type)
-        {
-            ERROR("get default settings - invaild value type",path,settings[json::json_pointer(path)].type_name());
-            class invaild_settings {}error;
-            throw error;
-        }
+        (Type)settings[json::json_pointer(path)];
         return (Type)settings[json::json_pointer(path)];
     }
 }
 using Settings::get_settings;
-using Settings::get_default_settings;
-const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num",json::value_t::number_unsigned);
-const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit",json::value_t::number_unsigned);
-const std::string exe_suf=get_settings<std::string>("/exe_suf",json::value_t::string);
+const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
+const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
+const std::string exe_suf=get_settings<std::string>("/exe_suf");
 namespace Settings
 {
     void change_time_limit(const tim time)
@@ -54,15 +43,15 @@ namespace Settings
     }
     tim get_time_limit()
     {
-        return get_settings<tim>("/data/time",json::value_t::number_unsigned);
+        return get_settings<tim>("/data/time");
     }
 }
 void change_time_limit(const tim time) {Settings::change_time_limit(time);}
 tim get_time_limit() {return Settings::get_time_limit();}
-const std::string compile_argu=get_settings<std::string>("/data/compile_argu",json::value_t::string);
-fil default_infile=get_file(get_settings<std::string>("/data/infile",json::value_t::string));
-fil default_outfile=get_file(get_settings<std::string>("/data/outfile",json::value_t::string));
-fil default_ansfile=get_file(get_settings<std::string>("/data/ansfile",json::value_t::string));
-fil default_chkfile=get_file(get_settings<std::string>("/data/chkfile",json::value_t::string));
-fil default_data_dir=get_file(get_settings<std::string>("/data/data_dir",json::value_t::string)).path();
+const std::string compile_argu=get_settings<std::string>("/data/compile_argu");
+fil default_infile=get_file(get_settings<std::string>("/data/infile"),false);
+fil default_outfile=get_file(get_settings<std::string>("/data/outfile"),false);
+fil default_ansfile=get_file(get_settings<std::string>("/data/ansfile"),false);
+fil default_chkfile=get_file(get_settings<std::string>("/data/chkfile"),false);
+fil default_data_dir=get_file(get_settings<std::string>("/data/data_dir"),false);
 #endif
