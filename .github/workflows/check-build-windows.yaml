@@ -3,7 +3,6 @@ name: Check Build Windows
 on:
   push:
     branches:
-      - master
       - dev
 
 jobs:
