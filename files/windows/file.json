@@ -1,0 +1,10 @@
+{
+    "file000": "%{APPDATA_PATH}%/0.cpp",
+    "file001": "%{APPDATA_PATH}%/1.cpp",
+    "file010": "%{APPDATA_PATH}%/data/data.in",
+    "file011": "%{APPDATA_PATH}%/data/data.out",
+    "file012": "%{APPDATA_PATH}%/data/data.ans",
+    "file013": "%{APPDATA_PATH}%/data/data.txt",
+    "file102": "%1",
+    "file114": "%1"
+}

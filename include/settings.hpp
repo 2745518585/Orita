@@ -12,7 +12,7 @@ namespace Settings
       public:
         Init()
         {
-            (sifstream(file_path/"files"/"settings.json",false))>>default_settings;
+            (sifstream(file_path/"files"/os_name/"settings.json",false))>>default_settings;
             try {(sifstream(appdata_path/"settings.json",false))>>settings;} catch(...) {};
         }
         ~Init()

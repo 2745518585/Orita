@@ -49,6 +49,14 @@ using json=nlohmann::json;
 #include"Poco/Util/OptionException.h"
 #include"Poco/Util/HelpFormatter.h"
 
+// os
+#ifdef _WIN32
+const std::string os_name="windows";
+#endif
+#ifdef __linux__
+const std::string os_name="linux";
+#endif
+
 // code
 std::string UTF8tosys(const std::string &str)
 {
