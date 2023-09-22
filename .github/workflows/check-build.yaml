@@ -1,12 +1,9 @@
-name: Check Build Windows
+name: Check Build
 
-on:
-  push:
-    branches:
-      - dev
+on: push
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
@@ -17,6 +14,23 @@ jobs:
 
     - name: Set up MSVC
       uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Set up CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Build
+      run: |
+        cmake -B build -S . 
+        cmake --build build --config Release --target orita
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Set up CMake
       uses: lukka/get-cmake@latest
