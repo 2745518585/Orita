@@ -17,9 +17,9 @@ class Command_compile: public App
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
         helpFormatter->setHeader("Orita - Compile");
-        helpFormatter->setUsage("[file]... [options]\n");
+        helpFormatter->setCommand("orita compile");
+        helpFormatter->setUsage("[file] [options]\n");
         helpFormatter->setFooter(" ");
-        helpFormatter->setCommand(commandName());
         helpFormatter->format(std::cout);
     }
     int main(const std::vector<std::string>& args)

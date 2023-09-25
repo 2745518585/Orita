@@ -60,15 +60,13 @@ $ cmake --build .
 
 为了正常使用 Orita，请保证计算机上有支持 C++14 的 C++ 编译器 g++，并能在控制台中全局调用。
 
-使用 `orita reset` 命令初始化并清空配置。
+使用 `orita /r`(Windows) 或 `orita -r`(Linux) 命令初始化并清空配置。
 
 ## 用法
 
 ### 参数系统
 
-所有命令的参数格式均为 `/i arg ...` 或 `-i arg`，每个参数的范围为声明至下一个参数或结尾。
-
-如参数中含空格需加引号，且参数中需要使用引号请使用 `\"`。
+Windows 系统下使用 DOS 风格命令行参数，Linux 下使用 Unix 风格命令行参数。以下示例中均使用 DOS 风格。
 
 ### 内置文件
 
@@ -88,123 +86,107 @@ Orita 内置了一些文件来方便使用，其初始化后位于配置文件�
 
 ## 命令
 
-### reset
+### orita
 
-`orita reset`
+`orita [/help] [/reset] [/clear]`
 
-重置配置。
+`/help`     帮助信息。
 
-### clear
+`/reset`    重置配置。
 
-`orita clear`
-
-删除配置文件。
+`/clear`    清空配置。
 
 ### run
 
-`run [/f <file>] [/c <chk_file>] [/t <time>]`
+`orita run [/help] [/file=file] [/checker=file] [/time=time]`
 
-#### 描述
+运行给定的文件并重定向输入，与输出数据比较。所有文件编译时定义宏 `JUDGING`。数据会存放在 `settings.data.data_dir/` 目录下。
 
-将给定的文件跑预定好的标准输入输出，并给出结果。所有文件编译时定义宏 `JUDGING`。
+`/help`             帮助信息。
 
-#### 参数列表
+`/file=file`        指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/f <file>`    指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
+`/checker=file`     指定评测文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/c <chk_file>`    指定 `checker` 文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
-
-`/t <time>`    修改默认运行时间限制（单位 ms）。
-
-#### 数据及源代码输出
-
-数据与源代码输出会在程序运行完成后存放至 `data/data.in` `data/data.out` `data/data.ans` `data/data.txt`。
+`/time=time`        修改默认运行时间限制（单位 ms）。
 
 ### chdata
 
-`chdata [/f <input_file> <output_file> | /s] [/t <time>]`
+`orita chdata [/help] [/ifile[=file]] [/ofile[=file]] [/time=time]`
 
-#### 描述
+用于修改 `run` 命令的输入输出数据。
 
-用于修改标准输入输出。
+`/help`             帮助信息。
 
-#### 参数列表
+`/ifile[=file]`     指定输入数据所在文件，未指定值从标准输入中读取。
 
-`/f <input_file> <output_file>`   指定输入输出文件。
+`/ofile[=file]`     指定输出数据所在文件，未指定值从标准输入中读取。
 
-`/s`    从 `stdin` 中读取，每个文件以 `EOF` 结束。此参数与 `/f` 冲突，优先级低于 `/f`。
-
-`/t <time>`    修改默认运行时间限制（单位 ms）。
+`/t <time>`         修改默认运行时间限制（单位 ms）。
 
 ### check
 
-`check [/n <sum>] [/f <in_file> <out_file> <ans_file> | [[/if <in_file>] [/of <out_file>] [/af <ans_file>]]] [/c <chk_file>] [/t <time>]`
+`orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num] [/time=time]`
 
-#### 描述
+给定数据生成器、标准代码和源代码，进行对拍。所有文件编译时定义宏 `JUDGING`。数据会存放在 `settings.data.data_dir/` 目录下。
 
-给定数据生成器、标准代码和源代码，进行对拍。所有文件编译时定义宏 `JUDGING`。数据会存放在 `data/` 目录下。
+`/help`             帮助信息。
 
-#### 参数列表
+`/ifile=file`       指定数据生成器（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的文件为准。
 
-`/n <sum>`    对拍次数。如无此参数不会开始对拍，仅视为设置参数。
+`/ofile=file`       指定标准代码（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的文件为准。
 
-`/f <in_file> <out_file> <ans_file>`    指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
+`/afile=file`       指定源代码（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的文件为准。
 
-`/c <chk_file>`    指定 `checker` 的文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
+`/checker=file`     指定评测文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/if <in_file>`    指定 `in` 文件（后缀不为 `.cpp `自动添加 `.cpp `后缀）。如无此参数则以上一次设置的 `in` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
+`/num=num`          对拍次数。如无此参数不会开始对拍，仅视为设置参数。
 
-`/of <out_file>`    指定 `out` 文件（后缀不为 `.cpp `自动添加 `.cpp `后缀）。如无此参数则以上一次设置的 `out` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
-
-`/af <ans_file>`    指定 `ans` 文件（后缀不为 `.cpp `自动添加 `.cpp `后缀）。如无此参数则以上一次设置的 `ans` 文件为准。此参数与 `/f` 冲突，优先级低于 `/f`。
-
-`/t <time>`    修改默认运行时间限制（单位 ms）。
+`/time=time`        修改默认运行时间限制（单位 ms）。
 
 ### judge
 
-`judge [/f <file>] [/c <chk_file>] [/d data...] [/is <infile_suf>] [/os <outfile_suf>] [/t <time>]`
-
-#### 描述
+`orita judge [data] [/help] [/file=file] [/checker=file] [/time=time] [/isuf=suf] [/osuf=suf]`
 
 给定数据文件和源代码，从数据文件中找到指定后缀名的输入输出文件并组成数据点，得到源代码的所有结果。所有文件编译时定义宏 `JUDGING`。数据会存放在 `data/` 目录下。
 
-#### 参数列表
+`data`              指定数据文件。如无此参数将不会开始评测，仅视为设置参数。
 
-`/f <file>`    指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
+`/help`             帮助信息。
 
-`/c <chk_file>`    指定 `checker` 的文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
+`/file=file`        指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/d data...`    指定数据点文件。如无此参数将不会开始评测，仅视为设置参数。
+`/checker=file`     指定评测文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。如无此参数则以上一次设置的源文件为准。
 
-`/is <infile_suf>`    指定输入文件后缀名。
+`/time=time`        修改默认运行时间限制（单位 ms）。
 
-`/os <outfile_suf>`    指定输出文件后缀名。
+`/isuf=suf`         指定输入文件后缀名，默认为 `.in`。
 
-`/t <time>`    修改默认运行时间限制（单位 ms）。
+`/osuf=suf`         指定输出文件后缀名，默认为 `.out`。
 
 ### compile
 
-`compile [[/r <file>] | [/t <file>] | [/f file...]] [/o compile_arg] [/p run_arg]`
-
-#### 描述
+`orita compile [file] /help [/run] [/trun] [/carg=args] [/arg=args]`
 
 给定源文件和编译参数，编译源文件。
 
-#### 参数列表
+`file`              指定源文件。
 
-`/r <file>`    给定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），编译并运行。此参数与 `/f` 冲突，优先级高于 `/f`。添加此参数将没有输出。
+`/help`             帮助信息。
 
-`/t <file>`    给定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），运行该源文件对应生成的可执行文件。此参数与 `/f` 冲突，优先级高于 `/f`。添加此参数将没有输出。
+`/r <file>`         指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），编译并运行。此参数与 `/f` 冲突，优先级高于 `/f`。添加此参数将没有输出。
 
-`/f file...`    给定多个编译源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。
+`/t <file>`         指定源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀），运行该源文件对应生成的可执行文件。此参数与 `/f` 冲突，优先级高于 `/f`。添加此参数将没有输出。
 
-`/o compile_arg`    给定编译参数。
+`/f file...`        指定多个编译源文件（后缀不为 `.cpp` 自动添加 `.cpp` 后缀）。
 
-`/p run_arg`    给定运行参数。
+`/carg=args`        指定编译参数。
+
+`/arg=args`         指定运行参数。
 
 ### config
 
-`config [[/s [key [value | %{RESET}%]]] | [/f [key [value | %{RESET}%]]]]`
+`config [key [value]] [/help] [/settings] [/files]`
 
 #### 描述
 
@@ -212,9 +194,15 @@ Orita 内置了一些文件来方便使用，其初始化后位于配置文件�
 
 #### 参数列表
 
-`/s [key [value]]`    如未给出 `key`，输出 `settings.json` 文件。如给出 `key` 未给出 `value`，输出 `key` 的值。如 `key` 后追加 `%{RESET}%`，则将该项重置为默认值，默认值从 `%{FILE_PATH}%/files/settings.json` 中读取。如 `key` 后追加 `value`，则修改 `key` 的值为 `value`。`key` 中不同层的键值用 `/` 分隔。
+`key`           指定键。
 
-`/f [num [value]]`    如未给出 `num`，输出 `file.json` 文件。如给出 `num` 未给出 `value`，输出编号为 `num` 的文件的值。如 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值从 `%{FILE_PATH}%/files/file.json` 中读取。如 `num` 后追加 `value`，则将该文件设为 `value`。
+`value`         指定值。
+
+`/help`         帮助信息。
+
+`/settings`     如未给出 `key`，输出 `settings.json` 文件。如给出 `key` 未给出 `value`，输出 `key` 的值。如 `key` 后追加 `%{RESET}%`，则将该项重置为默认值，默认值从 `%{FILE_PATH}%/files/settings.json` 中读取。如 `key` 后追加 `value`，则修改 `key` 的值为 `value`。`key` 中不同层的键值用 `/` 分隔。
+
+`/files`        如未给出 `num`，输出 `file.json` 文件。如给出 `num` 未给出 `value`，输出编号为 `num` 的文件的值。如 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值从 `%{FILE_PATH}%/files/file.json` 中读取。如 `num` 后追加 `value`，则将该文件设为 `value`。
 
 ## 卸载
 

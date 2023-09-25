@@ -18,9 +18,9 @@ class Command_judge: public App
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
         helpFormatter->setHeader("Orita - Judge");
-        helpFormatter->setUsage("[data]... [options]\n");
+        helpFormatter->setCommand("orita judge");
+        helpFormatter->setUsage("[data] [options]\n");
         helpFormatter->setFooter(" ");
-        helpFormatter->setCommand(commandName());
         helpFormatter->format(std::cout);
     }
     int main(const std::vector<std::string>& args)

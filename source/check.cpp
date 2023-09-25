@@ -18,10 +18,10 @@ class Command_check: public App
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
-        helpFormatter->setHeader("Orita - Run");
+        helpFormatter->setHeader("Orita - Check");
+        helpFormatter->setCommand("orita check");
         helpFormatter->setUsage("[options]\n");
         helpFormatter->setFooter(" ");
-        helpFormatter->setCommand(commandName());
         helpFormatter->format(std::cout);
     }
     int main(const std::vector<std::string>& args)

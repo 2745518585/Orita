@@ -56,19 +56,17 @@ You can find the latest release on [Github](https://github.com/2745518585/Orita/
 
 ### Initialization
 
-Run `init.bat | init.sh` in the `Orita/` directory to compile the entry file. Ensure that the executable files in the `Orita/bin/` directory can be globally accessed and can be moved to any location. When using CMake to generate, the location of the source files will be automatically output. If you move the source files, please run `init.bat | init.sh` in the `Orita/` directory.
+Run `init.bat` (Windows) or `init.sh` (Linux) in the `Orita/` directory to compile and generate the entry file. Make sure that the executable files in `Orita/bin/` can be globally called, and you can move the executable files to any location. If you generate them with CMake, the source file location will be automatically output. If you move the source files, please execute `init.bat` (Windows) or `init.sh` (Linux) in the `Orita/` directory.
 
 To use Orita properly, make sure that your computer has a C++ compiler g++ that supports C++14 and can be globally accessed from the command line.
 
-Use the `orita reset` command to initialize and clear the configuration.
+Use the `orita /r` command (Windows) or `orita -r` command (Linux) to initialize and clear the configuration.
 
 ## Usage
 
 ### Parameter System
 
-The parameter format for all commands is `/i arg ...` or `-i arg`, and the scope of each parameter extends to the next parameter or the end.
-
-If a parameter contains spaces, enclose it in quotes, and use `\"` to include quotes within the parameter.
+DOS-style command-line parameters are used in Windows, and Unix-style command-line parameters are used in Linux. The following examples use DOS-style.
 
 ### Built-in Files
 
@@ -90,139 +88,131 @@ File names in Orita can be replaced using specific patterns:
 
 ## Commands
 
-### reset
+### orita
 
-`orita reset`
+`orita [/help] [/reset] [/clear]`
 
-Reset the configuration.
+`/help`: Display help information.
 
-### clear
+`/reset`: Reset the configuration.
 
-`orita clear`
-
-Delete the configuration files.
+`/clear`: Clear the configuration.
 
 ### run
 
-`run [/f <file>] [/c <chk_file>] [/t <time>]`
+`orita run [/help] [/file=file] [/checker=file] [/time=time]`
 
-#### Description
+Run the given file and redirect input, and compare the output. Macros defined during file compilation include `JUDGING`. The data will be placed in the `settings.data.data_dir/` directory.
 
-Run the given file with predefined standard input and output and provide the results. All files are compiled with the `JUDGING` macro defined.
+`/help`: Display help information.
 
-#### Parameter List
+`/file=file`: Specify the source file (automatically adds `.cpp` extension if not present). If this parameter is not present, the source file set in the previous step will be used.
 
-`/f <file>`: Specify the source file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
+`/checker=file`: Specify the judging file (automatically adds `.cpp` extension if not present). If this parameter is not present, the source file set in the previous step will be used.
 
-`/c <chk_file>`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
-
-`/t <time>`: Modify the default runtime limit (in milliseconds).
-
-#### Data and Source Code Output
-
-Data and source code output will be placed in `data/data.in`, `data/data.out`, `data/data.ans`, and `data/data.txt` after the program has completed.
+`/time=time`: Modify the default runtime limit (in ms).
 
 ### chdata
 
-`chdata [/f <input_file> <output_file> | /s] [/t <time>]`
+`orita chdata [/help] [/ifile[=file]] [/ofile[=file]] [/time=time]`
 
-#### Description
+Used to modify
 
-Used to modify standard input and output.
+ the input and output data for the `run` command.
 
-#### Parameter List
+`/help`: Display help information.
 
-`/f <input_file> <output_file>`: Specify the input and output files.
+`/ifile[=file]`: Specify the input data file. If no value is specified, it will read from standard input.
 
-`/s`: Read from `stdin`, with each file ending at `EOF`. This parameter conflicts with `/f` and has lower priority than `/f`.
+`/ofile[=file]`: Specify the output data file. If no value is specified, it will read from standard input.
 
-`/t <time>`: Modify the default runtime limit (in milliseconds).
+`/t <time>`: Modify the default runtime limit (in ms).
 
 ### check
 
-`check [/n <sum>] [/f <in_file> <out_file> <ans_file> | [[/if <in_file>] [/of <out_file>] [/af <ans_file>]]] [/c <chk_file>] [/t <time>]`
+`orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num] [/time=time]`
 
-#### Description
+Perform a data check with the given data generator, standard code, and source code. Macros defined during file compilation include `JUDGING`. The data will be placed in the `settings.data.data_dir/` directory.
 
-Perform stress testing with a given data generator, standard code, and source code. All files are compiled with the `JUDGING` macro defined. Data will be stored in the `data/` directory.
+`/help`: Display help information.
 
-#### Parameter List
+`/ifile=file`: Specify the data generator (automatically adds `.cpp` extension if not present). If this parameter is not present, the file set in the previous step will be used.
 
-`/n <sum>`: Number of stress testing iterations. If not provided, stress testing will not be performed and will be considered as parameter setting only.
+`/ofile=file`: Specify the standard code (automatically adds `.cpp` extension if not present). If this parameter is not present, the file set in the previous step will be used.
 
-`/f <in_file> <out_file> <ans_file>`: Specify the source file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set source file is used.
+`/afile=file`: Specify the source code (automatically adds `.cpp` extension if not present). If this parameter is not present, the file set in the previous step will be used.
 
-`/c <chk_file>`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
+`/checker=file`: Specify the judging file (automatically adds `.cpp` extension if not present). If this parameter is not present, the source file set in the previous step will be used.
 
-`/if <in_file>`: Specify the `in` file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set `in` file is used. This parameter conflicts with `/f` and has lower priority than `/f`.
+`/num=num`: Number of checks. If this parameter is not present, it will not start checking and will only be treated as setting parameters.
 
-`/of <out_file>`: Specify the `out` file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set `out` file is used. This parameter conflicts with `/f` and has lower priority than `/f`.
-
-`/af <ans_file>`: Specify the `ans` file (automatically adds a `.cpp` extension if not present). If no file is specified, the last set `ans` file is used. This parameter conflicts with `/f` and has lower priority than `/f`.
-
-`/t <time>`: Modify the default runtime limit (in milliseconds).
+`/time=time`: Modify the default runtime limit (in ms).
 
 ### judge
 
-`judge [/f <file>] [/c <chk_file>] [/d data...] [/is <infile_suf>] [/os <outfile_suf>] [/t <time>]`
+`orita judge [data] [/help] [/file=file] [/checker=file] [/time=time] [/isuf=suf] [/osuf=suf]`
 
-#### Description
+Given data files and source code, find the input and output files with the specified suffix in the data files and compose data points to obtain all results of the source code. Macros defined during file compilation include `JUDGING`. The data will be placed in the `data/` directory.
 
-Given data files and source code, create data points by finding input and output files with specified extensions in the data files, and obtain all results of the source code. All files are compiled with the `JUDGING` macro defined. Data will be stored in the `data/` directory.
+`data`: Specify the data file. If this parameter is not present, it will not start judging and will only be treated as setting parameters.
 
-#### Parameter List
+`/help`: Display help information.
 
-`/f <file>`: Specify the source file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
+`/file=file`: Specify the source file (automatically adds `.cpp` extension if not present). If this parameter is not present, the source file set in the previous step will be used.
 
-`/c <chk_file>`: Specify the `checker` file (automatically adds a `.cpp` extension if not present). If this parameter is not provided, the last set source file is used.
+`/checker=file`: Specify the judging file (automatically adds `.cpp` extension if not present). If this parameter is not present, the source file set in the previous step will be used.
 
-`/d data...`: Specify data point files. If this parameter is not provided, judging will not begin and will be considered as parameter setting only.
+`/time=time`: Modify the default runtime limit (in ms).
 
-`/is <infile_suf>`: Specify the input file suffix.
+`/isuf=suf`: Specify the input file suffix, default is `.in`.
 
-`/os <outfile_suf>`: Specify the output file suffix.
-
-`/t <time>`: Modify the default runtime limit (in milliseconds).
+`/osuf=suf`: Specify the output file suffix, default is `.out`.
 
 ### compile
 
-`compile [[/r <file>] | [/t <file>] | [/f file...]] [/o compile_arg] [/p run_arg]`
+`orita compile [file] /help [/run] [/trun] [/carg=args] [/arg=args]`
 
-#### Description
+Compile the source file with the given source file and compilation parameters.
 
-Given source files and compilation parameters, compile the source files.
+`file`: Specify the source file.
 
-#### Parameter List
+`/help`: Display help information.
 
-`/r <file>`: Specify the source file (automatically adds a `.cpp` extension if not present), compile and run it. This parameter conflicts with `/f` and takes precedence over `/f`. Using this parameter will have no output.
+`/r <file>`: Specify the source file (automatically adds `.cpp` extension if not present) and compile and run it. This parameter conflicts with `/f` and takes precedence over `/f`. Adding this parameter will have no output.
 
-`/t <file>`: Specify the source file (automatically adds a `.cpp` extension if not present), run the executable file generated from it. This parameter conflicts with `/f` and takes precedence over `/f`. Using this parameter will have no output.
+`/t <file>`: Specify the source file (automatically adds `.cpp` extension if not present) and run the corresponding executable file generated by the source file. This parameter conflicts with `/f` and takes precedence over `/f`. Adding this parameter will have no output.
 
-`/f file...`: Specify multiple source files to be compiled (automatically adds a `.cpp` extension if not present).
+`/f file...`: Specify multiple source files to compile (automatically adds `.cpp` extension if not present).
 
-`/o compile_arg`: Specify compilation parameters.
+`/carg=args`: Specify compilation parameters.
 
-`/p run_arg`: Specify runtime parameters.
+`/arg=args`: Specify runtime parameters.
 
 ### config
 
-`config [[/s [key [value | %{RESET}%]]] | [/f [key [value | %{RESET}%]]]]`
+`config [key [value]] [/help] [/settings] [/files]`
 
 #### Description
 
-View and modify configurations.
+View or modify the configuration.
 
 #### Parameter List
 
-`/s [key [value]]` If `key` is not given, output `settings.json` file. If `key` is given but `value` is not given, output the value of `key`. If `%{RESET}%` is appended after `key`, the item will be reset to the default value, which is read from `%{FILE_PATH}%/files/settings.json`. If `value` is appended after `key`, the value of `key` is changed to `value`. The key values of different layers in `key` are separated by `/`.
+`key`: Specify the key.
 
-`/f [num [value]]` If `num` is not given, output `file.json` file. If `num` is given but `value` is not given, output the value of the file numbered `num`. If `%{RESET}%` is appended after `num`, the file will be reset to the default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended after `num`, the file is set to `value`.
+`value`: Specify the value.
 
-## Uninstall
+`/help`: Help information.
 
-To uninstall Orita, use `orita clear` to delete all configuration files, and then remove the source files under the `Orita` directory.
+`/settings`: If the `key` is not provided, output the `settings.json` file. If the `key` is provided but not the `value`, output the value of the `key`. If `%{RESET}%` is appended to the `key`, reset the item to its default value, which is read from `%{FILE_PATH}%/files/settings.json`. If `value` is appended to the `key`, modify the value of the `key`. Different layers of keys in `key` are separated by `/`.
 
-If you no longer need CMake, GCC, MSVC, or other components, please uninstall them manually.
+`/files`: If `num` is not provided, output the `file.json` file. If `num` is provided but not the `value`, output the value of the file with the number `num`. If `%{RESET}%` is appended to `num`, reset the file to its default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended to `num`, set the file to `value`.
+
+## Uninstallation
+
+Use `orita clear` to delete all configuration files, and then delete the source files in the `Orita` directory.
+
+If you no longer need CMake, GCC, MSVC, etc., please uninstall them yourself.
 
 ## Dependencies
 

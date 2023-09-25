@@ -15,9 +15,9 @@ class Command_config: public App
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
         helpFormatter->setHeader("Orita - Config");
-        helpFormatter->setUsage("[file]... [options]\n");
+        helpFormatter->setCommand("orita config");
+        helpFormatter->setUsage("[key] [value] [options]\n");
         helpFormatter->setFooter(" ");
-        helpFormatter->setCommand(commandName());
         helpFormatter->format(std::cout);
     }
     int main(const std::vector<std::string>& args)

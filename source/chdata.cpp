@@ -16,9 +16,9 @@ class Command_chdata: public App
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
         helpFormatter->setHeader("Orita - Chdata");
+        helpFormatter->setCommand("orita chdata");
         helpFormatter->setUsage("[options]\n");
         helpFormatter->setFooter(" ");
-        helpFormatter->setCommand(commandName());
         helpFormatter->format(std::cout);
     }
     int main(const std::vector<std::string>& args)

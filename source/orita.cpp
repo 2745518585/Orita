@@ -20,9 +20,9 @@ class Command_orita: public App
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
         helpFormatter->setHeader("Orita - Useful OI Tools");
-        helpFormatter->setFooter("Turn to https://github.com/2745518585/Orita#readme to get more information!\n");
+        helpFormatter->setCommand("orita");
         helpFormatter->setUsage("[options]\n");
-        helpFormatter->setCommand(commandName());
+        helpFormatter->setFooter("Turn to https://github.com/2745518585/Orita#readme to get more information!\n");
         helpFormatter->format(std::cout);
     }
     int main(const std::vector<std::string> &args)
