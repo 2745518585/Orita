@@ -72,7 +72,7 @@ class Command_check: public App
         // init data dir
         try
         {
-            default_data_dir.remove(true);
+            if(default_data_dir.exists()) default_data_dir.remove(true);
             default_data_dir.createDirectory();
             (default_data_dir/"datas").createDirectory();
             INFO("make data dir",add_squo(default_data_dir.path()));
