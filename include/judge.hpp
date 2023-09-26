@@ -15,9 +15,6 @@ class runner
     tim time;
     int exit_code=0;
     timer run_timer;
-    std::atomic<bool> if_end;
-    std::mutex wait_lock;
-    std::condition_variable wait;
     runner(const fil &_file,const fil &_in_file,const fil &_out_file,const std::string &_argu="",const tim _time_limit=runtime_limit):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
     void run_run()
     {
@@ -28,27 +25,15 @@ class runner
         exit_code=ssystem(command)>>sys_exit_code;
         hide_cursor();
         time=run_timer.get_time();
-        if_end=true;
-        wait.notify_all();
     }
     int run()
     {
-        if_end=false;
-        std::thread(&runner::run_run,this).detach();
-        {
-            std::unique_lock<std::mutex> lock(wait_lock);
-            wait.wait_for(lock,std::chrono::milliseconds(time_limit),[&](){return (bool)if_end;});
-            lock.unlock();
-        }
-        if(!if_end)
+        std::future<void> run_future(std::async(std::launch::async,&runner::run_run,this));
+        if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
             WARN("run - timeout","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
             kill_task(replace_extension(file,exe_suf));
-            {
-                std::unique_lock<std::mutex> lock(wait_lock);
-                wait.wait(lock,[&](){return (bool)if_end;});
-                lock.unlock();
-            }
+            run_future.wait();
             time=time_limit;
             return 1;
         }
