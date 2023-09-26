@@ -264,6 +264,7 @@ Orita 第一个正式版本。
 - File name could not be readed successfully because of use `\` as path separator in Linux.
 - File namesuf would be replaced unexpectedly.
 - The program always exit with code 0.
+- Compiling possibly could not end because of wrong in `std::mutex`.
 
 #### Changes
 
