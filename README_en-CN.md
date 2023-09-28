@@ -52,7 +52,7 @@ $ cmake --build .
 
 ### Download
 
-You can find the latest release on [Github](https://github.com/2745518585/Orita/releases) and download the precompiled file package for your corresponding platform.
+You can find the latest releases on [GitHub](https://github.com/2745518585/Orita/releases) and download the compiled files for your platform.
 
 ### Initialization
 
@@ -66,11 +66,11 @@ Use the `orita /r` command (Windows) or `orita -r` command (Linux) to initialize
 
 ### Parameter System
 
-DOS-style command-line parameters are used in Windows, and Unix-style command-line parameters are used in Linux. The following examples use DOS-style.
+Use DOS-style command line parameters on Windows and Unix-style command line parameters on Linux. The following examples use DOS-style parameters.
 
 ### Built-in Files
 
-Orita comes with some built-in files for convenience, and they are located in the configuration directory after initialization.
+Orita provides some built-in files for convenience, and these files are located in the configuration file directory after initialization.
 
 `0.cpp`: Empty, always returns 0.
 
@@ -82,15 +82,37 @@ File names in Orita can be replaced using specific patterns:
 
 - `%[0-999]`: This will be replaced with the corresponding file name based on the `file.json` configuration. For example, `%1` represents the file name with the ID 1.
 
-- `%...%`: In file names, this pattern is replaced with environment variables `...`. It first attempts to match project-specific environment variables like `{APPDATA_PATH}`, `{FILE_PATH}`, and `{RUNNING_PATH}`. If no match is found, it falls back to system environment variables `...`.
+* The `%...%` in the file name is replaced with environment variables `...`. The program will match the following environment variables in sequence:
+  
+  - `APPDATA_PATH`: `%APPDATA%/Orita` on Windows, `%HOME%/.Orita` on Linux.
+  - `FILE_PATH`: The directory where the source code is located.
+  - `RUNNING_PATH`: The running directory.
+  - `OS_NAME`: The name of the operating system, `windows` on Windows, `linux` on Linux.
+  - Otherwise, it returns the system environment variable `...`.
 
-- `%%`: In file names, this pattern is replaced with `%`.
+- `%%` in the file name is replaced with `%`.
+
+### Configuration System
+
+The configuration file is named `settings.json` and has three levels:
+
+1. Default settings file located at `%{FILE_PATH}%/files/%{OS_NAME}%/settings.json`.
+2. Global settings file located at `%{APPDATA_PATH}%/settings.json`.
+3. Local settings file located at `.orita/settings.json`.
+
+These three-level settings files have increasing priority from top to bottom. For a single run, the effective local settings file is the one in the `%{RUNNING_PATH%` directory itself and its ancestor directories, with the priority increasing from shallow to deep.
+
+When querying and modifying settings, the default priority is from high to low. If the current setting value is `null`, the query priority is lower than the current file.
+
+Whenever a local settings file is identified in the current directory or a directory with modified local settings through commands, the latest settings file will be output when the program ends. Directories without settings files and without modifications will not output anything.
 
 ## Commands
 
 ### orita
 
 `orita [/help] [/reset] [/clear]`
+
+The entry command for the command-line tool.
 
 `/help`: Display help information.
 
@@ -202,17 +224,21 @@ View or modify the configuration.
 
 `value`: Specify the value.
 
-`/help`: Help information.
+`/help`: Display help information.
 
 `/settings`: If the `key` is not provided, output the `settings.json` file. If the `key` is provided but not the `value`, output the value of the `key`. If `%{RESET}%` is appended to the `key`, reset the item to its default value, which is read from `%{FILE_PATH}%/files/settings.json`. If `value` is appended to the `key`, modify the value of the `key`. Different layers of keys in `key` are separated by `/`.
+
+`/global`: Specifies modifying global settings.
+
+`/local`: Specifies modifying local settings for the current directory.
 
 `/files`: If `num` is not provided, output the `file.json` file. If `num` is provided but not the `value`, output the value of the file with the number `num`. If `%{RESET}%` is appended to `num`, reset the file to its default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended to `num`, set the file to `value`.
 
 ## Uninstallation
 
-Use `orita clear` to delete all configuration files, and then delete the source files in the `Orita` directory.
+To uninstall Orita, use the `orita clear` command to delete all configuration files and then delete the source files in the `Orita` directory.
 
-If you no longer need CMake, GCC, MSVC, etc., please uninstall them yourself.
+You can also uninstall CMake, GCC, MSVC, and other components if you no longer need them.
 
 ## Dependencies
 

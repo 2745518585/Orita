@@ -18,7 +18,7 @@ class Command_config: public App
     {
         helpFormatter->setHeader("Orita - Config");
         helpFormatter->setCommand("orita config");
-        helpFormatter->setUsage("[key] [value] [options]\n");
+        helpFormatter->setUsage("[key [value]] [options]\n");
         helpFormatter->setFooter(" ");
         helpFormatter->format(std::cout);
     }
