@@ -14,8 +14,9 @@ namespace Settings
         {
             (sifstream(file_path/"files"/os_name/"settings.json",false))>>default_settings;
             try {(sifstream(appdata_path/"settings.json",false))>>global_settings;} catch(...) {}
-            pat dir;
+            pat dir("/");
             dir.setDevice(running_path.getDevice());
+            dir.setNode(running_path.getNode());
             for(int i=-1;i<=running_path.depth();++i)
             {
                 if(i>=0) dir/=running_path[i];
@@ -29,8 +30,9 @@ namespace Settings
         ~Init()
         {
             (sofstream(appdata_path/"settings.json",false))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
-            pat dir;
+            pat dir("/");
             dir.setDevice(running_path.getDevice());
+            dir.setNode(running_path.getNode());
             for(int i=-1;i<=running_path.depth();++i)
             {
                 if(i>=0) dir/=running_path[i];
@@ -48,11 +50,11 @@ namespace Settings
     json *get_settings_object(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
-        json *object=&default_settings;
-        if(global_settings[pointer].type()==default_settings[pointer].type()) object=&global_settings;
+        json *object=&default_settings[pointer];
+        try {if(global_settings[pointer].type()==default_settings[pointer].type()) object=&global_settings[pointer];} catch(...) {}
         for(auto &i:all_settings)
         {
-            if(i[pointer].type()==default_settings[pointer].type()) object=&i;
+            try {if(i[pointer].type()==default_settings[pointer].type()) object=&i[pointer];} catch(...) {}
         }
         INFO("get settings object",add_squo(key),(*object).dump());
         return object;
@@ -61,17 +63,17 @@ namespace Settings
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=get_settings_object(key);
-        INFO("get settings",add_squo(key),(*object)[pointer].dump());
-        return (Type)(*object)[pointer];
+        INFO("get settings",add_squo(key),(*object).dump());
+        return (Type)(*object);
     }
     pat get_settings_path(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         pat path=running_path;
-        if(global_settings[pointer].type()==default_settings[pointer].type()) path=running_path;
+        try {if(global_settings[pointer].type()==default_settings[pointer].type()) path=running_path;} catch(...) {}
         for(auto &i:all_settings.items())
         {
-            if(i.value()[pointer].type()==default_settings[pointer].type()) path=i.key();
+            try {if(i.value()[pointer].type()==default_settings[pointer].type()) path=i.key();} catch(...) {}
         }
         INFO("get settings path",add_squo(key),add_squo(path));
         return path;

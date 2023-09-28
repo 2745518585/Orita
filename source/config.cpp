@@ -31,15 +31,28 @@ class Command_config: public App
 
         if(check_option("settings"))
         {
-            std::string key="/";
-            if(args.size()>0) key+=args[0];
+            std::string key="";
+            if(args.size()>0) key="/"+args[0];
             json *target=NULL;
-            if(check_option("global")) target=&global_settings;
-            else if(check_option("local global")) target=&all_settings[running_path.toString()],if_has_settings[running_path.toString()]=true;
-            else target=get_settings_object(key);
+            if(check_option("global")) target=&global_settings[(json::json_pointer)(key)];
+            else if(check_option("local"))
+            {
+                target=&all_settings[running_path.toString()][(json::json_pointer)(key)];
+                if_has_settings[running_path.toString()]=true;
+            }
+            else
+            {
+                if(key=="")
+                {
+                    target=new json(default_settings);
+                    merge(*target,global_settings);
+                    for(auto i:all_settings) merge(*target,i);
+                }
+                else target=get_settings_object(key);
+            }
             if(args.size()==0)
             {
-                scout<<(*target).dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
+                scout<<target->dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
             }
             else if(args.size()==1)
             {
@@ -50,7 +63,7 @@ class Command_config: public App
                 if(args[1]=="%{RESET}%") (*target)=default_settings[(json::json_pointer)(key)];
                 else (*target)=json::parse(args[1]);
             }
-            scout<<termcolor::grey<<get_settings_path(key).toString()<<termcolor::reset<<"\n";
+            if(!check_option("global")) scout<<termcolor::grey<<get_settings_path(key).toString()<<termcolor::reset<<"\n";
         }
         else if(check_option("files"))
         {

@@ -63,6 +63,16 @@ const std::string os_name="windows";
 const std::string os_name="linux";
 #endif
 
+// json
+void merge(json &a,json b)
+{
+    for(auto &i:b.items())
+    {
+        if(i.value().is_object()) merge(a[i.key()],i.value());
+        else if(!i.value().is_null()) a[i.key()]=i.value();
+    }
+}
+
 // code
 std::string UTF8tosys(const std::string &str)
 {
