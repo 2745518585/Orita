@@ -84,10 +84,10 @@ File names in Orita can be replaced using specific patterns:
 
 * The `%...%` in the file name is replaced with environment variables `...`. The program will match the following environment variables in sequence:
   
-  - `APPDATA_PATH`: `%APPDATA%/Orita` on Windows, `%HOME%/.Orita` on Linux.
-  - `FILE_PATH`: The directory where the source code is located.
-  - `RUNNING_PATH`: The running directory.
-  - `OS_NAME`: The name of the operating system, `windows` on Windows, `linux` on Linux.
+  - `{APPDATA_PATH}`: `%APPDATA%/Orita` on Windows, `%HOME%/.Orita` on Linux.
+  - `{FILE_PATH}`: The directory where the source code is located.
+  - `{RUNNING_PATH}`: The running directory.
+  - `{OS_NAME}`: The name of the operating system, `windows` on Windows, `linux` on Linux.
   - Otherwise, it returns the system environment variable `...`.
 
 - `%%` in the file name is replaced with `%`.
@@ -100,11 +100,11 @@ The configuration file is named `settings.json` and has three levels:
 2. Global settings file located at `%{APPDATA_PATH}%/settings.json`.
 3. Local settings file located at `.orita/settings.json`.
 
-These three-level settings files have increasing priority from top to bottom. For a single run, the effective local settings file is the one in the `%{RUNNING_PATH%` directory itself and its ancestor directories, with the priority increasing from shallow to deep.
+These three-level settings files have increasing priority from top to bottom. For a single run, the effective local settings file is the one in the `%{RUNNING_PATH}%` directory itself and its ancestor directories, with the priority increasing from shallow to deep.
 
 When querying and modifying settings, the default priority is from high to low. If the current setting value is `null`, the query priority is lower than the current file.
 
-Whenever a local settings file is identified in the current directory or a directory with modified local settings through commands, the latest settings file will be output when the program ends. Directories without settings files and without modifications will not output anything.
+Relative paths in local settings files will be resolved in the directory corresponding to the file. Whenever a local settings file is identified in the current directory or a directory with modified local settings through commands, the latest settings file will be output when the program ends. Directories without settings files and without modifications will not output anything.
 
 ## Commands
 
