@@ -32,16 +32,21 @@
 
 #include"nlohmann/json.hpp"
 using json=nlohmann::json;
+
 #include"termcolor/termcolor.hpp"
+
 #include"spdlog/spdlog.h"
 #include"spdlog/sinks/basic_file_sink.h"
+
 #include"Poco/File.h"
 #include"Poco/Path.h"
 #include"Poco/Environment.h"
+
 #include"Poco/Process.h"
 #include"Poco/Pipe.h"
 #include"Poco/PipeStream.h"
 #include"Poco/StreamCopier.h"
+
 #include"Poco/Util/Application.h"
 #include"Poco/Util/Option.h"
 #include"Poco/Util/OptionSet.h"
@@ -191,7 +196,8 @@ const pat appdata_path=[]()
 json enviroment_variable={
     {"{RUNNING_PATH}",running_path.toString()},
     {"{FILE_PATH}",file_path.toString()},
-    {"{APPDATA_PATH}",appdata_path.toString()}
+    {"{APPDATA_PATH}",appdata_path.toString()},
+    {"{OS_NAME}",os_name}
 };
 std::string sgetenv(const std::string &str)
 {

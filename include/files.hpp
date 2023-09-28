@@ -24,7 +24,7 @@ namespace Files
         }
         ~Init()
         {
-            (sofstream(appdata_path/"file.json",false))<<std::setw(4)<<files_json;
+            (sofstream(appdata_path/"file.json",false))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
         }
     }_Init_files;
     class file_number
@@ -77,11 +77,10 @@ namespace Files
     }
     std::string get_filestr(const file_number &num)
     {
-        if(files_json[num.str()].type()!=json::value_t::string)
+        if(!files_json[num.str()].is_string())
         {
-            ERROR("get filestr - empty filename","num: "+add_squo(num.str()));
-            class empty_filename {}error;
-            throw error;
+            WARN("get filestr - empty filename","num: "+add_squo(num.str()));
+            return "";
         }
         const std::string file=(std::string)files_json[num.str()];
         INFO("get filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
@@ -89,20 +88,20 @@ namespace Files
     }
     std::string get_default_filestr(const file_number &num)
     {
-        if(default_files_json[num.str()].type()!=json::value_t::string)
+        if(!default_files_json[num.str()].is_string())
         {
-            ERROR("get default filestr - empty filename","num: "+add_squo(num.str()));
-            class empty_filename {}error;
-            throw error;
+            WARN("get default filestr - empty filename","num: "+add_squo(num.str()));
+            return "";
         }
         const std::string file=(std::string)default_files_json[num.str()];
         INFO("get default filestr","num: "+add_squo(num.str()),"file: "+add_squo(file));
         return file;
     }
-    pat get_path(const pat &file)
+    pat get_path(const pat &file,const pat &file_dir=running_path)
     {
         if(file==pat()||std::regex_match(file.toString(),std::regex("^%([^%]|$).*"))) return file;
-        else return file.absolute();
+        else if(file.isAbsolute()) return file;
+        else return file_dir/file;
     }
     void add_file(const file_number &num,const pat &file)
     {
@@ -110,10 +109,10 @@ namespace Files
         INFO("add file","name: "+add_squo(file),"file: "+add_squo(file_result));
         add_filestr(num,file_result.toString());
     }
-    fil get_file(const file_number &num);
-    fil get_file(const pat &file)
+    fil get_file(const file_number &num,const pat &file_dir=running_path);
+    fil get_file(const pat &file,const pat &file_dir=running_path)
     {
-        pat tmp=get_path(file),final_path=pat("/");
+        pat tmp=get_path(file,file_dir),final_path=pat("/");
         final_path.setDevice(tmp.getDevice());
         final_path.setNode(tmp.getNode());
         for(int i=0;i<=tmp.depth();++i)
@@ -121,7 +120,7 @@ namespace Files
             const pat dir=tmp[i];
             if(std::regex_match(dir.toString(),std::regex("^%[^%]*")))
             {
-                pat path=get_file((file_number)dir.toString()).path();
+                pat path=get_file((file_number)dir.toString(),file_dir).path();
                 final_path/=path;
                 if(path.getDevice()!="") final_path.setDevice(path.getDevice());
             }
@@ -145,14 +144,9 @@ namespace Files
         INFO("get file","name: "+add_squo(file),"file: "+add_squo(final_path));
         return final_path;
     }
-    fil get_file(const file_number &num)
+    fil get_file(const file_number &num,const pat &file_dir)
     {
-        return get_file(get_filestr(num));
-    }
-    template<typename Type> fil get_file(const Type &str,bool err)
-    {
-        try {return get_file(str);}
-        catch(...) {return fil();}
+        return get_file(get_filestr(num),file_dir);
     }
     pat check_file() {return pat();}
     template<typename Type> pat check_file(const Type &str)

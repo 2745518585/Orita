@@ -80,9 +80,27 @@ Orita 内置了一些文件来方便使用，其初始化后位于配置文件�
 
 形如 `%[0-999]` 将替换为 `file.json` 中对应编号的文件名，如 `%1` 表示编号为 $1$ 的文件名。
 
-文件名中的 `%...%` 替换为环境变量 `...`。优先匹配项目环境变量 `{APPDATA_PATH}`、`{FILE_PATH}` 和 `{RUNNING_PATH}`，不匹配则返回系统环境变量 `...`。
+文件名中的 `%...%` 替换为环境变量 `...`。匹配环境变量：
+
+- `APPDATA_PATH`: Windows 下为 `%APPDATA%/Orita`，Linux 下为 `%HOME%/.Orita`。
+- `FILE_PATH`: 源代码所在目录。
+- `RUNNING_PATH`: 运行目录。
+- `OS_NAME`：操作系统名称，Windows 下为 `windows`，Linux 下为 `linux`。
+- 否则返回系统环境变量 `...`。
 
 文件名中的 `%%` 将替换为 `%`。
+
+### 设置系统
+
+设置文件名为 `settings.json`，分为三种：
+
+1. 默认设置文件，位于 `%{FILE_PATH}%/files/%{OS_NAME}%/settings.json`。
+2. 全局设置文件，位于 `%{APPDATA_PATH}%/settings.json`。
+3. 局部设置文件，位于 `.orita/settings.json`。
+
+从上到下优先级递增，单次运行有效局部设置文件为 `%{RUNNING_PATH%` 自身和祖先目录下的 `.orita/settings.json` 文件，目录层数由浅到深优先级递增。优先级从高到低匹配，如果当前设置值为 `null` 则查询优先级次于当前的文件。
+
+凡是识别到当前目录下存在局部设置文件或通过命令修改了局部设置文件的目录，都会在程序结束时输出最新设置文件，没有设置文件且没有修改的目录则不会输出。
 
 ## 命令
 
@@ -200,9 +218,9 @@ Orita 内置了一些文件来方便使用，其初始化后位于配置文件�
 
 `/help`         帮助信息。
 
-`/settings`     如未给出 `key`，输出 `settings.json` 文件。如给出 `key` 未给出 `value`，输出 `key` 的值。如 `key` 后追加 `%{RESET}%`，则将该项重置为默认值，默认值从 `%{FILE_PATH}%/files/settings.json` 中读取。如 `key` 后追加 `value`，则修改 `key` 的值为 `value`。`key` 中不同层的键值用 `/` 分隔。
+`/settings`     如未给出 `key`，输出 `settings.json` 文件。如给出 `key` 未给出 `value`，输出 `key` 的值。如 `key` 后追加 `%{RESET}%`，则将该项重置为默认值，默认值从 `%{FILE_PATH}%/files/%{OS_NAME}%/settings.json` 中读取。如 `key` 后追加 `value`，则修改 `key` 的值为 `value`。`key` 中不同层的键值用 `/` 分隔。
 
-`/files`        如未给出 `num`，输出 `file.json` 文件。如给出 `num` 未给出 `value`，输出编号为 `num` 的文件的值。如 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值从 `%{FILE_PATH}%/files/file.json` 中读取。如 `num` 后追加 `value`，则将该文件设为 `value`。
+`/files`        如未给出 `num`，输出 `file.json` 文件。如给出 `num` 未给出 `value`，输出编号为 `num` 的文件的值。如 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值从 `%{FILE_PATH}%/files/%{OS_NAME}%/file.json` 中读取。如 `num` 后追加 `value`，则将该文件设为 `value`。
 
 ## 卸载
 

@@ -38,7 +38,7 @@ class Command_orita: public App
             ((fil)appdata_path).remove(true);
             ((fil)file_path/"files"/os_name).copyTo(appdata_path.toString());
             ssystem("echo "+(file_path/"build").toString()+" > "+add_quo(appdata_path/"path.txt"));
-            settings=default_settings;
+            global_settings=default_settings;
             Files::files_json=Files::default_files_json;
             return Application::EXIT_OK;
         }

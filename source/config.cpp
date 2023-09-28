@@ -9,6 +9,8 @@ class Command_config: public App
     {
         options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
         options.addOption(Poco::Util::Option("settings","s","settings").noArgument());
+        options.addOption(Poco::Util::Option("global","g","global settings").noArgument());
+        options.addOption(Poco::Util::Option("local","l","local settings").noArgument());
         options.addOption(Poco::Util::Option("files","f","files").noArgument());
         App::defineOptions(options);
     }
@@ -29,25 +31,32 @@ class Command_config: public App
 
         if(check_option("settings"))
         {
+            std::string key="/";
+            if(args.size()>0) key+=args[0];
+            json *target=NULL;
+            if(check_option("global")) target=&global_settings;
+            else if(check_option("local global")) target=&all_settings[running_path.toString()],if_has_settings[running_path.toString()]=true;
+            else target=get_settings_object(key);
             if(args.size()==0)
             {
-                scout<<std::setw(4)<<settings;
+                scout<<(*target).dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
             }
             else if(args.size()==1)
             {
-                scout<<settings[(json::json_pointer)("/"+args[0])]<<"\n";
+                scout<<(*target)<<"\n";
             }
             else
             {
-                if(args[1]=="%{RESET}%") settings[(json::json_pointer)("/"+args[0])]=default_settings[(json::json_pointer)("/"+args[0])];
-                else settings[(json::json_pointer)("/"+args[0])]=json::parse(args[1]);
+                if(args[1]=="%{RESET}%") (*target)=default_settings[(json::json_pointer)(key)];
+                else (*target)=json::parse(args[1]);
             }
+            scout<<termcolor::grey<<get_settings_path(key).toString()<<termcolor::reset<<"\n";
         }
         else if(check_option("files"))
         {
             if(args.size()==0)
             {
-                scout<<std::setw(4)<<Files::files_json;
+                scout<<Files::files_json.dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
             }
             else if(args.size()==1)
             {
