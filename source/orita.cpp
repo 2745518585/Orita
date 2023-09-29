@@ -29,9 +29,10 @@ class Command_orita: public App
     {
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
-        if(check_option("help")) return Application::EXIT_OK;
+        if(check_option("help")) return EXIT_OK;
+        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
 
-        
+
         if(check_option("reset"))
         {
             delete orita_log;
@@ -40,13 +41,13 @@ class Command_orita: public App
             ssystem("echo "+(file_path/"build").toString()+" > "+add_quo(appdata_path/"path.txt"));
             global_settings=default_settings;
             Files::files_json=Files::default_files_json;
-            return Application::EXIT_OK;
+            return EXIT_OK;
         }
         else if(check_option("clear"))
         {
             delete orita_log;
             ((fil)appdata_path).remove(true);
-            return Application::EXIT_OK;
+            return EXIT_OK;
         }
         scout<<"--------------------------------------------------\n";
         scout<<"  Orita - Useful OI Tools\n";
@@ -54,7 +55,7 @@ class Command_orita: public App
         scout<<"  Repository: https://github.com/2745518585/Orita\n";
         scout<<"  Local Path: "<<file_path.toString()<<"\n";
         scout<<"--------------------------------------------------\n";
-        return Application::EXIT_OK;
+        return EXIT_OK;
     }
 };
 int main(int argc,char **argv)

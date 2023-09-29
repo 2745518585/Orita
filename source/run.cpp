@@ -25,7 +25,8 @@ class Command_run: public App
     {
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
-        if(check_option("help")) return Application::EXIT_OK;
+        if(check_option("help")) return EXIT_OK;
+        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
 
 
         const std::string _ans_name="ans";

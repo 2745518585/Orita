@@ -54,6 +54,7 @@ using json=nlohmann::json;
 #include"Poco/Util/OptionProcessor.h"
 #include"Poco/Util/OptionException.h"
 #include"Poco/Util/HelpFormatter.h"
+#include"Poco/Exception.h"
 
 // os
 #ifdef _WIN32
@@ -122,6 +123,12 @@ std::string add_quo(const std::string &str)
 std::string add_squo(const std::string &str)
 {
     return "'"+str+"'";
+}
+template<typename Type,typename Func> std::string vec_to_str(const std::vector<Type> &vec,Func func)
+{
+    std::string str;
+    for(auto i:vec) str+=func(i)+" ";
+    return str;
 }
 
 // path
@@ -214,8 +221,7 @@ std::string sgetenv(const std::string &str)
     if(!enviroment_variable[str].is_null()) return (std::string)enviroment_variable[str];
     if(!Poco::Environment::has(str))
     {
-        class empty_environment_variable {}error;
-        throw error;
+        throw Poco::Exception("empty environment variable");
     }
     return Poco::Environment::get(str);
 }

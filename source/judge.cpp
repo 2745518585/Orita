@@ -27,7 +27,8 @@ class Command_judge: public App
     {
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
-        if(check_option("help")) return Application::EXIT_OK;
+        if(check_option("help")) return EXIT_OK;
+        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
 
         
         const std::string _ans_name="ans";
@@ -99,8 +100,7 @@ class Command_judge: public App
         catch(...)
         {
             ERROR("make data dir - fail",add_squo(default_data_dir.path()));
-            class fail_make_data_dir {}error;
-            throw error;
+            throw Poco::Exception("fail make data dir");
         }
         // judge
         int runned_sum=0,ac_sum=0;

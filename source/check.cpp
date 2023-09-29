@@ -28,7 +28,8 @@ class Command_check: public App
     {
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
-        if(check_option("help")) return Application::EXIT_OK;
+        if(check_option("help")) return EXIT_OK;
+        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
 
 
         const std::string _in_name="data_maker";
@@ -80,8 +81,7 @@ class Command_check: public App
         catch(...)
         {
             ERROR("make data dir - fail",add_squo(default_data_dir.path()));
-            class fail_make_data_dir {}error;
-            throw error;
+            throw Poco::Exception("fail make data dir");
         }
         // find file
         if(in==fil()||!in.exists()) {print_result(_in_name,res::type::NF);return EXIT_NOINPUT;}

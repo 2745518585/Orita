@@ -37,34 +37,23 @@ namespace Files
             if(num<0||num>_max_file_num)
             {
                 ERROR("file_number - invalid file_number","num: "+add_squo(this->str()));
-                class invalid_file_number {}error;
-                throw error;
+                throw Poco::Exception("invalid file number");
             }
         }
-        explicit file_number(const std::string &str):num([&]
+        explicit file_number(const std::string &str):file_number([&]
         {
             if(str[0]!='%')
             {
                 ERROR("file_number - invalid file_number","str: "+add_squo(str));
-                class invalid_file_number {}error;
-                throw error;
+                throw Poco::Exception("invalid file number");
             }
             try {return std::stoul(str.substr(1));}
             catch(...)
             {
                 ERROR("file_number - invalid file_number","str: "+add_squo(str));
-                class invalid_file_number {}error;
-                throw error;
+                throw Poco::Exception("invalid file number");
             }
-        }())
-        {
-            if(num<0||num>_max_file_num)
-            {
-                ERROR("file_number - invalid file_number","num: "+add_squo(this->str()));
-                class invalid_file_number {}error;
-                throw error;
-            }
-        }
+        }()) {}
     };
     bool find_filestr(const file_number &num)
     {
@@ -135,8 +124,7 @@ namespace Files
                 if(std::regex_match(dir.toString(),std::regex(".*(^|[^%])(%%)*%($|[^%]).*")))
                 {
                     ERROR("get file - invaild path",add_squo(tmp.toString()));
-                    class invaild_path {}error;
-                    throw error;
+                    throw Poco::Exception("invaild_path");
                 }
                 final_path/=std::regex_replace(dir.toString(),std::regex("%%"),"%");
             }
