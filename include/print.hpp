@@ -77,6 +77,7 @@ class printer
     std::atomic<bool> if_end;
     std::mutex wait_lock;
     std::condition_variable wait;
+    std::future<void> *print_future;
     void print()
     {
         int pos=0;
@@ -95,13 +96,15 @@ class printer
     }
     void start()
     {
-        std::thread(&printer::print,this).detach();
+        print_future=new std::future(std::async(std::launch::async,&printer::print,this));
+        INFO("printer - start","id: "+to_string_hex(this),"str: "+vec_to_str(str,static_cast<std::string(*)(const std::string&)>(add_squo)),"interval time: "+std::to_string(interval_time.count()));
     }
     void stop()
     {
         if_end=true;
         wait.notify_all();
-        ssleep((tim)10);
+        print_future->wait();
+        INFO("printer - end","id: "+to_string_hex(this));
     }
     printer(const std::initializer_list<std::string> _str,const tim _interval_time)
     {
