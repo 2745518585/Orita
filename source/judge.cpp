@@ -114,7 +114,7 @@ class Command_judge: public App
                 std::string tmp=pat(i.key()).getFileName();
                 if(!data_sum[data_name].is_null())
                 {
-                    data_sum[data_name]=data_sum[data_name]+1;
+                    data_sum[data_name]=(unsigned)data_sum[data_name]+1;
                     tmp+="("+std::to_string((unsigned)data_sum[data_name])+")";
                 }
                 else data_sum[data_name]=0;
