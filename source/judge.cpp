@@ -76,7 +76,7 @@ class Command_judge: public App
         loading_printer.stop();
         // find data
         const std::string in_file_suf=get_option("isuf","in"),out_file_suf=get_option("osuf","out");
-        json datas;
+        json datas,data_sum;
         for(auto i:args)
         {
             pat file=i;
@@ -109,7 +109,17 @@ class Command_judge: public App
             // init file
             if(i.value()["in"].is_null()&&i.value()["out"].is_null()) continue;
             for(int j=1;j<=50;++j) scout<<"-";
-            const std::string data_name=i.key();
+            const std::string data_name=[&]()
+            {
+                std::string tmp=pat(i.key()).getFileName();
+                if(!data_sum[data_name].is_null())
+                {
+                    data_sum[data_name]=data_sum[data_name]+1;
+                    tmp+="("+std::to_string((unsigned)data_sum[data_name])+")";
+                }
+                else data_sum[data_name]=0;
+                return tmp;
+            }();
             scout<<"\r#"<<data_name<<"\n";
             ++runned_sum;
             fil run_dir=default_data_dir/"datas"/data_name;
