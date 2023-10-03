@@ -108,6 +108,14 @@ Relative paths in local settings files will be resolved in the directory corresp
 
 ## Commands
 
+The command can be called through the true prefix of the full name of the command. For example, `orita run` can be abbreviated as `orita r`. The matching priority from high to low is:
+- `compile`
+- `config`
+- `check`
+- `chdata`
+- `judge`
+- `run`
+
 ### orita
 
 `orita [/help] [/reset] [/clear]`

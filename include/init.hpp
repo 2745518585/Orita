@@ -130,6 +130,10 @@ template<typename Type,typename Func> std::string vec_to_str(const std::vector<T
     for(auto i:vec) str+=func(i)+" ";
     return str;
 }
+bool if_pre(std::string str,std::string pre)
+{
+    return pre.size()<=str.size()&&str.substr(0,pre.size())==pre;
+}
 
 // path
 using pat=Poco::Path;
