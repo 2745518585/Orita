@@ -66,6 +66,15 @@ namespace Settings
         INFO("get settings",add_squo(key),(*object).dump());
         return (Type)(*object);
     }
+    json get_settings_merge(std::string key)
+    {
+        const json::json_pointer pointer=(json::json_pointer)key;
+        json object=default_settings[pointer];
+        merge(object,global_settings[pointer]);
+        for(auto i:all_settings) merge(object,i[pointer]);
+        INFO("get settings merge",add_squo(key),object.dump());
+        return object;
+    }
     pat get_settings_path(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
@@ -81,11 +90,18 @@ namespace Settings
 }
 using Settings::get_settings_object;
 using Settings::get_settings;
+using Settings::get_settings_merge;
 using Settings::get_settings_path;
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
 const std::string exe_suf=get_settings<std::string>("/exe_suf");
-const std::string compile_argu=get_settings<std::string>("/data/compile_argu");
+const std::string compile_argu=[]()
+{
+    json object=get_settings_merge("/data/compile_argu"),if_appear;
+    std::string str;
+    for(auto i:object) if(i.is_string()&&if_appear[(std::string)i].is_null()) str+=(std::string)i+" ",if_appear[(std::string)i]=true;
+    return str;
+}();
 fil default_infile=get_file(get_settings<std::string>("/data/infile"),get_settings_path("/data/infile"));
 fil default_outfile=get_file(get_settings<std::string>("/data/outfile"),get_settings_path("/data/outfile"));
 fil default_ansfile=get_file(get_settings<std::string>("/data/ansfile"),get_settings_path("/data/ansfile"));
@@ -102,6 +118,6 @@ namespace Settings
         return get_settings<tim>("/data/time");
     }
 }
-void change_time_limit(const tim time) {Settings::change_time_limit(time);}
-tim get_time_limit() {return Settings::get_time_limit();}
+using Settings::change_time_limit;
+using Settings::get_time_limit;
 #endif

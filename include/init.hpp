@@ -67,11 +67,16 @@ const std::string os_name="linux";
 // json
 void merge(json &a,json b)
 {
-    for(auto &i:b.items())
+    if(!a.is_null()&&!b.is_null()&&a.type()!=b.type()) return;
+    if(b.is_object())
     {
-        if(i.value().is_object()) merge(a[i.key()],i.value());
-        else if(!i.value().is_null()) a[i.key()]=i.value();
+        for(auto &i:b.items()) merge(a[i.key()],i.value());
     }
+    else if(b.is_array())
+    {
+        a.insert(a.end(),b.begin(),b.end());
+    }
+    else if(!b.is_null()) a=b;
 }
 
 // code

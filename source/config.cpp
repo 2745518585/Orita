@@ -41,30 +41,22 @@ class Command_config: public App
                 target=&all_settings[running_path.toString()][(json::json_pointer)(key)];
                 if_has_settings[running_path.toString()]=true;
             }
-            else
-            {
-                if(key=="")
-                {
-                    target=new json(default_settings);
-                    merge(*target,global_settings);
-                    for(auto i:all_settings) merge(*target,i);
-                }
-                else target=get_settings_object(key);
-            }
             if(args.size()==0)
             {
+                if(target==NULL) target=new json(get_settings_merge(""));
                 scout<<target->dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
             }
             else if(args.size()==1)
             {
+                if(target==NULL) target=get_settings_object(key);
                 scout<<(*target)<<"\n";
             }
             else
             {
+                if(target==NULL) target=get_settings_object(key);
                 if(args[1]=="%{RESET}%") (*target)=default_settings[(json::json_pointer)(key)];
                 else (*target)=json::parse(args[1]);
             }
-            if(!check_option("global")) scout<<termcolor::grey<<get_settings_path(key).toString()<<termcolor::reset<<"\n";
         }
         else if(check_option("files"))
         {
