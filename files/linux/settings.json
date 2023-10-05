@@ -1,14 +1,25 @@
 {
+    "commands": {
+        "c": "compile",
+        "ch": "check",
+        "chd": "chdata",
+        "con": "config",
+        "j": "judge",
+        "r": "run"
+    },
     "data": {
         "ansfile": "%12",
         "chkfile": "%13",
-        "compile_argu": ["-std=c++14","-O2"],
+        "compile_argu": [
+            "-std=c++14",
+            "-O2"
+        ],
         "data_dir": "%{RUNNING_PATH}%/.data",
         "infile": "%10",
         "outfile": "%11",
         "time": 1000
     },
-    "exe_suf": "",
+    "exe_suf": "exe",
     "max_thread_num": 10,
     "runtime_limit": 5000
 }

@@ -50,21 +50,52 @@ namespace Settings
     json *get_settings_object(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
-        json *object=&default_settings[pointer];
-        try {if(global_settings[pointer].type()==default_settings[pointer].type()) object=&global_settings[pointer];} catch(...) {}
+        json *object=NULL;
+        try {if(!default_settings[pointer].is_null()) object=&default_settings[pointer];} catch(...) {}
+        try {if(!global_settings[pointer].is_null()) object=&global_settings[pointer];} catch(...) {}
         for(auto &i:all_settings)
         {
-            try {if(i[pointer].type()==default_settings[pointer].type()) object=&i[pointer];} catch(...) {}
+            try {if(!i[pointer].is_null()) object=&i[pointer];} catch(...) {}
         }
-        INFO("get settings object",add_squo(key),(*object).dump());
+        if(object) INFO("get settings object",add_squo(key),(*object).dump());
+        else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
-    template<typename Type> Type get_settings(std::string key)
+    template<typename Type> json *get_settings_object(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
-        json *object=get_settings_object(key);
-        INFO("get settings",add_squo(key),(*object).dump());
-        return (Type)(*object);
+        json *object=NULL;
+        try {(Type)default_settings[pointer];object=&default_settings[pointer];} catch(...) {}
+        try {(Type)global_settings[pointer];object=&global_settings[pointer];} catch(...) {}
+        for(auto &i:all_settings)
+        {
+            try {(Type)i[pointer];object=&i[pointer];} catch(...) {}
+        }
+        if(object) INFO("get settings object",add_squo(key),(*object).dump());
+        else INFO("get settings object",add_squo(key),"NULL");
+        return object;
+    }
+    pat get_settings_path(std::string key)
+    {
+        const json::json_pointer pointer=(json::json_pointer)key;
+        pat path=running_path;
+        for(auto &i:all_settings.items())
+        {
+            try {if(!i.value()[pointer].is_null()) path=i.key();} catch(...) {}
+        }
+        INFO("get settings path",add_squo(key),add_squo(path));
+        return path;
+    }
+    template<typename Type> pat get_settings_path(std::string key)
+    {
+        const json::json_pointer pointer=(json::json_pointer)key;
+        pat path=running_path;
+        for(auto &i:all_settings.items())
+        {
+            try {(Type)i.value()[pointer];path=i.key();} catch(...) {}
+        }
+        INFO("get settings path",add_squo(key),add_squo(path));
+        return path;
     }
     json get_settings_merge(std::string key)
     {
@@ -75,23 +106,23 @@ namespace Settings
         INFO("get settings merge",add_squo(key),object.dump());
         return object;
     }
-    pat get_settings_path(std::string key)
+    template<typename Type> Type get_settings(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
-        pat path=running_path;
-        try {if(global_settings[pointer].type()==default_settings[pointer].type()) path=running_path;} catch(...) {}
-        for(auto &i:all_settings.items())
+        json *object=get_settings_object<Type>(key);
+        if(!object)
         {
-            try {if(i.value()[pointer].type()==default_settings[pointer].type()) path=i.key();} catch(...) {}
+            WARN("get settings - null",add_squo(key));
+            throw Poco::Exception("null settings");
         }
-        INFO("get settings path",add_squo(key),add_squo(path));
-        return path;
+        INFO("get settings",add_squo(key),(*object).dump());
+        return (Type)(*object);
     }
 }
 using Settings::get_settings_object;
-using Settings::get_settings;
-using Settings::get_settings_merge;
 using Settings::get_settings_path;
+using Settings::get_settings_merge;
+using Settings::get_settings;
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
 const std::string exe_suf=get_settings<std::string>("/exe_suf");
@@ -102,11 +133,11 @@ const std::string compile_argu=[]()
     for(auto i:object) if(i.is_string()&&if_appear[(std::string)i].is_null()) str+=(std::string)i+" ",if_appear[(std::string)i]=true;
     return str;
 }();
-fil default_infile=get_file(get_settings<std::string>("/data/infile"),get_settings_path("/data/infile"));
-fil default_outfile=get_file(get_settings<std::string>("/data/outfile"),get_settings_path("/data/outfile"));
-fil default_ansfile=get_file(get_settings<std::string>("/data/ansfile"),get_settings_path("/data/ansfile"));
-fil default_chkfile=get_file(get_settings<std::string>("/data/chkfile"),get_settings_path("/data/chkfile"));
-fil default_data_dir=get_file(get_settings<std::string>("/data/data_dir"),get_settings_path("/data/data_dir"));
+fil default_infile=get_file(get_settings<std::string>("/data/infile"),get_settings_path<std::string>("/data/infile"));
+fil default_outfile=get_file(get_settings<std::string>("/data/outfile"),get_settings_path<std::string>("/data/outfile"));
+fil default_ansfile=get_file(get_settings<std::string>("/data/ansfile"),get_settings_path<std::string>("/data/ansfile"));
+fil default_chkfile=get_file(get_settings<std::string>("/data/chkfile"),get_settings_path<std::string>("/data/chkfile"));
+fil default_data_dir=get_file(get_settings<std::string>("/data/data_dir"),get_settings_path<std::string>("/data/data_dir"));
 namespace Settings
 {
     void change_time_limit(const tim time)

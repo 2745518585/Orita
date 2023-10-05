@@ -106,15 +106,22 @@ When querying and modifying settings, the default priority is from high to low. 
 
 Relative paths in local settings files will be resolved in the directory corresponding to the file. Whenever a local settings file is identified in the current directory or a directory with modified local settings through commands, the latest settings file will be output when the program ends. Directories without settings files and without modifications will not output anything.
 
-## Commands
+### Command matching
 
-The command can be called through the true prefix of the full name of the command. For example, `orita run` can be abbreviated as `orita r`. The matching priority from high to low is:
-- `compile`
-- `config`
-- `check`
-- `chdata`
-- `judge`
-- `run`
+The first parameter will be used as the key to match the command in `settings.commands.`. The command name is shown in the command list. The matching list defaults to:
+```json
+{
+    "c": "compile",
+    "ch": "check",
+    "chd": "chdata",
+    "con": "config",
+    "j": "judge",
+    "r": "run"
+}
+```
+If the matching fails, the first parameter will be used as the command. If there is no parameter or no corresponding command, the entry command will be entered.
+
+## Commands
 
 ### orita
 

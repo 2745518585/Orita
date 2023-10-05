@@ -60,13 +60,21 @@ class Command_orita: public App
 };
 int main(int argc,char **argv)
 {
-    if(argc>1&&if_pre("compile",argv[1])) {Command_compile Compile;Compile.init(argc-1,argv+1);return Compile.run();}
-    if(argc>1&&if_pre("config",argv[1])) {Command_config Config;Config.init(argc-1,argv+1);return Config.run();}
-    if(argc>1&&if_pre("check",argv[1])) {Command_check Check;Check.init(argc-1,argv+1);return Check.run();}
-    if(argc>1&&if_pre("chdata",argv[1])) {Command_chdata Chdata;Chdata.init(argc-1,argv+1);return Chdata.run();}
-    if(argc>1&&if_pre("judge",argv[1])) {Command_judge Judge;Judge.init(argc-1,argv+1);return Judge.run();}
-    if(argc>1&&if_pre("run",argv[1])) {Command_run Run;Run.init(argc-1,argv+1);return Run.run();}
-    Command_orita Orita;
-    Orita.init(argc,argv);
-    return Orita.run();
+    auto run_commands=[&](std::string commands){
+        INFO("run commands","commands: "+commands);
+        if(commands=="chdata") {Command_chdata Chdata;Chdata.init(argc-1,argv+1);return Chdata.run();}
+        else if(commands=="check") {Command_check Check;Check.init(argc-1,argv+1);return Check.run();}
+        else if(commands=="compile") {Command_compile Compile;Compile.init(argc-1,argv+1);return Compile.run();}
+        else if(commands=="config") {Command_config Config;Config.init(argc-1,argv+1);return Config.run();}
+        else if(commands=="judge") {Command_judge Judge;Judge.init(argc-1,argv+1);return Judge.run();}
+        else if(commands=="run") {Command_run Run;Run.init(argc-1,argv+1);return Run.run();}
+        else {Command_orita Orita;Orita.init(argc,argv);return Orita.run();}
+    };
+    std::string commands;
+    if(argc>1&&!std::regex_match(argv[1],std::regex("^[/|-].*$")))
+    {
+        try {commands=get_settings<std::string>((std::string)"/commands/"+argv[1]);}
+        catch(...) {commands=argv[1];}
+    }
+    return run_commands(commands);
 }
