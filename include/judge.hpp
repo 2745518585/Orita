@@ -32,7 +32,7 @@ class runner
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
             WARN("run - timeout","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
-            kill_task(replace_extension(file,exe_suf));
+            kill_task(replace_extension(file,exe_suf).getFileName());
             run_future.wait();
             time=time_limit;
             return 1;
