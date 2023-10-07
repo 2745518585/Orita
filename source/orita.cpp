@@ -13,8 +13,8 @@ class Command_orita: public App
     void defineOptions(Poco::Util::OptionSet &options)
     {
         options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
-        options.addOption(Poco::Util::Option("reset","r","reset Configuration").noArgument());
-        options.addOption(Poco::Util::Option("clear","c","clear Configuration").noArgument());
+        options.addOption(Poco::Util::Option("reset","r","reset configuration").noArgument());
+        options.addOption(Poco::Util::Option("clear","c","clear configuration").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)

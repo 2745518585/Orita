@@ -78,6 +78,26 @@ void merge(json &a,json b)
     }
     else if(!b.is_null()) a=b;
 }
+void remove_null(json &a)
+{
+    if(a.is_object())
+    {
+        for(auto &i:a) remove_null(i);
+        for(auto i=a.begin();i!=a.end();)
+        {
+            ++i;
+            try {if(prev(i)->size()==0) a.erase(prev(i));} catch(...) {}
+        }
+    }
+    else if(a.is_array())
+    {
+        for(auto &i:a) remove_null(i);
+        for(int i=a.size()-1;i>=0;--i)
+        {
+            try {if(a[i].size()==0) a.erase(i);} catch(...) {}
+        }
+    }
+}
 
 // code
 std::string UTF8tosys(const std::string &str)

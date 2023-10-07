@@ -24,6 +24,7 @@ namespace Files
         }
         ~Init()
         {
+            remove_null(files_json);
             (sofstream(appdata_path/"file.json",false))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
         }
     }_Init_files;

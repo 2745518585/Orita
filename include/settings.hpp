@@ -29,6 +29,7 @@ namespace Settings
         }
         ~Init()
         {
+            remove_null(global_settings);
             (sofstream(appdata_path/"settings.json",false))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
             pat dir("/");
             dir.setDevice(running_path.getDevice());
@@ -41,6 +42,7 @@ namespace Settings
                     if(!if_has_settings[dir.toString()].is_null())
                     {
                         ((fil)dir/".orita").createDirectory();
+                        remove_null(all_settings[dir.toString()]);
                         (sofstream(dir/".orita/settings.json",false))<<all_settings[dir.toString()].dump(4,' ',true,json::error_handler_t::ignore);
                     }
                 } catch(...) {};

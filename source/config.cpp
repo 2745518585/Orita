@@ -44,11 +44,13 @@ class Command_config: public App
             if(args.size()==0)
             {
                 if(target==NULL) target=new json(get_settings_merge(""));
+                remove_null(*target);
                 scout<<target->dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
             }
             else if(args.size()==1)
             {
                 if(target==NULL) target=get_settings_object(key);
+                remove_null(*target);
                 scout<<(*target)<<"\n";
             }
             else
