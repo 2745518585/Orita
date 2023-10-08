@@ -10,8 +10,8 @@ int main(int argc,char **argv)
     {
         bool end1=bool(!getline(infile1,str1)),end2=bool(!getline(infile2,str2));
         if(end1&&end2) break;
-        while(str1[str1.size()-1]==' ') str1=str1.substr(0,str1.size()-1);
-        while(str2[str2.size()-1]==' ') str2=str2.substr(0,str2.size()-1);
+        while(str1.back()==' ') str1.pop_back();
+        while(str2.back()==' ') str2.pop_back();
         if(end1||str1.size()==0) empty1=true;
         else empty1=false;
         if(end2||str2.size()==0) empty2=true;
