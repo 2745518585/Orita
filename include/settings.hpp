@@ -125,9 +125,9 @@ namespace Settings
                 std::string str=replace_env((std::string)*object);
                 INFO("get settings str",add_squo(key),add_squo(str));
                 return (Type)str;
-            } catch(...) {}
+            } catch(...) {WARN("get settings str - fail",add_squo(key),object->dump());}
         }
-        INFO("get settings",add_squo(key),object->dump());
+        else INFO("get settings",add_squo(key),object->dump());
         return (Type)(*object);
     }
 }
@@ -145,11 +145,19 @@ const std::string compile_argu=[]()
     for(auto i:object) if(i.is_string()&&if_appear[(std::string)i].is_null()) str+=(std::string)i+" ",if_appear[(std::string)i]=true;
     return str;
 }();
-fil default_infile=get_file(get_settings<std::string>("/data/infile"),get_settings_path<std::string>("/data/infile"));
-fil default_outfile=get_file(get_settings<std::string>("/data/outfile"),get_settings_path<std::string>("/data/outfile"));
-fil default_ansfile=get_file(get_settings<std::string>("/data/ansfile"),get_settings_path<std::string>("/data/ansfile"));
-fil default_chkfile=get_file(get_settings<std::string>("/data/chkfile"),get_settings_path<std::string>("/data/chkfile"));
-fil default_data_dir=get_file(get_settings<std::string>("/data/data_dir"),get_settings_path<std::string>("/data/data_dir"));
+namespace Settings
+{
+    std::string get_file(std::string key)
+    {
+        try {return ::get_file(get_settings<std::string>(key),get_settings_path<std::string>(key)).path();} catch(...) {}
+        return "";
+    }
+}
+fil default_infile=Settings::get_file("/data/infile");
+fil default_outfile=Settings::get_file("/data/outfile");
+fil default_ansfile=Settings::get_file("/data/ansfile");
+fil default_chkfile=Settings::get_file("/data/chkfile");
+fil default_data_dir=Settings::get_file("/data/data_dir");
 namespace Settings
 {
     void change_time_limit(const tim time)
