@@ -232,7 +232,9 @@ const pat file_path=[]()
     realpath("/proc/self/exe",tmp);
     #endif
     pat path=tmp;
-    return path.parent().parent().parent();
+    try {while(!((fil)(path/"orita.root")).exists()) path=path.parent();}
+    catch(...) {throw Poco::Exception("cannot find root dir");}
+    return path;
 }();
 const pat appdata_path=[]()
 {

@@ -39,7 +39,7 @@ int main(int argc,char **argv)
 {
     std::string path;
     (std::ifstream)(makepath(get_appdata_path(),"path.txt"))>>path;
-    path=makepath(path,"bin");
+    path=makepath(path,"build","bin");
     #ifdef _WIN32
     path=makepath(path,"orita.exe");
     #endif

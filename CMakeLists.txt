@@ -23,7 +23,8 @@ target_link_libraries(${PROJECT_NAME} Poco::Foundation Poco::Util nlohmann_json:
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/include)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    file(WRITE "$ENV{APPDATA}\\Orita\\path.txt" ${CMAKE_BINARY_DIR})
+    file(WRITE "$ENV{APPDATA}\\Orita\\path.txt" ${CMAKE_SOURCE_DIR})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    file(WRITE "$ENV{HOME}/.Orita/path.txt" ${CMAKE_BINARY_DIR})
+    file(WRITE "$ENV{HOME}/.Orita/path.txt" ${CMAKE_SOURCE_DIR})
 endif()
+file(WRITE ${CMAKE_SOURCE_DIR}/orita.root "THIS FILE IS USED TO LOCATE ORITA SOURCE DIR AND EXECUTE DIR\nPLEASE DONOT REMOVE IT")
