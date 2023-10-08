@@ -59,12 +59,13 @@ namespace Settings
         {
             try {if(!i[pointer].is_null()) object=&i[pointer];} catch(...) {}
         }
-        if(object) INFO("get settings object",add_squo(key),(*object).dump());
+        if(object) INFO("get settings object",add_squo(key),object->dump());
         else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
     template<typename Type> json *get_settings_object(std::string key)
     {
+        if(std::is_same_v<Type,json>) return get_settings_object(key);
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=NULL;
         try {(Type)default_settings[pointer];object=&default_settings[pointer];} catch(...) {}
@@ -73,7 +74,7 @@ namespace Settings
         {
             try {(Type)i[pointer];object=&i[pointer];} catch(...) {}
         }
-        if(object) INFO("get settings object",add_squo(key),(*object).dump());
+        if(object) INFO("get settings object",add_squo(key),object->dump());
         else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
@@ -117,7 +118,16 @@ namespace Settings
             WARN("get settings - null",add_squo(key));
             throw Poco::Exception("null settings");
         }
-        INFO("get settings",add_squo(key),(*object).dump());
+        if constexpr(std::is_convertible<Type,std::string>::value)
+        {
+            try
+            {
+                std::string str=replace_env((std::string)*object);
+                INFO("get settings str",add_squo(key),add_squo(str));
+                return (Type)str;
+            } catch(...) {}
+        }
+        INFO("get settings",add_squo(key),object->dump());
         return (Type)(*object);
     }
 }

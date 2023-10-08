@@ -33,7 +33,7 @@ class Command_config: public App
         if(check_option("settings"))
         {
             std::string key="";
-            if(args.size()>0) key="/"+args[0];
+            if(args.size()>0) key=std::regex_replace((std::string)args[0],std::regex("\\."),"/");
             json *target=NULL;
             if(check_option("global")) target=&global_settings[(json::json_pointer)(key)];
             else if(check_option("local"))

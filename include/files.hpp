@@ -43,7 +43,7 @@ namespace Files
         }
         explicit file_number(const std::string &str):file_number([&]
         {
-            if(str[0]!='%')
+            if(!std::regex_match(str,std::regex("\\*[0-9]+")))
             {
                 ERROR("file_number - invalid file_number","str: "+add_squo(str));
                 throw Poco::Exception("invalid file number");
@@ -99,41 +99,13 @@ namespace Files
         INFO("add file","name: "+add_squo(file),"file: "+add_squo(file_result));
         add_filestr(num,file_result.toString());
     }
-    fil get_file(const file_number &num,const pat &file_dir=running_path);
     fil get_file(const pat &file,const pat &file_dir=running_path)
     {
-        pat tmp=get_path(file,file_dir),final_path=pat("/");
-        final_path.setDevice(tmp.getDevice());
-        final_path.setNode(tmp.getNode());
-        for(int i=0;i<=tmp.depth();++i)
-        {
-            const pat dir=tmp[i];
-            if(std::regex_match(dir.toString(),std::regex("^%[^%]*")))
-            {
-                pat path=get_file((file_number)dir.toString(),file_dir).path();
-                final_path/=path;
-                if(path.getDevice()!="") final_path.setDevice(path.getDevice());
-            }
-            else if(std::regex_match(dir.toString(),std::regex("^%[^%]+%$")))
-            {
-                pat path=sgetenv(dir.toString().substr(1,dir.toString().length()-2));
-                final_path/=path;
-                if(path.getDevice()!="") final_path.setDevice(path.getDevice());
-            }
-            else
-            {
-                if(std::regex_match(dir.toString(),std::regex(".*(^|[^%])(%%)*%($|[^%]).*")))
-                {
-                    ERROR("get file - invaild path",add_squo(tmp.toString()));
-                    throw Poco::Exception("invaild_path");
-                }
-                final_path/=std::regex_replace(dir.toString(),std::regex("%%"),"%");
-            }
-        }
+        pat final_path=replace_env(get_path(file,file_dir).toString());
         INFO("get file","name: "+add_squo(file),"file: "+add_squo(final_path));
         return final_path;
     }
-    fil get_file(const file_number &num,const pat &file_dir)
+    fil get_file(const file_number &num,const pat &file_dir=running_path)
     {
         return get_file(get_filestr(num),file_dir);
     }
@@ -178,6 +150,7 @@ namespace Files
     }
     #undef number_len
 }
+using Files::file_number;
 using Files::find_filestr;
 using Files::add_filestr;
 using Files::get_filestr;

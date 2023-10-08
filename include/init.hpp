@@ -213,7 +213,11 @@ pat replace_extension(fil file,const std::string suf="")
 {
     return ((pat)file.path()).setExtension(suf).toString();
 }
-std::string sgetenv(const std::string &str);
+std::string sgetenv(const std::string &str)
+{
+    if(!Poco::Environment::has(str)) throw Poco::Exception("empty environment variable");
+    return Poco::Environment::get(str);
+}
 const pat running_path=[]()
 {
     return (pat)(pat::current());
@@ -243,17 +247,8 @@ json enviroment_variable={
     {"{RUNNING_PATH}",running_path.toString()},
     {"{FILE_PATH}",file_path.toString()},
     {"{APPDATA_PATH}",appdata_path.toString()},
-    {"{OS_NAME}",os_name}
+    {"{OS_NAME}",os_name},
 };
-std::string sgetenv(const std::string &str)
-{
-    if(!enviroment_variable[str].is_null()) return (std::string)enviroment_variable[str];
-    if(!Poco::Environment::has(str))
-    {
-        throw Poco::Exception("empty environment variable");
-    }
-    return Poco::Environment::get(str);
-}
 
 // time
 using tim=std::chrono::milliseconds;
@@ -423,3 +418,5 @@ namespace Init
         ~Init() {show_cursor();}
     }_Init;
 }
+
+#include"env.h"
