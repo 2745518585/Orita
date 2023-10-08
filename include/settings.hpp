@@ -5,6 +5,7 @@
 #include"log.hpp"
 #include"files.hpp"
 json all_settings,global_settings,default_settings,if_has_settings;
+json::json_pointer others_settings=json::json_pointer("/~0list");
 namespace Settings
 {
     class Init

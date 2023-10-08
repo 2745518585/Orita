@@ -9,8 +9,10 @@ class Command_config: public App
     {
         options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
         options.addOption(Poco::Util::Option("settings","s","settings").noArgument());
-        options.addOption(Poco::Util::Option("global","g","global settings").noArgument());
-        options.addOption(Poco::Util::Option("local","l","local settings").noArgument());
+        options.addOption(Poco::Util::Option("global","global","global settings").noArgument());
+        options.addOption(Poco::Util::Option("local","local","local settings").noArgument());
+        options.addOption(Poco::Util::Option("add","add","add custom settings").argument("key",true));
+        options.addOption(Poco::Util::Option("load","load","load custom settings").argument("key",true));
         options.addOption(Poco::Util::Option("files","f","files").noArgument());
         App::defineOptions(options);
     }
@@ -34,28 +36,41 @@ class Command_config: public App
         {
             std::string key="";
             if(args.size()>0) key=std::regex_replace((std::string)args[0],std::regex("\\."),"/");
-            json *target=NULL;
-            if(check_option("global")) target=&global_settings[(json::json_pointer)(key)];
-            else if(check_option("local"))
+            json::json_pointer pointer=(json::json_pointer)(key);
+            if(args.size()<=1)
             {
-                target=&all_settings[running_path.toString()][(json::json_pointer)(key)];
-                if_has_settings[running_path.toString()]=true;
-            }
-            if(args.size()==0)
-            {
-                if(target==NULL) target=new json(get_settings_merge(""));
-                remove_null(*target);
-                scout<<target->dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
-            }
-            else if(args.size()==1)
-            {
-                if(target==NULL) target=get_settings_object(key);
-                remove_null(*target);
-                scout<<(*target)<<"\n";
+                json target;
+                if(check_option("global")) target=global_settings[pointer];
+                else if(check_option("local")||check_option("load"))
+                {
+                    target=all_settings[running_path.toString()][pointer];
+                    if_has_settings[running_path.toString()]=true;
+                }
+                else target=get_settings_merge(key);
+                if(check_option("add"))
+                {
+                    global_settings[others_settings][get_option("add")][pointer]=target;
+                }
+                else if(check_option("load"))
+                {
+                    all_settings[running_path.toString()][pointer]=global_settings[others_settings][get_option("load")][pointer];
+                }
+                else
+                {
+                    remove_null(target);
+                    scout<<target.dump(4,' ',true,json::error_handler_t::ignore)<<"\n";
+                }
             }
             else
             {
-                if(target==NULL) target=get_settings_object(key);
+                json *target=NULL;
+                if(check_option("global")) target=&global_settings[pointer];
+                else if(check_option("local"))
+                {
+                    target=&all_settings[running_path.toString()][pointer];
+                    if_has_settings[running_path.toString()]=true;
+                }
+                else target=get_settings_object(key);
                 if(args[1]=="%{RESET}%") (*target)=default_settings[(json::json_pointer)(key)];
                 else (*target)=json::parse(args[1]);
             }

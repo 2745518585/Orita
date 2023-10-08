@@ -257,7 +257,7 @@ Orita 第一个正式版本。
 
 - Supported `MSVC`.
 - Add Github Actions.
-- Supported local settings.
+- Add settings system.
 - Add commands matching lists.
 - Add enviroment variables replace.
 - Add `orita command`.

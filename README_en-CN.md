@@ -108,6 +108,8 @@ Relative paths in local settings files will be resolved in the directory corresp
 
 If you need to use a string to represent an object in the setting, please use `.` to separate directories at different levels, such as `.data.data_dir`. In the following, `%.data.dat_dir%` represents the corresponding object in the settings.
 
+Settings files can be stored in the `.~list` location of the global settings file, and can be loaded into configuration files in the current directory.
+
 ### Command matching
 
 The first parameter will be used as the key to match the command in `%.commands...%`. The command name is shown in the command list. The matching list defaults to:
@@ -228,7 +230,7 @@ Compile the source file with the given source file and compilation parameters.
 
 ### config
 
-`config [key [value]] [/help] [/settings] [/files]`
+`config [key [value]] [/help] [/settings] [/global] [/local] [/add=key] [/load=key] [/files]`
 
 View or modify the configuration.
 
@@ -240,9 +242,13 @@ View or modify the configuration.
 
 `/settings`: If the `key` is not provided, output the `settings.json` file. If the `key` is provided but not the `value`, output the value of the `key`. If `%{RESET}%` is appended to the `key`, reset the item to its default value, which is read from `%{FILE_PATH}%/files/settings.json`. If `value` is appended to the `key`, modify the value of the `key`.
 
-`/global`: Specifies modifying global settings.
+`/global`: Specify global setting.
 
-`/local`: Specifies modifying local settings for the current directory.
+`/local`: Specifies local settings for the current directory.
+
+`/add=key`: Upload settings to a settings file named `key`.
+
+`/load=key`: Load the settings file named `key` into the local settings of the current directory.
 
 `/files`: If `num` is not provided, output the `file.json` file. If `num` is provided but not the `value`, output the value of the file with the number `num`. If `%{RESET}%` is appended to `num`, reset the file to its default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended to `num`, set the file to `value`.
 

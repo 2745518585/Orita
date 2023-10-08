@@ -22,5 +22,15 @@
     },
     "exe_suf": "",
     "max_thread_num": 10,
-    "runtime_limit": 5000
+    "runtime_limit": 5000,
+    "~list": {
+        "oi": {
+            "data": {
+                "compile_argu": [
+                    "-std=c++14",
+                    "-O2"
+                ]
+            }
+        }
+    }
 }

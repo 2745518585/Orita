@@ -108,6 +108,8 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 如需要用一个字符串表示设置中的一个对象，请使用 `.` 分隔不同层级的目录，如 `.data.data_dir`。下文中形如 `%.data.data_dir%` 即代表设置中对应的对象。
 
+设置文件可以存储在全局设置文件的 `.~list` 位置，并且可以加载到当前目录的配置文件。
+
 ### 命令匹配
 
 将以第一个参数为键于 `%.commands...%` 匹配命令，命令名称见命令列表，匹配列表默认为：
@@ -226,7 +228,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ### config
 
-`config [key [value]] [/help] [/settings] [/files]`
+`config [key [value]] [/help] [/settings] [/global] [/local] [/add=key] [/load=key] [/files]`
 
 查看或修改配置。
 
@@ -238,9 +240,13 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `/settings`: 如果未提供 `key`，则输出 `settings.json` 文件。如果提供 `key` 但未提供 `value`，则输出 `key` 的值。如果在 `key` 后追加 `%{RESET}%`，则将该项重置为默认值，默认值将从 `%{FILE_PATH}%/files/settings.json` 中读取。如果在 `key` 后追加 `value`，则将 `key` 的值修改为 `value`。
 
-`/global`: 指定修改全局设置。
+`/global`: 指定为全局设置。
 
-`/local`: 指定修改当前目录的局部设置。
+`/local`: 指定为当前目录的局部设置。
+
+`/add=key`: 上传设置至名为 `key` 的设置文件。
+
+`/load=key`: 加载名为 `key` 的设置文件至当前目录的局部设置。
 
 `/files`: 如果未提供 `num`，则输出 `file.json` 文件。如果提供 `num` 但未提供 `value`，则输出编号为 `num` 的文件的值。如果在 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值将从 `%{FILE_PATH}%/files/%{OS_NAME}%/file.json` 中读取。如果在 `num` 后追加 `value`，则将该文件的值设置为 `value`。
 
