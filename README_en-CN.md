@@ -106,19 +106,20 @@ When querying and modifying settings, the default priority is from high to low. 
 
 Relative paths in local settings files will be resolved in the directory corresponding to the file. Whenever a local settings file is identified in the current directory or a directory with modified local settings through commands, the latest settings file will be output when the program ends. Directories without settings files and without modifications will not output anything.
 
-If you need to use a string to represent an object in the setting, please use `.` to separate directories at different levels, such as `.data.data_dir`. In the following, `settings...` represents the corresponding object in the settings.
+If you need to use a string to represent an object in the setting, please use `.` to separate directories at different levels, such as `.data.data_dir`. In the following, `%.data.dat_dir%` represents the corresponding object in the settings.
 
 ### Command matching
 
-The first parameter will be used as the key to match the command in `settings.commands.`. The command name is shown in the command list. The matching list defaults to:
+The first parameter will be used as the key to match the command in `%.commands...%`. The command name is shown in the command list. The matching list defaults to:
 ```json
 {
-    "c": "compile",
-    "ch": "check",
-    "chd": "chdata",
-    "con": "config",
-    "j": "judge",
-    "r": "run"
+  "c": "compile",
+  "ch": "check",
+  "chd": "chdata",
+  "com": "command",
+  "con": "config",
+  "j": "judge",
+  "r": "run"
 }
 ```
 If the matching fails, the first parameter will be used as the command. If there is no parameter or no corresponding command, the entry command will be entered.
@@ -141,7 +142,7 @@ The entry command for the command-line tool.
 
 `orita run [/help] [/file=file] [/checker=file] [/time=time]`
 
-Run the given file and redirect input, and compare the output. Macros defined during file compilation include `JUDGING`. The data will be placed in the `settings.data.data_dir/` directory.
+Run the given file and redirect input, and compare the output. Macros defined during file compilation include `JUDGING`. The data will be placed in the `%.data.data_dir%/` directory.
 
 `/help`: Display help information.
 
@@ -171,7 +172,7 @@ Used to modify
 
 `orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num] [/time=time]`
 
-Perform a data check with the given data generator, standard code, and source code. Macros defined during file compilation include `JUDGING`. The data will be placed in the `settings.data.data_dir/` directory.
+Perform a data check with the given data generator, standard code, and source code. Macros defined during file compilation include `JUDGING`. The data will be placed in the `%.data.data_dir%/` directory.
 
 `/help`: Display help information.
 
@@ -229,11 +230,7 @@ Compile the source file with the given source file and compilation parameters.
 
 `config [key [value]] [/help] [/settings] [/files]`
 
-#### Description
-
 View or modify the configuration.
-
-#### Parameter List
 
 `key`: Specify the key.
 
@@ -248,6 +245,14 @@ View or modify the configuration.
 `/local`: Specifies modifying local settings for the current directory.
 
 `/files`: If `num` is not provided, output the `file.json` file. If `num` is provided but not the `value`, output the value of the file with the number `num`. If `%{RESET}%` is appended to `num`, reset the file to its default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended to `num`, set the file to `value`.
+
+### command
+
+`command [commands]`
+
+Execute the commands after replacing the environment variables.
+
+`/help`: Display help information.
 
 ## Uninstallation
 

@@ -259,6 +259,8 @@ Orita 第一个正式版本。
 - Add Github Actions.
 - Supported local settings.
 - Add commands matching lists.
+- Add enviroment variables replace.
+- Add `orita command`.
 
 #### Fixes
 

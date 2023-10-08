@@ -3,6 +3,7 @@
         "c": "compile",
         "ch": "check",
         "chd": "chdata",
+        "com": "command",
         "con": "config",
         "j": "judge",
         "r": "run"

@@ -3,6 +3,7 @@
 #include"chdata.cpp"
 #include"check.cpp"
 #include"compile.cpp"
+#include"command.cpp"
 #include"config.cpp"
 #include"judge.cpp"
 #include"run.cpp"
@@ -65,6 +66,7 @@ int main(int argc,char **argv)
         if(commands=="chdata") {Command_chdata Chdata;Chdata.init(argc-1,argv+1);return Chdata.run();}
         else if(commands=="check") {Command_check Check;Check.init(argc-1,argv+1);return Check.run();}
         else if(commands=="compile") {Command_compile Compile;Compile.init(argc-1,argv+1);return Compile.run();}
+        else if(commands=="command") {Command_command Command;Command.init(argc-1,argv+1);return Command.run();}
         else if(commands=="config") {Command_config Config;Config.init(argc-1,argv+1);return Config.run();}
         else if(commands=="judge") {Command_judge Judge;Judge.init(argc-1,argv+1);return Judge.run();}
         else if(commands=="run") {Command_run Run;Run.init(argc-1,argv+1);return Run.run();}
