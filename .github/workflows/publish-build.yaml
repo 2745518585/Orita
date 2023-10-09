@@ -26,11 +26,17 @@ jobs:
         cmake -B build -S . 
         cmake --build build --config Release --target orita
 
+    - name: Copy Release
+      run: |
+        mkdir release
+        xcopy /s /e /i '.\build\bin' '.\release\bin'
+        xcopy /s /e /i '.\build\lib' '.\release\lib'
+
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.1
       with:
         type: 'zip'
-        path: './build/bin'
+        path: './release'
         filename: 'Orita-windows-release.zip'
         exclusions: '*.git*'
 
@@ -58,11 +64,17 @@ jobs:
         cmake -B build -S . 
         cmake --build build --config Release --target orita
 
+    - name: Copy Release
+      run: |
+        mkdir release
+        cp -r './build/bin' './release'
+        cp -r './build/lib' './release'
+      
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.1
       with:
         type: 'zip'
-        path: './build/bin'
+        path: './release'
         filename: 'Orita-linux-release.zip'
         exclusions: '*.git*'
 

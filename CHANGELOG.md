@@ -276,3 +276,4 @@ Orita 第一个正式版本。
 - Moved Runtime outputs to `bin\`.
 - Use `Poco::Path` and `Poco::File`.
 - Use `Poco::Util`.
+- Use CMake to compile entrance file.

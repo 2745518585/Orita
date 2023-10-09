@@ -46,10 +46,10 @@ int main(int argc,char **argv)
         return 0;
     }
     #ifdef _WIN32
-    path=makepath(path,"orita.exe");
+    path=makepath(path,"main.exe");
     #endif
     #ifdef __linux__
-    path=makepath(path,"orita");
+    path=makepath(path,"main");
     #endif
     std::string command=add_quo(path);
     for(int i=1;i<argc;++i) command+=" "+add_quo(std::regex_replace(argv[i],std::regex("\""),"\\\""))+" ";

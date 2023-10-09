@@ -35,9 +35,16 @@ add_subdirectory(poco)
 add_subdirectory(spdlog)
 add_subdirectory(termcolor)
 
-add_executable(${PROJECT_NAME} source/${PROJECT_NAME}.cpp)
-target_link_libraries(${PROJECT_NAME} Poco::Foundation Poco::Util nlohmann_json::nlohmann_json spdlog::spdlog termcolor::termcolor)
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/include)
+add_executable(main source/orita.cpp)
+target_link_libraries(main Poco::Foundation Poco::Util nlohmann_json::nlohmann_json spdlog::spdlog termcolor::termcolor)
+target_include_directories(main PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}/include)
+
+add_executable(orita orita.cpp)
+set_target_properties(orita PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/bin)
+set_target_properties(orita PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/bin)
+set_target_properties(orita PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/bin)
+
+add_dependencies(orita main)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     file(WRITE "$ENV{APPDATA}\\Orita\\path.txt" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
