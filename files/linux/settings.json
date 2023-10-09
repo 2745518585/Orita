@@ -24,6 +24,11 @@
     "max_thread_num": 10,
     "runtime_limit": 5000,
     "~list": {
+        "localdata": {
+            "data": {
+                "data_dir": "./.data"
+            }
+        },
         "oi": {
             "data": {
                 "compile_argu": [
