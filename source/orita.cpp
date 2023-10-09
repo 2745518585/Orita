@@ -38,7 +38,7 @@ class Command_orita: public App
         {
             delete orita_log;
             ((fil)appdata_path).remove(true);
-            ((fil)file_path/"files"/os_name).copyTo(appdata_path.toString());
+            ((fil)file_path/"files").copyTo(appdata_path.toString());
             ssystem("echo "+file_path.toString()+" > "+add_quo(appdata_path/"path.txt"));
             global_settings=default_settings;
             Files::files_json=Files::default_files_json;

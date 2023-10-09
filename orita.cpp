@@ -45,7 +45,6 @@ int main(int argc,char **argv)
         ssystem("cmake --build "+makepath(path,"build")+" --config Release --target orita");
         return 0;
     }
-    path=makepath(path,"build","bin");
     #ifdef _WIN32
     path=makepath(path,"orita.exe");
     #endif

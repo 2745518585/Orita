@@ -56,7 +56,9 @@ $ cmake --build .
 
 ### 初始化
 
-请在 `Orita/` 目录下运行 `init.bat | init.sh` 以编译入口文件。请确保 `Orita/bin/` 目录中的可执行文件可以被全局调用，可执行文件的位置可以任意移动。如果使用 CMake 生成，它会自动输出源文件的位置。如果移动源文件后，请执行 `Orita/` 目录下的 `init.bat | init.sh`。
+请在 `Orita/` 目录下运行 `init.bat` 或 `init.sh` 以编译入口文件。请确保 `Orita/bin/` 目录中的入口文件可以被全局调用，入口文件的位置可以任意移动。
+
+如果使用 CMake 生成，它会自动输出可执行文件的位置。如果移动可执行文件后，请执行可执行文件所在目录下的 `path.bat` 或 `path.sh`。
 
 为了正常使用 Orita，请确保计算机上安装了支持 C++14 的 C++ 编译器 g++，并且可以在控制台中全局调用。
 
@@ -66,7 +68,7 @@ $ cmake --build .
 
 ### 参数系统
 
-在 Windows 系统中，使用 DOS 风格的命令行参数，在 Linux 下使用 Unix 风格的命令行参数。以下示例均使用 DOS 风格。
+在 Windows 下使用 DOS 风格的命令行参数，在 Linux 下使用 Unix 风格的命令行参数。以下示例均使用 DOS 风格。
 
 ### 内置文件
 
@@ -85,7 +87,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - 形如 `%*[0-999]%` 的表达式，将会替换为 `file.json` 中对应编号的文件名，例如 `%*1%` 表示编号为 $1$ 的文件名。
   - 形如 `%....%` 的表达式，将会替换为设置系统中对应值，例如 `%.data.data_dir%` 表示设置中 `/data/data_dir` 的值。
   - `{APPDATA_PATH}`: Windows 下为 `%APPDATA%/Orita`，Linux 下为 `%HOME%/.Orita`。
-  - `{FILE_PATH}`: 源代码所在目录。
+  - `{FILE_PATH}`: 可执行文件所在目录。
   - `{RUNNING_PATH}`: 运行目录。
   - `{OS_NAME}`: 操作系统名称，Windows 下为 `windows`，Linux 下为 `linux`。
   - 否则返回系统环境变量 `...`。

@@ -19,7 +19,7 @@ namespace Files
       public:
         Init()
         {
-            (sifstream(file_path/"files"/os_name/"file.json",false))>>default_files_json;
+            (sifstream(file_path/"files"/"file.json",false))>>default_files_json;
             try {(sifstream(appdata_path/"file.json",false))>>files_json;} catch(...) {}
         }
         ~Init()
