@@ -228,7 +228,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ### config
 
-`config [key [value]] [/help] [/settings] [/global] [/local] [/add=key] [/load=key] [/files]`
+`config [key [value]] [/help] [/settings] [/global] [/local] [/add=key] [/load=key] [/merge=key] [/files]`
 
 查看或修改配置。
 
@@ -247,6 +247,8 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 `/add=key`: 上传设置至名为 `key` 的设置文件。
 
 `/load=key`: 加载名为 `key` 的设置文件至当前目录的局部设置。
+
+`/merge=key`: 将名为 `key` 的设置文件合并（覆盖不匹配）至当前目录的局部设置。
 
 `/files`: 如果未提供 `num`，则输出 `file.json` 文件。如果提供 `num` 但未提供 `value`，则输出编号为 `num` 的文件的值。如果在 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值将从 `%{FILE_PATH}%/files/%{OS_NAME}%/file.json` 中读取。如果在 `num` 后追加 `value`，则将该文件的值设置为 `value`。
 

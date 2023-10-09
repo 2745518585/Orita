@@ -68,7 +68,8 @@ const std::string os_name="linux";
 void merge(json &a,json b)
 {
     if(!a.is_null()&&!b.is_null()&&a.type()!=b.type()) return;
-    if(b.is_object())
+    if(a.is_null()) a=b;
+    else if(b.is_object())
     {
         for(auto &i:b.items()) merge(a[i.key()],i.value());
     }

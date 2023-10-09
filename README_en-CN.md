@@ -230,7 +230,7 @@ Compile the source file with the given source file and compilation parameters.
 
 ### config
 
-`config [key [value]] [/help] [/settings] [/global] [/local] [/add=key] [/load=key] [/files]`
+`config [key [value]] [/help] [/settings] [/global] [/local] [/add=key] [/load=key] [/merge=key] [/files]`
 
 View or modify the configuration.
 
@@ -249,6 +249,8 @@ View or modify the configuration.
 `/add=key`: Upload settings to a settings file named `key`.
 
 `/load=key`: Load the settings file named `key` into the local settings of the current directory.
+
+`/merge=key`: Merge (overwrite mismatches) the settings file named `key` into the local settings of the current directory.
 
 `/files`: If `num` is not provided, output the `file.json` file. If `num` is provided but not the `value`, output the value of the file with the number `num`. If `%{RESET}%` is appended to `num`, reset the file to its default value, which is read from `%{FILE_PATH}%/files/file.json`. If `value` is appended to `num`, set the file to `value`.
 

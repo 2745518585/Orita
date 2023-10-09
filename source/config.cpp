@@ -13,6 +13,7 @@ class Command_config: public App
         options.addOption(Poco::Util::Option("local","local","local settings").noArgument());
         options.addOption(Poco::Util::Option("add","add","add custom settings").argument("key",true));
         options.addOption(Poco::Util::Option("load","load","load custom settings").argument("key",true));
+        options.addOption(Poco::Util::Option("merge","merge","merge custom settings").argument("key",true));
         options.addOption(Poco::Util::Option("files","f","files").noArgument());
         App::defineOptions(options);
     }
@@ -41,7 +42,7 @@ class Command_config: public App
             {
                 json target;
                 if(check_option("global")) target=global_settings[pointer];
-                else if(check_option("local")||check_option("load"))
+                else if(check_option("local")||check_option("load")||check_option("merge"))
                 {
                     target=all_settings[running_path.toString()][pointer];
                     if_has_settings[running_path.toString()]=true;
@@ -54,6 +55,10 @@ class Command_config: public App
                 else if(check_option("load"))
                 {
                     all_settings[running_path.toString()][pointer]=global_settings[others_settings][get_option("load")][pointer];
+                }
+                else if(check_option("merge"))
+                {
+                    merge(all_settings[running_path.toString()][pointer],global_settings[others_settings][get_option("merge")][pointer]);
                 }
                 else
                 {
