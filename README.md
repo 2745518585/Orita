@@ -132,7 +132,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ### orita
 
-`orita [/help] [/reset] [/clear]`
+`orita [[/help] | [/reset] | [/clear]]`
 
 命令行工具的入口命令。
 
@@ -212,7 +212,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ### compile
 
-`orita compile [file] /help [/run] [/trun] [/carg=args] [/arg=args]`
+`orita compile [file] /help [[/run] | [/trun]] [/carg=args] [/arg=args]`
 
 编译指定的源文件和编译参数。
 
@@ -230,7 +230,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ### config
 
-`config [key [value]] [/help] [/settings] [/global] [/local] [/add=key] [/load=key] [/merge=key] [/files]`
+`config [key [value]] [/help] [[/settings [/global] [/local] [[/add=key] | [/load=key] | [/merge=key]]] | [/files]]`
 
 查看或修改配置。
 
