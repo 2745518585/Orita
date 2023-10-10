@@ -146,7 +146,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `orita run [/help] [/file=file] [/checker=file] [/time=time]`
 
-运行指定的文件并重定向输入，然后与输出数据进行比较。所有文件在编译时都会定义宏 `JUDGING`。数据将存储在 `%.data.data_dir%/` 目录下。
+运行指定的文件并重定向输入，然后与输出数据进行比较。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
 
 `/help`: 显示帮助信息。
 
@@ -174,7 +174,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num] [/time=time]`
 
-使用数据生成器、标准代码和源代码进行对拍。所有文件在编译时都会定义宏 `JUDGING`。数据将存储在 `%.data.data_dir%/` 目录下。
+使用数据生成器、标准代码和源代码进行对拍。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
 
 `/help`: 显示帮助信息。
 
@@ -194,7 +194,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `orita judge [data] [/help] [/file=file] [/checker=file] [/time=time] [/isuf=suf] [/osuf=suf]`
 
-对于给定的数据文件和源代码，从数据文件中找到具有指定后缀名的输入输出文件并生成数据点，然后获取源代码的所有结果。所有文件在编译时都会定义宏 `JUDGING`。数据将存储在 `%.data.data_dir%/` 目录下。
+对于给定的数据文件和源代码，从数据文件中找到具有指定后缀名的输入输出文件并生成数据点，然后获取源代码的所有结果。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
 
 `data`: 指定数据文件。如果没有此参数，将不会开始评测，仅作为设置参数。
 

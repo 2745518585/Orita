@@ -7,18 +7,18 @@
 #include"settings.hpp"
 namespace Compile
 {
-    int compile(fil file,const std::string &compile_argu="",const bool if_print=true)
+    int compile(fil file,const std::string &argu="",const bool if_print=true)
     {
         if(((pat)file.path()).getExtension()!="cpp")
         {
             WARN("compile - invaild file","file: "+add_quo(file));
             return -1;
         }
-        const std::string command="g++ "+add_quo(file)+" -o "+add_quo(replace_extension(file,exe_suf))+" "+compile_argu+" "+(if_print?"":system_to_nul);
-        INFO("compile - start","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
+        const std::string command=compiler_command.path()+" "+add_quo(file)+" -o "+add_quo(replace_extension(file,exe_suf))+" "+compile_argu+argu+(if_print?"":system_to_nul);
+        INFO("compile - start","file: "+add_squo(file),"argu: "+add_squo(argu),"command: "+add_squo(command));
         int result=ssystem(command);
-        if(result) WARN("compile - fail","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
-        else INFO("compile - success","file: "+add_squo(file),"argu: "+add_squo(compile_argu),"command: "+add_squo(command));
+        if(result) WARN("compile - fail","file: "+add_squo(file),"argu: "+add_squo(argu),"command: "+add_squo(command));
+        else INFO("compile - success","file: "+add_squo(file),"argu: "+add_squo(argu),"command: "+add_squo(command));
         return result!=0;
     }
 }

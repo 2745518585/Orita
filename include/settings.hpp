@@ -139,7 +139,15 @@ using Settings::get_settings;
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
 const std::string exe_suf=get_settings<std::string>("/exe_suf");
+const fil compiler_command=get_settings<std::string>("/compiler/command");
 const std::string compile_argu=[]()
+{
+    json object=get_settings_merge("/compiler/argu"),if_appear;
+    std::string str;
+    for(auto i:object) if(i.is_string()&&if_appear[(std::string)i].is_null()) str+=(std::string)i+" ",if_appear[(std::string)i]=true;
+    return str;
+}();
+const std::string data_compile_argu=[]()
 {
     json object=get_settings_merge("/data/compile_argu"),if_appear;
     std::string str;

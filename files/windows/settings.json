@@ -8,12 +8,19 @@
         "j": "judge",
         "r": "run"
     },
+    "compiler": {
+        "argu": [
+            "-O2"
+        ],
+        "command": "g++.exe"
+    },
     "data": {
         "ansfile": "%*12%",
         "chkfile": "%*13%",
         "compile_argu": [
             "-std=c++14",
-            "-O2"
+            "-O2",
+            "-D JUDGING"
         ],
         "data_dir": "%{RUNNING_PATH}%/.data",
         "infile": "%*10%",
@@ -34,7 +41,8 @@
                 "compile_argu": [
                     "-std=c++14",
                     "-O2",
-                    "-Wl,--stack=2147483648"
+                    "-Wl,--stack=2147483648",
+                    "-D JUDGING"
                 ]
             }
         }

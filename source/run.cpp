@@ -57,7 +57,7 @@ class Command_run: public App
         printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
         print->start();
         compiler *run_compiler=new compiler(2);
-        run_compiler->add({{_ans_name,ans},{_chk_name,chk}},compile_argu+" -D JUDGING");
+        run_compiler->add({{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
         run_compiler->wait({_ans_name,_chk_name});
         {
             auto compile_result=run_compiler->get({_ans_name,_chk_name});

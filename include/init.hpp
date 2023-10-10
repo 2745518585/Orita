@@ -73,10 +73,10 @@ void merge(json &a,json b)
     {
         for(auto &i:b.items()) merge(a[i.key()],i.value());
     }
-    else if(b.is_array())
-    {
-        a.insert(a.end(),b.begin(),b.end());
-    }
+    // else if(b.is_array())
+    // {
+    //     a.insert(a.end(),b.begin(),b.end());
+    // }
     else if(!b.is_null()) a=b;
 }
 void remove_null(json &a)
