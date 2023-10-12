@@ -3,12 +3,15 @@
 #include<string>
 int main(int argc,char **argv)
 {
+    std::ios_base::sync_with_stdio(false);
     std::ifstream infile1(argv[2]),infile2(argv[3]);
     std::string str1,str2;
     bool empty1=0,empty2=0;
+    unsigned lines=0;
     while(true)
     {
-        bool end1=bool(!getline(infile1,str1)),end2=bool(!getline(infile2,str2));
+        ++lines;
+        bool end1=bool(!std::getline(infile1,str1)),end2=bool(!std::getline(infile2,str2));
         if(end1&&end2) break;
         while(str1.back()==' ') str1.pop_back();
         while(str2.back()==' ') str2.pop_back();
@@ -18,7 +21,7 @@ int main(int argc,char **argv)
         else empty2=false;
         if(empty1^empty2||str1!=str2)
         {
-            std::cout<<"\n*****\n"<<str1<<"\n*****\n"<<str2<<"\n*****\n";
+            std::cout<<"on line "<<lines<<"\n*****\n"<<str1<<"\n*****\n"<<str2<<"\n*****\n";
             return 1;
         }
     }

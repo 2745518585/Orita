@@ -37,22 +37,18 @@ class Command_chdata: public App
         else if(check_option("ifile"))
         {
             show_cursor();
-            char str;
-            FILE *file=sfopen(default_infile.path(),"w");
-            str=getchar();
-            while(str!=EOF) fputc(str,file),str=getchar();
-            sfclose(file);
+            std::string str;
+            sofstream output(default_infile);
+            while(std::getline(std::cin,str)) output<<str<<"\n";
             hide_cursor();
         }
         if(out_file!=fil()) out_file.copyTo(default_outfile.path());
         else if(check_option("ofile"))
         {
             show_cursor();
-            char str;
-            FILE *file=sfopen(default_outfile.path(),"w");
-            str=getchar();
-            while(str!=EOF) fputc(str,file),str=getchar();
-            sfclose(file);
+            std::string str;
+            sofstream output(default_outfile);
+            while(std::getline(std::cin,str)) output<<str<<"\n";
             hide_cursor();
         }
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));

@@ -3,20 +3,24 @@
 #define _FILE_INIT _FILE_INIT
 #include<iostream>
 #include<fstream>
-#include<cstdio>
-#include<algorithm>
-#include<queue>
+#include<sstream>
 #include<string>
-#include<filesystem>
-#include<typeinfo>
+
+#include<algorithm>
 #include<random>
 #include<regex>
-#include<sstream>
+#include<typeinfo>
+
+#include<filesystem>
+
 #include<thread>
 #include<future>
 #include<atomic>
 #include<mutex>
 #include<condition_variable>
+
+#include<queue>
+#include<map>
 #define NOMINMAX
 
 #ifdef _WIN32
@@ -394,14 +398,6 @@ class sofstream: public std::ofstream
     template<typename Type> sofstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
     template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
 };
-FILE *sfopen(const std::string &file,const std::string mode)
-{
-    return fopen(file.c_str(),mode.c_str());
-}
-int sfclose(FILE *file)
-{
-    return fclose(file);
-}
 namespace ANSI
 {
     const std::string hide_cursor="\033[?25l";
@@ -469,8 +465,15 @@ namespace Init
     class Init
     {
       public:
-        Init() {hide_cursor();}
-        ~Init() {show_cursor();}
+        Init()
+        {
+            std::ios_base::sync_with_stdio(false);
+            hide_cursor();
+        }
+        ~Init()
+        {
+            show_cursor();
+        }
     }_Init;
 }
 
