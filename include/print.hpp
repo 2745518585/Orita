@@ -22,8 +22,7 @@ namespace Print
         if(result.is(res::type::TO)) scout<<termcolor::bright_cyan<<"Timeout\n";
         if(result.is(res::type::NF)) scout<<termcolor::blue<<"No such file\n";
         if(result.is(res::type::II)) scout<<termcolor::blue<<"Invalid input\n";
-        scout<<termcolor::reset;
-        scout.flush();
+        scout<<termcolor::reset<<std::flush;
     }
     std::string get_resultname(const res result)
     {
@@ -63,11 +62,57 @@ namespace Print
         if(result.is(res::type::FL)) return "FL";
         return "";
     }
+    class print_list
+    {
+        std::vector<std::string> list;
+      public:
+        print_list(std::initializer_list<std::any> _list)
+        {
+            for(auto i:_list)
+            {
+                list.push_back(get_any(i));
+            }
+        }
+        std::string operator[](size_t pos)const {return list[pos];}
+        size_t size()const {return list.size();}
+    };
+    std::string print_type(const print_list &str_back,const std::vector<print_list> &str_list)
+    {
+        std::string str;
+        std::vector<size_t> lens;
+        for(int i=0;i<str_back.size();++i)
+        {
+            size_t len=0;
+            for(auto j:str_list)
+            {
+                if(i<j.size()) len=std::max(len,j[i].size());
+            }
+            lens.push_back(len);
+        }
+        for(auto i:str_list)
+        {
+            for(int j=0;j<str_back.size();++j)
+            {
+                if(j<i.size())
+                {
+                    str+=str_back[j]+i[j];
+                    for(int k=0;k<lens[j]-i[j].size();++k) str+=" ";
+                }
+                else
+                {
+                    str+=str_back[j];
+                    for(int k=0;k<lens[j];++k) str+=" ";
+                }
+            }
+        }
+        return str;
+    }
 }
 void print_result(const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
 void print_result(const std::string &name,const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
 using Print::get_resultname;
 using Print::get_short_resultname;
+using Print::print_type;
 class printer
 {
   public:

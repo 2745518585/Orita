@@ -160,6 +160,12 @@ bool if_pre(std::string str,std::string pre)
 {
     return pre.size()<=str.size()&&str.substr(0,pre.size())==pre;
 }
+template<typename Type>std::enable_if_t<std::is_convertible_v<Type,size_t>,std::string> operator*(const std::string a,Type b)
+{
+    std::string str="";
+    while(b--) str+=a;
+    return str;
+}
 
 // path
 using pat=Poco::Path;
@@ -250,6 +256,16 @@ json enviroment_variable={
     {"{APPDATA_PATH}",appdata_path.toString()},
     {"{OS_NAME}",os_name},
 };
+std::ostream &operator<<(std::ostream &output,pat val)
+{
+    output<<val.toString();
+    return output;
+}
+std::ostream &operator<<(std::ostream &output,fil val)
+{
+    output<<val.path();
+    return output;
+}
 
 // time
 using tim=std::chrono::milliseconds;
@@ -276,11 +292,6 @@ std::ostream &operator<<(std::ostream &output,tim str)
     output<<std::to_string(str.count())<<"ms";
     return output;
 }
-std::ofstream &operator<<(std::ofstream &output,tim str)
-{
-    output<<std::to_string(str.count())<<"ms";
-    return output;
-}
 
 // print
 #ifdef _WIN32
@@ -291,73 +302,97 @@ const pat system_con="\\\\.\\con";
 const pat system_nul="/dev/null";
 const pat system_con="/dev/tty";
 #endif
-class sifstream
+std::ostream &operator<<(std::ostream &output,std::any any)
+{
+    #define out(Type) else if(any.type()==typeid(Type)) output<<std::any_cast<Type>(any);\
+    else if(any.type()==typeid(const Type)) output<<std::any_cast<const Type>(any);\
+    else if(any.type()==typeid(Type&)) output<<std::any_cast<Type&>(any);\
+    else if(any.type()==typeid(const Type&)) output<<std::any_cast<const Type&>(any);\
+    else if(any.type()==typeid(Type*)) output<<std::any_cast<Type*>(any);\
+    else if(any.type()==typeid(const Type*)) output<<std::any_cast<const Type*>(any)
+    if(false);
+    out(int);out(unsigned);out(long long);out(unsigned long long);
+    out(char);out(bool);
+    out(std::string);
+    out(tim);out(pat);out(fil);
+    #undef out
+    else if(any.type()==typeid(std::ostream (*)(std::ostream&))) output<<std::any_cast<std::ostream (*)(std::ostream&)>(any);
+    else if(any.type()==typeid(std::ostream &(*)(std::ostream&))) output<<std::any_cast<std::ostream &(*)(std::ostream&)>(any);
+    return output;
+}
+std::string get_any(std::any any)
+{
+    std::stringstream stream;
+    stream<<any;
+    return stream.str();
+}
+class sistream
 {
   public:
-    std::ifstream stream;
+    std::istream& stream;
     bool if_sys;
-    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
-    {
-        if constexpr(std::is_convertible<Type,pat>::value) stream.open(pat(file).toString());
-        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(fil(file).path());
-        else if constexpr(std::is_convertible<Type,std::ifstream>::value) stream.open(file);
-    }
-    sifstream() {}
-    template<typename Type> sifstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
-    template<typename Type> sifstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
-    void close() {stream.close();}
-    template<typename Type> sifstream &operator>>(Type &val)
+    template<typename Type> sistream(Type &_stream,bool _if_sys=true):stream(_stream),if_sys(_if_sys) {}
+    template<typename Type> sistream &operator>>(Type &val)
     {
         stream>>val;
         return *this;
     }
-};
-class sofstream
-{
-  public:
-    std::ofstream stream;
-    bool if_sys;
-    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
-    {
-        stream.close();
-        if constexpr(std::is_convertible<Type,pat>::value) stream.open(pat(file).toString(),mode);
-        else if constexpr(std::is_convertible<Type,fil>::value) stream.open(fil(file).path(),mode);
-        else if constexpr(std::is_convertible<Type,std::ofstream>::value) stream.open(file,mode);
-    }
-    sofstream() {}
-    template<typename Type> sofstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
-    template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
-    void close() {stream.close();}
-    void flush() {stream.flush();}
-    template<typename Type> sofstream &operator<<(const Type &val)
-    {
-        stream<<val;
-        return *this;
-    }
-    sofstream &operator<<(std::ostream &(*manipulator)(std::ostream&))
-    {
-        stream<<manipulator;
-        return *this;
-    }
-};
+}scin(std::cin);
 class sostream
 {
   public:
     std::ostream &stream;
     bool if_sys;
     template<typename Type> sostream(Type &_stream,bool _if_sys=true):stream(_stream),if_sys(_if_sys) {}
-    void flush() {stream.flush();}
     template<typename Type> sostream &operator<<(const Type &val)
     {
         stream<<val;
         return *this;
     }
-    sostream &operator<<(std::ostream &(*manipulator)(std::ostream&))
+    sostream &operator<<(std::ostream &(*val)(std::ostream&))
     {
-        stream<<manipulator;
+        stream<<val;
         return *this;
     }
 }scout(std::cout),scerr(std::cerr);
+class sifstream: public std::ifstream
+{
+  public:
+    bool if_sys;
+    void open(const pat &file,const std::ios_base::openmode &mode=std::ios::in)
+    {
+        std::ifstream::open(file.toString(),mode);
+    }
+    void open(const fil &file,const std::ios_base::openmode &mode=std::ios::in)
+    {
+        std::ifstream::open(file.path(),mode);
+    }
+    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::in)
+    {
+        std::ifstream::open(file,mode);
+    }
+    template<typename Type> sifstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
+    template<typename Type> sifstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
+};
+class sofstream: public std::ofstream
+{
+  public:
+    bool if_sys;
+    void open(const pat &file,const std::ios_base::openmode &mode=std::ios::out)
+    {
+        std::ofstream::open(file.toString(),mode);
+    }
+    void open(const fil &file,const std::ios_base::openmode &mode=std::ios::out)
+    {
+        std::ofstream::open(file.path(),mode);
+    }
+    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
+    {
+        std::ofstream::open(file,mode);
+    }
+    template<typename Type> sofstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
+    template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
+};
 FILE *sfopen(const std::string &file,const std::string mode)
 {
     return fopen(file.c_str(),mode.c_str());
@@ -366,8 +401,14 @@ int sfclose(FILE *file)
 {
     return fclose(file);
 }
-void hide_cursor() {scout<<"\033[?25l"<<std::flush;}
-void show_cursor() {scout<<"\033[?25h"<<std::flush;}
+namespace ANSI
+{
+    const std::string hide_cursor="\033[?25l";
+    const std::string show_cursor="\033[?25h";
+    const std::string move_up="\x1b[A";
+};
+void hide_cursor() {scout<<ANSI::hide_cursor<<std::flush;}
+void show_cursor() {scout<<ANSI::show_cursor<<std::flush;}
 
 // command
 #ifdef _WIN32

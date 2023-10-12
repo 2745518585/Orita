@@ -88,6 +88,7 @@ class Command_check: public App
         if(out==fil()||!out.exists()) {print_result(_out_name,res::type::NF);return EXIT_NOINPUT;}
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
+        scout<<termcolor::bright_grey<<print_type({std::string(" ")*60,"","\n"},{{_in_name+": ",in},{_out_name+": ",out},{_ans_name+": ",ans},{_chk_name+": ",chk}})<<ANSI::move_up*4<<termcolor::reset;
         // compile file
         printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
         loading_printer.start();
@@ -109,12 +110,10 @@ class Command_check: public App
         unsigned ac_sum=0,runned_sum=0;
         for(int i=1;i<=total_sum;++i)
         {
-            for(int j=1;j<=50;++j) scout<<"-";
-            scout<<"\r#"<<i;
-            if(runned_sum-ac_sum!=0)
+            scout<<std::string("-")*50<<"\r#"<<i;
+            if(runned_sum!=ac_sum)
             {
-                for(int j=1;j<=30-std::to_string(i).size();++j) scout<<"-";
-                scout<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
+                scout<<std::string("-")*(30-std::to_string(i).size())<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
             }
             scout<<"\n";
             fil run_dir=default_data_dir/"datas"/std::to_string(i);
@@ -131,15 +130,11 @@ class Command_check: public App
             ans_judger.judge();
             ans_judger.print_result();
             sofstream output_chk_file(chk_file,std::ios::app);
-            output_chk_file<<"\n";
-            for(int j=1;j<=50;++j) output_chk_file<<"*";output_chk_file<<"\n";
+            output_chk_file<<"\n"<<std::string("*")*50<<"\n";
             output_chk_file<<"    result: "<<get_resultname(ans_judger.result)<<"\n";
             output_chk_file<<"    seed: "<<seed<<"\n";
-            output_chk_file<<"    "<<_in_name<<":  "<<"time: "<<in_runner.time<<", exit_code: "<<in_runner.exit_code<<"\n";
-            output_chk_file<<"    "<<_out_name<<":  "<<"time: "<<out_runner.time<<", exit_code: "<<out_runner.exit_code<<"\n";
-            output_chk_file<<"    "<<_ans_name<<":  "<<"time: "<<ans_judger.time<<", exit_code: "<<ans_judger.exit_code<<"\n";
-            output_chk_file<<"    "<<_chk_name<<":  "<<"time: "<<ans_judger.chk_time<<", exit_code: "<<ans_judger.chk_exit_code<<"\n";
-            for(int j=1;j<=50;++j) output_chk_file<<"*";
+            output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_in_name+":",in_runner.time,in_runner.exit_code},{_out_name+":",out_runner.time,out_runner.exit_code},{_ans_name+":",ans_judger.time,ans_judger.exit_code},{_chk_name+":",ans_judger.chk_time,ans_judger.chk_exit_code}});
+            output_chk_file<<std::string("*")*50;
             output_chk_file.close();
             if(!ans_judger.result.isnull()) ++runned_sum;
             if(ans_judger.result.istrue()) ++ac_sum;

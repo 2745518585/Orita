@@ -57,6 +57,7 @@ class Command_judge: public App
         // find file
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
+        scout<<termcolor::bright_grey<<print_type({std::string(" ")*60,"","\n"},{{_ans_name+": ",ans},{_chk_name+": ",chk}})<<ANSI::move_up*2<<termcolor::reset;
         // compile file
         printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
         loading_printer.start();
@@ -133,14 +134,11 @@ class Command_judge: public App
             run_judger.print_result();
             // print result
             sofstream output_chk_file(chk_file,std::ios::app);
-            output_chk_file<<"\n";
-            for(int j=1;j<=50;++j) output_chk_file<<"*";
-            output_chk_file<<"\n";
+            output_chk_file<<"\n"<<std::string("*")*50<<"\n";
             output_chk_file<<"    infile: "<<add_quo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul.toString()))<<", outfile: "<<add_quo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul.toString()))<<"\n";
             output_chk_file<<"    result: "<<get_resultname(run_judger.result)<<"\n";
-            output_chk_file<<"    "<<_ans_name<<":  "<<"time: "<<run_judger.time<<", exit_code: "<<run_judger.exit_code<<"\n";
-            output_chk_file<<"    "<<_chk_name<<":  "<<"time: "<<run_judger.chk_time<<", exit_code: "<<run_judger.chk_exit_code<<"\n";
-            for(int j=1;j<=50;++j) output_chk_file<<"*";
+            output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_time,run_judger.chk_exit_code}});
+            output_chk_file<<std::string("*")*50;
             output_chk_file.close();
             // copy result
             if(run_judger.result.istrue()) ++ac_sum;
