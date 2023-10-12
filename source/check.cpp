@@ -131,7 +131,7 @@ class Command_check: public App
             ans_judger.print_result();
             sofstream output_chk_file(chk_file,std::ios::app);
             output_chk_file<<"\n"<<std::string("*")*50<<"\n";
-            output_chk_file<<"    result: "<<get_resultname(ans_judger.result)<<"\n";
+            output_chk_file<<"    result: "<<ans_judger.result<<"\n";
             output_chk_file<<"    seed: "<<seed<<"\n";
             output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_in_name+":",in_runner.time,in_runner.exit_code},{_out_name+":",out_runner.time,out_runner.exit_code},{_ans_name+":",ans_judger.time,ans_judger.exit_code},{_chk_name+":",ans_judger.chk_time,ans_judger.chk_exit_code}});
             output_chk_file<<std::string("*")*50;

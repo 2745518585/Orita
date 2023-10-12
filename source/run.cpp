@@ -78,7 +78,7 @@ class Command_run: public App
         run_judger.print_result();
         sofstream output_chk_file(chk_file,std::ios::app);
         output_chk_file<<"\n"<<std::string("*")*50<<"\n";
-        output_chk_file<<"    result: "<<get_resultname(run_judger.result)<<"\n";
+        output_chk_file<<"    result: "<<run_judger.result<<"\n";
         output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_time,run_judger.chk_exit_code}});
         output_chk_file<<std::string("*")*50;
         output_chk_file.close();

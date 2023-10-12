@@ -5,62 +5,73 @@
 #include"log.hpp"
 namespace Print
 {
+    std::map<res::type,std::string> result_name={
+        {res::type::NL,"NULL"},
+        {res::type::NF,"No such file"},
+        {res::type::AC,"Accepted"},
+        {res::type::WA,"Wrong Answer"},
+        {res::type::RE,"Runtime Error"},
+        {res::type::TLE_CA,"Time Limit Error with Correct Answer"},
+        {res::type::TLE_WA,"Time Limit Error with Wrong Answer"},
+        {res::type::TLE_O,"Time Limit Error"},
+        {res::type::CE,"Compile Error"},
+        {res::type::SA,"Same Answer"},
+        {res::type::DA,"Different Answer"},
+        {res::type::II,"Invalid input"},
+        {res::type::TO,"Timeout"},
+        {res::type::SS,"Success"},
+        {res::type::FL,"Fail"},
+    };
+    std::map<res::type,std::string> short_result_name={
+        {res::type::NL,"NL"},
+        {res::type::NF,"NF"},
+        {res::type::AC,"AC"},
+        {res::type::WA,"WA"},
+        {res::type::RE,"RE"},
+        {res::type::TLE_CA,"TLE_CA"},
+        {res::type::TLE_WA,"TLE_WA"},
+        {res::type::TLE_O,"TLE_O"},
+        {res::type::CE,"CE"},
+        {res::type::SA,"SA"},
+        {res::type::DA,"DA"},
+        {res::type::II,"II"},
+        {res::type::TO,"TO"},
+        {res::type::SS,"SS"},
+        {res::type::FL,"FL"},
+    };
+    std::map<res::type,std::ostream &(*)(std::ostream&)> result_color={
+        {res::type::NL,termcolor::reset},
+        {res::type::NF,termcolor::blue},
+        {res::type::AC,termcolor::bright_green},
+        {res::type::WA,termcolor::bright_red},
+        {res::type::RE,termcolor::magenta},
+        {res::type::TLE_CA,termcolor::bright_cyan},
+        {res::type::TLE_WA,termcolor::bright_cyan},
+        {res::type::TLE_O,termcolor::bright_cyan},
+        {res::type::CE,termcolor::bright_yellow},
+        {res::type::SA,termcolor::bright_green},
+        {res::type::DA,termcolor::bright_red},
+        {res::type::II,termcolor::blue},
+        {res::type::TO,termcolor::bright_cyan},
+        {res::type::SS,termcolor::bright_green},
+        {res::type::FL,termcolor::bright_red},
+    };
     void print_result(const std::string &name,const res result,const tim time,const int exit_code)
     {
         if(name!="") scout<<termcolor::bright_grey<<name<<":\n";
-        if(result.is(res::type::SS)) scout<<termcolor::bright_green<<"Success\n";
-        if(result.is(res::type::FL)) scout<<termcolor::bright_red<<"Fail\n";
-        if(result.is(res::type::AC)) scout<<termcolor::bright_green<<"Accepted\n"<<time<<"\n";
-        if(result.is(res::type::WA)) scout<<termcolor::bright_red<<"Wrong Answer\n"<<time<<"\n";
-        if(result.is(res::type::RE)) scout<<termcolor::magenta<<"Runtime Error\nexit with code "<<exit_code<<"\n";
-        if(result.is(res::type::TLE_CA)) scout<<termcolor::bright_cyan<<"Time Limit Error with Correct Answer\n"<<time<<"\n";
-        if(result.is(res::type::TLE_WA)) scout<<termcolor::bright_cyan<<"Time Limit Error with Wrong Answer\n"<<time<<"\n";
-        if(result.is(res::type::TLE_O)) scout<<termcolor::bright_cyan<<"Time Limit Error\nover "<<time<<"\n";
-        if(result.is(res::type::CE)) scout<<termcolor::bright_yellow<<"Compile Error\n";
-        if(result.is(res::type::SA)) scout<<termcolor::bright_green<<"Same Answer\n";
-        if(result.is(res::type::DA)) scout<<termcolor::bright_red<<"Different Answer\n";
-        if(result.is(res::type::TO)) scout<<termcolor::bright_cyan<<"Timeout\n";
-        if(result.is(res::type::NF)) scout<<termcolor::blue<<"No such file\n";
-        if(result.is(res::type::II)) scout<<termcolor::blue<<"Invalid input\n";
+        scout<<result_color[result.result]<<result_name[result.result]<<"\n";
+        if(result.is({res::type::AC,res::type::WA,res::type::TLE_CA,res::type::TLE_WA})) scout<<time<<"\n";
+        if(result.is(res::type::RE)) scout<<"exit with code "<<exit_code<<"\n";
+        if(result.is(res::type::TLE_O)) scout<<"over "<<time<<"\n";
         scout<<termcolor::reset<<std::flush;
     }
     std::string get_resultname(const res result)
     {
-        if(result.is(res::type::NL)) return "NULL";
-        if(result.is(res::type::NF)) return "No such file";
-        if(result.is(res::type::AC)) return "Accepted";
-        if(result.is(res::type::WA)) return "Wrong Answer";
-        if(result.is(res::type::RE)) return "Runtime Error";
-        if(result.is(res::type::TLE_CA)) return "Time Limit Error with Correct Answer";
-        if(result.is(res::type::TLE_WA)) return "Time Limit Error with Wrong Answer";
-        if(result.is(res::type::TLE_O)) return "Time Limit Error";
-        if(result.is(res::type::CE)) return "Compile Error";
-        if(result.is(res::type::SA)) return "Same Answer";
-        if(result.is(res::type::DA)) return "Different Answer";
-        if(result.is(res::type::II)) return "Invalid input";
-        if(result.is(res::type::TO)) return "Timeout";
-        if(result.is(res::type::SS)) return "Success";
-        if(result.is(res::type::FL)) return "Fail";
-        return "";
+        return result_name[result.result];
     }
     std::string get_short_resultname(const res result)
     {
-        if(result.is(res::type::NL)) return "NL";
-        if(result.is(res::type::NF)) return "NF";
-        if(result.is(res::type::AC)) return "AC";
-        if(result.is(res::type::WA)) return "WA";
-        if(result.is(res::type::RE)) return "RE";
-        if(result.is(res::type::TLE_CA)) return "TLE_CA";
-        if(result.is(res::type::TLE_WA)) return "TLE_WA";
-        if(result.is(res::type::TLE_O)) return "TLE_O";
-        if(result.is(res::type::CE)) return "CE";
-        if(result.is(res::type::SA)) return "SA";
-        if(result.is(res::type::DA)) return "DA";
-        if(result.is(res::type::II)) return "II";
-        if(result.is(res::type::TO)) return "TO";
-        if(result.is(res::type::SS)) return "SS";
-        if(result.is(res::type::FL)) return "FL";
-        return "";
+        return short_result_name[result.result];
     }
     class print_list
     {
@@ -113,6 +124,11 @@ void print_result(const std::string &name,const res result=res::type::NL,const t
 using Print::get_resultname;
 using Print::get_short_resultname;
 using Print::print_type;
+std::ostream &operator<<(std::ostream &output,res res)
+{
+    output<<get_resultname(res);
+    return output;
+}
 class printer
 {
   public:
