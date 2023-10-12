@@ -180,4 +180,5 @@ namespace Settings
 }
 using Settings::change_time_limit;
 using Settings::get_time_limit;
+bool show_file_info=Settings::get_settings<bool>("/show_file_info");
 #endif

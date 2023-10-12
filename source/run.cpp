@@ -53,7 +53,7 @@ class Command_run: public App
         // find file
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
-        scout<<termcolor::bright_grey<<print_type({std::string(" ")*60,"","\n"},{{_ans_name+": ",ans},{_chk_name+": ",chk}})<<ANSI::move_up*2<<termcolor::reset;
+        if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*2<<termcolor::reset;
         // compile file
         printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
         print->start();

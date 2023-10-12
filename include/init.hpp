@@ -28,6 +28,7 @@
 #include<unistd.h>
 #include<limits.h>
 #include<sys/time.h>
+#include<sys/ioctl.h>
 #endif
 
 #include"nlohmann/json.hpp"
@@ -440,7 +441,19 @@ int kill_task(const pat &task)
     #endif
     return result;
 }
-#endif
+size_t get_terminal_width()
+{
+    #ifdef _WIN32
+    HANDLE console=GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    if(GetConsoleScreenBufferInfo(console,&csbi)) return csbi.srWindow.Right-csbi.srWindow.Left+1;
+    #endif
+    #ifdef __linux__
+    struct winsize w;
+    if(ioctl(0,TIOCGWINSZ,&w)==0) return w.ws_col;
+    #endif
+    return 0;
+}
 
 // random
 unsigned rnd()
@@ -462,3 +475,5 @@ namespace Init
 }
 
 #include"env.h"
+
+#endif

@@ -84,36 +84,30 @@ namespace Print
                 list.push_back(get_any(i));
             }
         }
-        std::string operator[](size_t pos)const {return list[pos];}
-        size_t size()const {return list.size();}
+        const std::string operator[](size_t pos)const {return list[pos];}
+        const size_t size()const {return list.size();}
     };
-    std::string print_type(const print_list &str_back,const std::vector<print_list> &str_list)
+    std::string print_type(const print_list &str_back,const std::vector<print_list> &str_list,bool if_right=false)
     {
         std::string str;
         std::vector<size_t> lens;
-        for(int i=0;i<str_back.size();++i)
+        size_t tot_len=0;
+        for(unsigned i=0;i<str_back.size();++i)
         {
             size_t len=0;
-            for(auto j:str_list)
-            {
-                if(i<j.size()) len=std::max(len,j[i].size());
-            }
+            for(auto j:str_list) if(i<j.size()) len=std::max(len,j[i].size());
             lens.push_back(len);
+            tot_len+=str_back[i].size()+len;
         }
+        std::string pre;
+        if(if_right) pre=std::string(" ")*(get_terminal_width()-tot_len);
         for(auto i:str_list)
         {
-            for(int j=0;j<str_back.size();++j)
+            str+=pre;
+            for(unsigned j=0;j<str_back.size();++j)
             {
-                if(j<i.size())
-                {
-                    str+=str_back[j]+i[j];
-                    for(int k=0;k<lens[j]-i[j].size();++k) str+=" ";
-                }
-                else
-                {
-                    str+=str_back[j];
-                    for(int k=0;k<lens[j];++k) str+=" ";
-                }
+                if(j<i.size()) str+=str_back[j]+i[j]+std::string(" ")*(lens[j]-i[j].size());
+                else str+=str_back[j]+std::string("")*lens[j];
             }
         }
         return str;
@@ -128,6 +122,11 @@ std::ostream &operator<<(std::ostream &output,res res)
 {
     output<<get_resultname(res);
     return output;
+}
+std::ostream &print_right(std::ostream &stream)
+{
+    stream<<std::setw(get_terminal_width())<<std::right;
+    return stream;
 }
 class printer
 {

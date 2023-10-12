@@ -88,7 +88,7 @@ class Command_check: public App
         if(out==fil()||!out.exists()) {print_result(_out_name,res::type::NF);return EXIT_NOINPUT;}
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
-        scout<<termcolor::bright_grey<<print_type({std::string(" ")*60,"","\n"},{{_in_name+": ",in},{_out_name+": ",out},{_ans_name+": ",ans},{_chk_name+": ",chk}})<<ANSI::move_up*4<<termcolor::reset;
+        if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_in_name+": ",in},{_out_name+": ",out},{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*4<<termcolor::reset;
         // compile file
         printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
         loading_printer.start();

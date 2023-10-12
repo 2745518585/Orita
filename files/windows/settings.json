@@ -30,6 +30,7 @@
     "exe_suf": "exe",
     "max_thread_num": 10,
     "runtime_limit": 5000,
+    "show_file_info": true,
     "~list": {
         "localdata": {
             "data": {
