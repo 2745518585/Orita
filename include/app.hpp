@@ -16,6 +16,17 @@ class App: public Poco::Util::Application
         }
         stopOptionsProcessing();
     }
+    void init(std::vector<std::string> args)
+    {
+        try {Application::init(args);}
+        catch(Poco::Util::OptionException& err)
+        {
+            scerr<<"error: "<<err.displayText()<<std::endl;
+            config().setBool("error options",true);
+            ERROR((std::string)"option - "+err.displayText());
+        }
+        stopOptionsProcessing();
+    }
   protected:
     void initialize(Application &self)
     {

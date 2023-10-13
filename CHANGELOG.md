@@ -277,3 +277,4 @@ Orita 第一个正式版本。
 - Use `Poco::Path` and `Poco::File`.
 - Use `Poco::Util`.
 - Use CMake to compile entrance file.
+- Use enviroment variables to pass arguments.
