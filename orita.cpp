@@ -52,14 +52,23 @@ std::string get_appdata_path()
     #endif
 }
 
+std::string get_filedir(std::string file)
+{
+    #ifdef _WIN32
+    file=std::regex_replace(file,std::regex("/"),"\\");
+    #endif
+    return file.substr(0,file.find_last_of(PS));
+}
+
 std::vector<std::string> init_file(int argc,char **argv)
 {
     std::vector<std::string> args;
     for(int i=1;i<argc;++i)
     {
         #ifdef _WIN32
-        WIN32_FIND_DATA findFileData;
-        HANDLE hFind=FindFirstFile(argv[i],&findFileData);
+        WIN32_FIND_DATA file;
+        HANDLE hFind=FindFirstFile(argv[i],&file);
+        std::string dir=get_filedir(argv[i]);
         if(hFind==INVALID_HANDLE_VALUE)
         {
             args.push_back(argv[i]);
@@ -67,8 +76,8 @@ std::vector<std::string> init_file(int argc,char **argv)
         }
         do
         {
-            args.push_back(findFileData.cFileName);
-        }while(FindNextFile(hFind,&findFileData)!=0);
+            args.push_back(makepath(dir,file.cFileName));
+        }while(FindNextFile(hFind,&file)!=0);
         FindClose(hFind);
         #endif
         #ifdef __linux__
@@ -82,12 +91,6 @@ int main(int argc,char **argv)
 {
     std::string path;
     (std::ifstream)(makepath(get_appdata_path(),"path.txt"))>>path;
-    if(argc>1&&std::string(argv[1])=="recompile")
-    {
-        ssystem("cmake -B "+makepath(path,"build")+" -S "+path);
-        ssystem("cmake --build "+makepath(path,"build")+" --config Release --target orita");
-        return 0;
-    }
     std::vector<std::string> args=init_file(argc,argv);
     #ifdef _WIN32
     path=makepath(path,"main.exe");
