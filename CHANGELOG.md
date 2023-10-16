@@ -261,6 +261,7 @@ Orita 第一个正式版本。
 - Add commands matching lists.
 - Add enviroment variables replace.
 - Add `orita command`.
+- Supported International ANSI encoding.
 
 #### Fixes
 

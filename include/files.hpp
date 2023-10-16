@@ -19,13 +19,13 @@ namespace Files
       public:
         Init()
         {
-            (sifstream(file_path/"files"/"file.json",false))>>default_files_json;
-            try {(sifstream(appdata_path/"file.json",false))>>files_json;} catch(...) {}
+            (sifstream(file_path/"files"/"file.json"))>>default_files_json;
+            try {(sifstream(appdata_path/"file.json"))>>files_json;} catch(...) {}
         }
         ~Init()
         {
             remove_null(files_json);
-            (sofstream(appdata_path/"file.json",false))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
+            (sofstream(appdata_path/"file.json"))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
         }
     }_Init_files;
     class file_number

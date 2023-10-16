@@ -13,8 +13,8 @@ namespace Settings
       public:
         Init()
         {
-            (sifstream(file_path/"files"/"settings.json",false))>>default_settings;
-            try {(sifstream(appdata_path/"settings.json",false))>>global_settings;} catch(...) {}
+            (sifstream(file_path/"files"/"settings.json"))>>default_settings;
+            try {(sifstream(appdata_path/"settings.json"))>>global_settings;} catch(...) {}
             pat dir("/");
             dir.setDevice(running_path.getDevice());
             dir.setNode(running_path.getNode());
@@ -23,7 +23,7 @@ namespace Settings
                 if(i>=0) dir/=running_path[i];
                 try
                 {
-                    (sifstream(dir/".orita/settings.json",false))>>all_settings[dir.toString()];
+                    (sifstream(dir/".orita/settings.json"))>>all_settings[dir.toString()];
                     if_has_settings[dir.toString()]=true;
                 } catch(...) {};
             }
@@ -31,7 +31,7 @@ namespace Settings
         ~Init()
         {
             remove_null(global_settings);
-            (sofstream(appdata_path/"settings.json",false))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
+            (sofstream(appdata_path/"settings.json"))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
             pat dir("/");
             dir.setDevice(running_path.getDevice());
             dir.setNode(running_path.getNode());
@@ -44,7 +44,7 @@ namespace Settings
                     {
                         ((fil)dir/".orita").createDirectory();
                         remove_null(all_settings[dir.toString()]);
-                        (sofstream(dir/".orita/settings.json",false))<<all_settings[dir.toString()].dump(4,' ',true,json::error_handler_t::ignore);
+                        (sofstream(dir/".orita/settings.json"))<<all_settings[dir.toString()].dump(4,' ',true,json::error_handler_t::ignore);
                     }
                 } catch(...) {};
             }

@@ -39,7 +39,7 @@ class logger
     logger(const fil &_output_file=appdata_path/"Orita.log",const std::string _name="Orita LOG"):output_file(_output_file),name(_name)
     {
         (sofstream)(output_file)<<name<<"\n";
-        output=spdlog::basic_logger_mt(name,output_file.path());
+        output=spdlog::basic_logger_mt(name,UTF8tosys(output_file.path()));
         output->set_level(spdlog::level::debug);
         output->flush_on(spdlog::level::trace);
         print(_LOG_INFO,"running_path","path: "+add_squo(running_path));

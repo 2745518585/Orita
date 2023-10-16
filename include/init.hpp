@@ -36,7 +36,6 @@
 #endif
 
 #include"nlohmann/json.hpp"
-using json=nlohmann::json;
 
 #include"termcolor/termcolor.hpp"
 
@@ -61,6 +60,36 @@ using json=nlohmann::json;
 #include"Poco/Util/HelpFormatter.h"
 #include"Poco/Exception.h"
 
+// code
+std::string UTF8tosys(const std::string &utf8Text)
+{
+    #ifdef _WIN32
+    int wideCharLength=MultiByteToWideChar(CP_UTF8,0,utf8Text.c_str(),-1,nullptr,0);
+    std::wstring wideString(wideCharLength,L'\0');
+    MultiByteToWideChar(CP_UTF8,0,utf8Text.c_str(),-1,&wideString[0],wideCharLength);
+    int ansiLength=WideCharToMultiByte(CP_ACP,0,wideString.c_str(),-1,nullptr,0,nullptr,nullptr);
+    std::string ansiString(ansiLength,'\0');
+    WideCharToMultiByte(CP_ACP,0,wideString.c_str(),-1,&ansiString[0],ansiLength,nullptr,nullptr);
+    while(ansiString.back()==0) ansiString.pop_back();
+    return ansiString;
+    #endif
+    return utf8Text;
+}
+std::string systoUTF8(const std::string &systemText)
+{
+    #ifdef _WIN32
+    int wideCharLength=MultiByteToWideChar(CP_ACP,0,systemText.c_str(),-1,nullptr,0);
+    std::wstring wideString(wideCharLength,L'\0');
+    MultiByteToWideChar(CP_ACP,0,systemText.c_str(),-1,&wideString[0],wideCharLength);
+    int utf8Length=WideCharToMultiByte(CP_UTF8,0,wideString.c_str(),-1,nullptr,0,nullptr,nullptr);
+    std::string utf8String(utf8Length,'\0');
+    WideCharToMultiByte(CP_UTF8,0,wideString.c_str(),-1,&utf8String[0],utf8Length,nullptr,nullptr);
+    while(utf8String.back()==0) utf8String.pop_back();
+    return utf8String;
+    #endif
+    return systemText;
+}
+
 // os
 #ifdef _WIN32
 const std::string os_name="windows";
@@ -70,6 +99,7 @@ const std::string os_name="linux";
 #endif
 
 // json
+using json=nlohmann::json;
 void merge(json &a,json b)
 {
     if(!a.is_null()&&!b.is_null()&&a.type()!=b.type()) return;
@@ -103,16 +133,6 @@ void remove_null(json &a)
             try {if(a[i].size()==0) a.erase(i);} catch(...) {}
         }
     }
-}
-
-// code
-std::string UTF8tosys(const std::string &str)
-{
-    return str;
-}
-std::string systoUTF8(const std::string &str)
-{
-    return str;
 }
 
 // result
@@ -335,8 +355,7 @@ class sistream
 {
   public:
     std::istream& stream;
-    bool if_sys;
-    template<typename Type> sistream(Type &_stream,bool _if_sys=true):stream(_stream),if_sys(_if_sys) {}
+    template<typename Type> sistream(Type &_stream):stream(_stream) {}
     template<typename Type> sistream &operator>>(Type &val)
     {
         stream>>val;
@@ -347,8 +366,12 @@ class sostream
 {
   public:
     std::ostream &stream;
-    bool if_sys;
-    template<typename Type> sostream(Type &_stream,bool _if_sys=true):stream(_stream),if_sys(_if_sys) {}
+    template<typename Type> sostream(Type &_stream):stream(_stream) {}
+    sostream &operator<<(const std::string &val)
+    {
+        stream<<UTF8tosys(val);
+        return *this;
+    }
     template<typename Type> sostream &operator<<(const Type &val)
     {
         stream<<val;
@@ -363,40 +386,38 @@ class sostream
 class sifstream: public std::ifstream
 {
   public:
-    bool if_sys;
     void open(const pat &file,const std::ios_base::openmode &mode=std::ios::in)
     {
-        std::ifstream::open(file.toString(),mode);
+        open(file.toString(),mode);
     }
     void open(const fil &file,const std::ios_base::openmode &mode=std::ios::in)
     {
-        std::ifstream::open(file.path(),mode);
+        open(file.path(),mode);
     }
     template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::in)
     {
-        std::ifstream::open(file,mode);
+        std::ifstream::open(UTF8tosys(file),mode);
     }
-    template<typename Type> sifstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
-    template<typename Type> sifstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
+    template<typename Type> sifstream(const Type &file) {open(file);}
+    template<typename Type> sifstream(const Type &file,const std::ios_base::openmode &mode) {open(file,mode);}
 };
 class sofstream: public std::ofstream
 {
   public:
-    bool if_sys;
     void open(const pat &file,const std::ios_base::openmode &mode=std::ios::out)
     {
-        std::ofstream::open(file.toString(),mode);
+        open(file.toString(),mode);
     }
     void open(const fil &file,const std::ios_base::openmode &mode=std::ios::out)
     {
-        std::ofstream::open(file.path(),mode);
+        open(file.path(),mode);
     }
     template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
     {
-        std::ofstream::open(file,mode);
+        std::ofstream::open(UTF8tosys(file),mode);
     }
-    template<typename Type> sofstream(const Type &file,const bool _if_sys=true):if_sys(_if_sys) {open(file);}
-    template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode,const bool _if_sys=true):if_sys(_if_sys) {open(file,mode);}
+    template<typename Type> sofstream(const Type &file) {open(file);}
+    template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode) {open(file,mode);}
 };
 namespace ANSI
 {
@@ -421,10 +442,10 @@ const int sys_exit_code=8;
 int ssystem(const std::string &command)
 {
     #ifdef _WIN32
-    return system(("cmd /C "+add_quo(command)).c_str());
+    return system(UTF8tosys("cmd /C "+add_quo(command)).c_str());
     #endif
     #ifdef __linux__
-    return system(command.c_str());
+    return system(UTF8tosys(command).c_str());
     #endif
 }
 int kill_task(const pat &task)
