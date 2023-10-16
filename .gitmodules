@@ -1,0 +1,12 @@
+[submodule "poco"]
+	path = poco
+	url = https://github.com/pocoproject/poco
+[submodule "nlohmann"]
+	path = nlohmann
+	url = https://github.com/nlohmann/json
+[submodule "spdlog"]
+	path = spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "termcolor"]
+	path = termcolor
+	url = https://github.com/ikalnytskyi/termcolor

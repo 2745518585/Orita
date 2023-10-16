@@ -5,69 +5,129 @@
 #include"log.hpp"
 namespace Print
 {
+    std::map<res::type,std::string> result_name={
+        {res::type::NL,"NULL"},
+        {res::type::NF,"No such file"},
+        {res::type::AC,"Accepted"},
+        {res::type::WA,"Wrong Answer"},
+        {res::type::RE,"Runtime Error"},
+        {res::type::TLE_CA,"Time Limit Error with Correct Answer"},
+        {res::type::TLE_WA,"Time Limit Error with Wrong Answer"},
+        {res::type::TLE_O,"Time Limit Error"},
+        {res::type::CE,"Compile Error"},
+        {res::type::SA,"Same Answer"},
+        {res::type::DA,"Different Answer"},
+        {res::type::II,"Invalid input"},
+        {res::type::TO,"Timeout"},
+        {res::type::SS,"Success"},
+        {res::type::FL,"Fail"},
+    };
+    std::map<res::type,std::string> short_result_name={
+        {res::type::NL,"NL"},
+        {res::type::NF,"NF"},
+        {res::type::AC,"AC"},
+        {res::type::WA,"WA"},
+        {res::type::RE,"RE"},
+        {res::type::TLE_CA,"TLE_CA"},
+        {res::type::TLE_WA,"TLE_WA"},
+        {res::type::TLE_O,"TLE_O"},
+        {res::type::CE,"CE"},
+        {res::type::SA,"SA"},
+        {res::type::DA,"DA"},
+        {res::type::II,"II"},
+        {res::type::TO,"TO"},
+        {res::type::SS,"SS"},
+        {res::type::FL,"FL"},
+    };
+    std::map<res::type,std::ostream &(*)(std::ostream&)> result_color={
+        {res::type::NL,termcolor::reset},
+        {res::type::NF,termcolor::blue},
+        {res::type::AC,termcolor::bright_green},
+        {res::type::WA,termcolor::bright_red},
+        {res::type::RE,termcolor::magenta},
+        {res::type::TLE_CA,termcolor::bright_cyan},
+        {res::type::TLE_WA,termcolor::bright_cyan},
+        {res::type::TLE_O,termcolor::bright_cyan},
+        {res::type::CE,termcolor::bright_yellow},
+        {res::type::SA,termcolor::bright_green},
+        {res::type::DA,termcolor::bright_red},
+        {res::type::II,termcolor::blue},
+        {res::type::TO,termcolor::bright_cyan},
+        {res::type::SS,termcolor::bright_green},
+        {res::type::FL,termcolor::bright_red},
+    };
     void print_result(const std::string &name,const res result,const tim time,const int exit_code)
     {
         if(name!="") scout<<termcolor::bright_grey<<name<<":\n";
-        if(result.is(res::type::SS)) scout<<termcolor::bright_green<<"Success\n";
-        if(result.is(res::type::FL)) scout<<termcolor::bright_red<<"Fail\n";
-        if(result.is(res::type::AC)) scout<<termcolor::bright_green<<"Accepted\n"<<time<<"\n";
-        if(result.is(res::type::WA)) scout<<termcolor::bright_red<<"Wrong Answer\n"<<time<<"\n";
-        if(result.is(res::type::RE)) scout<<termcolor::magenta<<"Runtime Error\nexit with code "<<exit_code<<"\n";
-        if(result.is(res::type::TLE_CA)) scout<<termcolor::bright_cyan<<"Time Limit Error with Correct Answer\n"<<time<<"\n";
-        if(result.is(res::type::TLE_WA)) scout<<termcolor::bright_cyan<<"Time Limit Error with Wrong Answer\n"<<time<<"\n";
-        if(result.is(res::type::TLE_O)) scout<<termcolor::bright_cyan<<"Time Limit Error\nover "<<time<<"\n";
-        if(result.is(res::type::CE)) scout<<termcolor::bright_yellow<<"Compile Error\n";
-        if(result.is(res::type::SA)) scout<<termcolor::bright_green<<"Same Answer\n";
-        if(result.is(res::type::DA)) scout<<termcolor::bright_red<<"Different Answer\n";
-        if(result.is(res::type::TO)) scout<<termcolor::bright_cyan<<"Timeout\n";
-        if(result.is(res::type::NF)) scout<<termcolor::blue<<"No such file\n";
-        if(result.is(res::type::II)) scout<<termcolor::blue<<"Invalid input\n";
-        scout<<termcolor::reset;
-        scout.flush();
+        scout<<result_color[result.result]<<result_name[result.result]<<"\n";
+        if(result.is({res::type::AC,res::type::WA,res::type::TLE_CA,res::type::TLE_WA})) scout<<time<<"\n";
+        if(result.is(res::type::RE)) scout<<"exit with code "<<exit_code<<"\n";
+        if(result.is(res::type::TLE_O)) scout<<"over "<<time<<"\n";
+        scout<<termcolor::reset<<std::flush;
     }
     std::string get_resultname(const res result)
     {
-        if(result.is(res::type::NL)) return "NULL";
-        if(result.is(res::type::NF)) return "No such file";
-        if(result.is(res::type::AC)) return "Accepted";
-        if(result.is(res::type::WA)) return "Wrong Answer";
-        if(result.is(res::type::RE)) return "Runtime Error";
-        if(result.is(res::type::TLE_CA)) return "Time Limit Error with Correct Answer";
-        if(result.is(res::type::TLE_WA)) return "Time Limit Error with Wrong Answer";
-        if(result.is(res::type::TLE_O)) return "Time Limit Error";
-        if(result.is(res::type::CE)) return "Compile Error";
-        if(result.is(res::type::SA)) return "Same Answer";
-        if(result.is(res::type::DA)) return "Different Answer";
-        if(result.is(res::type::II)) return "Invalid input";
-        if(result.is(res::type::TO)) return "Timeout";
-        if(result.is(res::type::SS)) return "Success";
-        if(result.is(res::type::FL)) return "Fail";
-        return "";
+        return result_name[result.result];
     }
     std::string get_short_resultname(const res result)
     {
-        if(result.is(res::type::NL)) return "NL";
-        if(result.is(res::type::NF)) return "NF";
-        if(result.is(res::type::AC)) return "AC";
-        if(result.is(res::type::WA)) return "WA";
-        if(result.is(res::type::RE)) return "RE";
-        if(result.is(res::type::TLE_CA)) return "TLE_CA";
-        if(result.is(res::type::TLE_WA)) return "TLE_WA";
-        if(result.is(res::type::TLE_O)) return "TLE_O";
-        if(result.is(res::type::CE)) return "CE";
-        if(result.is(res::type::SA)) return "SA";
-        if(result.is(res::type::DA)) return "DA";
-        if(result.is(res::type::II)) return "II";
-        if(result.is(res::type::TO)) return "TO";
-        if(result.is(res::type::SS)) return "SS";
-        if(result.is(res::type::FL)) return "FL";
-        return "";
+        return short_result_name[result.result];
+    }
+    class print_list
+    {
+        std::vector<std::string> list;
+      public:
+        print_list(std::initializer_list<std::any> _list)
+        {
+            for(auto i:_list)
+            {
+                list.push_back(get_any(i));
+            }
+        }
+        const std::string operator[](size_t pos)const {return list[pos];}
+        const size_t size()const {return list.size();}
+    };
+    std::string print_type(const print_list &str_back,const std::vector<print_list> &str_list,bool if_right=false)
+    {
+        std::string str;
+        std::vector<size_t> lens;
+        size_t tot_len=0;
+        for(unsigned i=0;i<str_back.size();++i)
+        {
+            size_t len=0;
+            for(auto j:str_list) if(i<j.size()) len=std::max(len,j[i].size());
+            lens.push_back(len);
+            tot_len+=str_back[i].size()+len;
+        }
+        std::string pre;
+        if(if_right) pre=std::string(" ")*(get_terminal_width()-tot_len);
+        for(auto i:str_list)
+        {
+            str+=pre;
+            for(unsigned j=0;j<str_back.size();++j)
+            {
+                if(j<i.size()) str+=str_back[j]+i[j]+std::string(" ")*(lens[j]-i[j].size());
+                else str+=str_back[j]+std::string("")*lens[j];
+            }
+        }
+        return str;
     }
 }
 void print_result(const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result("",result,time,exit_code);}
 void print_result(const std::string &name,const res result=res::type::NL,const tim time=(tim)0,int exit_code=0) {Print::print_result(name,result,time,exit_code);}
-std::string get_resultname(const res result) {return Print::get_resultname(result);}
-std::string get_short_resultname(const res result) {return Print::get_short_resultname(result);}
+using Print::get_resultname;
+using Print::get_short_resultname;
+using Print::print_type;
+std::ostream &operator<<(std::ostream &output,res res)
+{
+    output<<get_resultname(res);
+    return output;
+}
+std::ostream &print_right(std::ostream &stream)
+{
+    stream<<std::setw(get_terminal_width())<<std::right;
+    return stream;
+}
 class printer
 {
   public:
@@ -77,6 +137,7 @@ class printer
     std::atomic<bool> if_end;
     std::mutex wait_lock;
     std::condition_variable wait;
+    std::future<void> *print_future;
     void print()
     {
         int pos=0;
@@ -95,13 +156,15 @@ class printer
     }
     void start()
     {
-        std::thread(&printer::print,this).detach();
+        print_future=new std::future(std::async(std::launch::async,&printer::print,this));
+        INFO("printer - start","id: "+to_string_hex(this),"str: "+vec_to_str(str,static_cast<std::string(*)(const std::string&)>(add_squo)),"interval time: "+std::to_string(interval_time.count()));
     }
     void stop()
     {
         if_end=true;
         wait.notify_all();
-        ssleep((tim)10);
+        print_future->wait();
+        INFO("printer - end","id: "+to_string_hex(this));
     }
     printer(const std::initializer_list<std::string> _str,const tim _interval_time)
     {

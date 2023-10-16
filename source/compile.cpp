@@ -1,60 +1,62 @@
-#include"run.hpp"
-const json make_cor_argu()
+#pragma once
+#ifndef _COMMAND_COMPILE
+#define _COMMAND_COMPILE _COMMAND_COMPILE
+#include"orita.hpp"
+class Command_compile: public App
 {
-    json cor_argu={
-        {"f",{arguer::NL}},
-        {"r",{arguer::ND,1}},
-        {"t",{arguer::ND,1}},
-        {"o",{arguer::NL}},
-        {"p",{arguer::NL}}
-    };
-    return cor_argu;
-}
-const json cor_argu=make_cor_argu();
-int compile_main()
-{
-    std::string compile_argu;
-    if(argus["o"].appear())
+  protected:
+    void defineOptions(Poco::Util::OptionSet &options)
     {
-        for(int i=1;i<=argus["o"].size();++i) compile_argu=compile_argu+" "+argus["o"][i];
+        options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
+        options.addOption(Poco::Util::Option("run","r","compile and run").noArgument());
+        options.addOption(Poco::Util::Option("trun","t","only run").noArgument());
+        options.addOption(Poco::Util::Option("carg","c","compile args").argument("args",true));
+        options.addOption(Poco::Util::Option("arg","a","run args").argument("args",true));
+        App::defineOptions(options);
     }
-    else compile_argu=compile_argu;
-    std::string run_argu;
-    if(argus["p"].appear())
+    void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
     {
-        for(int i=1;i<=argus["p"].size();++i) run_argu=run_argu+" "+argus["p"][i];
+        helpFormatter->setHeader("Orita - Compile");
+        helpFormatter->setCommand("orita compile");
+        helpFormatter->setUsage("[file] [options]\n");
+        helpFormatter->setFooter(" ");
+        helpFormatter->format(std::cout);
     }
-    if(argus["r"].appear())
+    int main(const std::vector<std::string>& args)
     {
-        pat file;
-        file=get_file(add_namesuf(argus["r"][1],".cpp"));
-        if(compile(file,compile_argu)) return 0;
-        runner runs(replace_extension(file,exe_suf),"","",run_argu,(tim)1000000);
-        runs.run();
-        scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
-    }
-    else if(argus["t"].appear())
-    {
-        pat file=get_file(argus["t"][1]);
-        runner runs(file,"","",run_argu,(tim)1000000);
-        runs.run();
-        scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
-    }
-    else
-    {
-        for(int i=1;i<=argus["f"].size();++i)
+        loadConfiguration();
+        if(check_option("error options")) return EXIT_USAGE;
+        if(check_option("help")) return EXIT_OK;
+        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+
+        
+        std::string compile_argu=get_option("carg");
+        std::string run_argu=get_option("arg");
+        if(args.size()==1&&check_option("run"))
         {
-            pat file=get_file(add_namesuf(argus["f"][i],".cpp"));
-            if(compile(file,compile_argu)) print_result(file.filename().string(),res::type::CE);
-            else print_result(file.filename().string(),res::type::SS);
+            fil file=add_namesuf(get_file((pat)args[0]),"cpp");
+            if(compile(file,compile_argu)) return EXIT_OK;
+            runner runs(replace_extension(file,exe_suf),"","",run_argu,(tim)1000000);
+            runs.run();
+            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
         }
+        else if(args.size()==1&&check_option("trun"))
+        {
+            fil file=get_file((pat)args[0]);
+            runner runs(file,"","",run_argu,(tim)1000000);
+            runs.run();
+            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
+        }
+        else
+        {
+            for(auto i:args)
+            {
+                fil file=get_file(add_namesuf((pat)i,"cpp"));
+                if(compile(file,compile_argu)) print_result(((pat)file.path()).getFileName(),res::type::CE);
+                else print_result(((pat)file.path()).getFileName(),res::type::SS);
+            }
+        }
+        return EXIT_OK;
     }
-    return 0;
-}
-int main(int argc,char **argv)
-{
-    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
-    int exit_code=compile_main();
-    return exit_code;
-}
+};
+#endif

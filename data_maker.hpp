@@ -64,6 +64,13 @@ namespace Data_maker
     auto _GRE=[](long long s1,long long s2) {return s1>s2;};
     auto _LOE=[](long long s1,long long s2) {return s1<=s2;};
     auto _GOE=[](long long s1,long long s2) {return s1>=s2;};
+    std::vector<unsigned> rnd_range(unsigned tot)
+    {
+        std::vector<unsigned> ans;
+        for(unsigned i=1;i<=tot;++i) ans.push_back(i);
+        shuffle(ans.begin(),ans.end(),rd);
+        return ans;
+    }
     std::vector<std::pair<unsigned,unsigned>> rnd_tree(unsigned tot)
     {
         unsigned *fa=new unsigned[tot+1];
@@ -104,22 +111,17 @@ namespace Data_maker
         return ans;
     }
 }
-std::mt19937 rd=Data_maker::rd;
-void register_rnd(int argc,char **argv) {return Data_maker::register_rnd(argc,argv);}
-void register_rnd(unsigned seed) {return Data_maker::register_rnd(seed);}
-unsigned long long rnd(){return Data_maker::rnd();}
-long long rnd(long long lim){return Data_maker::rnd(lim);}
-long long rnd(long long llim,long long ulim){return Data_maker::rnd(llim,ulim);}
-template<typename Type> std::pair<long long,long long> rnd_pair(long long llim,long long ulim,Type checker){return Data_maker::rnd_pair(llim,ulim,checker);}
-template<typename Type> std::pair<long long,long long> rnd_pair(long long llim1,long long ulim1,long long llim2,long long ulim2,Type checker){return Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,checker);}
-template<typename Type> std::pair<long long,long long> reg_pair(int num,long long llim,long long ulim,Type checker){return Data_maker::reg_pair(num,llim,ulim,checker);}
-template<typename Type> std::pair<long long,long long> reg_pair(int num,long long llim1,long long ulim1,long long llim2,long long ulim2,Type checker){return Data_maker::reg_pair(num,llim1,ulim1,llim2,ulim2,checker);}
-std::pair<long long,long long> reg_pair(int num){return Data_maker::reg_pair(num);}
-auto _NEQ=Data_maker::_NEQ;
-auto _LES=Data_maker::_LES;
-auto _GRE=Data_maker::_LOE;
-auto _LOE=Data_maker::_LOE;
-auto _GOE=Data_maker::_GOE;
-std::vector<std::pair<unsigned,unsigned>> rnd_tree(unsigned tot){return Data_maker::rnd_tree(tot);}
-std::vector<std::pair<unsigned,unsigned>> rnd_ucgraph(unsigned totp,unsigned tote){return Data_maker::rnd_ucgraph(totp,tote);}
+using Data_maker::rd;
+using Data_maker::register_rnd;
+using Data_maker::rnd;
+using Data_maker::rnd_pair;
+using Data_maker::reg_pair;
+using Data_maker::_NEQ;
+using Data_maker::_LES;
+using Data_maker::_GRE;
+using Data_maker::_LOE;
+using Data_maker::_GOE;
+using Data_maker::rnd_range;
+using Data_maker::rnd_tree;
+using Data_maker::rnd_ucgraph;
 #endif

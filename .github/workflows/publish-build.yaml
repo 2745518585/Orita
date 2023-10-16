@@ -1,0 +1,86 @@
+name: Publish Build
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Set up MSVC
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Set up CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Build
+      run: |
+        cmake -B build -S . 
+        cmake --build build --config Release --target orita
+
+    - name: Copy Release
+      run: |
+        mkdir release
+        xcopy /s /e /i '.\build\bin' '.\release\bin'
+        xcopy /s /e /i '.\build\lib' '.\release\lib'
+
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        path: './release'
+        filename: 'Orita-windows-release.zip'
+        exclusions: '*.git*'
+
+    - name: Upload Release
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        artifacts: 'Orita-windows-release.zip'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        allowUpdates: true
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Set up CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Build
+      run: |
+        cmake -B build -S . 
+        cmake --build build --config Release --target orita
+
+    - name: Copy Release
+      run: |
+        mkdir release
+        cp -r './build/bin' './release'
+        cp -r './build/lib' './release'
+      
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        path: './release'
+        filename: 'Orita-linux-release.zip'
+        exclusions: '*.git*'
+
+    - name: Upload Release
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        artifacts: 'Orita-linux-release.zip'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        allowUpdates: true

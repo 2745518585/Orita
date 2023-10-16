@@ -1,46 +1,59 @@
-#include"run.hpp"
-const json make_cor_argu()
+#pragma once
+#ifndef _COMMAND_CHDATA
+#define _COMMAND_CHDATA _COMMAND_CHDATA
+#include"orita.hpp"
+class Command_chdata: public App
 {
-    json cor_argu={
-        {"f",{arguer::ND,2}},
-        {"if",{arguer::ND,1}},
-        {"of",{arguer::ND,1}},
-        {"s",{arguer::ND,0,1}},
-        {"t",{arguer::ND,1}}
-    };
-    return cor_argu;
-}
-const json cor_argu=make_cor_argu();
-int chdata_main()
-{
-    pat in_file=check_file(argus["f"][1],argus["if"][1]);
-    pat out_file=check_file(argus["f"][2],argus["of"][1]);
-    if(in_file!=""&&!std::filesystem::exists(in_file)) {print_result(res::type::NF);return 0;}
-    if(out_file!=""&&!std::filesystem::exists(out_file)) {print_result(res::type::NF);return 0;}
-    if(in_file!="") std::filesystem::copy_file(in_file,default_infile,std::filesystem::copy_options::overwrite_existing);
-    if(out_file!="") std::filesystem::copy_file(out_file,default_outfile,std::filesystem::copy_options::overwrite_existing);
-    if(argus["s"].appear())
+  protected:
+    void defineOptions(Poco::Util::OptionSet &options)
     {
-        show_cursor();
-        char str;
-        FILE *file=sfopen(default_infile.string(),"w");
-        str=getchar();
-        while(str!=EOF) fputc(str,file),str=getchar();
-        sfclose(file);
-        file=sfopen(default_outfile.string(),"w");
-        str=getchar();
-        while(str!=EOF) fputc(str,file),str=getchar();
-        sfclose(file);
-        hide_cursor();
+        options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
+        options.addOption(Poco::Util::Option("ifile","if","specify input file").argument("file",false));
+        options.addOption(Poco::Util::Option("ofile","of","specify output file").argument("file",false));
+        options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
+        App::defineOptions(options);
     }
-    if(argus["t"].size()==1) change_time_limit((tim)stoi(argus["t"][1]));
-    print_result(res::type::SS);
-    return 0;
-}
-int main(int argc,char **argv)
-{
-    if(argus.init_argu(argc,argv)) {print_result(res::type::II);return 0;}
-    if(argus.check_argu(cor_argu)) {print_result(res::type::II);return 0;}
-    int exit_code=chdata_main();
-    return exit_code;
-}
+    void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
+    {
+        helpFormatter->setHeader("Orita - Chdata");
+        helpFormatter->setCommand("orita chdata");
+        helpFormatter->setUsage("[options]\n");
+        helpFormatter->setFooter(" ");
+        helpFormatter->format(std::cout);
+    }
+    int main(const std::vector<std::string>& args)
+    {
+        loadConfiguration();
+        if(check_option("error options")) return EXIT_USAGE;
+        if(check_option("help")) return EXIT_OK;
+        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+
+
+        fil in_file=get_option("ifile");
+        fil out_file=get_option("ofile");
+        if(in_file!=fil()&&!in_file.exists()) {print_result(res::type::NF);return EXIT_NOINPUT;}
+        if(out_file!=fil()&&!out_file.exists()) {print_result(res::type::NF);return EXIT_NOINPUT;}
+        if(in_file!=fil()) in_file.copyTo(default_infile.path());
+        else if(check_option("ifile"))
+        {
+            show_cursor();
+            std::string str;
+            sofstream output(default_infile);
+            while(std::getline(std::cin,str)) output<<str<<"\n";
+            hide_cursor();
+        }
+        if(out_file!=fil()) out_file.copyTo(default_outfile.path());
+        else if(check_option("ofile"))
+        {
+            show_cursor();
+            std::string str;
+            sofstream output(default_outfile);
+            while(std::getline(std::cin,str)) output<<str<<"\n";
+            hide_cursor();
+        }
+        if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
+        print_result(res::type::SS);
+        return 0;
+    }
+};
+#endif

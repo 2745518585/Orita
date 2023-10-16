@@ -248,3 +248,34 @@ Orita 第一个正式版本。
 
 - Empty invalid arguments could not be checked. ([`326f57a`](https://github.com/2745518585/Orita/commit/326f57a7994031fdda64cddb68d3d0d0847c3619),[`3d2cd12`](https://github.com/2745518585/Orita/commit/3d2cd128b64c404a99504841129d48e32e941087))
 - Files could not be removed while the logger is running. ([`4d7e4da`](https://github.com/2745518585/Orita/commit/4d7e4daa5248dc278425409ffce6a240cdcc3b0f))
+
+## Dev 0.2
+
+### Dev 0.2.0
+
+#### Features
+
+- Supported `MSVC`.
+- Add Github Actions.
+- Add settings system.
+- Add commands matching lists.
+- Add enviroment variables replace.
+- Add `orita command`.
+- Supported International ANSI encoding.
+
+#### Fixes
+
+- Files could not be copied for unknown reasons.
+- File name could not be readed successfully because of use `\` as path separator in Linux.
+- File namesuf would be replaced unexpectedly.
+- The program always exit with code 0.
+- Compiling possibly could not end because of wrong in `std::mutex`.
+
+#### Changes
+
+- Use submodules.
+- Moved Runtime outputs to `bin\`.
+- Use `Poco::Path` and `Poco::File`.
+- Use `Poco::Util`.
+- Use CMake to compile entrance file.
+- Use enviroment variables to pass arguments.
