@@ -33,16 +33,6 @@ char PS='/';
 std::string makepath(const std::string &path) {return path;}
 template<typename ...others_type> std::string makepath(const std::string &path,const others_type ...others) {if(path=="") return makepath(others...); return path+PS+makepath(others...);}
 
-void ssetenv(std::string key,std::string value)
-{
-    #ifdef _WIN32
-    SetEnvironmentVariable(key.c_str(),value.c_str());
-    #endif
-    #ifdef __linux__
-    setenv(key.c_str(),value.c_str(),true);
-    #endif
-}
-
 std::string get_appdata_path()
 {
     #ifdef _WIN32
@@ -101,10 +91,19 @@ int main(int argc,char **argv)
     path=makepath(path,"main");
     #endif
     std::string command=add_quo(path);
-    ssetenv("ORITA ARGS",std::to_string(args.size()));
+    auto ssetenv=[&](const std::string &key,const std::string &value)
+    {
+        #ifdef _WIN32
+        SetEnvironmentVariable(key.c_str(),value.c_str());
+        #endif
+        #ifdef __linux__
+        command="export "+key+"="+value+" && "+command;
+        #endif
+    };
+    ssetenv("ORITA_ARGS",std::to_string(args.size()));
     for(int i=0;i<args.size();++i)
     {
-        ssetenv("ORITA ARGS "+std::to_string(i),args[i]);
+        ssetenv("ORITA_ARGS_"+std::to_string(i),args[i]);
     }
     return ssystem(command);
 }

@@ -62,11 +62,11 @@ class Command_orita: public App
 int main(int argc,char **argv)
 {
     std::vector<std::string> args;
-    unsigned args_sum=stoul(sgetenv("ORITA ARGS"));
+    unsigned args_sum=stoul(sgetenv("ORITA_ARGS"));
     args.push_back(argv[0]);
     for(int i=0;i<args_sum;++i)
     {
-        args.push_back(sgetenv("ORITA ARGS "+std::to_string(i)));
+        args.push_back(sgetenv("ORITA_ARGS_"+std::to_string(i)));
     }
     auto run_commands=[&](std::string commands){
         INFO("run commands","commands: "+commands);
