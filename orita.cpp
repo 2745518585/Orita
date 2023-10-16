@@ -3,6 +3,7 @@
 #include<regex>
 #include<vector>
 #include<cstdlib>
+#include<iostream>
 
 #ifdef _WIN32
 #include<windows.h>
@@ -30,7 +31,7 @@ char PS='\\';
 char PS='/';
 #endif
 std::string makepath(const std::string &path) {return path;}
-template<typename ...others_type> std::string makepath(const std::string &path,const others_type ...others) {return path+PS+makepath(others...);}
+template<typename ...others_type> std::string makepath(const std::string &path,const others_type ...others) {if(path=="") return makepath(others...); return path+PS+makepath(others...);}
 
 void ssetenv(std::string key,std::string value)
 {
@@ -57,6 +58,7 @@ std::string get_filedir(std::string file)
     #ifdef _WIN32
     file=std::regex_replace(file,std::regex("/"),"\\");
     #endif
+    if(file.find_last_of(PS)==std::string::npos) return "";
     return file.substr(0,file.find_last_of(PS));
 }
 
