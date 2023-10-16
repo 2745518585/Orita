@@ -89,7 +89,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `{APPDATA_PATH}`: Windows 下为 `%APPDATA%/Orita`，Linux 下为 `%HOME%/.Orita`。
   - `{FILE_PATH}`: 可执行文件所在目录。
   - `{RUNNING_PATH}`: 运行目录。
-  - `{OS_NAME}`: 操作系统名称，Windows 下为 `windows`，Linux 下为 `linux`。
+  - `{OS_NAME}`: 操作系统名称。
   - 否则返回系统环境变量 `...`。
 
 - 文件名中的 `%%` 会被替换为 `%`。

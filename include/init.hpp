@@ -91,12 +91,7 @@ std::string systoUTF8(const std::string &systemText)
 }
 
 // os
-#ifdef _WIN32
-const std::string os_name="windows";
-#endif
-#ifdef __linux__
-const std::string os_name="linux";
-#endif
+const std::string os_name=Poco::Environment::osName();
 
 // json
 using json=nlohmann::json;
