@@ -279,3 +279,9 @@ Orita 第一个正式版本。
 - Use `Poco::Util`.
 - Use CMake to compile entrance file.
 - Use enviroment variables to pass arguments.
+
+### Dev 0.2.1
+
+#### Fixex
+
+- Unexpected output when the result is `NULL`.

@@ -76,7 +76,7 @@ class judger
     void print_result(const std::string &name="",const std::string &chk_name="checker")
     {
         if(result.is(res::type::NL)) Print::print_result(chk_name,chk_result,chk_time,chk_exit_code);
-        Print::print_result(name,result,time,exit_code);
+        else Print::print_result(name,result,time,exit_code);
     }
 };
 #endif
