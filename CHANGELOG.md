@@ -282,6 +282,14 @@ Orita 第一个正式版本。
 
 ### Dev 0.2.1
 
-#### Fixex
+#### Features
+
+- Multi-threaded compilation.
+
+#### Fixes
 
 - Unexpected output when the result is `NULL`.
+
+#### Changes
+
+- Use `Poco::Process`.

@@ -157,7 +157,7 @@ class printer
     void start()
     {
         print_future=new std::future(std::async(std::launch::async,&printer::print,this));
-        INFO("printer - start","id: "+to_string_hex(this),"str: "+vec_to_str(str,static_cast<std::string(*)(const std::string&)>(add_squo)),"interval time: "+std::to_string(interval_time.count()));
+        INFO("printer - start","id: "+to_string_hex(this),"str: "+add_squo(str),"interval time: "+std::to_string(interval_time.count()));
     }
     void stop()
     {

@@ -9,36 +9,56 @@
 class runner
 {
   public:
-    const fil file,in_file,out_file;
-    std::string argu;
+    const fil file;
+    const arg argu;
     const tim time_limit;
+    int exit_code=-1;
     tim time;
-    int exit_code=0;
     timer run_timer;
-    runner(const fil &_file,const fil &_in_file,const fil &_out_file,const std::string &_argu="",const tim _time_limit=runtime_limit):file(_file),in_file(_in_file),out_file(_out_file),argu(_argu),time_limit(_time_limit) {}
-    void run_run()
+    bool if_end=false;
+    Poco::Pipe in,out,err;
+    Poco::ProcessHandle *ph=NULL;
+    std::ostream *out_stream=&std::cout,*err_stream=&std::cerr;
+    runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(replace_extension(_file,exe_suf)),argu(_argu),time_limit(_time_limit) {}
+    runner &set_in(const fil &file) {sifstream(file,std::ios::binary)>>in;return *this;}
+    runner &set_out(std::istream *stream) {*stream>>in;return *this;}
+    runner &set_out(const fil &file) {out_stream=new sofstream(file,std::ios::binary);return *this;}
+    runner &set_out(std::ostream *stream) {out_stream=stream;return *this;}
+    runner &set_err(const fil &file) {err_stream=new sofstream(file,std::ios::binary);return *this;}
+    runner &set_err(std::ostream *stream) {err_stream=stream;return *this;}
+    void wait_for() {ph->wait();}
+    void start()
     {
-        const std::string command=add_quo(replace_extension(file,exe_suf))+" "+argu+" "+(in_file!=fil()?" < "+add_quo(in_file):"")+(out_file!=fil()?" > "+add_quo(out_file):"");
-        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)),"argu: "+add_squo(argu),"in_file: "+add_squo(in_file),"out_file: "+add_squo(out_file),"command: "+add_squo(command));
-        run_timer.init();
+        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time: "+std::to_string(time_limit.count())+"ms");
         show_cursor();
-        exit_code=ssystem(command)>>sys_exit_code;
-        hide_cursor();
-        time=run_timer.get_time();
-    }
-    int run()
-    {
-        std::future<void> run_future(std::async(std::launch::async,&runner::run_run,this));
+        run_timer.init();
+        in.close();
+        ph=new Poco::ProcessHandle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
+        std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
-            WARN("run - timeout","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
-            kill_task(replace_extension(file,exe_suf).getFileName());
+            Poco::Process::kill(*ph);
             run_future.wait();
             time=time_limit;
-            return 1;
+            WARN("run - timeout","id: "+to_string_hex(this),"file: "+add_squo(file));
         }
-        INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(replace_extension(file,exe_suf)));
-        return 0;
+        else
+        {
+            time=run_timer.get_time();
+            exit_code=ph->wait();
+            if_end=true;
+            INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(file),"time: "+std::to_string(time.count())+"ms","exit_code: "+std::to_string(exit_code));
+        }
+        hide_cursor();
+        if(out_stream!=NULL) *out_stream<<out;
+        if(err_stream!=NULL) *err_stream<<err;
+        out_stream->flush();
+        err_stream->flush();
+    }
+    int operator()()
+    {
+        threads::run(std::bind(&runner::start,this));
+        return if_end!=true;
     }
 };
 class judger
@@ -52,13 +72,13 @@ class judger
     judger(const fil &_ans,const fil &_chk,const fil &_in_file,const fil &_out_file,const fil &_ans_file,const fil &_chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
     res judge()
     {
-        runner ans_runner(ans,in_file,ans_file,"",time_limit*2);
-        if(ans_runner.run()) return time=ans_runner.time,result=res::type::TLE_O;
+        runner ans_runner=runner(ans,arg(),time_limit*2).set_in(in_file).set_out(ans_file);
+        if(ans_runner()) return time=ans_runner.time,result=res::type::TLE_O;
         time=ans_runner.time;
         exit_code=ans_runner.exit_code;
         if(exit_code) return result=res::type::RE;
-        runner chk_runner(chk,system_nul,chk_file,add_quo(in_file)+" "+add_quo(out_file)+" "+add_quo(ans_file));
-        if(chk_runner.run()) return chk_time=chk_runner.time,chk_result=res::type::TO,result=res::type::NL;
+        runner chk_runner=runner(chk,(arg)in_file+out_file+ans_file).set_out(chk_file);
+        if(chk_runner()) return chk_time=chk_runner.time,chk_result=res::type::TO,result=res::type::NL;
         chk_time=chk_runner.time;
         chk_exit_code=chk_runner.exit_code;
         if(chk_exit_code!=0&&chk_exit_code!=1) return chk_result=res::type::RE,result=res::type::NL;

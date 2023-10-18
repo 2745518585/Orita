@@ -10,6 +10,7 @@
 #include<random>
 #include<regex>
 #include<typeinfo>
+#include<functional>
 
 #include<filesystem>
 
@@ -160,7 +161,7 @@ template<typename num_type> std::string to_string_hex(const num_type num)
 {
     std::stringstream strstream;
     strstream<<std::hex<<num;
-    return strstream.str();
+    return "0x"+strstream.str();
 }
 std::string add_quo(const std::string &str)
 {
@@ -170,17 +171,23 @@ std::string add_squo(const std::string &str)
 {
     return "'"+str+"'";
 }
-template<typename Type,typename Func> std::string vec_to_str(const std::vector<Type> &vec,Func func)
+std::string add_quo(const std::vector<std::string> &vec)
 {
     std::string str;
-    for(auto i:vec) str+=func(i)+" ";
+    for(auto i:vec) str+="\""+i+"\" ";
+    return str;
+}
+std::string add_squo(const std::vector<std::string> &vec)
+{
+    std::string str;
+    for(auto i:vec) str+="'"+i+"' ";
     return str;
 }
 bool if_pre(std::string str,std::string pre)
 {
     return pre.size()<=str.size()&&str.substr(0,pre.size())==pre;
 }
-template<typename Type>std::enable_if_t<std::is_convertible_v<Type,size_t>,std::string> operator*(const std::string a,Type b)
+template<typename Type> std::enable_if_t<std::is_convertible_v<Type,size_t>,std::string> operator*(const std::string a,Type b)
 {
     std::string str="";
     while(b--) str+=a;
@@ -284,6 +291,50 @@ std::ostream &operator<<(std::ostream &output,pat val)
 std::ostream &operator<<(std::ostream &output,fil val)
 {
     output<<val.path();
+    return output;
+}
+
+// arg
+class arg: public Poco::Process::Args
+{
+  public:
+    using Poco::Process::Args::Args;
+    arg(const char *str) {push_back((std::string)str);}
+    arg(const std::string &str) {push_back(str);}
+    arg(const pat &str) {push_back(str.toString());}
+    arg(const fil &str) {push_back(str.path());}
+};
+arg get_arg(const std::string &str)
+{
+    bool is_quo=false,is_squo=false;
+    arg argu;
+    std::string tmp;
+    for(auto i:str)
+    {
+        if(i=='\"'&&!is_squo) is_quo=!is_quo;
+        else if(i=='\''&&!is_quo) is_squo=!is_squo;
+        else if(i==' '&&!is_quo&&!is_squo) argu.push_back(tmp),tmp="";
+        else tmp.push_back(i);
+    }
+    if(tmp!="") argu.push_back(tmp);
+    return argu;
+}
+arg operator+(const arg &a,const arg &b) {arg c=a;c.insert(c.end(),b.begin(),b.end());return c;}
+template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> operator+(const arg &a,const Type &b) {return a+(arg)b;}
+template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> operator+(const Type &a,const arg &b) {return (arg)a+b;}
+template<typename Type> arg &operator+=(arg &a,const Type &b) {return a=a+b;}
+
+// pipe
+std::istream &operator>>(std::istream &input,const Poco::Pipe &pipe)
+{
+    Poco::PipeOutputStream pipe_output(pipe);
+    Poco::StreamCopier::copyStream(input,pipe_output);
+    return input;
+}
+std::ostream &operator<<(std::ostream &output,const Poco::Pipe &pipe)
+{
+    Poco::PipeInputStream pipe_input(pipe);
+    Poco::StreamCopier::copyStream(pipe_input,output);
     return output;
 }
 
@@ -442,16 +493,6 @@ int ssystem(const std::string &command)
     #ifdef __linux__
     return system(UTF8tosys(command).c_str());
     #endif
-}
-int kill_task(const pat &task)
-{
-    #ifdef _WIN32
-    const int result=ssystem("taskkill /f /im "+add_quo(task)+system_to_nul);
-    #endif
-    #ifdef __linux__
-    const int result=ssystem("killall "+add_quo(task)+system_to_nul);
-    #endif
-    return result;
 }
 size_t get_terminal_width()
 {

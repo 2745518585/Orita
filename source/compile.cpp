@@ -27,34 +27,56 @@ class Command_compile: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
         
-        std::string compile_argu=get_option("carg");
+        arg compile_argu=get_arg(get_option("carg"));
         std::string run_argu=get_option("arg");
         if(args.size()==1&&check_option("run"))
         {
             fil file=add_namesuf(get_file((pat)args[0]),"cpp");
-            if(compile(file,compile_argu)) return EXIT_OK;
-            runner runs(replace_extension(file,exe_suf),"","",run_argu,(tim)1000000);
-            runs.run();
-            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
+            compiler comp(file,compile_argu);
+            if(comp())
+            {
+                scerr<<comp.err;
+                return EXIT_OK;
+            }
+            show_cursor();
+            timer run_timer;run_timer.init();
+            int exit_code=ssystem(replace_extension(file,exe_suf).toString()+" "+run_argu);
+            tim time=run_timer.get_time();
+            hide_cursor();
+            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
         }
         else if(args.size()==1&&check_option("trun"))
         {
             fil file=get_file((pat)args[0]);
-            runner runs(file,"","",run_argu,(tim)1000000);
-            runs.run();
-            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
+            show_cursor();
+            timer run_timer;run_timer.init();
+            int exit_code=ssystem(replace_extension(file,exe_suf).toString()+" "+run_argu);
+            tim time=run_timer.get_time();
+            hide_cursor();
+            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
         }
         else
         {
+            th_compiler comp;
             for(auto i:args)
             {
                 fil file=get_file(add_namesuf((pat)i,"cpp"));
-                if(compile(file,compile_argu)) print_result(((pat)file.path()).getFileName(),res::type::CE);
-                else print_result(((pat)file.path()).getFileName(),res::type::SS);
+                comp.add(file.path(),file,compile_argu);
             }
+            comp.wait_all();
+            {
+                auto compile_result=comp.get_all();
+                if(compile_result.first!="")
+                {
+                    scerr<<compile_result.second->err;
+                    print_result(compile_result.first,res::type::CE);
+                    return EXIT_OK;
+                }
+            }
+            print_result(res::type::SS);
         }
         return EXIT_OK;
     }

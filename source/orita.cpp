@@ -31,7 +31,7 @@ class Command_orita: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
 
         if(check_option("reset"))

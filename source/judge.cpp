@@ -28,7 +28,7 @@ class Command_judge: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
         
         const std::string _ans_name="ans";
@@ -59,22 +59,22 @@ class Command_judge: public App
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*2<<termcolor::reset;
         // compile file
-        printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
-        loading_printer.start();
-        compiler *run_compiler=new compiler(2);
+        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
+        th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
-        run_compiler->wait({_ans_name,_chk_name});
+        run_compiler->wait_all();
         {
-            auto compile_result=run_compiler->get({_ans_name,_chk_name});
-            if(compile_result.first)
+            auto compile_result=run_compiler->get_all();
+            if(compile_result.first!="")
             {
-                loading_printer.stop();
-                print_result(compile_result.second,res::type::CE);
+                delete print;
+                scerr<<compile_result.second->err;
+                print_result(compile_result.first,res::type::CE);
                 return EXIT_OK;
             }
         }
         delete run_compiler;
-        loading_printer.stop();
+        delete print;
         // find data
         const std::string in_file_suf=get_option("isuf","in"),out_file_suf=get_option("osuf","out");
         json datas,data_sum;
@@ -98,10 +98,10 @@ class Command_judge: public App
             (default_data_dir/"datas").createDirectory();
             INFO("make data dir",add_squo(default_data_dir.path()));
         }
-        catch(...)
+        catch(Poco::Exception &error)
         {
-            ERROR("make data dir - fail",add_squo(default_data_dir.path()));
-            throw Poco::Exception("fail make data dir");
+            ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
+            throw Poco::Exception("fail make data dir",add_squo(error.displayText()));
         }
         // judge
         int runned_sum=0,ac_sum=0;

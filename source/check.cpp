@@ -29,7 +29,7 @@ class Command_check: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
 
         const std::string _in_name="data_maker";
@@ -78,10 +78,10 @@ class Command_check: public App
             (default_data_dir/"datas").createDirectory();
             INFO("make data dir",add_squo(default_data_dir.path()));
         }
-        catch(...)
+        catch(Poco::Exception &error)
         {
-            ERROR("make data dir - fail",add_squo(default_data_dir.path()));
-            throw Poco::Exception("fail make data dir");
+            ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
+            throw Poco::Exception("fail make data dir",error.displayText());
         }
         // find file
         if(in==fil()||!in.exists()) {print_result(_in_name,res::type::NF);return EXIT_NOINPUT;}
@@ -90,22 +90,22 @@ class Command_check: public App
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_in_name+": ",in},{_out_name+": ",out},{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*4<<termcolor::reset;
         // compile file
-        printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
-        loading_printer.start();
-        compiler *run_compiler=new compiler(4);
+        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
+        th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_in_name,in},{_out_name,out},{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
-        run_compiler->wait({_in_name,_out_name,_ans_name,_chk_name});
+        run_compiler->wait_all();
         {
-            auto compile_result=run_compiler->get({_in_name,_out_name,_ans_name,_chk_name});
-            if(compile_result.first)
+            auto compile_result=run_compiler->get_all();
+            if(compile_result.first!="")
             {
-                loading_printer.stop();
-                print_result(compile_result.second,res::type::CE);
+                delete print;
+                scerr<<compile_result.second->err;
+                print_result(compile_result.first,res::type::CE);
                 return EXIT_OK;
             }
         }
         delete run_compiler;
-        loading_printer.stop();
+        delete print;
         // check
         unsigned ac_sum=0,runned_sum=0;
         for(int i=1;i<=total_sum;++i)
@@ -120,11 +120,11 @@ class Command_check: public App
             run_dir.createDirectory();
             fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
             unsigned seed=rnd();
-            runner in_runner(in,system_nul,in_file,std::to_string(seed));
-            if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
+            runner in_runner=runner(in,std::to_string(seed)).set_out(in_file);
+            if(in_runner()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
             if(in_runner.exit_code) {print_result(_in_name,res::type::RE,(tim)0,in_runner.exit_code);continue;}
-            runner out_runner(out,in_file,out_file);
-            if(out_runner.run()) {print_result(_out_name,res::type::TO,out_runner.time);continue;}
+            runner out_runner=runner(out).set_in(in_file).set_out(out_file);
+            if(out_runner()) {print_result(_out_name,res::type::TO,out_runner.time);continue;}
             if(out_runner.exit_code) {print_result(_out_name,res::type::RE,(tim)0,out_runner.exit_code);continue;}
             judger ans_judger(ans,chk,in_file,out_file,ans_file,chk_file);
             ans_judger.judge();

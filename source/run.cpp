@@ -26,7 +26,7 @@ class Command_run: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
 
         const std::string _ans_name="ans";
@@ -55,17 +55,17 @@ class Command_run: public App
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*2<<termcolor::reset;
         // compile file
-        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
-        print->start();
-        compiler *run_compiler=new compiler(2);
+        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
+        th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
-        run_compiler->wait({_ans_name,_chk_name});
+        run_compiler->wait_all();
         {
-            auto compile_result=run_compiler->get({_ans_name,_chk_name});
-            if(compile_result.first)
+            auto compile_result=run_compiler->get_all();
+            if(compile_result.first!="")
             {
                 delete print;
-                print_result(compile_result.second,res::type::CE);
+                scerr<<compile_result.second->err;
+                print_result(compile_result.first,res::type::CE);
                 return EXIT_OK;
             }
         }
