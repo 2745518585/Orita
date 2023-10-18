@@ -272,7 +272,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 该项目使用了以下第三方库：
 
-- [nlohmann/json](https://github.com/nlohmann/json)
+- Lohmann, N. (2022). JSON for Modern C++ (Version 3.11.2) [Computer software]. https://github.com/nlohmann
 - [gabime/spdlog](https://github.com/gabime/spdlog)
 - [ikalnytskyi/termcolor](https://github.com/ikalnytskyi/termcolor)
 - [pocoproject/poco](https://github.com/pocoproject/poco)
