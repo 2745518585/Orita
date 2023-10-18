@@ -17,7 +17,7 @@ class runner
     timer run_timer;
     bool if_end=false;
     Poco::Pipe in,out,err;
-    Poco::ProcessHandle *ph=NULL;
+    process_handle *ph=NULL;
     std::ostream *out_stream=&std::cout,*err_stream=&std::cerr;
     runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(replace_extension(_file,exe_suf)),argu(_argu),time_limit(_time_limit) {}
     runner &set_in(const fil &file) {sifstream(file,std::ios::binary)>>in;return *this;}
@@ -32,7 +32,7 @@ class runner
         INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time: "+std::to_string(time_limit.count())+"ms");
         show_cursor();
         run_timer.init();
-        ph=new Poco::ProcessHandle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
+        ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
         in.close();
         std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)

@@ -30,6 +30,7 @@
 #endif
 
 #ifdef __linux__
+#include<wait.h>
 #include<unistd.h>
 #include<limits.h>
 #include<sys/time.h>
@@ -93,6 +94,16 @@ std::string systoUTF8(const std::string &systemText)
 
 // os
 const std::string os_name=Poco::Environment::osName();
+#ifdef _WIN32
+const std::string system_to_nul=" > nul 2>&1 ";
+const std::string system_to_con=" > con 2>&1 ";
+const int sys_exit_code=0;
+#endif
+#ifdef __linux__
+const std::string system_to_nul=" > /dev/null 2>&1 ";
+const std::string system_to_con=" > /dev/tty 2>&1 ";
+const int sys_exit_code=8;
+#endif
 
 // json
 using json=nlohmann::json;
@@ -324,6 +335,30 @@ template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> op
 template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> operator+(const Type &a,const arg &b) {return (arg)a+b;}
 template<typename Type> arg &operator+=(arg &a,const Type &b) {return a=a+b;}
 
+// process
+class process_handle: public Poco::ProcessHandle
+{
+  private:
+    int exit_code=-1;
+  public:
+    using Poco::ProcessHandle::ProcessHandle;
+    process_handle(Poco::ProcessHandle process):Poco::ProcessHandle(process) {}
+    int wait()
+    {
+        try {exit_code=Poco::ProcessHandle::wait();}
+        catch(...) {}
+        if(exit_code>=0) return exit_code>>sys_exit_code;
+        else return exit_code;
+    }
+    int tryWait()
+    {
+        try {exit_code=Poco::ProcessHandle::tryWait();}
+        catch(...) {}
+        if(exit_code>=0) return exit_code>>sys_exit_code;
+        else return exit_code;
+    }
+};
+
 // pipe
 std::istream &operator>>(std::istream &input,const Poco::Pipe &pipe)
 {
@@ -475,16 +510,6 @@ void hide_cursor() {scout<<ANSI::hide_cursor<<std::flush;}
 void show_cursor() {scout<<ANSI::show_cursor<<std::flush;}
 
 // command
-#ifdef _WIN32
-const std::string system_to_nul=" > nul 2>&1 ";
-const std::string system_to_con=" > con 2>&1 ";
-const int sys_exit_code=0;
-#endif
-#ifdef __linux__
-const std::string system_to_nul=" > /dev/null 2>&1 ";
-const std::string system_to_con=" > /dev/tty 2>&1 ";
-const int sys_exit_code=8;
-#endif
 int ssystem(const std::string &command)
 {
     #ifdef _WIN32

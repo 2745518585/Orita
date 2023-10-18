@@ -13,25 +13,25 @@ class compiler
     const arg argu;
     bool if_end=false;
     Poco::Pipe in,out,err;
-    Poco::ProcessHandle *ph=NULL;
+    process_handle *ph=NULL;
     std::condition_variable wait_end;
     compiler(const fil &_file,const arg &_argu=arg()):file(_file),argu((arg)file+"-o"+replace_extension(file,exe_suf)+compile_argu+_argu) {}
-    void wait_for() {ph->wait();}
+    void wait_for() {try {ph->wait();} catch(...) {}}
     void start()
     {
-        INFO("compile - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
-        ph=new Poco::ProcessHandle(Poco::Process::launch(compiler_command.path(),argu,&in,&out,&err));
+        INFO("compile - start","id: "+to_string_hex(this),"argu: "+add_squo(argu));
+        ph=new process_handle(Poco::Process::launch(compiler_command.path(),argu,&in,&out,&err));
         std::future<void> run_future(std::async(std::launch::async,&compiler::wait_for,this));
         if(run_future.wait_for(runtime_limit)!=std::future_status::ready)
         {
             Poco::Process::kill(*ph);
             run_future.wait();
-            WARN("compile - timeout","id: "+to_string_hex(this),"file: "+add_squo(file));
+            WARN("compile - timeout","id: "+to_string_hex(this));
             add();
             return;
         }
-        if(ph->wait()) WARN("compile - fail","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
-        else INFO("compile - success","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
+        if(ph->wait()) WARN("compile - fail","id: "+to_string_hex(this),"argu: "+add_squo(argu));
+        else INFO("compile - success","id: "+to_string_hex(this),"argu: "+add_squo(argu));
         if_end=true;
         wait_end.notify_all();
     }
@@ -42,7 +42,7 @@ class compiler
     }
     void add()
     {
-        INFO("compile - add","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
+        INFO("compile - add","id: "+to_string_hex(this),"argu: "+add_squo(argu));
         threads::add(std::bind(&compiler::start,this));
     }
 };
