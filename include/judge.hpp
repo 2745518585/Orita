@@ -32,8 +32,8 @@ class runner
         INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time: "+std::to_string(time_limit.count())+"ms");
         show_cursor();
         run_timer.init();
-        in.close();
         ph=new Poco::ProcessHandle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
+        in.close();
         std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
