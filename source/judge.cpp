@@ -109,7 +109,6 @@ class Command_judge: public App
         {
             // init file
             if(i.value()["in"].is_null()&&i.value()["out"].is_null()) continue;
-            for(int j=1;j<=50;++j) scout<<"-";
             const std::string data_name=[&]()
             {
                 std::string tmp=pat(i.key()).getFileName();
@@ -121,7 +120,7 @@ class Command_judge: public App
                 else data_sum[data_name]=0;
                 return tmp;
             }();
-            scout<<"\r#"<<data_name<<"\n";
+            scout<<std::string("-")*50<<"\r#"<<data_name<<"\n";
             ++runned_sum;
             fil run_dir=default_data_dir/"datas"/data_name;
             run_dir.createDirectory();

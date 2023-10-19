@@ -18,23 +18,42 @@ class runner
     bool if_end=false;
     Poco::Pipe in,out,err;
     process_handle *ph=NULL;
+    std::istream *in_stream=NULL;
     std::ostream *out_stream=&std::cout,*err_stream=&std::cerr;
-    std::vector<sofstream*> close_list;
+    std::vector<sifstream*> close_in_list;
+    std::vector<sofstream*> close_out_list;
     runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(replace_extension(_file,exe_suf)),argu(_argu),time_limit(_time_limit) {}
     ~runner() {delete ph;}
-    runner *set_in(const fil &file) {sifstream(file,std::ios::binary)>>in;return this;}
-    runner *set_in(std::istream *stream) {*stream>>in;return this;}
-    runner *set_out(const fil &file) {auto stream=new sofstream(file,std::ios::binary);out_stream=stream;close_list.push_back(stream);return this;}
+    runner *set_in(const fil &file) {auto stream=new sifstream(file,std::ios::binary);in_stream=stream;close_in_list.push_back(stream);return this;}
+    runner *set_in(std::istream *stream) {in_stream=stream;return this;}
+    runner *set_out(const fil &file) {auto stream=new sofstream(file,std::ios::binary);out_stream=stream;close_out_list.push_back(stream);return this;}
     runner *set_out(std::ostream *stream) {out_stream=stream;return this;}
-    runner *set_err(const fil &file) {auto stream=new sofstream(file,std::ios::binary);err_stream=stream;close_list.push_back(stream);return this;}
+    runner *set_err(const fil &file) {auto stream=new sofstream(file,std::ios::binary);err_stream=stream;close_out_list.push_back(stream);return this;}
     runner *set_err(std::ostream *stream) {err_stream=stream;return this;}
     void wait_for() {ph->wait();}
+    void input()
+    {
+        if(in_stream!=NULL) *in_stream>>in;
+        in.close();
+    }
+    void output()
+    {
+        if(out_stream!=NULL) *out_stream<<out;
+        out_stream->flush();
+    }
+    void errput()
+    {
+        if(err_stream!=NULL) *err_stream<<err;
+        err_stream->flush();
+    }
     void start()
     {
         INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time: "+std::to_string(time_limit.count())+"ms");
         run_timer.init();
+        std::future<void> in_future(std::async(std::launch::async,&runner::input,this));
+        std::future<void> out_future(std::async(std::launch::async,&runner::output,this));
+        std::future<void> err_future(std::async(std::launch::async,&runner::errput,this));
         ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
-        in.close();
         std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
@@ -47,14 +66,14 @@ class runner
         {
             time=run_timer.get_time();
             exit_code=ph->wait();
-            if_end=true;
             INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(file),"time: "+std::to_string(time.count())+"ms","exit_code: "+std::to_string(exit_code));
         }
-        if(out_stream!=NULL) *out_stream<<out;
-        if(err_stream!=NULL) *err_stream<<err;
-        out_stream->flush();
-        err_stream->flush();
-        for(auto i:close_list) delete i;
+        in_future.wait();
+        out_future.wait();
+        err_future.wait();
+        for(auto i:close_in_list) delete i;
+        for(auto i:close_out_list) delete i;
+        if_end=true;
     }
     int operator()()
     {
@@ -68,14 +87,14 @@ class judger
     fil in,out,ans,chk,in_file,out_file,ans_file,chk_file;
     const tim time_limit;
     int seed=rnd();
-    runner *in_runner,*out_runner,*ans_runner,*chk_runner;
+    runner *in_runner=NULL,*out_runner=NULL,*ans_runner=NULL,*chk_runner=NULL;
     res in_result,out_result,result,chk_result;
     tim time;
     int exit_code;
     bool if_end=false;
     std::condition_variable *wait_end=new std::condition_variable;
     judger(const fil &_ans,const fil &_chk,const fil &_in_file,const fil &_out_file,const fil &_ans_file,const fil &_chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
-    ~judger() {delete in_runner;delete out_runner;delete ans_runner;delete chk_runner;delete wait_end;}
+    ~judger() {if(in_runner!=NULL) delete in_runner; if(out_runner!=NULL) delete out_runner; delete ans_runner;delete chk_runner;delete wait_end;}
     judger *set_in(const fil &file) {in=file;return this;}
     judger *set_out(const fil &file) {out=file;return this;}
     void judge()
@@ -94,9 +113,9 @@ class judger
         }
         {
             (ans_runner=new runner(ans,arg(),time_limit*2))->set_in(in_file)->set_out(ans_file);
+            if((*ans_runner)()) {time=ans_runner->time;exit_code=ans_runner->exit_code;result=res::type::TLE_O;return;}
             time=ans_runner->time;
             exit_code=ans_runner->exit_code;
-            if((*ans_runner)()) {result=res::type::TLE_O;return;}
             if(ans_runner->exit_code) {result=res::type::RE;return;}
         }
         {
