@@ -38,12 +38,12 @@ class runner
     void output()
     {
         if(out_stream!=NULL) *out_stream<<out,out_stream->flush();
-        out.close();
+out.close();
     }
     void errput()
     {
         if(err_stream!=NULL) *err_stream<<err,err_stream->flush();
-        err.close();
+err.close();
     }
     void start()
     {
@@ -89,7 +89,7 @@ class judger
   public:
     fil in,out,ans,chk,in_file,out_file,ans_file,chk_file;
     const tim time_limit;
-    int seed=rnd();
+    unsigned seed=rnd();
     runner *in_runner=NULL,*out_runner=NULL,*ans_runner=NULL,*chk_runner=NULL;
     res in_result,out_result,result,chk_result;
     tim time=(tim)-1;

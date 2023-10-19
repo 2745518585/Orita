@@ -132,7 +132,7 @@ class Command_check: public App
                 }
                 scout<<"\n";
                 fil run_dir=default_data_dir/"datas"/std::to_string(get_sum);
-                (default_data_dir/"tmp_data"/name).moveTo(run_dir.path());
+                (default_data_dir/"tmp_data"/name).copyTo(run_dir.path());
                 fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
                 judger *target=run_judger.list[name];
                 target->print_result(_in_name,_out_name,"",_chk_name);
