@@ -112,6 +112,8 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 设置文件可以存储在全局设置文件的 `.~list` 位置，并且可以加载到当前目录的配置文件。
 
+$\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_num` 分别表示最大进程数和最大线程数的量级，请根据 CPU 并行性能、内存及磁盘读写速率调整参数，否则可能因为 CPU 占用过高导致系统崩溃，或磁盘读写延迟过高导致程序异常。
+
 ### 命令匹配
 
 将以第一个参数为键于 `%.commands...%` 匹配命令，命令名称见命令列表，匹配列表默认为：
@@ -172,7 +174,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ### check
 
-`orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num] [/time=time]`
+`orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num] [/time=time] [/multithread]`
 
 使用数据生成器、标准代码和源代码进行对拍。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
 
@@ -189,6 +191,8 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 `/num=num`: 对拍次数。如果没有此参数，则不会开始对拍，仅作为设置参数。
 
 `/time=time`: 修改默认的运行时间限制（单位：毫秒）。
+
+`/multithread`: 启用多线程。启用多线程会导致单个测试得到的程序运行时间增加数倍，并和运行的进程数及计算机并行性能相关，因此得到的 `TLE` 结果不一定准确。
 
 ### judge
 

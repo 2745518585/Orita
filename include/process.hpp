@@ -1,9 +1,9 @@
 #pragma once
-#ifndef _FILE_THREADS
-#define _FILE_THREADS _FILE_THREADS
+#ifndef _FILE_PROCESS
+#define _FILE_PROCESS _FILE_PROCESS
 #include"init.hpp"
 #include"settings.hpp"
-namespace threads
+namespace process
 {
     std::atomic<unsigned> running_thread_num;
     std::mutex wait_que_lock,read_lock;
@@ -14,11 +14,11 @@ namespace threads
         {
             {
                 std::unique_lock<std::mutex> lock(wait_que_lock);
-                wait_que.wait(lock,[&](){return running_thread_num<max_thread_num;});
+                wait_que.wait(lock,[&](){return running_thread_num<max_process_num;});
                 lock.unlock();
             }
             read_lock.lock();
-            if(running_thread_num>=max_thread_num)
+            if(running_thread_num>=max_process_num)
             {
                 read_lock.unlock();
                 continue;
@@ -35,7 +35,7 @@ namespace threads
     }
     void add(std::function<void()> func)
     {
-        std::thread(threads::run,func).detach();
+        std::thread(process::run,func).detach();
     }
 }
 #endif

@@ -60,23 +60,26 @@ class Command_compile: public App
         }
         else
         {
+            unsigned add_sum=0;
             th_compiler comp;
-            for(auto i:args)
+            auto add=[&](unsigned i)
             {
-                fil file=get_file(add_namesuf((pat)i,"cpp"));
+                fil file=get_file(add_namesuf((pat)args[i-1],"cpp"));
                 comp.add(file.path(),file,compile_argu);
-            }
-            comp.wait_all();
+            };
+            while(add_sum<max_thread_num&&add_sum<args.size()) add(++add_sum);
+            std::string name;
+            while((name=comp.get_one())!="")
             {
-                auto compile_result=comp.get_all();
-                if(compile_result.first!="")
+                if(comp.list[name]->exit_code)
                 {
-                    scerr<<compile_result.second->err;
-                    print_result(compile_result.first,res::type::CE);
-                    return EXIT_OK;
+                    scerr<<comp.list[name]->err;
+                    print_result(name,res::type::CE,(tim)0,comp.list[name]->exit_code);
                 }
+                else print_result(name,res::type::SS,(tim)0,comp.list[name]->exit_code);
+                comp.remove(name);
+                if(add_sum<args.size()) add(++add_sum);
             }
-            print_result(res::type::SS);
         }
         return EXIT_OK;
     }

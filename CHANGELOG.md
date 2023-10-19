@@ -285,6 +285,7 @@ Orita 第一个正式版本。
 #### Features
 
 - Multi-threaded compilation.
+- Multi-threaded check.
 
 #### Fixes
 

@@ -64,12 +64,12 @@ class Command_judge: public App
         run_compiler->add({{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
         run_compiler->wait_all();
         {
-            auto compile_result=run_compiler->get_all();
-            if(compile_result.first!="")
+            std::string name=run_compiler->get_all();
+            if(name!="")
             {
                 delete print;
-                scerr<<compile_result.second->err;
-                print_result(compile_result.first,res::type::CE);
+                scerr<<run_compiler->list[name]->err;
+                print_result(name,res::type::CE);
                 return EXIT_OK;
             }
         }
@@ -131,13 +131,13 @@ class Command_judge: public App
             // judge
             judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
             run_judger.judge();
-            run_judger.print_result();
+            run_judger.print_result("",_chk_name);
             // print result
             sofstream output_chk_file(chk_file,std::ios::app);
             output_chk_file<<"\n"<<std::string("*")*50<<"\n";
             output_chk_file<<"    infile: "<<add_quo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul.toString()))<<", outfile: "<<add_quo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul.toString()))<<"\n";
             output_chk_file<<"    result: "<<run_judger.result<<"\n";
-            output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_time,run_judger.chk_exit_code}});
+            output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
             output_chk_file<<std::string("*")*50;
             output_chk_file.close();
             // copy result

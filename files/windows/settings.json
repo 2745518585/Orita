@@ -12,7 +12,8 @@
         "argu": [
             "-O2"
         ],
-        "command": "g++.exe"
+        "command": "g++.exe",
+        "time_limit": 5000
     },
     "data": {
         "ansfile": "%*12%",
@@ -28,7 +29,8 @@
         "time": 1000
     },
     "exe_suf": "exe",
-    "max_thread_num": 10,
+    "max_process_num": 10,
+    "max_thread_num": 100,
     "runtime_limit": 5000,
     "show_file_info": true,
     "~list": {
