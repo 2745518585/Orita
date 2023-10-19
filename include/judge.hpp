@@ -33,17 +33,14 @@ class runner
     void input()
     {
         if(in_stream!=NULL) *in_stream>>in;
-        in.close();
     }
     void output()
     {
         if(out_stream!=NULL) *out_stream<<out,out_stream->flush();
-out.close();
     }
     void errput()
     {
         if(err_stream!=NULL) *err_stream<<err,err_stream->flush();
-err.close();
     }
     void start()
     {
@@ -56,6 +53,8 @@ err.close();
         std::future<void> out_future(std::async(std::launch::async,&runner::output,this));
         std::future<void> err_future(std::async(std::launch::async,&runner::errput,this));
         ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
+        in_future.wait();
+        in.close();
         std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
@@ -71,7 +70,6 @@ err.close();
             if_success=true;
             INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(file),"time: "+std::to_string(time.count())+"ms","exit_code: "+std::to_string(exit_code));
         }
-        in_future.wait();
         out_future.wait();
         err_future.wait();
         if(in_file!=fil()) delete in_stream;
