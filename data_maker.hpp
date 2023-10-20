@@ -73,26 +73,15 @@ namespace Data_maker
     }
     std::vector<std::pair<unsigned,unsigned>> rnd_tree(unsigned tot)
     {
-        unsigned *fa=new unsigned[tot+1];
-        auto find=[&](unsigned pos)
-        {
-            auto s=[&](auto self,unsigned pos)
-            {
-                if(fa[pos]==pos) return pos;
-                return fa[pos]=self(self,fa[pos]);
-            };
-            return s(s,pos);
-        };
         std::vector<std::pair<unsigned,unsigned>> ans;
-        for(unsigned i=1;i<=tot;++i) fa[i]=i;
-        for(unsigned i=1;i<=tot-1;++i)
+        for(int i=1;i<=tot-1;++i) ans.push_back(std::make_pair(rnd(1,i),i+1));
+        auto pos=rnd_range(tot);
+        for(auto &i:ans)
         {
-            std::pair<unsigned,unsigned> pos=rnd_pair(1,tot,_LES);
-            while(find(pos.first)==find(pos.second)) pos=rnd_pair(1,tot,_LES);
-            ans.push_back(pos);
-            fa[find(pos.first)]=find(pos.second);
+            i.first=pos[i.first-1];
+            i.second=pos[i.second-1];
+            if(rnd(0,1)) std::swap(i.first,i.second);
         }
-        delete[] fa;
         return ans;
     }
     std::vector<std::pair<unsigned,unsigned>> rnd_ucgraph(unsigned totp,unsigned tote)
