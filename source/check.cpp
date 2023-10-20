@@ -72,6 +72,7 @@ class Command_check: public App
         }
         unsigned total_sum=std::stoi(get_option("num"));
         // init data dir
+        printer *print=new printer({"Deleting.","Deleting..","Deleting..."},(tim)150);print->start();
         try
         {
             if(default_data_dir.exists()) default_data_dir.remove(true);
@@ -85,6 +86,7 @@ class Command_check: public App
             ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
             throw Poco::Exception("fail make data dir",error.displayText());
         }
+        delete print;
         // find file
         if(in==fil()||!in.exists()) {print_result(_in_name,res::type::NF);return EXIT_NOINPUT;}
         if(out==fil()||!out.exists()) {print_result(_out_name,res::type::NF);return EXIT_NOINPUT;}
@@ -92,7 +94,7 @@ class Command_check: public App
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_in_name+": ",in},{_out_name+": ",out},{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*4<<termcolor::reset;
         // compile file
-        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
+        print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
         th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_in_name,in},{_out_name,out},{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
         run_compiler->wait_all();

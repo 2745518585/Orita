@@ -78,8 +78,17 @@ class runner
     }
     int operator()()
     {
-        process::run(std::bind(&runner::start,this));
-        return if_success!=true;
+        try
+        {
+            process::run(std::bind(&runner::start,this));
+            return if_success!=true;
+        }
+        catch(...)
+        {
+            if(ph!=NULL) Poco::Process::kill(*ph);
+            wait_for();
+            return 0;
+        }
     }
 };
 class judger

@@ -91,6 +91,7 @@ class Command_judge: public App
             }
         }
         // init data dir
+        print=new printer({"Deleting.","Deleting..","Deleting..."},(tim)150);print->start();
         try
         {
             if(default_data_dir.exists()) default_data_dir.remove(true);
@@ -103,6 +104,7 @@ class Command_judge: public App
             ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
             throw Poco::Exception("fail make data dir",add_squo(error.displayText()));
         }
+        delete print;
         // judge
         int runned_sum=0,ac_sum=0;
         for(auto i:datas.items())
