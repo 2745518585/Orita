@@ -148,9 +148,13 @@ class Command_judge: public App
                 target->print_result("",_chk_name);
                 sofstream output_chk_file(run_dir/"data.txt",std::ios::app);
                 output_chk_file<<"\n"<<std::string("*")*50<<"\n";
-                output_chk_file<<"    infile: "<<add_quo(get_file(!datas[name]["in"].is_null()?(std::string)datas[name]["in"]:system_nul.toString()))<<", outfile: "<<add_quo(get_file(!datas[name]["out"].is_null()?(std::string)datas[name]["out"]:system_nul.toString()))<<"\n";
+                output_chk_file
+                <<"    infile: "<<add_squo(get_file(!datas[name]["in"].is_null()?(std::string)datas[name]["in"]:system_nul))
+                <<", outfile: "<<add_squo(get_file(!datas[name]["out"].is_null()?(std::string)datas[name]["out"]:system_nul))<<"\n";
                 output_chk_file<<"    result: "<<target->result<<"\n";
-                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",target->time,target->exit_code},{_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code}});
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
+                    {_ans_name+":",target->time,target->exit_code},
+                    {_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code}});
                 output_chk_file<<std::string("*")*50;
                 output_chk_file.close();
                 if(target->result.istrue()) ++ac_sum;
@@ -164,7 +168,7 @@ class Command_judge: public App
         }
         else
         {
-            int runned_sum=0,ac_sum=0;
+            unsigned runned_sum=0,ac_sum=0;
             for(auto i:datas.items())
             {
                 // init file
@@ -194,9 +198,13 @@ class Command_judge: public App
                 // print result
                 sofstream output_chk_file(chk_file,std::ios::app);
                 output_chk_file<<"\n"<<std::string("*")*50<<"\n";
-                output_chk_file<<"    infile: "<<add_quo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul.toString()))<<", outfile: "<<add_quo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul.toString()))<<"\n";
+                output_chk_file
+                <<"    infile: "<<add_squo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul))
+                <<", outfile: "<<add_squo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul))<<"\n";
                 output_chk_file<<"    result: "<<run_judger.result<<"\n";
-                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
+                    {_ans_name+":",run_judger.time,run_judger.exit_code},
+                    {_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
                 output_chk_file<<std::string("*")*50;
                 output_chk_file.close();
                 // copy result

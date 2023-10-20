@@ -132,7 +132,7 @@ class printer
 {
   public:
     tim interval_time;
-    int len;
+    size_t len;
     std::vector<std::string> str;
     std::atomic<bool> if_end;
     std::mutex wait_lock;
@@ -140,7 +140,7 @@ class printer
     std::future<void> *print_future;
     void print()
     {
-        int pos=0;
+        size_t pos=0;
         while(!if_end)
         {
             pos=(pos+1)%str.size();
@@ -151,7 +151,7 @@ class printer
                 lock.unlock();
             }
         }
-        for(int i=0;i<len;++i) scout<<" ";
+        for(size_t i=0;i<len;++i) scout<<" ";
         scout<<"\r"<<std::flush;
     }
     void start()
@@ -171,8 +171,8 @@ class printer
         if_end=false;
         len=0;
         interval_time=_interval_time;
-        for(auto i:_str) str.push_back(i),len=std::max(len,(int)i.size());
-        for(int i=0;i<str.size();++i)
+        for(auto i:_str) str.push_back(i),len=std::max(len,i.size());
+        for(size_t i=0;i<str.size();++i)
         {
             while(str[i].size()<len) str[i]+=" ";
         }

@@ -21,14 +21,14 @@ class logger
     {
         return get_str(str)+get_str(others...);
     }
-    template<typename ...others_type> void print(const int info,const std::string &str)
+    template<typename ...others_type> void print(const unsigned info,const std::string &str)
     {
         if(info==_LOG_INFO) output->info(str);
         if(info==_LOG_WARN) output->warn(str);
         if(info==_LOG_ERROR) output->error(str);
         if(info==_LOG_DEBUG) output->debug(str);
     }
-    template<typename ...others_type> void print(const int info,const std::string &pre_str,const others_type ...others)
+    template<typename ...others_type> void print(const unsigned info,const std::string &pre_str,const others_type ...others)
     {
         const std::string str=pre_str+":"+get_str(others...);
         if(info==_LOG_INFO) output->info(str);

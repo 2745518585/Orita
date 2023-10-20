@@ -54,7 +54,7 @@ class Command_orita: public App
         scout<<"  Orita - Useful OI Tools\n";
         scout<<"  Version: Dev "<<PROJECT_VERSION<<"\n";
         scout<<"  Repository: https://github.com/2745518585/Orita\n";
-        scout<<"  Local Path: "<<file_path.toString()<<"\n";
+        scout<<"  Local Path: "<<file_path<<"\n";
         scout<<"--------------------------------------------------\n";
         return EXIT_OK;
     }
@@ -62,9 +62,9 @@ class Command_orita: public App
 int main(int argc,char **argv)
 {
     std::vector<std::string> args;
-    unsigned args_sum=stoul(sgetenv("ORITA_ARGS"));
+    size_t args_sum=stoul(sgetenv("ORITA_ARGS"));
     args.push_back(argv[0]);
-    for(int i=0;i<args_sum;++i)
+    for(size_t i=0;i<args_sum;++i)
     {
         args.push_back(sgetenv("ORITA_ARGS_"+std::to_string(i)));
     }

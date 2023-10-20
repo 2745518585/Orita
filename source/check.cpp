@@ -141,7 +141,11 @@ class Command_check: public App
                 output_chk_file<<"\n"<<std::string("*")*50<<"\n";
                 output_chk_file<<"    result: "<<target->result<<"\n";
                 output_chk_file<<"    seed: "<<target->seed<<"\n";
-                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_in_name+":",target->in_runner->time,target->in_runner->exit_code},{_out_name+":",target->out_runner->time,target->out_runner->exit_code},{_ans_name+":",target->time,target->exit_code},{_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code}});
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
+                    {_in_name+":",target->in_runner->time,target->in_runner->exit_code},
+                    {_out_name+":",target->out_runner->time,target->out_runner->exit_code},
+                    {_ans_name+":",target->time,target->exit_code},
+                    {_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code}});
                 output_chk_file<<std::string("*")*50;
                 output_chk_file.close();
                 if(!target->result.isnull()) ++runned_sum;
@@ -158,7 +162,7 @@ class Command_check: public App
         else
         {
             unsigned ac_sum=0,runned_sum=0;
-            for(int i=1;i<=total_sum;++i)
+            for(unsigned i=1;i<=total_sum;++i)
             {
                 scout<<std::string("-")*50<<"\r#"<<i;
                 if(runned_sum!=ac_sum)
@@ -176,7 +180,11 @@ class Command_check: public App
                 output_chk_file<<"\n"<<std::string("*")*50<<"\n";
                 output_chk_file<<"    result: "<<run_judger.result<<"\n";
                 output_chk_file<<"    seed: "<<run_judger.seed<<"\n";
-                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_in_name+":",run_judger.in_runner->time,run_judger.in_runner->exit_code},{_out_name+":",run_judger.out_runner->time,run_judger.out_runner->exit_code},{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
+                    {_in_name+":",run_judger.in_runner->time,run_judger.in_runner->exit_code},
+                    {_out_name+":",run_judger.out_runner->time,run_judger.out_runner->exit_code},
+                    {_ans_name+":",run_judger.time,run_judger.exit_code},
+                    {_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
                 output_chk_file<<std::string("*")*50;
                 output_chk_file.close();
                 if(!run_judger.result.isnull()) ++runned_sum;
