@@ -13,6 +13,7 @@ class Command_judge: public App
         options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
         options.addOption(Poco::Util::Option("isuf","is","specify input file suf").argument("suf",true));
         options.addOption(Poco::Util::Option("osuf","os","specify output file suf").argument("suf",true));
+        options.addOption(Poco::Util::Option("multithread","mul","turn on multithreading").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
@@ -97,6 +98,7 @@ class Command_judge: public App
             if(default_data_dir.exists()) default_data_dir.remove(true);
             default_data_dir.createDirectory();
             (default_data_dir/"datas").createDirectory();
+            (default_data_dir/"tmp_data").createDirectory();
             INFO("make data dir",add_squo(default_data_dir.path()));
         }
         catch(Poco::Exception &error)
@@ -106,50 +108,107 @@ class Command_judge: public App
         }
         delete print;
         // judge
-        int runned_sum=0,ac_sum=0;
-        for(auto i:datas.items())
+        if(check_option("multithread"))
         {
-            // init file
-            if(i.value()["in"].is_null()&&i.value()["out"].is_null()) continue;
-            const std::string data_name=[&]()
+            unsigned ac_sum=0,runned_sum=0,add_sum=0,get_sum=0;
+            th_judger run_judger;
+            std::vector<std::string> judge_list;
+            std::map<std::string,unsigned> num_list;
+            for(auto i:datas.items()) judge_list.push_back(i.key()),num_list[i.key()]=judge_list.size();
+            auto add=[&](const std::string &name)
             {
-                std::string tmp=pat(i.key()).getFileName();
-                if(!data_sum[data_name].is_null())
+                if(datas[name]["in"].is_null()&&datas[name]["out"].is_null()) return;
+                fil run_dir=default_data_dir/"tmp_data"/std::to_string(num_list[name]);
+                run_dir.createDirectory();
+                fil in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+                if(!datas[name]["in"].is_null()) ((fil)(std::string)datas[name]["in"]).copyTo((in_file=run_dir/"data.in").path());
+                if(!datas[name]["out"].is_null()) ((fil)(std::string)datas[name]["out"]).copyTo((out_file=run_dir/"data.out").path());
+                run_judger.add(name,(new judger(ans,chk,in_file,out_file,ans_file,chk_file)));
+            };
+            while(add_sum<max_thread_num&&add_sum<judge_list.size()) add(judge_list[add_sum++]);
+            std::string name;
+            while((name=run_judger.get_one())!="")
+            {
+                const std::string data_name=[&]()
                 {
-                    data_sum[data_name]=(unsigned)data_sum[data_name]+1;
-                    tmp+="("+std::to_string((unsigned)data_sum[data_name])+")";
+                    std::string tmp=pat(name).getFileName();
+                    if(!data_sum[data_name].is_null())
+                    {
+                        data_sum[data_name]=(unsigned)data_sum[data_name]+1;
+                        tmp+="("+std::to_string((unsigned)data_sum[data_name])+")";
+                    }
+                    else data_sum[data_name]=0;
+                    return tmp;
+                }();
+                scout<<std::string("-")*50<<"\r#"<<data_name<<"\n";
+                ++runned_sum;
+                fil run_dir=default_data_dir/"datas"/data_name;
+                (default_data_dir/"tmp_data"/std::to_string(num_list[name])).copyTo(run_dir.path());
+                judger *target=run_judger.list[name];
+                target->print_result("",_chk_name);
+                sofstream output_chk_file(run_dir/"data.txt",std::ios::app);
+                output_chk_file<<"\n"<<std::string("*")*50<<"\n";
+                output_chk_file<<"    infile: "<<add_quo(get_file(!datas[name]["in"].is_null()?(std::string)datas[name]["in"]:system_nul.toString()))<<", outfile: "<<add_quo(get_file(!datas[name]["out"].is_null()?(std::string)datas[name]["out"]:system_nul.toString()))<<"\n";
+                output_chk_file<<"    result: "<<target->result<<"\n";
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",target->time,target->exit_code},{_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code}});
+                output_chk_file<<std::string("*")*50;
+                output_chk_file.close();
+                if(target->result.istrue()) ++ac_sum;
+                if(target->result.isfalse())
+                {
+                    run_dir.copyTo((default_data_dir/(data_name+" - "+get_short_resultname(target->result))).path());
                 }
-                else data_sum[data_name]=0;
-                return tmp;
-            }();
-            scout<<std::string("-")*50<<"\r#"<<data_name<<"\n";
-            ++runned_sum;
-            fil run_dir=default_data_dir/"datas"/data_name;
-            run_dir.createDirectory();
-            fil in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
-            if(!i.value()["in"].is_null()) ((fil)(std::string)i.value()["in"]).copyTo((in_file=run_dir/"data.in").path());
-            if(!i.value()["out"].is_null()) ((fil)(std::string)i.value()["out"]).copyTo((out_file=run_dir/"data.out").path());
-            // judge
-            judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
-            run_judger.judge();
-            run_judger.print_result("",_chk_name);
-            // print result
-            sofstream output_chk_file(chk_file,std::ios::app);
-            output_chk_file<<"\n"<<std::string("*")*50<<"\n";
-            output_chk_file<<"    infile: "<<add_quo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul.toString()))<<", outfile: "<<add_quo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul.toString()))<<"\n";
-            output_chk_file<<"    result: "<<run_judger.result<<"\n";
-            output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
-            output_chk_file<<std::string("*")*50;
-            output_chk_file.close();
-            // copy result
-            if(run_judger.result.istrue()) ++ac_sum;
-            if(run_judger.result.isfalse())
-            {
-                run_dir.copyTo((default_data_dir/(data_name+" - "+get_short_resultname(run_judger.result))).path());
+                #undef run_dir
             }
-            #undef run_dir
+            scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
         }
-        scout<<ac_sum<<" / "<<runned_sum;
+        else
+        {
+            int runned_sum=0,ac_sum=0;
+            for(auto i:datas.items())
+            {
+                // init file
+                if(i.value()["in"].is_null()&&i.value()["out"].is_null()) continue;
+                const std::string data_name=[&]()
+                {
+                    std::string tmp=pat(i.key()).getFileName();
+                    if(!data_sum[data_name].is_null())
+                    {
+                        data_sum[data_name]=(unsigned)data_sum[data_name]+1;
+                        tmp+="("+std::to_string((unsigned)data_sum[data_name])+")";
+                    }
+                    else data_sum[data_name]=0;
+                    return tmp;
+                }();
+                scout<<std::string("-")*50<<"\r#"<<data_name<<"\n";
+                ++runned_sum;
+                fil run_dir=default_data_dir/"datas"/data_name;
+                run_dir.createDirectory();
+                fil in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+                if(!i.value()["in"].is_null()) ((fil)(std::string)i.value()["in"]).copyTo((in_file=run_dir/"data.in").path());
+                if(!i.value()["out"].is_null()) ((fil)(std::string)i.value()["out"]).copyTo((out_file=run_dir/"data.out").path());
+                // judge
+                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
+                run_judger.judge();
+                run_judger.print_result("",_chk_name);
+                // print result
+                sofstream output_chk_file(chk_file,std::ios::app);
+                output_chk_file<<"\n"<<std::string("*")*50<<"\n";
+                output_chk_file<<"    infile: "<<add_quo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul.toString()))<<", outfile: "<<add_quo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul.toString()))<<"\n";
+                output_chk_file<<"    result: "<<run_judger.result<<"\n";
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
+                output_chk_file<<std::string("*")*50;
+                output_chk_file.close();
+                // copy result
+                if(run_judger.result.istrue()) ++ac_sum;
+                if(run_judger.result.isfalse())
+                {
+                    run_dir.copyTo((default_data_dir/(data_name+" - "+get_short_resultname(run_judger.result))).path());
+                }
+                #undef run_dir
+            }
+            scout<<ac_sum<<" / "<<runned_sum;
+        }
         return EXIT_OK;
     }
 };

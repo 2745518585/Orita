@@ -71,22 +71,6 @@ class Command_check: public App
             return EXIT_OK;
         }
         unsigned total_sum=std::stoi(get_option("num"));
-        // init data dir
-        printer *print=new printer({"Deleting.","Deleting..","Deleting..."},(tim)150);print->start();
-        try
-        {
-            if(default_data_dir.exists()) default_data_dir.remove(true);
-            default_data_dir.createDirectory();
-            (default_data_dir/"datas").createDirectory();
-            (default_data_dir/"tmp_data").createDirectory();
-            INFO("make data dir",add_squo(default_data_dir.path()));
-        }
-        catch(Poco::Exception &error)
-        {
-            ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
-            throw Poco::Exception("fail make data dir",error.displayText());
-        }
-        delete print;
         // find file
         if(in==fil()||!in.exists()) {print_result(_in_name,res::type::NF);return EXIT_NOINPUT;}
         if(out==fil()||!out.exists()) {print_result(_out_name,res::type::NF);return EXIT_NOINPUT;}
@@ -94,7 +78,7 @@ class Command_check: public App
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_in_name+": ",in},{_out_name+": ",out},{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*4<<termcolor::reset;
         // compile file
-        print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
+        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
         th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_in_name,in},{_out_name,out},{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
         run_compiler->wait_all();
@@ -109,6 +93,22 @@ class Command_check: public App
             }
         }
         delete run_compiler;
+        delete print;
+        // init data dir
+        print=new printer({"Deleting.","Deleting..","Deleting..."},(tim)150);print->start();
+        try
+        {
+            if(default_data_dir.exists()) default_data_dir.remove(true);
+            default_data_dir.createDirectory();
+            (default_data_dir/"datas").createDirectory();
+            (default_data_dir/"tmp_data").createDirectory();
+            INFO("make data dir",add_squo(default_data_dir.path()));
+        }
+        catch(Poco::Exception &error)
+        {
+            ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
+            throw Poco::Exception("fail make data dir",error.displayText());
+        }
         delete print;
         // check
         if(check_option("multithread"))
@@ -135,10 +135,9 @@ class Command_check: public App
                 scout<<"\n";
                 fil run_dir=default_data_dir/"datas"/std::to_string(get_sum);
                 (default_data_dir/"tmp_data"/name).copyTo(run_dir.path());
-                fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
                 judger *target=run_judger.list[name];
                 target->print_result(_in_name,_out_name,"",_chk_name);
-                sofstream output_chk_file(chk_file,std::ios::app);
+                sofstream output_chk_file(run_dir/"data.txt",std::ios::app);
                 output_chk_file<<"\n"<<std::string("*")*50<<"\n";
                 output_chk_file<<"    result: "<<target->result<<"\n";
                 output_chk_file<<"    seed: "<<target->seed<<"\n";
