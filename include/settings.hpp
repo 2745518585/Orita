@@ -169,6 +169,7 @@ fil default_outfile=Settings::get_file("/data/outfile");
 fil default_ansfile=Settings::get_file("/data/ansfile");
 fil default_chkfile=Settings::get_file("/data/chkfile");
 fil default_data_dir=Settings::get_file("/data/data_dir");
+const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/data/chk_exit_code");
 namespace Settings
 {
     void change_time_limit(const tim time)

@@ -144,7 +144,7 @@ class judger
             {
                 (chk_runner=new runner(chk,(arg)in_file+out_file+ans_file))->set_out(chk_file);
                 if((*chk_runner)()) {chk_result=res::type::TO;return;}
-                if(chk_runner->exit_code!=0&&chk_runner->exit_code!=1) {chk_result=res::type::RE;return;}
+                if(chk_runner->exit_code!=0&&!std::regex_match(std::to_string(chk_runner->exit_code),chk_correct_exit_code)) {chk_result=res::type::RE;return;}
             }
             if(ans_runner->time<=time_limit)
             {
@@ -166,7 +166,7 @@ class judger
     }
     void print_result(const std::string &ans_name,const std::string &chk_name)
     {
-        if(!in_result.isnull()) Print::print_result(chk_name,chk_result,chk_runner->time,chk_runner->exit_code);
+        if(!chk_result.isnull()) Print::print_result(chk_name,chk_result,chk_runner->time,chk_runner->exit_code);
         else Print::print_result(ans_name,result,ans_runner->time,ans_runner->exit_code);
     }
     void print_result(const std::string &in_name,const std::string &out_name,const std::string &ans_name,const std::string &chk_name)
