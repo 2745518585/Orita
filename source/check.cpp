@@ -14,6 +14,7 @@ class Command_check: public App
         options.addOption(Poco::Util::Option("checker","c","specify checker").argument("file",true));
         options.addOption(Poco::Util::Option("num","n","specify check num").argument("num",true));
         options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
+        options.addOption(Poco::Util::Option("multithread","mul","turn on multithreading").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
@@ -29,7 +30,7 @@ class Command_check: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
 
         const std::string _in_name="data_maker";
@@ -70,19 +71,6 @@ class Command_check: public App
             return EXIT_OK;
         }
         unsigned total_sum=std::stoi(get_option("num"));
-        // init data dir
-        try
-        {
-            if(default_data_dir.exists()) default_data_dir.remove(true);
-            default_data_dir.createDirectory();
-            (default_data_dir/"datas").createDirectory();
-            INFO("make data dir",add_squo(default_data_dir.path()));
-        }
-        catch(...)
-        {
-            ERROR("make data dir - fail",add_squo(default_data_dir.path()));
-            throw Poco::Exception("fail make data dir");
-        }
         // find file
         if(in==fil()||!in.exists()) {print_result(_in_name,res::type::NF);return EXIT_NOINPUT;}
         if(out==fil()||!out.exists()) {print_result(_out_name,res::type::NF);return EXIT_NOINPUT;}
@@ -90,60 +78,124 @@ class Command_check: public App
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_in_name+": ",in},{_out_name+": ",out},{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*4<<termcolor::reset;
         // compile file
-        printer loading_printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
-        loading_printer.start();
-        compiler *run_compiler=new compiler(4);
+        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
+        th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_in_name,in},{_out_name,out},{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
-        run_compiler->wait({_in_name,_out_name,_ans_name,_chk_name});
+        run_compiler->wait_all();
         {
-            auto compile_result=run_compiler->get({_in_name,_out_name,_ans_name,_chk_name});
-            if(compile_result.first)
+            std::string name=run_compiler->get_all();
+            if(name!="")
             {
-                loading_printer.stop();
-                print_result(compile_result.second,res::type::CE);
+                delete print;
+                scerr<<run_compiler->list[name]->err;
+                print_result(name,res::type::CE);
                 return EXIT_OK;
             }
         }
         delete run_compiler;
-        loading_printer.stop();
-        // check
-        unsigned ac_sum=0,runned_sum=0;
-        for(int i=1;i<=total_sum;++i)
+        delete print;
+        // init data dir
+        print=new printer({"Deleting.","Deleting..","Deleting..."},(tim)150);print->start();
+        try
         {
-            scout<<std::string("-")*50<<"\r#"<<i;
-            if(runned_sum!=ac_sum)
-            {
-                scout<<std::string("-")*(30-std::to_string(i).size())<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
-            }
-            scout<<"\n";
-            fil run_dir=default_data_dir/"datas"/std::to_string(i);
-            run_dir.createDirectory();
-            fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
-            unsigned seed=rnd();
-            runner in_runner(in,system_nul,in_file,std::to_string(seed));
-            if(in_runner.run()) {print_result(_in_name,res::type::TO,in_runner.time);continue;}
-            if(in_runner.exit_code) {print_result(_in_name,res::type::RE,(tim)0,in_runner.exit_code);continue;}
-            runner out_runner(out,in_file,out_file);
-            if(out_runner.run()) {print_result(_out_name,res::type::TO,out_runner.time);continue;}
-            if(out_runner.exit_code) {print_result(_out_name,res::type::RE,(tim)0,out_runner.exit_code);continue;}
-            judger ans_judger(ans,chk,in_file,out_file,ans_file,chk_file);
-            ans_judger.judge();
-            ans_judger.print_result();
-            sofstream output_chk_file(chk_file,std::ios::app);
-            output_chk_file<<"\n"<<std::string("*")*50<<"\n";
-            output_chk_file<<"    result: "<<ans_judger.result<<"\n";
-            output_chk_file<<"    seed: "<<seed<<"\n";
-            output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_in_name+":",in_runner.time,in_runner.exit_code},{_out_name+":",out_runner.time,out_runner.exit_code},{_ans_name+":",ans_judger.time,ans_judger.exit_code},{_chk_name+":",ans_judger.chk_time,ans_judger.chk_exit_code}});
-            output_chk_file<<std::string("*")*50;
-            output_chk_file.close();
-            if(!ans_judger.result.isnull()) ++runned_sum;
-            if(ans_judger.result.istrue()) ++ac_sum;
-            if(ans_judger.result.isfalse())
-            {
-                run_dir.copyTo((default_data_dir/(std::to_string(i)+" - "+get_short_resultname(ans_judger.result))).path());
-            }
+            if(default_data_dir.exists()) default_data_dir.remove(true);
+            default_data_dir.createDirectory();
+            (default_data_dir/"datas").createDirectory();
+            (default_data_dir/"tmp_data").createDirectory();
+            INFO("make data dir",add_squo(default_data_dir.path()));
         }
-        scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
+        catch(Poco::Exception &error)
+        {
+            ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
+            throw Poco::Exception("fail make data dir",error.displayText());
+        }
+        delete print;
+        // check
+        if(check_option("multithread"))
+        {
+            unsigned ac_sum=0,runned_sum=0,add_sum=0,get_sum=0;
+            th_judger run_judger;
+            auto add=[&](unsigned i)
+            {
+                fil run_dir=default_data_dir/"tmp_data"/std::to_string(i);
+                run_dir.createDirectory();
+                fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+                run_judger.add(std::to_string(i),(new judger(ans,chk,in_file,out_file,ans_file,chk_file))->set_in(in)->set_out(out));
+            };
+            while(add_sum<max_thread_num&&add_sum<total_sum) add(++add_sum);
+            std::string name;
+            while((name=run_judger.get_one())!="")
+            {
+                ++get_sum;
+                scout<<std::string("-")*50<<"\r#"<<get_sum;
+                if(runned_sum!=ac_sum)
+                {
+                    scout<<std::string("-")*(30-std::to_string(get_sum).size())<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
+                }
+                scout<<"\n";
+                fil run_dir=default_data_dir/"datas"/std::to_string(get_sum);
+                (default_data_dir/"tmp_data"/name).copyTo(run_dir.path());
+                judger *target=run_judger.list[name];
+                target->print_result(_in_name,_out_name,"",_chk_name);
+                sofstream output_chk_file(run_dir/"data.txt",std::ios::app);
+                output_chk_file<<"\n"<<std::string("*")*50<<"\n";
+                output_chk_file<<"    result: "<<target->result<<"\n";
+                output_chk_file<<"    seed: "<<target->seed<<"\n";
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
+                    {_in_name+":",target->in_runner->time,target->in_runner->exit_code},
+                    {_out_name+":",target->out_runner->time,target->out_runner->exit_code},
+                    {_ans_name+":",target->time,target->exit_code},
+                    {_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code}});
+                output_chk_file<<std::string("*")*50;
+                output_chk_file.close();
+                if(!target->result.isnull()) ++runned_sum;
+                if(target->result.istrue()) ++ac_sum;
+                if(target->result.isfalse())
+                {
+                    run_dir.copyTo((default_data_dir/(std::to_string(get_sum)+" - "+get_short_resultname(target->result))).path());
+                }
+                run_judger.remove(name);
+                if(add_sum<total_sum) add(++add_sum);
+            }
+            scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
+        }
+        else
+        {
+            unsigned ac_sum=0,runned_sum=0;
+            for(unsigned i=1;i<=total_sum;++i)
+            {
+                scout<<std::string("-")*50<<"\r#"<<i;
+                if(runned_sum!=ac_sum)
+                {
+                    scout<<std::string("-")*(30-std::to_string(i).size())<<termcolor::bright_grey<<" Unaccepted "<<termcolor::bright_red<<runned_sum-ac_sum<<" "<<termcolor::reset;
+                }
+                scout<<"\n";
+                fil run_dir=default_data_dir/"datas"/std::to_string(i);
+                run_dir.createDirectory();
+                fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_in(in)->set_out(out);
+                run_judger.judge();
+                run_judger.print_result(_in_name,_out_name,"",_chk_name);
+                sofstream output_chk_file(chk_file,std::ios::app);
+                output_chk_file<<"\n"<<std::string("*")*50<<"\n";
+                output_chk_file<<"    result: "<<run_judger.result<<"\n";
+                output_chk_file<<"    seed: "<<run_judger.seed<<"\n";
+                output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
+                    {_in_name+":",run_judger.in_runner->time,run_judger.in_runner->exit_code},
+                    {_out_name+":",run_judger.out_runner->time,run_judger.out_runner->exit_code},
+                    {_ans_name+":",run_judger.time,run_judger.exit_code},
+                    {_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
+                output_chk_file<<std::string("*")*50;
+                output_chk_file.close();
+                if(!run_judger.result.isnull()) ++runned_sum;
+                if(run_judger.result.istrue()) ++ac_sum;
+                if(run_judger.result.isfalse())
+                {
+                    run_dir.copyTo((default_data_dir/(std::to_string(i)+" - "+get_short_resultname(run_judger.result))).path());
+                }
+            }
+            scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
+        }
         return EXIT_OK;
     }
 };

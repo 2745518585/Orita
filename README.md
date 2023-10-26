@@ -104,13 +104,36 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 这三个层级设置文件从上到下优先级递增。单次运行有效局部设置文件为 `%{RUNNING_PATH}%` 自身和祖先目录下的 `.orita/settings.json` 文件，目录层数由浅到深优先级递增。
 
-查询和修改设置时默认优先级从高到低匹配，如果当前设置值为 `null` 则查询优先级次于当前的文件。
+查询和修改设置时默认优先级从高到低匹配，如果当前设置值为 `null` 或值不合法则查询优先级次于当前的文件。
 
 局部设置文件中的相对路径将在文件对应的目录下解析。凡是识别到当前目录下存在局部设置文件或通过命令修改了局部设置文件的目录，都会在程序结束时输出最新设置文件，没有设置文件且没有修改的目录则不会输出。
 
 如需要用一个字符串表示设置中的一个对象，请使用 `.` 分隔不同层级的目录，如 `.data.data_dir`。下文中形如 `%.data.data_dir%` 即代表设置中对应的对象。
 
 设置文件可以存储在全局设置文件的 `.~list` 位置，并且可以加载到当前目录的配置文件。
+
+#### 设置信息
+
+- `commands`: 命令匹配列表。
+- `compiler`: 编译器相关。
+  - `argu`: 编译选项。
+  - `command`: 调用的编译器路径。
+  - `time_limit`: 编译时限。
+- `data`: 评测相关。
+  - `ansfile`: 默认答案数据文件。
+  - `chk_exit_code`: `checker` 在遇到答案错误时的返回值，在十进制下使用正则表达式匹配。
+  - `chkfile`: 默认比较信息文件。
+  - `compile_argu`: 评测编译选项。
+  - `data_dir`: 数据文件存放目录。
+  - `infile`: 默认输入数据文件。
+  - `outfile`: 默认输出数据文件。
+  - `time`: 评测时间限制。
+- `exe_suf`: 可执行文件后缀。
+- `max_process_num`: 最大进程数量级。
+- `max_thread_num`: 最大线程数量级。
+- `runtime_limit`: 子进程运行时间限制。
+- `show_file_info`: 是否在评测时展示文件信息。
+- `~list`: 设置列表。
 
 ### 命令匹配
 
@@ -127,6 +150,12 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 }
 ```
 匹配失败则以第一个参数作为命令，无参数或没有对应命令则进入入口命令。
+
+## 注意事项
+
+$\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_num` 分别表示最大进程数和最大线程数的量级，请根据 CPU 并行性能、内存及磁盘读写速率调整参数，否则可能因为 CPU 占用过高导致系统崩溃，或磁盘读写延迟过高导致程序异常。
+
+所有运行的程序单次运行用时之和不建议小于 $5\text{ms}$，否则可能造成程序异常。
 
 ## 命令
 
@@ -172,7 +201,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ### check
 
-`orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num] [/time=time]`
+`orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num [/multithread]] [/time=time]`
 
 使用数据生成器、标准代码和源代码进行对拍。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
 
@@ -190,9 +219,11 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `/time=time`: 修改默认的运行时间限制（单位：毫秒）。
 
+`/multithread`: 启用多线程。启用多线程会导致单个测试得到的程序运行时间增加数倍，并和运行的进程数及计算机并行性能相关，因此得到的 `TLE` 结果不一定准确。
+
 ### judge
 
-`orita judge [data] [/help] [/file=file] [/checker=file] [/time=time] [/isuf=suf] [/osuf=suf]`
+`orita judge [data] [/help] [/file=file] [/checker=file] [/time=time] [/isuf=suf] [/osuf=suf] [/multithread]`
 
 对于给定的数据文件和源代码，从数据文件中找到具有指定后缀名的输入输出文件并生成数据点，然后获取源代码的所有结果。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
 
@@ -209,6 +240,8 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 `/isuf=suf`: 指定输入文件的后缀名，默认为 `.in`。
 
 `/osuf=suf`: 指定输出文件的后缀名，默认为 `.out`。
+
+`/multithread`: 启用多线程。启用多线程会导致单个测试得到的程序运行时间增加数倍，并和运行的进程数及计算机并行性能相关，因此得到的 `TLE` 结果不一定准确。
 
 ### compile
 
@@ -272,7 +305,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 该项目使用了以下第三方库：
 
-- [nlohmann/json](https://github.com/nlohmann/json)
+- Lohmann, N. (2022). JSON for Modern C++ (Version 3.11.2) [Computer software]. https://github.com/nlohmann
 - [gabime/spdlog](https://github.com/gabime/spdlog)
 - [ikalnytskyi/termcolor](https://github.com/ikalnytskyi/termcolor)
 - [pocoproject/poco](https://github.com/pocoproject/poco)

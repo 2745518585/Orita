@@ -136,24 +136,26 @@ using Settings::get_settings_object;
 using Settings::get_settings_path;
 using Settings::get_settings_merge;
 using Settings::get_settings;
+const unsigned max_process_num=get_settings<unsigned>("/max_process_num");
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
 const std::string exe_suf=get_settings<std::string>("/exe_suf");
 const fil compiler_command=get_settings<std::string>("/compiler/command");
-const std::string compile_argu=[]()
+const arg compile_argu=[]()
 {
-    json object=get_settings_merge("/compiler/argu"),if_appear;
-    std::string str;
-    for(auto i:object) if(i.is_string()&&if_appear[(std::string)i].is_null()) str+=(std::string)i+" ",if_appear[(std::string)i]=true;
-    return str;
+    json object=get_settings_merge("/compiler/argu");
+    arg argu;
+    for(auto i:object) if(i.is_string()) argu+=(std::string)i;
+    return argu;
 }();
-const std::string data_compile_argu=[]()
+const arg data_compile_argu=[]()
 {
-    json object=get_settings_merge("/data/compile_argu"),if_appear;
-    std::string str;
-    for(auto i:object) if(i.is_string()&&if_appear[(std::string)i].is_null()) str+=(std::string)i+" ",if_appear[(std::string)i]=true;
-    return str;
+    json object=get_settings_merge("/data/compile_argu");
+    arg argu;
+    for(auto i:object) if(i.is_string()) argu+=(std::string)i;
+    return argu;
 }();
+const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
 namespace Settings
 {
     std::string get_file(std::string key)
@@ -167,6 +169,7 @@ fil default_outfile=Settings::get_file("/data/outfile");
 fil default_ansfile=Settings::get_file("/data/ansfile");
 fil default_chkfile=Settings::get_file("/data/chkfile");
 fil default_data_dir=Settings::get_file("/data/data_dir");
+const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/data/chk_exit_code");
 namespace Settings
 {
     void change_time_limit(const tim time)

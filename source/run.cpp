@@ -26,7 +26,7 @@ class Command_run: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
 
         const std::string _ans_name="ans";
@@ -55,17 +55,17 @@ class Command_run: public App
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*2<<termcolor::reset;
         // compile file
-        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);
-        print->start();
-        compiler *run_compiler=new compiler(2);
+        printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
+        th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
-        run_compiler->wait({_ans_name,_chk_name});
+        run_compiler->wait_all();
         {
-            auto compile_result=run_compiler->get({_ans_name,_chk_name});
-            if(compile_result.first)
+            std::string name=run_compiler->get_all();
+            if(name!="")
             {
                 delete print;
-                print_result(compile_result.second,res::type::CE);
+                scerr<<run_compiler->list[name]->err;
+                print_result(name,res::type::CE);
                 return EXIT_OK;
             }
         }
@@ -75,11 +75,13 @@ class Command_run: public App
         judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
         run_judger.judge();
         // print result
-        run_judger.print_result();
+        run_judger.print_result("",_chk_name);
         sofstream output_chk_file(chk_file,std::ios::app);
         output_chk_file<<"\n"<<std::string("*")*50<<"\n";
         output_chk_file<<"    result: "<<run_judger.result<<"\n";
-        output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{{_ans_name+":",run_judger.time,run_judger.exit_code},{_chk_name+":",run_judger.chk_time,run_judger.chk_exit_code}});
+        output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
+            {_ans_name+":",run_judger.time,run_judger.exit_code},
+            {_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
         output_chk_file<<std::string("*")*50;
         output_chk_file.close();
         // copy result

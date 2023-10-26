@@ -27,33 +27,58 @@ class Command_compile: public App
         loadConfiguration();
         if(check_option("error options")) return EXIT_USAGE;
         if(check_option("help")) return EXIT_OK;
-        INFO("args",vec_to_str(args,static_cast<std::string(*)(const std::string&)>(add_squo)));
+        INFO("args",add_squo(args));
 
         
-        std::string compile_argu=get_option("carg");
+        arg compile_argu=get_arg(get_option("carg"));
         std::string run_argu=get_option("arg");
         if(args.size()==1&&check_option("run"))
         {
             fil file=add_namesuf(get_file((pat)args[0]),"cpp");
-            if(compile(file,compile_argu)) return EXIT_OK;
-            runner runs(replace_extension(file,exe_suf),"","",run_argu,(tim)1000000);
-            runs.run();
-            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
+            compiler comp(file,compile_argu);
+            if(comp())
+            {
+                scerr<<comp.err;
+                return EXIT_OK;
+            }
+            show_cursor();
+            timer run_timer;run_timer.init();
+            int exit_code=ssystem(replace_extension(file,exe_suf).toString()+" "+run_argu)>>sys_exit_code;
+            tim time=run_timer.get_time();
+            hide_cursor();
+            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
         }
         else if(args.size()==1&&check_option("trun"))
         {
             fil file=get_file((pat)args[0]);
-            runner runs(file,"","",run_argu,(tim)1000000);
-            runs.run();
-            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<runs.time<<termcolor::bright_grey<<", exit code: "<<(runs.exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<runs.exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
+            show_cursor();
+            timer run_timer;run_timer.init();
+            int exit_code=ssystem(replace_extension(file,exe_suf).toString()+" "+run_argu)>>sys_exit_code;
+            tim time=run_timer.get_time();
+            hide_cursor();
+            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
         }
         else
         {
-            for(auto i:args)
+            unsigned add_sum=0;
+            th_compiler comp;
+            auto add=[&](unsigned i)
             {
-                fil file=get_file(add_namesuf((pat)i,"cpp"));
-                if(compile(file,compile_argu)) print_result(((pat)file.path()).getFileName(),res::type::CE);
-                else print_result(((pat)file.path()).getFileName(),res::type::SS);
+                fil file=get_file(add_namesuf((pat)args[i-1],"cpp"));
+                comp.add(file.path(),file,compile_argu);
+            };
+            while(add_sum<max_thread_num&&add_sum<args.size()) add(++add_sum);
+            std::string name;
+            while((name=comp.get_one())!="")
+            {
+                if(comp.list[name]->exit_code)
+                {
+                    scerr<<comp.list[name]->err;
+                    print_result(name,res::type::CE,(tim)0,comp.list[name]->exit_code);
+                }
+                else print_result(name,res::type::SS,(tim)0,comp.list[name]->exit_code);
+                comp.remove(name);
+                if(add_sum<args.size()) add(++add_sum);
             }
         }
         return EXIT_OK;

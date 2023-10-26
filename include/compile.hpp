@@ -5,117 +5,175 @@
 #include"log.hpp"
 #include"files.hpp"
 #include"settings.hpp"
-namespace Compile
-{
-    int compile(fil file,const std::string &argu="",const bool if_print=true)
-    {
-        if(((pat)file.path()).getExtension()!="cpp")
-        {
-            WARN("compile - invaild file","file: "+add_quo(file));
-            return -1;
-        }
-        const std::string command=compiler_command.path()+" "+add_quo(file)+" -o "+add_quo(replace_extension(file,exe_suf))+" "+compile_argu+argu+(if_print?"":system_to_nul);
-        INFO("compile - start","file: "+add_squo(file),"argu: "+add_squo(argu),"command: "+add_squo(command));
-        int result=ssystem(command);
-        if(result) WARN("compile - fail","file: "+add_squo(file),"argu: "+add_squo(argu),"command: "+add_squo(command));
-        else INFO("compile - success","file: "+add_squo(file),"argu: "+add_squo(argu),"command: "+add_squo(command));
-        return result!=0;
-    }
-}
-using Compile::compile;
+#include"process.hpp"
 class compiler
 {
   public:
-    unsigned thread_sum;
-    std::atomic<bool> if_end;
-    std::future<void> *compile_future[101];
-    std::mutex wait_que_lock,wait_result_lock,read_lock;
-    std::condition_variable wait_que,wait_result;
-    class comp_file
+    const fil file;
+    const arg argu;
+    int exit_code;
+    Poco::Pipe in,out,err;
+    process_handle *ph=NULL;
+    bool if_end=false;
+    std::condition_variable *wait_end=new std::condition_variable;
+    compiler(const fil &_file,const arg &_argu=arg()):file(_file),argu((arg)file+"-o"+replace_extension(file,exe_suf)+compile_argu+_argu) {}
+    ~compiler() {delete ph;delete wait_end;}
+    void wait_for() {try {ph->wait();} catch(...) {}}
+    void start()
     {
-      public:
-        std::string name,argu;
-        fil file;
-        comp_file(){}
-        comp_file(const std::string &name,const fil &file,const std::string &argu):name(name),file(file),argu(argu){}
-    };
-    std::queue<comp_file> compile_que;
-    std::map<std::string,int> results;
-    void auto_compile()
+        INFO("compile - start","id: "+to_string_hex(this),"argu: "+add_squo(argu));
+        ph=new process_handle(Poco::Process::launch(compiler_command.path(),argu,&in,&out,&err));
+        std::future<void> run_future(std::async(std::launch::async,&compiler::wait_for,this));
+        if(run_future.wait_for(compile_time_limit)!=std::future_status::ready)
+        {
+            Poco::Process::kill(*ph);
+            run_future.wait();
+            WARN("compile - timeout","id: "+to_string_hex(this));
+            add();
+            return;
+        }
+        if(exit_code=ph->wait()) WARN("compile - fail","id: "+to_string_hex(this),"argu: "+add_squo(argu));
+        else INFO("compile - success","id: "+to_string_hex(this),"argu: "+add_squo(argu));
+        if_end=true;
+        wait_end->notify_all();
+    }
+    int operator()()
+    {
+        process::run(std::bind(&compiler::start,this));
+        return ph->wait()!=0;
+    }
+    void add()
+    {
+        INFO("compile - add","id: "+to_string_hex(this),"argu: "+add_squo(argu));
+        process::add(std::bind(&compiler::start,this));
+    }
+};
+class th_compiler
+{
+  public:
+    std::mutex read_lock;
+    std::map<std::string,compiler*> list;
+    std::queue<std::string> new_que;
+    std::condition_variable wait_que;
+    std::atomic<size_t> running_sum;
+    void monitor(const std::string &name)
+    {
+        compiler *target=list[name];
+        {
+            std::mutex wait_end_lock;
+            std::unique_lock<std::mutex> lock(wait_end_lock);
+            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
+        }
+        read_lock.lock();
+        new_que.push(name);
+        --running_sum;
+        wait_que.notify_all();
+        read_lock.unlock();
+    }
+    void add(const std::string &name,const fil &file,const arg &argu=arg())
+    {
+        read_lock.lock();
+        if(list.count(name))
+        {
+            WARN("th_compiler - repeated compiler name","name: ",name);
+            return;
+        }
+        list[name]=new compiler(file,argu);
+        list[name]->add();
+        ++running_sum;
+        std::thread(&th_compiler::monitor,this,name).detach();
+        INFO("th_compiler - add compile task","id: "+to_string_hex(this),"name: "+add_squo(name),"file: "+add_squo(file),"argu: "+add_squo(argu));
+        read_lock.unlock();
+    }
+    void add(const std::initializer_list<std::pair<std::string,fil>> file,const arg &argu=arg())
+    {
+        for(auto i:file) add(i.first,i.second,argu);
+    }
+    void wait(const std::string &name)
+    {
+        read_lock.lock();
+        if(!list.count(name)) throw Poco::Exception("empty compiler name");
+        compiler *target=list[name];
+        read_lock.unlock();
+        {
+            std::mutex wait_end_lock;
+            std::unique_lock<std::mutex> lock(wait_end_lock);
+            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
+        }
+    }
+    void wait(const std::initializer_list<std::string> name)
+    {
+        for(auto i:name) wait(i);
+    }
+    void wait_all()
+    {
+        {
+            std::mutex wait_que_lock;
+            std::unique_lock<std::mutex> lock(wait_que_lock);
+            wait_que.wait(lock,[&](){return running_sum==0;});
+        }
+    }
+    std::string get(const std::initializer_list<std::string> name)
+    {
+        for(auto i:name)
+        {
+            wait(i);
+            if(list[i]->exit_code) return i;
+        }
+        return "";
+    }
+    std::string get_one()
     {
         while(true)
         {
             {
+                std::mutex wait_que_lock;
                 std::unique_lock<std::mutex> lock(wait_que_lock);
-                wait_que.wait(lock,[&](){return !compile_que.empty()||if_end;});
-                lock.unlock();
+                wait_que.wait(lock,[&](){return !new_que.empty()||running_sum==0;});
             }
+            if(running_sum==0) return "";
             read_lock.lock();
-            if(if_end)
-            {
-                ssleep((tim)10);
-                read_lock.unlock();
-                break;
-            }
-            if(compile_que.empty())
+            if(new_que.empty())
             {
                 read_lock.unlock();
                 continue;
             }
-            comp_file file=compile_que.front();
-            compile_que.pop();
+            std::string name=new_que.front();
+            new_que.pop();
             read_lock.unlock();
-            int result=compile(file.file,file.argu,false);
-            read_lock.lock();
-            results[file.name]=result;
-            wait_result.notify_all();
-            read_lock.unlock();
+            return name;
         }
     }
-    compiler(unsigned _thread_sum):thread_sum(_thread_sum)
+    std::string get_all()
     {
-        thread_sum=std::min(thread_sum,max_thread_num);
-        if_end=false;
-        for(unsigned i=0;i<thread_sum;++i) compile_future[i]=new std::future(std::async(std::launch::async,&compiler::auto_compile,this));
-        INFO("compiler - start","id: "+to_string_hex(this),"thread sum: "+std::to_string(thread_sum));
+        wait_all();
+        read_lock.lock();
+        for(auto i:list)
+        {
+            if(i.second->exit_code)
+            {
+                read_lock.unlock();
+                return i.first;
+            }
+        }
+        read_lock.unlock();
+        return "";
     }
-    ~compiler()
-    {
-        if_end=true;
-        wait_que.notify_all();
-        for(unsigned i=0;i<thread_sum;++i) compile_future[i]->wait();
-        INFO("compiler - end","id: "+to_string_hex(this));
-    }
-    void add(const std::string &name,const fil &file,const std::string &argu="")
+    void remove(const std::string &name)
     {
         read_lock.lock();
-        compile_que.push(comp_file(name,file.path(),argu));
-        wait_que.notify_one();
+        delete list[name];
+        list.erase(name);
         read_lock.unlock();
-        INFO("compiler - add compile task","id: "+to_string_hex(this),"name: "+add_squo(name),"file: "+add_squo(file),"argu: "+add_squo(argu));
     }
-    void add(const std::initializer_list<std::pair<std::string,fil>> file,const std::string &argu="")
+    th_compiler()
     {
-        for(auto i:file) add(i.first,i.second,argu);
+        INFO("th_compiler - start","id: "+to_string_hex(this));
     }
-    void wait(const std::initializer_list<std::string> name)
+    ~th_compiler()
     {
-        auto check=[&]()
-        {
-            for(auto i:name) if(!results.count(i)) return false;
-            return true;
-        };
-        std::unique_lock<std::mutex> lock(wait_result_lock);
-        wait_result.wait(lock,check);
-        lock.unlock();
-    }
-    std::pair<int,std::string> get(const std::initializer_list<std::string> name)
-    {
-        for(auto i:name)
-        {
-            if(!results.count(i)||results[i]) return std::make_pair(1,i);
-        }
-        return std::make_pair(0,std::string(""));
+        for(auto i:list) delete i.second;
+        INFO("th_compiler - end","id: "+to_string_hex(this));
     }
 };
 #endif
