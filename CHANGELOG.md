@@ -295,3 +295,15 @@ Orita 第一个正式版本。
 #### Changes
 
 - Use `Poco::Process`.
+
+### Dev0.2.2
+
+#### Features
+
+#### Fixes
+
+- `th_compiler` ans `th_judger` `get_one` cannot get finished tasks sometimes.
+
+#### Changes
+
+- Add `thread_mgr`.

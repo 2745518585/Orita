@@ -8,6 +8,7 @@
 #include"settings.hpp"
 #include"env.hpp"
 #include"process.hpp"
+#include"thread.hpp"
 #include"compile.hpp"
 #include"print.hpp"
 #include"judge.hpp"

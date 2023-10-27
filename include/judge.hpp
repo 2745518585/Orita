@@ -6,6 +6,7 @@
 #include"files.hpp"
 #include"settings.hpp"
 #include"print.hpp"
+#include"thread.hpp"
 class runner
 {
   public:
@@ -177,132 +178,16 @@ class judger
         else Print::print_result(ans_name,result,ans_runner->time,ans_runner->exit_code);
     }
 };
-class th_judger
+class th_judger: public thread_mgr<judger>
 {
   public:
-    std::mutex read_lock;
-    std::map<std::string,judger*> list;
-    std::queue<std::string> new_que;
-    std::condition_variable wait_que;
-    std::atomic<size_t> running_sum;
-    void monitor(const std::string &name)
+    std::string class_name() const override
     {
-        judger *target=list[name];
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
-        }
-        read_lock.lock();
-        new_que.push(name);
-        --running_sum;
-        wait_que.notify_all();
-        read_lock.unlock();
+        return "th_judger";
     }
-    void add(const std::string &name,judger *object)
+    std::string class_id() const override
     {
-        read_lock.lock();
-        if(list.count(name))
-        {
-            WARN("th_judger - repeated judger name","name: ",name);
-            return;
-        }
-        list[name]=object;
-        list[name]->add();
-        ++running_sum;
-        std::thread(&th_judger::monitor,this,name).detach();
-        INFO("th_judger - add judge task","id: "+to_string_hex(this),"name: "+add_squo(name));
-        read_lock.unlock();
-    }
-    void add(const std::initializer_list<std::pair<std::string,judger*>> object)
-    {
-        for(auto i:object) add(i.first,i.second);
-    }
-    void wait(const std::string &name)
-    {
-        read_lock.lock();
-        if(!list.count(name)) throw Poco::Exception("empty judger name");
-        judger *target=list[name];
-        read_lock.unlock();
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
-        }
-    }
-    void wait(const std::initializer_list<std::string> name)
-    {
-        for(auto i:name) wait(i);
-    }
-    void wait_all()
-    {
-        {
-            std::mutex wait_que_lock;
-            std::unique_lock<std::mutex> lock(wait_que_lock);
-            wait_que.wait(lock,[&](){return running_sum==0;});
-        }
-    }
-    std::string get(const std::initializer_list<std::string> name)
-    {
-        for(auto i:name)
-        {
-            wait(i);
-            if(list[i]->exit_code) return i;
-        }
-        return "";
-    }
-    std::string get_one()
-    {
-        while(true)
-        {
-            {
-                std::mutex wait_que_lock;
-                std::unique_lock<std::mutex> lock(wait_que_lock);
-                wait_que.wait(lock,[&](){return !new_que.empty()||running_sum==0;});
-            }
-            read_lock.lock();
-            if(new_que.empty())
-            {
-                read_lock.unlock();
-                if(running_sum==0) return "";
-                continue;
-            }
-            std::string name=new_que.front();
-            new_que.pop();
-            read_lock.unlock();
-            return name;
-        }
-    }
-    std::string get_all()
-    {
-        wait_all();
-        read_lock.lock();
-        for(auto i:list)
-        {
-            if(i.second->exit_code)
-            {
-                read_lock.unlock();
-                return i.first;
-            }
-        }
-        read_lock.unlock();
-        return "";
-    }
-    void remove(const std::string &name)
-    {
-        read_lock.lock();
-        delete list[name];
-        list.erase(name);
-        read_lock.unlock();
-    }
-    th_judger()
-    {
-        INFO("th_judger - start","id: "+to_string_hex(this));
-    }
-    ~th_judger()
-    {
-        for(auto i:list) delete i.second;
-        INFO("th_judger - end","id: "+to_string_hex(this));
+        return to_string_hex(this);
     }
 };
 #endif

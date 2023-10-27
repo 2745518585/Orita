@@ -6,6 +6,7 @@
 #include"files.hpp"
 #include"settings.hpp"
 #include"process.hpp"
+#include"thread.hpp"
 class compiler
 {
   public:
@@ -48,132 +49,24 @@ class compiler
         process::add(std::bind(&compiler::start,this));
     }
 };
-class th_compiler
+class th_compiler: public thread_mgr<compiler>
 {
   public:
-    std::mutex read_lock;
-    std::map<std::string,compiler*> list;
-    std::queue<std::string> new_que;
-    std::condition_variable wait_que;
-    std::atomic<size_t> running_sum;
-    void monitor(const std::string &name)
+    std::string class_name() const override
     {
-        compiler *target=list[name];
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
-        }
-        read_lock.lock();
-        new_que.push(name);
-        --running_sum;
-        wait_que.notify_all();
-        read_lock.unlock();
+        return "th_compiler";
+    }
+    std::string class_id() const override
+    {
+        return to_string_hex(this);
     }
     void add(const std::string &name,const fil &file,const arg &argu=arg())
     {
-        read_lock.lock();
-        if(list.count(name))
-        {
-            WARN("th_compiler - repeated compiler name","name: ",name);
-            return;
-        }
-        list[name]=new compiler(file,argu);
-        list[name]->add();
-        ++running_sum;
-        std::thread(&th_compiler::monitor,this,name).detach();
-        INFO("th_compiler - add compile task","id: "+to_string_hex(this),"name: "+add_squo(name),"file: "+add_squo(file),"argu: "+add_squo(argu));
-        read_lock.unlock();
+        thread_mgr::add(name,new compiler(file,argu));
     }
     void add(const std::initializer_list<std::pair<std::string,fil>> file,const arg &argu=arg())
     {
         for(auto i:file) add(i.first,i.second,argu);
-    }
-    void wait(const std::string &name)
-    {
-        read_lock.lock();
-        if(!list.count(name)) throw Poco::Exception("empty compiler name");
-        compiler *target=list[name];
-        read_lock.unlock();
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
-        }
-    }
-    void wait(const std::initializer_list<std::string> name)
-    {
-        for(auto i:name) wait(i);
-    }
-    void wait_all()
-    {
-        {
-            std::mutex wait_que_lock;
-            std::unique_lock<std::mutex> lock(wait_que_lock);
-            wait_que.wait(lock,[&](){return running_sum==0;});
-        }
-    }
-    std::string get(const std::initializer_list<std::string> name)
-    {
-        for(auto i:name)
-        {
-            wait(i);
-            if(list[i]->exit_code) return i;
-        }
-        return "";
-    }
-    std::string get_one()
-    {
-        while(true)
-        {
-            {
-                std::mutex wait_que_lock;
-                std::unique_lock<std::mutex> lock(wait_que_lock);
-                wait_que.wait(lock,[&](){return !new_que.empty()||running_sum==0;});
-            }
-            if(running_sum==0) return "";
-            read_lock.lock();
-            if(new_que.empty())
-            {
-                read_lock.unlock();
-                continue;
-            }
-            std::string name=new_que.front();
-            new_que.pop();
-            read_lock.unlock();
-            return name;
-        }
-    }
-    std::string get_all()
-    {
-        wait_all();
-        read_lock.lock();
-        for(auto i:list)
-        {
-            if(i.second->exit_code)
-            {
-                read_lock.unlock();
-                return i.first;
-            }
-        }
-        read_lock.unlock();
-        return "";
-    }
-    void remove(const std::string &name)
-    {
-        read_lock.lock();
-        delete list[name];
-        list.erase(name);
-        read_lock.unlock();
-    }
-    th_compiler()
-    {
-        INFO("th_compiler - start","id: "+to_string_hex(this));
-    }
-    ~th_compiler()
-    {
-        for(auto i:list) delete i.second;
-        INFO("th_compiler - end","id: "+to_string_hex(this));
     }
 };
 #endif
