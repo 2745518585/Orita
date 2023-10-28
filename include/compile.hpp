@@ -52,13 +52,9 @@ class compiler
 class th_compiler: public thread_mgr<compiler>
 {
   public:
-    std::string class_name() const override
+    std::string class_name()const override
     {
         return "th_compiler";
-    }
-    std::string class_id() const override
-    {
-        return to_string_hex(this);
     }
     void add(const std::string &name,const fil &file,const arg &argu=arg())
     {
@@ -67,6 +63,14 @@ class th_compiler: public thread_mgr<compiler>
     void add(const std::initializer_list<std::pair<std::string,fil>> file,const arg &argu=arg())
     {
         for(auto i:file) add(i.first,i.second,argu);
+    }
+    th_compiler():thread_mgr()
+    {
+        INFO(class_name()+" - start","id: "+to_string_hex(this));
+    }
+    ~th_compiler()
+    {
+        INFO(class_name()+" - end","id: "+to_string_hex(this));
     }
 };
 #endif

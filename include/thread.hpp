@@ -12,13 +12,9 @@ template<typename run_t> class thread_mgr
     std::queue<std::string> new_que;
     std::condition_variable wait_que;
     std::atomic<size_t> running_sum;
-    virtual std::string class_name() const
+    virtual std::string class_name()const
     {
         return "thread_mgr";
-    }
-    virtual std::string class_id() const
-    {
-        return to_string_hex(this);
     }
     void monitor(const std::string &name)
     {
@@ -46,7 +42,7 @@ template<typename run_t> class thread_mgr
         list[name]->add();
         ++running_sum;
         std::thread(&thread_mgr::monitor,this,name).detach();
-        INFO(class_name()+" - add task","id: "+class_id(),"name: "+add_squo(name));
+        INFO(class_name()+" - add task","id: "+to_string_hex(this),"name: "+add_squo(name));
         read_lock.unlock();
     }
     void add(const std::initializer_list<std::pair<std::string,run_t*>> object)
@@ -136,12 +132,12 @@ template<typename run_t> class thread_mgr
     }
     thread_mgr()
     {
-        INFO(class_name()+" - start","id: "+class_id());
+        INFO(class_name()+" - start","id: "+to_string_hex(this));
     }
     ~thread_mgr()
     {
         for(auto i:list) delete i.second;
-        INFO(class_name()+" - end","id: "+class_id());
+        INFO(class_name()+" - end","id: "+to_string_hex(this));
     }
 };
 #endif

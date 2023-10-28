@@ -181,13 +181,17 @@ class judger
 class th_judger: public thread_mgr<judger>
 {
   public:
-    std::string class_name() const override
+    std::string class_name()const override
     {
         return "th_judger";
     }
-    std::string class_id() const override
+    th_judger():thread_mgr()
     {
-        return to_string_hex(this);
+        INFO(class_name()+" - start","id: "+to_string_hex(this));
+    }
+    ~th_judger()
+    {
+        INFO(class_name()+" - end","id: "+to_string_hex(this));
     }
 };
 #endif
