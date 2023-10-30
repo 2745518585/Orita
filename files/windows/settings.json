@@ -40,7 +40,7 @@
                 "data_dir": "./.data"
             }
         },
-        "oi": {
+        "stack": {
             "data": {
                 "compile_argu": [
                     "-std=c++14",
