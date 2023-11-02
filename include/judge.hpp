@@ -181,7 +181,7 @@ class judger
 class th_judger: public thread_mgr<judger>
 {
   public:
-    std::string class_name()const override
+    std::string class_name() const noexcept override
     {
         return "th_judger";
     }

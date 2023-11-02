@@ -32,7 +32,7 @@ namespace Files
     {
       public:
         const unsigned num;
-        std::string str()const {return "file"+to_string_len(num,number_len);}
+        std::string str() const {return "file"+to_string_len(num,number_len);}
         file_number(const unsigned _num):num(_num)
         {
             if(num<0||num>_max_file_num)

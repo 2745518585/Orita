@@ -84,8 +84,8 @@ namespace Print
                 list.push_back(get_any(i));
             }
         }
-        const std::string operator[](size_t pos)const {return list[pos];}
-        const size_t size()const {return list.size();}
+        const std::string operator[](size_t pos) const {return list[pos];}
+        const size_t size() const {return list.size();}
     };
     std::string print_type(const print_list &str_back,const std::vector<print_list> &str_list,bool if_right=false)
     {

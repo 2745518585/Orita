@@ -158,7 +158,7 @@ const arg data_compile_argu=[]()
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
 namespace Settings
 {
-    std::string get_file(std::string key)
+    std::string get_file(std::string key) noexcept
     {
         try {return ::get_file(get_settings<std::string>(key),get_settings_path<std::string>(key)).path();} catch(...) {}
         return "";

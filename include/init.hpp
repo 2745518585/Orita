@@ -150,15 +150,15 @@ class res
     type result;
     res():result(type::NL) {}
     res(type _result):result(_result) {}
-    bool is(const type target_result)const {return result==target_result;}
-    bool is(const std::initializer_list<type> target_result_list)const
+    bool is(const type target_result) const {return result==target_result;}
+    bool is(const std::initializer_list<type> target_result_list) const
     {
         for(auto target_result:target_result_list) if(result==target_result) return true;
         return false;
     }
-    bool istrue()const {return is({type::AC,type::SA,type::SS});}
-    bool isfalse()const {return is({type::WA,type::RE,type::TLE_CA,type::TLE_WA,type::TLE_O,type::CE,type::DA,type::TO,type::NF,type::II,type::FL});}
-    bool isnull()const {return is({type::NL});}
+    bool istrue() const {return is({type::AC,type::SA,type::SS});}
+    bool isfalse() const {return is({type::WA,type::RE,type::TLE_CA,type::TLE_WA,type::TLE_O,type::CE,type::DA,type::TO,type::NF,type::II,type::FL});}
+    bool isnull() const {return is({type::NL});}
 };
 
 // string
@@ -383,11 +383,11 @@ class timer
 {
   public:
     decltype(std::chrono::high_resolution_clock::now()) begin_time;
-    void init()
+    void init() noexcept
     {
         begin_time=std::chrono::high_resolution_clock::now();
     }
-    tim get_time()
+    tim get_time() const noexcept
     {
         auto end_time=std::chrono::high_resolution_clock::now();
         return std::chrono::duration_cast<tim>(end_time-begin_time);

@@ -12,7 +12,7 @@ template<typename run_t> class thread_mgr
     std::queue<std::string> new_que;
     std::condition_variable wait_que;
     std::atomic<size_t> running_sum;
-    virtual std::string class_name()const
+    virtual std::string class_name() const noexcept
     {
         return "thread_mgr";
     }
