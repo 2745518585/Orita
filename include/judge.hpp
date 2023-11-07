@@ -45,7 +45,7 @@ class runner
     }
     void start()
     {
-        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time: "+std::to_string(time_limit.count())+"ms");
+        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time_limit: "+std::to_string(time_limit.count())+"ms");
         if(in_file!=fil()) in_stream=new sifstream(in_file,std::ios::binary);
         if(out_file!=fil()) out_stream=new sofstream(out_file,std::ios::binary);
         if(err_file!=fil()) err_stream=new sofstream(err_file,std::ios::binary);
