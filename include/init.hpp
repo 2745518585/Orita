@@ -549,6 +549,10 @@ namespace Init
       public:
         Init()
         {
+            if(os_name!="Windows NT"&&os_name!="Linux")
+            {
+                throw Poco::Exception("unsupported plateform");
+            }
             std::ios_base::sync_with_stdio(false);
             hide_cursor();
         }
