@@ -17,7 +17,7 @@ class compiler
     process_handle *ph=NULL;
     bool if_end=false;
     std::condition_variable *wait_end=new std::condition_variable;
-    compiler(const fil &_file,const arg &_argu=arg()):file(_file),argu((arg)file+"-o"+replace_extension(file,exe_suf)+compile_argu+_argu) {}
+    compiler(const fil &_file,const arg &_argu=arg()):file(_file),argu((arg)file+"-o"+get_exefile(file)+compile_argu+_argu) {}
     ~compiler() {delete ph;delete wait_end;}
     void wait_for() {try {ph->wait();} catch(...) {}}
     void start()

@@ -22,7 +22,7 @@ class runner
     std::istream *in_stream=NULL;
     std::ostream *out_stream=&std::cout,*err_stream=&std::cerr;
     fil in_file,out_file,err_file;
-    runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(replace_extension(_file,exe_suf)),argu(_argu),time_limit(_time_limit) {}
+    runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(get_exefile(_file)),argu(_argu),time_limit(_time_limit) {}
     ~runner() {if(ph!=NULL) delete ph;}
     runner *set_in(const fil &file) {in_file=file;return this;}
     runner *set_in(std::istream *stream) {in_stream=stream;return this;}

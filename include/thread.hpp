@@ -52,7 +52,7 @@ template<typename run_t> class thread_mgr
     void wait(const std::string &name)
     {
         read_lock.lock();
-        if(!list.count(name)) throw Poco::Exception("empty name");
+        if(!list.count(name)) throw exception("empty name");
         run_t *target=list[name];
         read_lock.unlock();
         {

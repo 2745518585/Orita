@@ -104,10 +104,10 @@ class Command_check: public App
             (default_data_dir/"tmp_data").createDirectory();
             INFO("make data dir",add_squo(default_data_dir.path()));
         }
-        catch(Poco::Exception &error)
+        catch(exception &error)
         {
             ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
-            throw Poco::Exception("fail make data dir",error.displayText());
+            throw exception("fail make data dir",error.displayText());
         }
         delete print;
         // check

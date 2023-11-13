@@ -138,6 +138,9 @@ void remove_null(json &a)
     }
 }
 
+// exception
+typedef Poco::Exception exception;
+
 // result
 class res
 {
@@ -264,7 +267,7 @@ const pat system_con="/dev/tty";
 #endif
 std::string sgetenv(const std::string &str)
 {
-    if(!Poco::Environment::has(str)) throw Poco::Exception("empty environment variable");
+    if(!Poco::Environment::has(str)) throw exception("empty environment variable");
     return Poco::Environment::get(str);
 }
 const pat running_path=[]()
@@ -479,6 +482,11 @@ class sostream
         stream<<UTF8tosys(val);
         return *this;
     }
+    template<typename Type> sostream &operator<<(Type &val)
+    {
+        stream<<val;
+        return *this;
+    }
     template<typename Type> sostream &operator<<(const Type &val)
     {
         stream<<val;
@@ -577,7 +585,7 @@ namespace Init
         {
             if(os_name!="Windows NT"&&os_name!="Linux")
             {
-                throw Poco::Exception("unsupported plateform");
+                throw exception("unsupported plateform");
             }
             std::ios_base::sync_with_stdio(false);
             hide_cursor();

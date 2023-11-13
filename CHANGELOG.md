@@ -300,6 +300,8 @@ Orita 第一个正式版本。
 
 #### Features
 
+- Add args in enviroment variables replace.
+
 #### Fixes
 
 - `th_compiler` ans `th_judger` `get_one` cannot get finished tasks sometimes.
@@ -307,3 +309,4 @@ Orita 第一个正式版本。
 #### Changes
 
 - Add `thread_mgr`.
+- Flush input and output when connected to console.

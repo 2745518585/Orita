@@ -117,7 +117,7 @@ namespace Settings
         if(!object)
         {
             WARN("get settings - null",add_squo(key));
-            throw Poco::Exception("null settings");
+            throw exception("null settings");
         }
         if constexpr(std::is_convertible<Type,std::string>::value)
         {
@@ -139,7 +139,6 @@ using Settings::get_settings;
 const unsigned max_process_num=get_settings<unsigned>("/max_process_num");
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
-const std::string exe_suf=get_settings<std::string>("/exe_suf");
 const fil compiler_command=get_settings<std::string>("/compiler/command");
 const arg compile_argu=[]()
 {
@@ -170,6 +169,15 @@ fil default_ansfile=Settings::get_file("/data/ansfile");
 fil default_chkfile=Settings::get_file("/data/chkfile");
 fil default_data_dir=Settings::get_file("/data/data_dir");
 const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/data/chk_exit_code");
+const std::string exefile_str=Settings::get_settings<std::string>("/exefile");
+pat get_exefile(const pat &file)
+{
+    return replace_env(exefile_str,running_path,{{"file",replace_extension(file,"").toString()},{"filename",replace_extension((pat)file.getFileName(),"").toString()},{"filepath",replace_extension(file.parent(),"").toString()}});
+}
+pat get_exefile(const fil &file)
+{
+    return get_exefile((pat)file.path());
+}
 namespace Settings
 {
     void change_time_limit(const tim time)

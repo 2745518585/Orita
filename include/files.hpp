@@ -38,7 +38,7 @@ namespace Files
             if(num<0||num>_max_file_num)
             {
                 ERROR("file_number - invalid file_number","num: "+add_squo(this->str()));
-                throw Poco::Exception("invalid file number");
+                throw exception("invalid file number");
             }
         }
         explicit file_number(const std::string &str):file_number([&]
@@ -46,13 +46,13 @@ namespace Files
             if(!std::regex_match(str,std::regex("\\*[0-9]+")))
             {
                 ERROR("file_number - invalid file_number","str: "+add_squo(str));
-                throw Poco::Exception("invalid file number");
+                throw exception("invalid file number");
             }
             try {return std::stoul(str.substr(1));}
             catch(...)
             {
                 ERROR("file_number - invalid file_number","str: "+add_squo(str));
-                throw Poco::Exception("invalid file number");
+                throw exception("invalid file number");
             }
         }()) {}
     };
