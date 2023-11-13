@@ -31,18 +31,6 @@ class runner
     runner *set_err(const fil &file) {err_file=file;return this;}
     runner *set_err(std::ostream *stream) {err_stream=stream;return this;}
     void wait_for() {ph->wait();}
-    void input()
-    {
-        if(in_stream!=NULL) *in_stream>>in;
-    }
-    void output()
-    {
-        if(out_stream!=NULL) *out_stream<<out,out_stream->flush();
-    }
-    void errput()
-    {
-        if(err_stream!=NULL) *err_stream<<err,err_stream->flush();
-    }
     void start()
     {
         INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time_limit: "+std::to_string(time_limit.count())+"ms");
@@ -50,9 +38,9 @@ class runner
         if(out_file!=fil()) out_stream=new sofstream(out_file,std::ios::binary);
         if(err_file!=fil()) err_stream=new sofstream(err_file,std::ios::binary);
         run_timer.init();
-        std::future<void> in_future(std::async(std::launch::async,&runner::input,this));
-        std::future<void> out_future(std::async(std::launch::async,&runner::output,this));
-        std::future<void> err_future(std::async(std::launch::async,&runner::errput,this));
+        std::future<void> in_future(std::async(std::launch::async,[&](){if(in_stream!=NULL) *in_stream>>in;}));
+        std::future<void> out_future(std::async(std::launch::async,[&](){if(out_stream!=NULL) *out_stream<<out<<std::flush;}));
+        std::future<void> err_future(std::async(std::launch::async,[&](){if(err_stream!=NULL) *err_stream<<err<<std::flush;}));
         ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
         in_future.wait();
         in.close();

@@ -364,16 +364,46 @@ class process_handle: public Poco::ProcessHandle
 };
 
 // pipe
-std::istream &operator>>(std::istream &input,const Poco::Pipe &pipe)
+std::streamsize copy_stream_flush(std::istream &istr,Poco::Pipe &ostr)
 {
-    Poco::PipeOutputStream pipe_output(pipe);
-    Poco::StreamCopier::copyStream(input,pipe_output);
+    char buffer;
+    std::streamsize len=0;
+    while(istr.read(&buffer,1))
+    {
+        ++len;
+        ostr.writeBytes(&buffer,1);
+    }
+    return len;
+}
+std::streamsize copy_stream_flush(Poco::Pipe &istr,std::ostream &ostr)
+{
+    char buffer;
+    std::streamsize len=0;
+    while(istr.readBytes(&buffer,1))
+    {
+        ++len;
+        ostr.write(&buffer,1);
+    }
+    return len;
+}
+std::istream &operator>>(std::istream &input,Poco::Pipe &pipe)
+{
+    if(&input==&std::cin) copy_stream_flush(input,pipe);
+    else
+    {
+        Poco::PipeOutputStream pipe_output(pipe);
+        Poco::StreamCopier::copyStream(input,pipe_output);
+    }
     return input;
 }
-std::ostream &operator<<(std::ostream &output,const Poco::Pipe &pipe)
+std::ostream &operator<<(std::ostream &output,Poco::Pipe &pipe)
 {
-    Poco::PipeInputStream pipe_input(pipe);
-    Poco::StreamCopier::copyStream(pipe_input,output);
+    if(&output==&std::cout||&output==&std::cerr) copy_stream_flush(pipe,output);
+    else
+    {
+        Poco::PipeInputStream pipe_input(pipe);
+        Poco::StreamCopier::copyStream(pipe_input,output);
+    }
     return output;
 }
 
