@@ -95,13 +95,9 @@ std::string systoUTF8(const std::string &systemText)
 // os
 const std::string os_name=Poco::Environment::osName();
 #ifdef _WIN32
-const std::string system_to_nul=" > nul 2>&1 ";
-const std::string system_to_con=" > con 2>&1 ";
 const int sys_exit_code=0;
 #endif
 #ifdef __linux__
-const std::string system_to_nul=" > /dev/null 2>&1 ";
-const std::string system_to_con=" > /dev/tty 2>&1 ";
 const int sys_exit_code=8;
 #endif
 
@@ -258,6 +254,14 @@ pat replace_extension(fil file,const std::string suf="")
 {
     return ((pat)file.path()).setExtension(suf).toString();
 }
+#ifdef _WIN32
+const pat system_nul="\\\\.\\nul";
+const pat system_con="\\\\.\\con";
+#endif
+#ifdef __linux__
+const pat system_nul="/dev/null";
+const pat system_con="/dev/tty";
+#endif
 std::string sgetenv(const std::string &str)
 {
     if(!Poco::Environment::has(str)) throw Poco::Exception("empty environment variable");
@@ -400,14 +404,6 @@ std::ostream &operator<<(std::ostream &output,tim str)
 }
 
 // print
-#ifdef _WIN32
-const pat system_nul="\\\\.\\nul";
-const pat system_con="\\\\.\\con";
-#endif
-#ifdef __linux__
-const pat system_nul="/dev/null";
-const pat system_con="/dev/tty";
-#endif
 std::ostream &operator<<(std::ostream &output,std::any any)
 {
     #define out(Type) else if(any.type()==typeid(Type)) output<<std::any_cast<Type>(any);\
