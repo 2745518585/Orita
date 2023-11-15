@@ -310,3 +310,4 @@ Orita 第一个正式版本。
 
 - Add `thread_mgr`.
 - Flush input and output when connected to console.
+- Save configs before running.

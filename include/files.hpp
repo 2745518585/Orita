@@ -14,19 +14,21 @@ namespace Files
 {
     #define number_len 3
     json files_json,default_files_json;
+    void read()
+    {
+        (sifstream(file_path/"files"/"file.json"))>>default_files_json;
+        try {(sifstream(appdata_path/"file.json"))>>files_json;} catch(...) {}
+    }
+    void save()
+    {
+        remove_null(files_json);
+        (sofstream(appdata_path/"file.json"))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
+    }
     class Init
     {
       public:
-        Init()
-        {
-            (sifstream(file_path/"files"/"file.json"))>>default_files_json;
-            try {(sifstream(appdata_path/"file.json"))>>files_json;} catch(...) {}
-        }
-        ~Init()
-        {
-            remove_null(files_json);
-            (sofstream(appdata_path/"file.json"))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
-        }
+        Init() {read();}
+        ~Init() {save();}
     }_Init_files;
     class file_number
     {

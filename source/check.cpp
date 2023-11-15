@@ -71,6 +71,8 @@ class Command_check: public App
             return EXIT_OK;
         }
         unsigned total_sum=std::stoi(get_option("num"));
+        // save config
+        save_config();
         // find file
         if(in==fil()||!in.exists()) {print_result(_in_name,res::type::NF);return EXIT_NOINPUT;}
         if(out==fil()||!out.exists()) {print_result(_out_name,res::type::NF);return EXIT_NOINPUT;}

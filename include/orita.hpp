@@ -13,4 +13,9 @@
 #include"print.hpp"
 #include"judge.hpp"
 #include"app.hpp"
+void save_config()
+{
+    Files::save();
+    Settings::save();
+}
 #endif

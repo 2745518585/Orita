@@ -8,47 +8,49 @@ json all_settings,global_settings,default_settings,if_has_settings;
 json::json_pointer others_settings=json::json_pointer("/~0list");
 namespace Settings
 {
+    void read()
+    {
+        (sifstream(file_path/"files"/"settings.json"))>>default_settings;
+        try {(sifstream(appdata_path/"settings.json"))>>global_settings;} catch(...) {}
+        pat dir("/");
+        dir.setDevice(running_path.getDevice());
+        dir.setNode(running_path.getNode());
+        for(int i=-1;i<=running_path.depth();++i)
+        {
+            if(i>=0) dir/=running_path[i];
+            try
+            {
+                (sifstream(dir/".orita/settings.json"))>>all_settings[dir.toString()];
+                if_has_settings[dir.toString()]=true;
+            } catch(...) {};
+        }
+    }
+    void save()
+    {
+        remove_null(global_settings);
+        (sofstream(appdata_path/"settings.json"))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
+        pat dir("/");
+        dir.setDevice(running_path.getDevice());
+        dir.setNode(running_path.getNode());
+        for(int i=-1;i<=running_path.depth();++i)
+        {
+            if(i>=0) dir/=running_path[i];
+            try
+            {
+                if(!if_has_settings[dir.toString()].is_null())
+                {
+                    ((fil)dir/".orita").createDirectory();
+                    remove_null(all_settings[dir.toString()]);
+                    (sofstream(dir/".orita/settings.json"))<<all_settings[dir.toString()].dump(4,' ',true,json::error_handler_t::ignore);
+                }
+            } catch(...) {};
+        }
+    }
     class Init
     {
       public:
-        Init()
-        {
-            (sifstream(file_path/"files"/"settings.json"))>>default_settings;
-            try {(sifstream(appdata_path/"settings.json"))>>global_settings;} catch(...) {}
-            pat dir("/");
-            dir.setDevice(running_path.getDevice());
-            dir.setNode(running_path.getNode());
-            for(int i=-1;i<=running_path.depth();++i)
-            {
-                if(i>=0) dir/=running_path[i];
-                try
-                {
-                    (sifstream(dir/".orita/settings.json"))>>all_settings[dir.toString()];
-                    if_has_settings[dir.toString()]=true;
-                } catch(...) {};
-            }
-        }
-        ~Init()
-        {
-            remove_null(global_settings);
-            (sofstream(appdata_path/"settings.json"))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
-            pat dir("/");
-            dir.setDevice(running_path.getDevice());
-            dir.setNode(running_path.getNode());
-            for(int i=-1;i<=running_path.depth();++i)
-            {
-                if(i>=0) dir/=running_path[i];
-                try
-                {
-                    if(!if_has_settings[dir.toString()].is_null())
-                    {
-                        ((fil)dir/".orita").createDirectory();
-                        remove_null(all_settings[dir.toString()]);
-                        (sofstream(dir/".orita/settings.json"))<<all_settings[dir.toString()].dump(4,' ',true,json::error_handler_t::ignore);
-                    }
-                } catch(...) {};
-            }
-        }
+        Init() {read();}
+        ~Init() {save();}
     }_Init;
     json *get_settings_object(std::string key)
     {

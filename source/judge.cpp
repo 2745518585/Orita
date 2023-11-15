@@ -55,6 +55,8 @@ class Command_judge: public App
             print_result(res::type::SS);
             return EXIT_OK;
         }
+        // save config
+        save_config();
         // find file
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
