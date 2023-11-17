@@ -38,12 +38,10 @@ class runner
         if(out_file!=fil()) out_stream=new sofstream(out_file,std::ios::binary);
         if(err_file!=fil()) err_stream=new sofstream(err_file,std::ios::binary);
         run_timer.init();
-        std::future<void> in_future(std::async(std::launch::async,[&](){if(in_stream!=NULL) *in_stream>>in;}));
+        std::future<void> in_future(std::async(std::launch::async,[&](){if(in_stream!=NULL) *in_stream>>in; in.close(Poco::Pipe::CLOSE_WRITE);}));
         std::future<void> out_future(std::async(std::launch::async,[&](){if(out_stream!=NULL) *out_stream<<out<<std::flush;}));
         std::future<void> err_future(std::async(std::launch::async,[&](){if(err_stream!=NULL) *err_stream<<err<<std::flush;}));
         ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
-        in_future.wait();
-        in.close();
         std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
@@ -59,8 +57,8 @@ class runner
             if_success=true;
             INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(file),"time: "+std::to_string(time.count())+"ms","exit_code: "+std::to_string(exit_code));
         }
-        out_future.wait();
-        err_future.wait();
+        in_future.wait();out_future.wait();err_future.wait();
+        in.close();out.close();err.close();
         if(in_file!=fil()) delete in_stream;
         if(out_file!=fil()) delete out_stream;
         if(err_file!=fil()) delete err_stream;
@@ -76,7 +74,7 @@ class runner
         {
             if(ph!=NULL) Poco::Process::kill(*ph);
             wait_for();
-            return 0;
+            return 1;
         }
     }
 };
