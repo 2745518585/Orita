@@ -129,7 +129,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `infile`: 默认输入数据文件。
   - `outfile`: 默认输出数据文件。
   - `time`: 评测时间限制。
-- `exefile`: 可执行文件路径。提供参数 `file` 为源文件路径去除后缀，`filename` 为源文件名去除后缀。
+- `exefile`: 可执行文件路径。提供参数 `file` 为源文件路径去除后缀，`filename` 为源文件名去除后缀，`filepath` 为源文件所在目录。
 - `max_process_num`: 最大进程数量级。
 - `max_thread_num`: 最大线程数量级。
 - `runtime_limit`: 子进程运行时间限制。
@@ -164,11 +164,11 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 评测时同时使用 `%.compiler.argu%` 和 `%.data.compile_argu%` 编译选项，默认含有宏 `JUDGING`。
 
-评测环境下 `stderr` 直接指向控制台，输出后需 `flush` 才会推送到控制台，建议使用 `std::cerr` 或在代码开头加上 `setvbuf(stderr,NULL,_IONBF,0);`。自定义标准输入输出文件指向控制台也需要 `flush` 操作。
+评测时标准输入输出、标准错误输出（`stderr` 指向控制台）均需要 `flush` 操作才会进行推送，建议使用 `iostream` 或加上 `setvbuf(stdout,NULL,_IONBF,0);` 来推送输出，从文件读入自动在文件结束后推送 `\0` 字符，从控制台读入建议在结束时键入 `EOF`。如需在程序非正常退出时依然保留已有输出（包括输出到文件和控制台），也需要进行 `flush` 操作。
 
 ### 其他
 
-所有命令在指定 C++ 源文件时默认后缀为 `cpp`，后缀不为 `cpp` 自动添加 `cpp` 后缀，得到的可执行文件为去除 `.cpp` 添加 `%.exe_suf%` 得到的文件名。
+所有命令在指定 C++ 源文件时默认后缀为 `cpp`，后缀不为 `cpp` 自动添加 `cpp` 后缀，得到的可执行文件为将源文件作为参数传入后 `%.exe_suf%` 的值。
 
 ## 命令
 
