@@ -304,7 +304,8 @@ Orita 第一个正式版本。
 
 #### Fixes
 
-- `th_compiler` ans `th_judger` `get_one` cannot get finished tasks sometimes.
+- `th_compiler` and `th_judger` `get_one` cannot get finished tasks sometimes.
+- Cannot get exit_code in Linux.
 
 #### Changes
 

@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_THREAD
-#define _FILE_THREAD _FILE_THREAD
+#define _FILE_THREAD
 #include"init.hpp"
 #include"log.hpp"
 #include"settings.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_ENV
-#define _FILE_ENV _FILE_ENV
+#define _FILE_ENV
 #include"init.hpp"
 #include"files.hpp"
 #include"settings.hpp"

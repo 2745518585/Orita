@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_JUDGE
-#define _COMMAND_JUDGE _COMMAND_JUDGE
+#define _COMMAND_JUDGE
 #include"orita.hpp"
 class Command_judge: public App
 {

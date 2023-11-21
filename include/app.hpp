@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_APP
-#define _FILE_APP _FILE_APP
+#define _FILE_APP
 #include"init.hpp"
 class App: public Poco::Util::Application
 {

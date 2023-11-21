@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_FILES
-#define _FILE_FILES _FILE_FILES
+#define _FILE_FILES
 #include"init.hpp"
 #include"log.hpp"
 #define _run_ans 101

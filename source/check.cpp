@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_CHECK
-#define _COMMAND_CHECK _COMMAND_CHECK
+#define _COMMAND_CHECK
 #include"orita.hpp"
 class Command_check: public App
 {

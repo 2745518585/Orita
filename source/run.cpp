@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_RUN
-#define _COMMAND_RUN _COMMAND_RUN
+#define _COMMAND_RUN
 #include"orita.hpp"
 class Command_run: public App
 {

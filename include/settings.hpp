@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_SETTINGS
-#define _FILE_SETTINGS _FILE_SETTINGS
+#define _FILE_SETTINGS
 #include"init.hpp"
 #include"log.hpp"
 #include"files.hpp"
