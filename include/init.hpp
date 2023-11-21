@@ -171,7 +171,8 @@ template<typename num_type> std::string to_string_hex(const num_type num)
 {
     std::stringstream strstream;
     strstream<<std::hex<<num;
-    return "0x"+strstream.str();
+    if(strstream.str().substr(0,2)!="0x") return "0x"+strstream.str();
+    else return strstream.str();
 }
 std::string add_quo(const std::string &str)
 {
@@ -352,6 +353,7 @@ class process_handle: public Poco::ProcessHandle
     process_handle(Poco::ProcessHandle process):Poco::ProcessHandle(process) {}
     int wait()
     {
+        if(exit_code!=-1) return exit_code;
         try {exit_code=Poco::ProcessHandle::wait();}
         catch(...) {}
         if(exit_code>=0) return exit_code>>sys_exit_code;
@@ -359,6 +361,7 @@ class process_handle: public Poco::ProcessHandle
     }
     int tryWait()
     {
+        if(exit_code!=-1) return exit_code;
         try {exit_code=Poco::ProcessHandle::tryWait();}
         catch(...) {}
         if(exit_code>=0) return exit_code>>sys_exit_code;
