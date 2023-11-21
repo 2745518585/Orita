@@ -99,7 +99,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 设置文件名为 `settings.json`，有三个层级：
 
-1. 默认设置文件，位于 `%{FILE_PATH}%/files/%{OS_NAME}%/settings.json`。
+1. 默认设置文件，位于 `%{FILE_PATH}%/files/settings.json`。
 2. 全局设置文件，位于 `%{APPDATA_PATH}%/settings.json`。
 3. 局部设置文件，位于 `.orita/settings.json`。
 
