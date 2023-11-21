@@ -11,7 +11,7 @@ namespace orita
 {
     namespace Data_maker
     {
-        std::mt19937 rd;
+        std::mt19937 rd(std::random_device{}());
         void register_rnd(int argc,char **argv)
         {
             if(argc>=2) rd.seed(std::stoul(argv[1]));
