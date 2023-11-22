@@ -82,7 +82,6 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 所有从命令行参数或配置文件读入的数据都将进行环境变量替换，从标准输入读入的数据则不会进行替换。
 
-
 * 文件名中的 `%...%` 替换为环境变量 `...`。程序将依次匹配以下环境变量：
   - 形如 `%*[0-999]%` 的表达式，将会替换为 `file.json` 中对应编号的文件名，例如 `%*1%` 表示编号为 $1$ 的文件名。
   - 形如 `%....%` 的表达式，将会替换为设置系统中对应值，例如 `%.data.data_dir%` 表示设置中 `/data/data_dir` 的值。
@@ -152,11 +151,9 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 ```
 匹配失败则以第一个参数作为命令，无参数或没有对应命令则进入入口命令。
 
-## 注意事项
-
 ### 线程与进程管理
 
-$\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_num` 分别表示最大进程数和最大线程数的量级，请根据 CPU 并行性能、内存及磁盘读写速率调整参数，否则可能因为 CPU 占用过高导致系统崩溃，或磁盘读写延迟过高导致程序异常。
+$\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thread_num%` 分别表示最大进程数和最大线程数的量级，请根据 CPU 并行性能、内存及磁盘读写速率调整参数，否则可能因为 CPU 占用过高导致系统崩溃，或磁盘读写延迟过高导致程序异常。
 
 所有运行的程序单次运行用时之和不建议小于 $5\text{ms}$，否则可能造成程序异常。
 
@@ -164,11 +161,13 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 评测时同时使用 `%.compiler.argu%` 和 `%.data.compile_argu%` 编译选项，默认含有宏 `JUDGING`。
 
-评测时标准输入输出、标准错误输出（`stderr` 指向控制台）均需要 `flush` 操作才会进行推送，建议使用 `iostream` 或加上 `setvbuf(stdout,NULL,_IONBF,0);` 来推送输出，从文件读入自动在文件结束后关闭管道写入端，从控制台读入建议在结束时键入 `EOF`。如需在程序非正常退出时依然保留已有输出（包括输出到文件和控制台），也需要进行 `flush` 操作。
+评测时标准输入输出、标准错误输出（`stderr` 指向控制台）均需要 `flush` 操作才会进行推送，建议使用 `iostream` 或使用 `orita::auto_flush()` 自动推送输出，从文件读入自动在文件结束后关闭管道写入端，从控制台读入建议在结束时键入 `EOF`。如需在程序非正常退出时依然保留已有输出（包括输出到文件和控制台），也需要进行 `flush` 操作。
+
+评测后得到的数据文件会存放至 `%.data.data_dir%` 下。
 
 ### 其他
 
-所有命令在指定 C++ 源文件时默认后缀为 `cpp`，后缀不为 `cpp` 自动添加 `cpp` 后缀，得到的可执行文件为将源文件作为参数传入后 `%.exe_suf%` 的值。
+所有命令在指定 C++ 源文件时默认后缀为 `cpp`，后缀不为 `cpp` 自动添加 `cpp` 后缀，得到的可执行文件为将源文件作为参数传入后 `%.exefile%` 的值。
 
 ## 命令
 
@@ -188,7 +187,7 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 `orita run [/help] [/file=file] [/checker=file] [/time=time]`
 
-运行指定的文件并重定向输入，然后与输出数据进行比较。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
+运行指定的文件并重定向输入，然后与输出数据进行比较。
 
 `/help`: 显示帮助信息。
 
@@ -216,7 +215,7 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 `orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num [/multithread]] [/time=time]`
 
-使用数据生成器、标准代码和源代码进行对拍。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
+使用数据生成器、标准代码和源代码进行对拍。
 
 `/help`: 显示帮助信息。
 
@@ -238,7 +237,7 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 `orita judge [data] [/help] [/file=file] [/checker=file] [/time=time] [/isuf=suf] [/osuf=suf] [/multithread]`
 
-对于给定的数据文件和源代码，从数据文件中找到具有指定后缀名的输入输出文件并生成数据点，然后获取源代码的所有结果。所有文件在编译时都会追加参数 `%.data.compile_argu%`。数据将存储在 `%.data.data_dir%/` 目录下。
+对于给定的数据文件和源代码，从数据文件中找到具有指定后缀名的输入输出文件并生成数据点，然后获取源代码的所有结果。
 
 `data`: 指定数据文件。如果没有此参数，将不会开始评测，仅作为设置参数。
 
@@ -311,6 +310,8 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 ## 头文件
 
 头文件默认位于 `${FILE_PATH}%/orita.hpp`，此目录默认添加至编译选项包含路径中，可通过 `#include"orita.hpp"` 直接引用。
+
+所有函数、变量、类均位于 `namespace orita` 中。
 
 #### `std::mt19937 rd`
 
