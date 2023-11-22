@@ -422,7 +422,7 @@ void ssleep(const tim time)
 class timer
 {
   public:
-    decltype(std::chrono::high_resolution_clock::now()) begin_time;
+    std::chrono::steady_clock::time_point begin_time;
     void init() noexcept
     {
         begin_time=std::chrono::high_resolution_clock::now();

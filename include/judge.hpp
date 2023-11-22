@@ -89,7 +89,7 @@ class judger
     tim time=(tim)-1;
     int exit_code=-1;
     bool if_end=false;
-    std::condition_variable *wait_end=new std::condition_variable;
+    std::condition_variable wait_end;
     judger(const fil &_ans,const fil &_chk,const fil &_in_file,const fil &_out_file,const fil &_ans_file,const fil &_chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
     ~judger()
     {
@@ -97,7 +97,6 @@ class judger
         if(out_runner!=NULL) delete out_runner;
         if(ans_runner!=NULL) delete ans_runner;
         if(chk_runner!=NULL) delete chk_runner;
-        delete wait_end;
     }
     judger *set_in(const fil &file) {in=file;return this;}
     judger *set_out(const fil &file) {out=file;return this;}
@@ -145,7 +144,7 @@ class judger
             }
         }();
         if_end=true;
-        wait_end->notify_all();
+        wait_end.notify_all();
     }
     void add()
     {

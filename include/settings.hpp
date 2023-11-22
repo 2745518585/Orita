@@ -52,7 +52,7 @@ namespace Settings
         Init() {read();}
         ~Init() {save();}
     }_Init;
-    json *get_settings_object(std::string key)
+    json *get_settings_object(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=NULL;
@@ -66,7 +66,7 @@ namespace Settings
         else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
-    template<typename Ty> json *get_settings_object(std::string key)
+    template<typename Ty> json *get_settings_object(const std::string &key)
     {
         if(std::is_same_v<Ty,json>) return get_settings_object(key);
         const json::json_pointer pointer=(json::json_pointer)key;
@@ -81,7 +81,7 @@ namespace Settings
         else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
-    pat get_settings_path(std::string key)
+    pat get_settings_path(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         pat path=running_path;
@@ -92,7 +92,7 @@ namespace Settings
         INFO("get settings path",add_squo(key),add_squo(path));
         return path;
     }
-    template<typename Ty> pat get_settings_path(std::string key)
+    template<typename Ty> pat get_settings_path(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         pat path=running_path;
@@ -103,7 +103,7 @@ namespace Settings
         INFO("get settings path",add_squo(key),add_squo(path));
         return path;
     }
-    json get_settings_merge(std::string key)
+    json get_settings_merge(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         json object=default_settings[pointer];
@@ -112,7 +112,7 @@ namespace Settings
         INFO("get settings merge",add_squo(key),object.dump());
         return object;
     }
-    template<typename Ty> Ty get_settings(std::string key)
+    template<typename Ty> Ty get_settings(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=get_settings_object<Ty>(key);
@@ -159,7 +159,7 @@ const arg data_compile_argu=[]()
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
 namespace Settings
 {
-    std::string get_file(std::string key) noexcept
+    std::string get_file(const std::string &key)
     {
         try {return ::get_file(get_settings<std::string>(key),get_settings_path<std::string>(key)).path();} catch(...) {}
         return "";
@@ -174,7 +174,7 @@ const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/d
 const std::string exefile_str=Settings::get_settings<std::string>("/exefile");
 pat get_exefile(const pat &file)
 {
-    return replace_env(exefile_str,running_path,{{"file",replace_extension(file,"").toString()},{"filename",replace_extension((pat)file.getFileName(),"").toString()},{"filepath",replace_extension(file.parent(),"").toString()}});
+    return replace_env(exefile_str,running_path,env_args::filenosuf(file));
 }
 pat get_exefile(const fil &file)
 {

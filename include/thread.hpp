@@ -22,7 +22,7 @@ template<typename run_t> class thread_mgr
         {
             std::mutex wait_end_lock;
             std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
+            target->wait_end.wait(lock,[&](){return (bool)target->if_end;});
         }
         read_lock.lock();
         new_que.push(name);

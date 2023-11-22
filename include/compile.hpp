@@ -16,9 +16,9 @@ class compiler
     Poco::Pipe in,out,err;
     process_handle *ph=NULL;
     bool if_end=false;
-    std::condition_variable *wait_end=new std::condition_variable;
+    std::condition_variable wait_end;
     compiler(const fil &_file,const arg &_argu=arg()):file(_file),argu((arg)file+"-o"+get_exefile(file)+compile_argu+_argu) {}
-    ~compiler() {delete ph;delete wait_end;}
+    ~compiler() {delete ph;}
     void wait_for() {try {ph->wait();} catch(...) {}}
     void start()
     {
@@ -36,7 +36,7 @@ class compiler
         if(exit_code=ph->wait()) WARN("compile - fail","id: "+to_string_hex(this),"argu: "+add_squo(argu));
         else INFO("compile - success","id: "+to_string_hex(this),"argu: "+add_squo(argu));
         if_end=true;
-        wait_end->notify_all();
+        wait_end.notify_all();
     }
     int operator()()
     {
