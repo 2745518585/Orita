@@ -439,7 +439,7 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
   - `s2`: 第二个值。
 - **返回值**: 比较的结果。
 
-#### `auto _GRE(auto s1, auto s2)`
+#### `auto _GOE(auto s1, auto s2)`
 
 大于等于比较函数。
 
@@ -462,7 +462,7 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 - **参数**: 
   - `tot`: 树的大小。
-- **返回值**: 随机树。
+- **返回值**: 随机树的边集。
 
 #### `std::vector<std::pair<unsigned int, unsigned int>> rnd_ucgraph(unsigned int totp, unsigned int tote)`
 
@@ -470,7 +470,7 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 - **参数**: 
   - `tot`: 图的大小。
-- **返回值**: 随机无向连通图。
+- **返回值**: 随机无向连通图的边集。
 
 #### `void auto_flush()`
 
