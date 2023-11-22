@@ -10,7 +10,9 @@
     },
     "compiler": {
         "argu": [
-            "-O2"
+            "-O2",
+            "-I",
+            "%{FILE_PATH}%"
         ],
         "command": "g++",
         "time_limit": 5000

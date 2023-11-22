@@ -12,6 +12,8 @@ namespace orita
     namespace Data_maker
     {
         std::mt19937 rd(std::random_device{}());
+        using ll=long long;
+        using ull=unsigned long long;
         void register_rnd(int argc,char **argv)
         {
             if(argc>=2) rd.seed(std::stoul(argv[1]));
@@ -20,51 +22,48 @@ namespace orita
         {
             rd.seed(seed);
         }
-        unsigned long long rnd()
+        ull rnd()
         {
-            return (std::uniform_int_distribution<unsigned long long>(0,-1))(rd);
+            return (std::uniform_int_distribution<ull>(0,-1))(rd);
         }
-        long long rnd(long long lim)
+        template<typename Ty> std::enable_if_t<std::is_integral_v<Ty>,Ty> rnd(const Ty &lim)
         {
-            return (std::uniform_int_distribution<long long>(0,lim-1))(rd);
+            return (std::uniform_int_distribution<Ty>(0,lim-1))(rd);
         }
-        long long rnd(long long llim,long long ulim)
+        ll rnd(const ll &lim)
         {
-            return (std::uniform_int_distribution<long long>(llim,ulim))(rd);
+            return (std::uniform_int_distribution<ll>(0,lim-1))(rd);
         }
-        std::map<int,std::pair<long long,long long>> pairs;
-        template<typename Type> std::pair<long long,long long> rnd_pair(long long llim,long long ulim,Type checker)
+        template<typename Ty> std::enable_if_t<std::is_integral_v<Ty>,Ty> rnd(const Ty &llim,const Ty &ulim)
         {
-            long long s1=rnd(llim,ulim),s2=rnd(llim,ulim);
+            return (std::uniform_int_distribution<Ty>(llim,ulim))(rd);
+        }
+        ll rnd(const ll &llim,const ll &ulim)
+        {
+            return (std::uniform_int_distribution<ll>(llim,ulim))(rd);
+        }
+        template<typename Ty1,typename Ty2> class pair: public std::pair<Ty1,Ty2>
+        {
+          public:
+            std::string sep;
+            pair(const Ty1 &first,const Ty2 &second,const std::string &_sep=" "):std::pair<Ty1,Ty2>(first,second),sep(_sep) {}
+            pair(const std::pair<Ty1,Ty2> &_pair,const std::string &_sep=" "):std::pair<Ty1,Ty2>(_pair),sep(_sep) {}
+        };
+        template<typename Ty1,typename Ty2> std::ostream &operator<<(std::ostream &out,const pair<Ty1,Ty2> &str)
+        {
+            return out<<str.first<<str.sep<<str.second;
+        }
+        template<typename lTy,typename uTy,typename chk_Ty> auto rnd_pair(const lTy &llim,const uTy &ulim,const chk_Ty &checker,const std::string &sep=" ")
+        {
+            auto s1=rnd(llim,ulim),s2=rnd(llim,ulim);
             while(!checker(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
-            return std::make_pair(s1,s2);
+            return pair(s1,s2,sep);
         }
-        template<typename Type> std::pair<long long,long long> rnd_pair(long long llim1,long long ulim1,long long llim2,long long ulim2,Type checker)
-        {
-            long long s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
-            while(!checker(s1,s2)) s1=rnd(llim1,ulim1),s2=rnd(llim2,ulim2);
-            return std::make_pair(s1,s2);
-        }
-        template<typename Type> std::pair<long long,long long> reg_pair(int num,long long llim,long long ulim,Type checker)
-        {
-            pairs[num]=Data_maker::rnd_pair(llim,ulim,checker);
-            return pairs[num];
-        }
-        template<typename Type> std::pair<long long,long long> reg_pair(int num,long long llim1,long long ulim1,long long llim2,long long ulim2,Type checker)
-        {
-            pairs[num]=Data_maker::rnd_pair(llim1,ulim1,llim2,ulim2,checker);
-            return pairs[num];
-        }
-        std::pair<long long,long long> reg_pair(int num)
-        {
-            if(!pairs.count(num)) return std::make_pair(0,0);
-            return pairs[num];
-        }
-        auto _NEQ=[](long long s1,long long s2) {return s1!=s2;};
-        auto _LES=[](long long s1,long long s2) {return s1<s2;};
-        auto _GRE=[](long long s1,long long s2) {return s1>s2;};
-        auto _LOE=[](long long s1,long long s2) {return s1<=s2;};
-        auto _GOE=[](long long s1,long long s2) {return s1>=s2;};
+        auto _NEQ=[](auto s1,auto s2) {return s1!=s2;};
+        auto _LES=[](auto s1,auto s2) {return s1<s2;};
+        auto _GRE=[](auto s1,auto s2) {return s1>s2;};
+        auto _LOE=[](auto s1,auto s2) {return s1<=s2;};
+        auto _GOE=[](auto s1,auto s2) {return s1>=s2;};
         std::vector<unsigned> rnd_range(unsigned tot)
         {
             std::vector<unsigned> ans;
@@ -75,7 +74,7 @@ namespace orita
         std::vector<std::pair<unsigned,unsigned>> rnd_tree(unsigned tot)
         {
             std::vector<std::pair<unsigned,unsigned>> ans;
-            for(int i=1;i<=tot-1;++i) ans.push_back(std::make_pair(rnd(1,i),i+1));
+            for(unsigned i=1;i<=tot-1;++i) ans.push_back(std::make_pair(rnd(1,i),i+1));
             auto pos=rnd_range(tot);
             for(auto &i:ans)
             {
@@ -105,7 +104,6 @@ namespace orita
     using Data_maker::register_rnd;
     using Data_maker::rnd;
     using Data_maker::rnd_pair;
-    using Data_maker::reg_pair;
     using Data_maker::_NEQ;
     using Data_maker::_LES;
     using Data_maker::_GRE;

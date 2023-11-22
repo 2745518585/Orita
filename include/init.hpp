@@ -139,7 +139,7 @@ void remove_null(json &a)
 }
 
 // exception
-typedef Poco::Exception exception;
+using exception=Poco::Exception;
 
 // result
 class res
@@ -194,11 +194,11 @@ std::string add_squo(const std::vector<std::string> &vec)
     for(auto i:vec) str+="'"+i+"' ";
     return str;
 }
-bool if_pre(std::string str,std::string pre)
+bool if_pre(const std::string &str,const std::string &pre)
 {
     return pre.size()<=str.size()&&str.substr(0,pre.size())==pre;
 }
-template<typename Type> std::enable_if_t<std::is_convertible_v<Type,size_t>,std::string> operator*(const std::string a,Type b)
+template<typename Ty> std::enable_if_t<std::is_convertible_v<Ty,size_t>,std::string> operator*(const std::string &a,Ty b)
 {
     std::string str="";
     while(b--) str+=a;
@@ -339,9 +339,9 @@ arg get_arg(const std::string &str)
     return argu;
 }
 arg operator+(const arg &a,const arg &b) {arg c=a;c.insert(c.end(),b.begin(),b.end());return c;}
-template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> operator+(const arg &a,const Type &b) {return a+(arg)b;}
-template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> operator+(const Type &a,const arg &b) {return (arg)a+b;}
-template<typename Type> arg &operator+=(arg &a,const Type &b) {return a=a+b;}
+template<typename Ty> std::enable_if_t<std::is_convertible_v<Ty,arg>,arg> operator+(const arg &a,const Ty &b) {return a+(arg)b;}
+template<typename Ty> std::enable_if_t<std::is_convertible_v<Ty,arg>,arg> operator+(const Ty &a,const arg &b) {return (arg)a+b;}
+template<typename Ty> arg &operator+=(arg &a,const Ty &b) {return a=a+b;}
 
 // process
 class process_handle: public Poco::ProcessHandle
@@ -442,12 +442,12 @@ std::ostream &operator<<(std::ostream &output,tim str)
 // print
 std::ostream &operator<<(std::ostream &output,std::any any)
 {
-    #define out(Type) else if(any.type()==typeid(Type)) output<<std::any_cast<Type>(any);\
-    else if(any.type()==typeid(const Type)) output<<std::any_cast<const Type>(any);\
-    else if(any.type()==typeid(Type&)) output<<std::any_cast<Type&>(any);\
-    else if(any.type()==typeid(const Type&)) output<<std::any_cast<const Type&>(any);\
-    else if(any.type()==typeid(Type*)) output<<std::any_cast<Type*>(any);\
-    else if(any.type()==typeid(const Type*)) output<<std::any_cast<const Type*>(any)
+    #define out(Ty) else if(any.type()==typeid(Ty)) output<<std::any_cast<Ty>(any);\
+    else if(any.type()==typeid(const Ty)) output<<std::any_cast<const Ty>(any);\
+    else if(any.type()==typeid(Ty&)) output<<std::any_cast<Ty&>(any);\
+    else if(any.type()==typeid(const Ty&)) output<<std::any_cast<const Ty&>(any);\
+    else if(any.type()==typeid(Ty*)) output<<std::any_cast<Ty*>(any);\
+    else if(any.type()==typeid(const Ty*)) output<<std::any_cast<const Ty*>(any)
     if(false);
     out(int);out(unsigned);out(long long);out(unsigned long long);
     out(char);out(bool);
@@ -468,8 +468,8 @@ class sistream
 {
   public:
     std::istream& stream;
-    template<typename Type> sistream(Type &_stream):stream(_stream) {}
-    template<typename Type> sistream &operator>>(Type &val)
+    template<typename Ty> sistream(Ty &_stream):stream(_stream) {}
+    template<typename Ty> sistream &operator>>(Ty &val)
     {
         stream>>val;
         return *this;
@@ -479,18 +479,18 @@ class sostream
 {
   public:
     std::ostream &stream;
-    template<typename Type> sostream(Type &_stream):stream(_stream) {}
+    template<typename Ty> sostream(Ty &_stream):stream(_stream) {}
     sostream &operator<<(const std::string &val)
     {
         stream<<UTF8tosys(val);
         return *this;
     }
-    template<typename Type> sostream &operator<<(Type &val)
+    template<typename Ty> sostream &operator<<(Ty &val)
     {
         stream<<val;
         return *this;
     }
-    template<typename Type> sostream &operator<<(const Type &val)
+    template<typename Ty> sostream &operator<<(const Ty &val)
     {
         stream<<val;
         return *this;
@@ -512,12 +512,12 @@ class sifstream: public std::ifstream
     {
         open(file.path(),mode);
     }
-    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::in)
+    template<typename Ty> void open(const Ty &file,const std::ios_base::openmode &mode=std::ios::in)
     {
         std::ifstream::open(UTF8tosys(file),mode);
     }
-    template<typename Type> sifstream(const Type &file) {open(file);}
-    template<typename Type> sifstream(const Type &file,const std::ios_base::openmode &mode) {open(file,mode);}
+    template<typename Ty> sifstream(const Ty &file) {open(file);}
+    template<typename Ty> sifstream(const Ty &file,const std::ios_base::openmode &mode) {open(file,mode);}
 };
 class sofstream: public std::ofstream
 {
@@ -530,12 +530,12 @@ class sofstream: public std::ofstream
     {
         open(file.path(),mode);
     }
-    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
+    template<typename Ty> void open(const Ty &file,const std::ios_base::openmode &mode=std::ios::out)
     {
         std::ofstream::open(UTF8tosys(file),mode);
     }
-    template<typename Type> sofstream(const Type &file) {open(file);}
-    template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode) {open(file,mode);}
+    template<typename Ty> sofstream(const Ty &file) {open(file);}
+    template<typename Ty> sofstream(const Ty &file,const std::ios_base::openmode &mode) {open(file,mode);}
 };
 namespace ANSI
 {

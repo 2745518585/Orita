@@ -66,16 +66,16 @@ namespace Settings
         else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
-    template<typename Type> json *get_settings_object(std::string key)
+    template<typename Ty> json *get_settings_object(std::string key)
     {
-        if(std::is_same_v<Type,json>) return get_settings_object(key);
+        if(std::is_same_v<Ty,json>) return get_settings_object(key);
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=NULL;
-        try {(Type)default_settings[pointer];object=&default_settings[pointer];} catch(...) {}
-        try {(Type)global_settings[pointer];object=&global_settings[pointer];} catch(...) {}
+        try {(Ty)default_settings[pointer];object=&default_settings[pointer];} catch(...) {}
+        try {(Ty)global_settings[pointer];object=&global_settings[pointer];} catch(...) {}
         for(auto &i:all_settings)
         {
-            try {(Type)i[pointer];object=&i[pointer];} catch(...) {}
+            try {(Ty)i[pointer];object=&i[pointer];} catch(...) {}
         }
         if(object) INFO("get settings object",add_squo(key),object->dump());
         else INFO("get settings object",add_squo(key),"NULL");
@@ -92,13 +92,13 @@ namespace Settings
         INFO("get settings path",add_squo(key),add_squo(path));
         return path;
     }
-    template<typename Type> pat get_settings_path(std::string key)
+    template<typename Ty> pat get_settings_path(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         pat path=running_path;
         for(auto &i:all_settings.items())
         {
-            try {(Type)i.value()[pointer];path=i.key();} catch(...) {}
+            try {(Ty)i.value()[pointer];path=i.key();} catch(...) {}
         }
         INFO("get settings path",add_squo(key),add_squo(path));
         return path;
@@ -112,26 +112,26 @@ namespace Settings
         INFO("get settings merge",add_squo(key),object.dump());
         return object;
     }
-    template<typename Type> Type get_settings(std::string key)
+    template<typename Ty> Ty get_settings(std::string key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
-        json *object=get_settings_object<Type>(key);
+        json *object=get_settings_object<Ty>(key);
         if(!object)
         {
             WARN("get settings - null",add_squo(key));
             throw exception("null settings");
         }
-        if constexpr(std::is_convertible<Type,std::string>::value)
+        if constexpr(std::is_convertible<Ty,std::string>::value)
         {
             try
             {
                 std::string str=replace_env((std::string)*object);
                 INFO("get settings str",add_squo(key),add_squo(str));
-                return (Type)str;
+                return (Ty)str;
             } catch(...) {WARN("get settings str - fail",add_squo(key),object->dump());}
         }
         else INFO("get settings",add_squo(key),object->dump());
-        return (Type)(*object);
+        return (Ty)(*object);
     }
 }
 using Settings::get_settings_object;
@@ -146,14 +146,14 @@ const arg compile_argu=[]()
 {
     json object=get_settings_merge("/compiler/argu");
     arg argu;
-    for(auto i:object) if(i.is_string()) argu+=(std::string)i;
+    for(auto i:object) if(i.is_string()) argu+=replace_env((std::string)i);
     return argu;
 }();
 const arg data_compile_argu=[]()
 {
     json object=get_settings_merge("/data/compile_argu");
     arg argu;
-    for(auto i:object) if(i.is_string()) argu+=(std::string)i;
+    for(auto i:object) if(i.is_string()) argu+=replace_env((std::string)i);
     return argu;
 }();
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");

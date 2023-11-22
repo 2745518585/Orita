@@ -13,6 +13,8 @@ configure_file(Oritaconfig.hpp.in Oritaconfig.hpp)
 
 file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
+configure_file("orita.hpp" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} COPYONLY)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(os_name "windows")
     configure_file("path.bat" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} COPYONLY)

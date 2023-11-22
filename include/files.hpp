@@ -112,26 +112,26 @@ namespace Files
         return get_file(get_filestr(num),file_dir);
     }
     pat check_file() {return pat();}
-    template<typename Type> pat check_file(const Type &str)
+    template<typename Ty> pat check_file(const Ty &str)
     {
-        if constexpr(std::is_convertible<Type,file_number>::value)
+        if constexpr(std::is_convertible<Ty,file_number>::value)
         {
             if(find_filestr(str)) return get_filestr(str);
             return pat();
         }
-        else if constexpr(std::is_convertible<Type,pat>::value)
+        else if constexpr(std::is_convertible<Ty,pat>::value)
         {
             if(pat(str)!=pat()) return str;
             return pat();
         }
-        else if constexpr(std::is_convertible<Type,fil>::value)
+        else if constexpr(std::is_convertible<Ty,fil>::value)
         {
             if(pat(fil(str).path())!=pat()) return str;
             return pat();
         }
         else return pat();
     }
-    template<typename Type,typename ...others_type> pat check_file(const Type &str,const others_type ...others)
+    template<typename Ty,typename ...others_type> pat check_file(const Ty &str,const others_type ...others)
     {
         pat result=check_file(str);
         if(result==pat()) return check_file(others...);
