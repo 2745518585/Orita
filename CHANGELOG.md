@@ -301,6 +301,7 @@ Orita 第一个正式版本。
 #### Features
 
 - Add args in enviroment variables replace.
+- Add `orita.hpp.
 
 #### Fixes
 

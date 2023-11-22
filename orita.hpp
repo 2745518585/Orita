@@ -49,9 +49,9 @@ namespace orita
             pair(const Ty1 &first,const Ty2 &second,const std::string &_sep=" "):std::pair<Ty1,Ty2>(first,second),sep(_sep) {}
             pair(const std::pair<Ty1,Ty2> &_pair,const std::string &_sep=" "):std::pair<Ty1,Ty2>(_pair),sep(_sep) {}
         };
-        template<typename Ty1,typename Ty2> std::ostream &operator<<(std::ostream &out,const pair<Ty1,Ty2> &str)
+        template<typename Ty1,typename Ty2> std::ostream &operator<<(std::ostream &out,const pair<Ty1,Ty2> &pr)
         {
-            return out<<str.first<<str.sep<<str.second;
+            return out<<pr.first<<pr.sep<<pr.second;
         }
         template<typename lTy,typename uTy,typename chk_Ty> auto rnd_pair(const lTy &llim,const uTy &ulim,const chk_Ty &checker,const std::string &sep=" ")
         {
@@ -103,6 +103,7 @@ namespace orita
     using Data_maker::rd;
     using Data_maker::register_rnd;
     using Data_maker::rnd;
+    using Data_maker::pair;
     using Data_maker::rnd_pair;
     using Data_maker::_NEQ;
     using Data_maker::_LES;

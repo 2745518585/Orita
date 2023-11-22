@@ -308,6 +308,174 @@ $\color{red}{\text{注意}}$：设置中的 `.max_process_num` 和 `.max_thread_
 
 `/help`: 显示帮助信息。
 
+## 头文件
+
+头文件默认位于 `${FILE_PATH}%/orita.hpp`，此目录默认添加至编译选项包含路径中，可通过 `#include"orita.hpp"` 直接引用。
+
+### `std::mt19937 rd`
+
+`std::mt19937` 类型随机数生成器。
+
+### `void register_rnd(int argc, char **argv)`
+
+用于注册随机数生成器的种子。
+
+- **参数**: 
+  - `argc`: 命令行参数的数量。
+  - `argv`: 命令行参数的数组。
+
+### `void register_rnd(unsigned seed)`
+
+用于注册指定的随机数种子。
+
+- **参数**: 
+  - `seed`: 要注册的随机数种子。
+
+### `unsigned long long rnd()`
+
+生成一个无符号长整型随机数。
+
+- **返回值**: 生成的随机数。
+
+### `template<class Ty> std::enable_if<std::is_integral_v<Ty>, Ty>::type rnd(const Ty &lim)`
+
+当传入参数类型为整数时，生成一个范围在 `[0, lim)` 之间的随机数。
+
+- **参数**: 
+  - `lim`: 随机数的上限。
+- **返回值**: 生成的随机数。
+
+### `long long rnd(const long long &lim)`
+
+生成一个范围在 `[0, lim)` 之间的长整型随机数。
+
+- **参数**: 
+  - `lim`: 随机数的上限。
+- **返回值**: 生成的随机数。
+
+### `template<class Ty> std::enable_if<std::is_integral_v<Ty>, Ty>::type rnd(const Ty &llim,const Ty &ulim)`
+
+当传入参数类型为整数时，生成一个范围在 `[llim, ulim]` 之间的随机数。
+
+- **参数**: 
+  - `llim`: 随机数的下限。
+  - `ulim`: 随机数的上限。
+- **返回值**: 生成的随机数。
+
+### `long long rnd(const long long &llim,const long long &ulim)`
+
+生成一个范围在 `[llim, ulim]` 之间的长整型随机数。
+
+- **参数**: 
+  - `llim`: 随机数的下限。
+  - `ulim`: 随机数的上限。
+- **返回值**: 生成的随机数。
+
+### `template<class Ty1, class Ty2> class pair<Ty1, Ty2>`
+
+带分隔符的键值对。
+
+- **成员**: 
+  - `first`: 键值对中的第一个元素。
+  - `second`: 键值对中的第二个元素。
+  - `sep`: 分隔符。
+- **方法**: 
+  - `pair(const Ty1 &first, const Ty2 &second, const std::string &_sep = " ")`: 构造函数，用于初始化键值对和分隔符。
+  - `pair(const std::pair<Ty1, Ty2> &_pair, const std::string &_sep = " ")`: 构造函数，从现有键值对和分隔符初始化。
+
+### `template<class Ty1, class Ty2> std::ostream &operator<<(std::ostream &out, const pair<Ty1, Ty2> &pr)`
+
+输出键值对。
+
+- **参数**: 
+  - `out`: 输出流。
+  - `pr`: 键值对。
+- **返回值**: 生成的随机数。
+
+### `template<class lTy, class uTy, class chk_Ty> auto rnd_pair(const lTy &llim, const uTy &ulim, const chk_Ty &checker, const std::string &sep = " ")`
+
+生成满足比较函数的随机数对。
+
+- **参数**: 
+  - `llim`: 随机数的下限。
+  - `ulim`: 随机数的上限。
+  - `checker`: 比较函数。
+  - `seq`: 分隔符。
+- **返回值**: 生成的随机数对。
+
+### `auto _NEQ(auto s1, auto s2)`
+
+不等于比较函数。
+
+- **参数**: 
+  - `s1`: 第一个值。
+  - `s2`: 第二个值。
+- **返回值**: 比较的结果。
+
+### `auto _LES(auto s1, auto s2)`
+
+小于比较函数。
+
+- **参数**: 
+  - `s1`: 第一个值。
+  - `s2`: 第二个值。
+- **返回值**: 比较的结果。
+
+### `auto _GRE(auto s1, auto s2)`
+
+大于比较函数。
+
+- **参数**: 
+  - `s1`: 第一个值。
+  - `s2`: 第二个值。
+- **返回值**: 比较的结果。
+
+### `auto _LOE(auto s1, auto s2)`
+
+小于等于比较函数。
+
+- **参数**: 
+  - `s1`: 第一个值。
+  - `s2`: 第二个值。
+- **返回值**: 比较的结果。
+
+### `auto _GRE(auto s1, auto s2)`
+
+大于等于比较函数。
+
+- **参数**: 
+  - `s1`: 第一个值。
+  - `s2`: 第二个值。
+- **返回值**: 比较的结果。
+
+### `std::vector<unsigned int> rnd_range(unsigned int tot)`
+
+生成随机排列。
+
+- **参数**: 
+  - `tot`: 排列长度。
+- **返回值**: 随机排列。
+
+### `std::vector<std::pair<unsigned int, unsigned int>> orita::Data_maker::rnd_tree(unsigned int tot)`
+
+生成随机树。
+
+- **参数**: 
+  - `tot`: 树的大小。
+- **返回值**: 随机树。
+
+### `std::vector<std::pair<unsigned int, unsigned int>> rnd_ucgraph(unsigned int totp, unsigned int tote)`
+
+生成随机无向连通图。
+
+- **参数**: 
+  - `tot`: 图的大小。
+- **返回值**: 随机无向连通图。
+
+### `void auto_flush()`
+
+自动刷新标准输出、标准错误输出缓冲区。
+
 ## 卸载
 
 要卸载 Orita，请使用 `orita clear` 命令删除所有配置文件，然后删除 `Orita` 目录下的源文件即可。
