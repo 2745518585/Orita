@@ -10,7 +10,9 @@
     },
     "compiler": {
         "argu": [
-            "-O2"
+            "-O2",
+            "-I",
+            "%{FILE_PATH}%"
         ],
         "command": "g++",
         "time_limit": 5000
@@ -29,7 +31,7 @@
         "outfile": "%*11%",
         "time": 1000
     },
-    "exe_suf": "",
+    "exefile": "%#file%",
     "max_process_num": 10,
     "max_thread_num": 100,
     "runtime_limit": 5000,
@@ -38,15 +40,6 @@
         "localdata": {
             "data": {
                 "data_dir": "./.data"
-            }
-        },
-        "oi": {
-            "data": {
-                "compile_argu": [
-                    "-std=c++14",
-                    "-O2",
-                    "-D JUDGING"
-                ]
             }
         }
     }

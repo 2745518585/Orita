@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_CHDATA
-#define _COMMAND_CHDATA _COMMAND_CHDATA
+#define _COMMAND_CHDATA
 #include"orita.hpp"
 class Command_chdata: public App
 {

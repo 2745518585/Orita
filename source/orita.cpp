@@ -16,6 +16,7 @@ class Command_orita: public App
         options.addOption(Poco::Util::Option("help","h","display help information").noArgument());
         options.addOption(Poco::Util::Option("reset","r","reset configuration").noArgument());
         options.addOption(Poco::Util::Option("clear","c","clear configuration").noArgument());
+        options.addOption(Poco::Util::Option("path","p","get local path").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
@@ -48,6 +49,11 @@ class Command_orita: public App
         {
             delete orita_log;
             ((fil)appdata_path).remove(true);
+            return EXIT_OK;
+        }
+        else if(check_option("path"))
+        {
+            scerr<<file_path;
             return EXIT_OK;
         }
         scout<<"--------------------------------------------------\n";

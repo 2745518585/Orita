@@ -1,11 +1,12 @@
 #pragma once
 #ifndef _FILE_JUDGE
-#define _FILE_JUDGE _FILE_JUDGE
+#define _FILE_JUDGE
 #include"init.hpp"
 #include"log.hpp"
 #include"files.hpp"
 #include"settings.hpp"
 #include"print.hpp"
+#include"thread.hpp"
 class runner
 {
   public:
@@ -21,7 +22,7 @@ class runner
     std::istream *in_stream=NULL;
     std::ostream *out_stream=&std::cout,*err_stream=&std::cerr;
     fil in_file,out_file,err_file;
-    runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(replace_extension(_file,exe_suf)),argu(_argu),time_limit(_time_limit) {}
+    runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(get_exefile(_file)),argu(_argu),time_limit(_time_limit) {}
     ~runner() {if(ph!=NULL) delete ph;}
     runner *set_in(const fil &file) {in_file=file;return this;}
     runner *set_in(std::istream *stream) {in_stream=stream;return this;}
@@ -30,31 +31,17 @@ class runner
     runner *set_err(const fil &file) {err_file=file;return this;}
     runner *set_err(std::ostream *stream) {err_stream=stream;return this;}
     void wait_for() {ph->wait();}
-    void input()
-    {
-        if(in_stream!=NULL) *in_stream>>in;
-    }
-    void output()
-    {
-        if(out_stream!=NULL) *out_stream<<out,out_stream->flush();
-    }
-    void errput()
-    {
-        if(err_stream!=NULL) *err_stream<<err,err_stream->flush();
-    }
     void start()
     {
-        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time: "+std::to_string(time_limit.count())+"ms");
+        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time_limit: "+std::to_string(time_limit.count())+"ms");
         if(in_file!=fil()) in_stream=new sifstream(in_file,std::ios::binary);
         if(out_file!=fil()) out_stream=new sofstream(out_file,std::ios::binary);
         if(err_file!=fil()) err_stream=new sofstream(err_file,std::ios::binary);
         run_timer.init();
-        std::future<void> in_future(std::async(std::launch::async,&runner::input,this));
-        std::future<void> out_future(std::async(std::launch::async,&runner::output,this));
-        std::future<void> err_future(std::async(std::launch::async,&runner::errput,this));
+        std::future<void> in_future(std::async(std::launch::async,[&](){if(in_stream!=NULL) *in_stream>>in; in.close(Poco::Pipe::CLOSE_WRITE);}));
+        std::future<void> out_future(std::async(std::launch::async,[&](){if(out_stream!=NULL) *out_stream<<out<<std::flush;}));
+        std::future<void> err_future(std::async(std::launch::async,[&](){if(err_stream!=NULL) *err_stream<<err<<std::flush;}));
         ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
-        in_future.wait();
-        in.close();
         std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
@@ -70,8 +57,8 @@ class runner
             if_success=true;
             INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(file),"time: "+std::to_string(time.count())+"ms","exit_code: "+std::to_string(exit_code));
         }
-        out_future.wait();
-        err_future.wait();
+        in_future.wait();out_future.wait();err_future.wait();
+        in.close();out.close();err.close();
         if(in_file!=fil()) delete in_stream;
         if(out_file!=fil()) delete out_stream;
         if(err_file!=fil()) delete err_stream;
@@ -87,7 +74,7 @@ class runner
         {
             if(ph!=NULL) Poco::Process::kill(*ph);
             wait_for();
-            return 0;
+            return 1;
         }
     }
 };
@@ -102,7 +89,7 @@ class judger
     tim time=(tim)-1;
     int exit_code=-1;
     bool if_end=false;
-    std::condition_variable *wait_end=new std::condition_variable;
+    std::condition_variable wait_end;
     judger(const fil &_ans,const fil &_chk,const fil &_in_file,const fil &_out_file,const fil &_ans_file,const fil &_chk_file,const tim _time_limit=get_time_limit()):ans(_ans),chk(_chk),in_file(_in_file),out_file(_out_file),ans_file(_ans_file),chk_file(_chk_file),time_limit(_time_limit) {}
     ~judger()
     {
@@ -110,7 +97,6 @@ class judger
         if(out_runner!=NULL) delete out_runner;
         if(ans_runner!=NULL) delete ans_runner;
         if(chk_runner!=NULL) delete chk_runner;
-        delete wait_end;
     }
     judger *set_in(const fil &file) {in=file;return this;}
     judger *set_out(const fil &file) {out=file;return this;}
@@ -158,7 +144,7 @@ class judger
             }
         }();
         if_end=true;
-        wait_end->notify_all();
+        wait_end.notify_all();
     }
     void add()
     {
@@ -177,132 +163,20 @@ class judger
         else Print::print_result(ans_name,result,ans_runner->time,ans_runner->exit_code);
     }
 };
-class th_judger
+class th_judger: public thread_mgr<judger>
 {
   public:
-    std::mutex read_lock;
-    std::map<std::string,judger*> list;
-    std::queue<std::string> new_que;
-    std::condition_variable wait_que;
-    std::atomic<size_t> running_sum;
-    void monitor(const std::string &name)
+    std::string class_name() const noexcept override
     {
-        judger *target=list[name];
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
-        }
-        read_lock.lock();
-        new_que.push(name);
-        --running_sum;
-        wait_que.notify_all();
-        read_lock.unlock();
+        return "th_judger";
     }
-    void add(const std::string &name,judger *object)
+    th_judger():thread_mgr()
     {
-        read_lock.lock();
-        if(list.count(name))
-        {
-            WARN("th_judger - repeated judger name","name: ",name);
-            return;
-        }
-        list[name]=object;
-        list[name]->add();
-        ++running_sum;
-        std::thread(&th_judger::monitor,this,name).detach();
-        INFO("th_judger - add judge task","id: "+to_string_hex(this),"name: "+add_squo(name));
-        read_lock.unlock();
-    }
-    void add(const std::initializer_list<std::pair<std::string,judger*>> object)
-    {
-        for(auto i:object) add(i.first,i.second);
-    }
-    void wait(const std::string &name)
-    {
-        read_lock.lock();
-        if(!list.count(name)) throw Poco::Exception("empty judger name");
-        judger *target=list[name];
-        read_lock.unlock();
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
-        }
-    }
-    void wait(const std::initializer_list<std::string> name)
-    {
-        for(auto i:name) wait(i);
-    }
-    void wait_all()
-    {
-        {
-            std::mutex wait_que_lock;
-            std::unique_lock<std::mutex> lock(wait_que_lock);
-            wait_que.wait(lock,[&](){return running_sum==0;});
-        }
-    }
-    std::string get(const std::initializer_list<std::string> name)
-    {
-        for(auto i:name)
-        {
-            wait(i);
-            if(list[i]->exit_code) return i;
-        }
-        return "";
-    }
-    std::string get_one()
-    {
-        while(true)
-        {
-            {
-                std::mutex wait_que_lock;
-                std::unique_lock<std::mutex> lock(wait_que_lock);
-                wait_que.wait(lock,[&](){return !new_que.empty()||running_sum==0;});
-            }
-            read_lock.lock();
-            if(new_que.empty())
-            {
-                read_lock.unlock();
-                if(running_sum==0) return "";
-                continue;
-            }
-            std::string name=new_que.front();
-            new_que.pop();
-            read_lock.unlock();
-            return name;
-        }
-    }
-    std::string get_all()
-    {
-        wait_all();
-        read_lock.lock();
-        for(auto i:list)
-        {
-            if(i.second->exit_code)
-            {
-                read_lock.unlock();
-                return i.first;
-            }
-        }
-        read_lock.unlock();
-        return "";
-    }
-    void remove(const std::string &name)
-    {
-        read_lock.lock();
-        delete list[name];
-        list.erase(name);
-        read_lock.unlock();
-    }
-    th_judger()
-    {
-        INFO("th_judger - start","id: "+to_string_hex(this));
+        INFO(class_name()+" - start","id: "+to_string_hex(this));
     }
     ~th_judger()
     {
-        for(auto i:list) delete i.second;
-        INFO("th_judger - end","id: "+to_string_hex(this));
+        INFO(class_name()+" - end","id: "+to_string_hex(this));
     }
 };
 #endif

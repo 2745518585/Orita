@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_FILES
-#define _FILE_FILES _FILE_FILES
+#define _FILE_FILES
 #include"init.hpp"
 #include"log.hpp"
 #define _run_ans 101
@@ -14,31 +14,33 @@ namespace Files
 {
     #define number_len 3
     json files_json,default_files_json;
+    void read()
+    {
+        (sifstream(file_path/"files"/"file.json"))>>default_files_json;
+        try {(sifstream(appdata_path/"file.json"))>>files_json;} catch(...) {}
+    }
+    void save()
+    {
+        remove_null(files_json);
+        (sofstream(appdata_path/"file.json"))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
+    }
     class Init
     {
       public:
-        Init()
-        {
-            (sifstream(file_path/"files"/"file.json"))>>default_files_json;
-            try {(sifstream(appdata_path/"file.json"))>>files_json;} catch(...) {}
-        }
-        ~Init()
-        {
-            remove_null(files_json);
-            (sofstream(appdata_path/"file.json"))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
-        }
+        Init() {read();}
+        ~Init() {save();}
     }_Init_files;
     class file_number
     {
       public:
         const unsigned num;
-        std::string str()const {return "file"+to_string_len(num,number_len);}
+        std::string str() const {return "file"+to_string_len(num,number_len);}
         file_number(const unsigned _num):num(_num)
         {
             if(num<0||num>_max_file_num)
             {
                 ERROR("file_number - invalid file_number","num: "+add_squo(this->str()));
-                throw Poco::Exception("invalid file number");
+                throw exception("invalid file number");
             }
         }
         explicit file_number(const std::string &str):file_number([&]
@@ -46,13 +48,13 @@ namespace Files
             if(!std::regex_match(str,std::regex("\\*[0-9]+")))
             {
                 ERROR("file_number - invalid file_number","str: "+add_squo(str));
-                throw Poco::Exception("invalid file number");
+                throw exception("invalid file number");
             }
             try {return std::stoul(str.substr(1));}
             catch(...)
             {
                 ERROR("file_number - invalid file_number","str: "+add_squo(str));
-                throw Poco::Exception("invalid file number");
+                throw exception("invalid file number");
             }
         }()) {}
     };
@@ -110,26 +112,26 @@ namespace Files
         return get_file(get_filestr(num),file_dir);
     }
     pat check_file() {return pat();}
-    template<typename Type> pat check_file(const Type &str)
+    template<typename Ty> pat check_file(const Ty &str)
     {
-        if constexpr(std::is_convertible<Type,file_number>::value)
+        if constexpr(std::is_convertible<Ty,file_number>::value)
         {
             if(find_filestr(str)) return get_filestr(str);
             return pat();
         }
-        else if constexpr(std::is_convertible<Type,pat>::value)
+        else if constexpr(std::is_convertible<Ty,pat>::value)
         {
             if(pat(str)!=pat()) return str;
             return pat();
         }
-        else if constexpr(std::is_convertible<Type,fil>::value)
+        else if constexpr(std::is_convertible<Ty,fil>::value)
         {
             if(pat(fil(str).path())!=pat()) return str;
             return pat();
         }
         else return pat();
     }
-    template<typename Type,typename ...others_type> pat check_file(const Type &str,const others_type ...others)
+    template<typename Ty,typename ...others_type> pat check_file(const Ty &str,const others_type ...others)
     {
         pat result=check_file(str);
         if(result==pat()) return check_file(others...);

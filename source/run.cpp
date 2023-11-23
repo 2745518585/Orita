@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_RUN
-#define _COMMAND_RUN _COMMAND_RUN
+#define _COMMAND_RUN
 #include"orita.hpp"
 class Command_run: public App
 {
@@ -50,6 +50,8 @@ class Command_run: public App
         }();
         // init time
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
+        // save config
+        save_config();
         // find file
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}

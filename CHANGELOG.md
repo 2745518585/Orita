@@ -295,3 +295,23 @@ Orita 第一个正式版本。
 #### Changes
 
 - Use `Poco::Process`.
+
+### Dev0.2.2
+
+#### Features
+
+- Add args in enviroment variables replace.
+- Add `orita.hpp`.
+- Add `orita /path`.
+
+#### Fixes
+
+- `th_compiler` and `th_judger` `get_one` cannot get finished tasks sometimes.
+- Cannot get exit_code in Linux.
+- Program unexpectedly waits for input
+
+#### Changes
+
+- Add `thread_mgr`.
+- Flush input and output when connected to console.
+- Save configs before running.

@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_LOG
-#define _FILE_LOG _FILE_LOG
+#define _FILE_LOG
 #include"init.hpp"
 class logger
 {

@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_JUDGE
-#define _COMMAND_JUDGE _COMMAND_JUDGE
+#define _COMMAND_JUDGE
 #include"orita.hpp"
 class Command_judge: public App
 {
@@ -55,6 +55,8 @@ class Command_judge: public App
             print_result(res::type::SS);
             return EXIT_OK;
         }
+        // save config
+        save_config();
         // find file
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
@@ -101,10 +103,10 @@ class Command_judge: public App
             (default_data_dir/"tmp_data").createDirectory();
             INFO("make data dir",add_squo(default_data_dir.path()));
         }
-        catch(Poco::Exception &error)
+        catch(exception &error)
         {
             ERROR("make data dir - fail",add_squo(default_data_dir.path()),add_squo(error.displayText()));
-            throw Poco::Exception("fail make data dir",add_squo(error.displayText()));
+            throw exception("fail make data dir",add_squo(error.displayText()));
         }
         delete print;
         // judge

@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_COMMAND
-#define _COMMAND_COMMAND _COMMAND_COMMAND
+#define _COMMAND_COMMAND
 #include"orita.hpp"
 class Command_command: public App
 {

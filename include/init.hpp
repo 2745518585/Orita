@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_INIT
-#define _FILE_INIT _FILE_INIT
+#define _FILE_INIT
 #include<iostream>
 #include<fstream>
 #include<sstream>
@@ -95,13 +95,9 @@ std::string systoUTF8(const std::string &systemText)
 // os
 const std::string os_name=Poco::Environment::osName();
 #ifdef _WIN32
-const std::string system_to_nul=" > nul 2>&1 ";
-const std::string system_to_con=" > con 2>&1 ";
 const int sys_exit_code=0;
 #endif
 #ifdef __linux__
-const std::string system_to_nul=" > /dev/null 2>&1 ";
-const std::string system_to_con=" > /dev/tty 2>&1 ";
 const int sys_exit_code=8;
 #endif
 
@@ -142,6 +138,9 @@ void remove_null(json &a)
     }
 }
 
+// exception
+using exception=Poco::Exception;
+
 // result
 class res
 {
@@ -150,15 +149,15 @@ class res
     type result;
     res():result(type::NL) {}
     res(type _result):result(_result) {}
-    bool is(const type target_result)const {return result==target_result;}
-    bool is(const std::initializer_list<type> target_result_list)const
+    bool is(const type target_result) const {return result==target_result;}
+    bool is(const std::initializer_list<type> target_result_list) const
     {
         for(auto target_result:target_result_list) if(result==target_result) return true;
         return false;
     }
-    bool istrue()const {return is({type::AC,type::SA,type::SS});}
-    bool isfalse()const {return is({type::WA,type::RE,type::TLE_CA,type::TLE_WA,type::TLE_O,type::CE,type::DA,type::TO,type::NF,type::II,type::FL});}
-    bool isnull()const {return is({type::NL});}
+    bool istrue() const {return is({type::AC,type::SA,type::SS});}
+    bool isfalse() const {return is({type::WA,type::RE,type::TLE_CA,type::TLE_WA,type::TLE_O,type::CE,type::DA,type::TO,type::NF,type::II,type::FL});}
+    bool isnull() const {return is({type::NL});}
 };
 
 // string
@@ -172,7 +171,8 @@ template<typename num_type> std::string to_string_hex(const num_type num)
 {
     std::stringstream strstream;
     strstream<<std::hex<<num;
-    return "0x"+strstream.str();
+    if(strstream.str().substr(0,2)!="0x") return "0x"+strstream.str();
+    else return strstream.str();
 }
 std::string add_quo(const std::string &str)
 {
@@ -194,11 +194,11 @@ std::string add_squo(const std::vector<std::string> &vec)
     for(auto i:vec) str+="'"+i+"' ";
     return str;
 }
-bool if_pre(std::string str,std::string pre)
+bool if_pre(const std::string &str,const std::string &pre)
 {
     return pre.size()<=str.size()&&str.substr(0,pre.size())==pre;
 }
-template<typename Type> std::enable_if_t<std::is_convertible_v<Type,size_t>,std::string> operator*(const std::string a,Type b)
+template<typename Ty> std::enable_if_t<std::is_convertible_v<Ty,size_t>,std::string> operator*(const std::string &a,Ty b)
 {
     std::string str="";
     while(b--) str+=a;
@@ -258,9 +258,17 @@ pat replace_extension(fil file,const std::string suf="")
 {
     return ((pat)file.path()).setExtension(suf).toString();
 }
+#ifdef _WIN32
+const pat system_nul="\\\\.\\nul";
+const pat system_con="\\\\.\\con";
+#endif
+#ifdef __linux__
+const pat system_nul="/dev/null";
+const pat system_con="/dev/tty";
+#endif
 std::string sgetenv(const std::string &str)
 {
-    if(!Poco::Environment::has(str)) throw Poco::Exception("empty environment variable");
+    if(!Poco::Environment::has(str)) throw exception("empty environment variable");
     return Poco::Environment::get(str);
 }
 const pat running_path=[]()
@@ -331,9 +339,9 @@ arg get_arg(const std::string &str)
     return argu;
 }
 arg operator+(const arg &a,const arg &b) {arg c=a;c.insert(c.end(),b.begin(),b.end());return c;}
-template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> operator+(const arg &a,const Type &b) {return a+(arg)b;}
-template<typename Type> std::enable_if_t<std::is_convertible_v<Type,arg>,arg> operator+(const Type &a,const arg &b) {return (arg)a+b;}
-template<typename Type> arg &operator+=(arg &a,const Type &b) {return a=a+b;}
+template<typename Ty> std::enable_if_t<std::is_convertible_v<Ty,arg>,arg> operator+(const arg &a,const Ty &b) {return a+(arg)b;}
+template<typename Ty> std::enable_if_t<std::is_convertible_v<Ty,arg>,arg> operator+(const Ty &a,const arg &b) {return (arg)a+b;}
+template<typename Ty> arg &operator+=(arg &a,const Ty &b) {return a=a+b;}
 
 // process
 class process_handle: public Poco::ProcessHandle
@@ -345,6 +353,7 @@ class process_handle: public Poco::ProcessHandle
     process_handle(Poco::ProcessHandle process):Poco::ProcessHandle(process) {}
     int wait()
     {
+        if(exit_code!=-1) return exit_code;
         try {exit_code=Poco::ProcessHandle::wait();}
         catch(...) {}
         if(exit_code>=0) return exit_code>>sys_exit_code;
@@ -352,6 +361,7 @@ class process_handle: public Poco::ProcessHandle
     }
     int tryWait()
     {
+        if(exit_code!=-1) return exit_code;
         try {exit_code=Poco::ProcessHandle::tryWait();}
         catch(...) {}
         if(exit_code>=0) return exit_code>>sys_exit_code;
@@ -360,16 +370,46 @@ class process_handle: public Poco::ProcessHandle
 };
 
 // pipe
-std::istream &operator>>(std::istream &input,const Poco::Pipe &pipe)
+std::streamsize copy_stream_flush(std::istream &istr,Poco::Pipe &ostr)
 {
-    Poco::PipeOutputStream pipe_output(pipe);
-    Poco::StreamCopier::copyStream(input,pipe_output);
+    char buffer;
+    std::streamsize len=0;
+    while(istr.read(&buffer,1))
+    {
+        ++len;
+        ostr.writeBytes(&buffer,1);
+    }
+    return len;
+}
+std::streamsize copy_stream_flush(Poco::Pipe &istr,std::ostream &ostr)
+{
+    char buffer;
+    std::streamsize len=0;
+    while(istr.readBytes(&buffer,1))
+    {
+        ++len;
+        ostr.write(&buffer,1);
+    }
+    return len;
+}
+std::istream &operator>>(std::istream &input,Poco::Pipe &pipe)
+{
+    if(&input==&std::cin) copy_stream_flush(input,pipe);
+    else
+    {
+        Poco::PipeOutputStream pipe_output(pipe);
+        Poco::StreamCopier::copyStream(input,pipe_output);
+    }
     return input;
 }
-std::ostream &operator<<(std::ostream &output,const Poco::Pipe &pipe)
+std::ostream &operator<<(std::ostream &output,Poco::Pipe &pipe)
 {
-    Poco::PipeInputStream pipe_input(pipe);
-    Poco::StreamCopier::copyStream(pipe_input,output);
+    if(&output==&std::cout||&output==&std::cerr) copy_stream_flush(pipe,output);
+    else
+    {
+        Poco::PipeInputStream pipe_input(pipe);
+        Poco::StreamCopier::copyStream(pipe_input,output);
+    }
     return output;
 }
 
@@ -383,11 +423,11 @@ class timer
 {
   public:
     decltype(std::chrono::high_resolution_clock::now()) begin_time;
-    void init()
+    void init() noexcept
     {
         begin_time=std::chrono::high_resolution_clock::now();
     }
-    tim get_time()
+    tim get_time() const noexcept
     {
         auto end_time=std::chrono::high_resolution_clock::now();
         return std::chrono::duration_cast<tim>(end_time-begin_time);
@@ -400,22 +440,14 @@ std::ostream &operator<<(std::ostream &output,tim str)
 }
 
 // print
-#ifdef _WIN32
-const pat system_nul="\\\\.\\nul";
-const pat system_con="\\\\.\\con";
-#endif
-#ifdef __linux__
-const pat system_nul="/dev/null";
-const pat system_con="/dev/tty";
-#endif
 std::ostream &operator<<(std::ostream &output,std::any any)
 {
-    #define out(Type) else if(any.type()==typeid(Type)) output<<std::any_cast<Type>(any);\
-    else if(any.type()==typeid(const Type)) output<<std::any_cast<const Type>(any);\
-    else if(any.type()==typeid(Type&)) output<<std::any_cast<Type&>(any);\
-    else if(any.type()==typeid(const Type&)) output<<std::any_cast<const Type&>(any);\
-    else if(any.type()==typeid(Type*)) output<<std::any_cast<Type*>(any);\
-    else if(any.type()==typeid(const Type*)) output<<std::any_cast<const Type*>(any)
+    #define out(Ty) else if(any.type()==typeid(Ty)) output<<std::any_cast<Ty>(any);\
+    else if(any.type()==typeid(const Ty)) output<<std::any_cast<const Ty>(any);\
+    else if(any.type()==typeid(Ty&)) output<<std::any_cast<Ty&>(any);\
+    else if(any.type()==typeid(const Ty&)) output<<std::any_cast<const Ty&>(any);\
+    else if(any.type()==typeid(Ty*)) output<<std::any_cast<Ty*>(any);\
+    else if(any.type()==typeid(const Ty*)) output<<std::any_cast<const Ty*>(any)
     if(false);
     out(int);out(unsigned);out(long long);out(unsigned long long);
     out(char);out(bool);
@@ -436,8 +468,8 @@ class sistream
 {
   public:
     std::istream& stream;
-    template<typename Type> sistream(Type &_stream):stream(_stream) {}
-    template<typename Type> sistream &operator>>(Type &val)
+    template<typename Ty> sistream(Ty &_stream):stream(_stream) {}
+    template<typename Ty> sistream &operator>>(Ty &val)
     {
         stream>>val;
         return *this;
@@ -447,13 +479,18 @@ class sostream
 {
   public:
     std::ostream &stream;
-    template<typename Type> sostream(Type &_stream):stream(_stream) {}
+    template<typename Ty> sostream(Ty &_stream):stream(_stream) {}
     sostream &operator<<(const std::string &val)
     {
         stream<<UTF8tosys(val);
         return *this;
     }
-    template<typename Type> sostream &operator<<(const Type &val)
+    template<typename Ty> sostream &operator<<(Ty &val)
+    {
+        stream<<val;
+        return *this;
+    }
+    template<typename Ty> sostream &operator<<(const Ty &val)
     {
         stream<<val;
         return *this;
@@ -475,12 +512,12 @@ class sifstream: public std::ifstream
     {
         open(file.path(),mode);
     }
-    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::in)
+    template<typename Ty> void open(const Ty &file,const std::ios_base::openmode &mode=std::ios::in)
     {
         std::ifstream::open(UTF8tosys(file),mode);
     }
-    template<typename Type> sifstream(const Type &file) {open(file);}
-    template<typename Type> sifstream(const Type &file,const std::ios_base::openmode &mode) {open(file,mode);}
+    template<typename Ty> sifstream(const Ty &file) {open(file);}
+    template<typename Ty> sifstream(const Ty &file,const std::ios_base::openmode &mode) {open(file,mode);}
 };
 class sofstream: public std::ofstream
 {
@@ -493,12 +530,12 @@ class sofstream: public std::ofstream
     {
         open(file.path(),mode);
     }
-    template<typename Type> void open(const Type &file,const std::ios_base::openmode &mode=std::ios::out)
+    template<typename Ty> void open(const Ty &file,const std::ios_base::openmode &mode=std::ios::out)
     {
         std::ofstream::open(UTF8tosys(file),mode);
     }
-    template<typename Type> sofstream(const Type &file) {open(file);}
-    template<typename Type> sofstream(const Type &file,const std::ios_base::openmode &mode) {open(file,mode);}
+    template<typename Ty> sofstream(const Ty &file) {open(file);}
+    template<typename Ty> sofstream(const Ty &file,const std::ios_base::openmode &mode) {open(file,mode);}
 };
 namespace ANSI
 {
@@ -549,6 +586,10 @@ namespace Init
       public:
         Init()
         {
+            if(os_name!="Windows NT"&&os_name!="Linux")
+            {
+                throw exception("unsupported plateform");
+            }
             std::ios_base::sync_with_stdio(false);
             hide_cursor();
         }

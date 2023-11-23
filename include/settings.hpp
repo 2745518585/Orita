@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_SETTINGS
-#define _FILE_SETTINGS _FILE_SETTINGS
+#define _FILE_SETTINGS
 #include"init.hpp"
 #include"log.hpp"
 #include"files.hpp"
@@ -8,49 +8,51 @@ json all_settings,global_settings,default_settings,if_has_settings;
 json::json_pointer others_settings=json::json_pointer("/~0list");
 namespace Settings
 {
+    void read()
+    {
+        (sifstream(file_path/"files"/"settings.json"))>>default_settings;
+        try {(sifstream(appdata_path/"settings.json"))>>global_settings;} catch(...) {}
+        pat dir("/");
+        dir.setDevice(running_path.getDevice());
+        dir.setNode(running_path.getNode());
+        for(int i=-1;i<=running_path.depth();++i)
+        {
+            if(i>=0) dir/=running_path[i];
+            try
+            {
+                (sifstream(dir/".orita/settings.json"))>>all_settings[dir.toString()];
+                if_has_settings[dir.toString()]=true;
+            } catch(...) {};
+        }
+    }
+    void save()
+    {
+        remove_null(global_settings);
+        (sofstream(appdata_path/"settings.json"))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
+        pat dir("/");
+        dir.setDevice(running_path.getDevice());
+        dir.setNode(running_path.getNode());
+        for(int i=-1;i<=running_path.depth();++i)
+        {
+            if(i>=0) dir/=running_path[i];
+            try
+            {
+                if(!if_has_settings[dir.toString()].is_null())
+                {
+                    ((fil)dir/".orita").createDirectory();
+                    remove_null(all_settings[dir.toString()]);
+                    (sofstream(dir/".orita/settings.json"))<<all_settings[dir.toString()].dump(4,' ',true,json::error_handler_t::ignore);
+                }
+            } catch(...) {};
+        }
+    }
     class Init
     {
       public:
-        Init()
-        {
-            (sifstream(file_path/"files"/"settings.json"))>>default_settings;
-            try {(sifstream(appdata_path/"settings.json"))>>global_settings;} catch(...) {}
-            pat dir("/");
-            dir.setDevice(running_path.getDevice());
-            dir.setNode(running_path.getNode());
-            for(int i=-1;i<=running_path.depth();++i)
-            {
-                if(i>=0) dir/=running_path[i];
-                try
-                {
-                    (sifstream(dir/".orita/settings.json"))>>all_settings[dir.toString()];
-                    if_has_settings[dir.toString()]=true;
-                } catch(...) {};
-            }
-        }
-        ~Init()
-        {
-            remove_null(global_settings);
-            (sofstream(appdata_path/"settings.json"))<<global_settings.dump(4,' ',true,json::error_handler_t::ignore);
-            pat dir("/");
-            dir.setDevice(running_path.getDevice());
-            dir.setNode(running_path.getNode());
-            for(int i=-1;i<=running_path.depth();++i)
-            {
-                if(i>=0) dir/=running_path[i];
-                try
-                {
-                    if(!if_has_settings[dir.toString()].is_null())
-                    {
-                        ((fil)dir/".orita").createDirectory();
-                        remove_null(all_settings[dir.toString()]);
-                        (sofstream(dir/".orita/settings.json"))<<all_settings[dir.toString()].dump(4,' ',true,json::error_handler_t::ignore);
-                    }
-                } catch(...) {};
-            }
-        }
+        Init() {read();}
+        ~Init() {save();}
     }_Init;
-    json *get_settings_object(std::string key)
+    json *get_settings_object(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=NULL;
@@ -64,22 +66,22 @@ namespace Settings
         else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
-    template<typename Type> json *get_settings_object(std::string key)
+    template<typename Ty> json *get_settings_object(const std::string &key)
     {
-        if(std::is_same_v<Type,json>) return get_settings_object(key);
+        if(std::is_same_v<Ty,json>) return get_settings_object(key);
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=NULL;
-        try {(Type)default_settings[pointer];object=&default_settings[pointer];} catch(...) {}
-        try {(Type)global_settings[pointer];object=&global_settings[pointer];} catch(...) {}
+        try {(Ty)default_settings[pointer];object=&default_settings[pointer];} catch(...) {}
+        try {(Ty)global_settings[pointer];object=&global_settings[pointer];} catch(...) {}
         for(auto &i:all_settings)
         {
-            try {(Type)i[pointer];object=&i[pointer];} catch(...) {}
+            try {(Ty)i[pointer];object=&i[pointer];} catch(...) {}
         }
         if(object) INFO("get settings object",add_squo(key),object->dump());
         else INFO("get settings object",add_squo(key),"NULL");
         return object;
     }
-    pat get_settings_path(std::string key)
+    pat get_settings_path(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         pat path=running_path;
@@ -90,18 +92,18 @@ namespace Settings
         INFO("get settings path",add_squo(key),add_squo(path));
         return path;
     }
-    template<typename Type> pat get_settings_path(std::string key)
+    template<typename Ty> pat get_settings_path(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         pat path=running_path;
         for(auto &i:all_settings.items())
         {
-            try {(Type)i.value()[pointer];path=i.key();} catch(...) {}
+            try {(Ty)i.value()[pointer];path=i.key();} catch(...) {}
         }
         INFO("get settings path",add_squo(key),add_squo(path));
         return path;
     }
-    json get_settings_merge(std::string key)
+    json get_settings_merge(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         json object=default_settings[pointer];
@@ -110,26 +112,26 @@ namespace Settings
         INFO("get settings merge",add_squo(key),object.dump());
         return object;
     }
-    template<typename Type> Type get_settings(std::string key)
+    template<typename Ty> Ty get_settings(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
-        json *object=get_settings_object<Type>(key);
+        json *object=get_settings_object<Ty>(key);
         if(!object)
         {
             WARN("get settings - null",add_squo(key));
-            throw Poco::Exception("null settings");
+            throw exception("null settings");
         }
-        if constexpr(std::is_convertible<Type,std::string>::value)
+        if constexpr(std::is_convertible<Ty,std::string>::value)
         {
             try
             {
                 std::string str=replace_env((std::string)*object);
                 INFO("get settings str",add_squo(key),add_squo(str));
-                return (Type)str;
+                return (Ty)str;
             } catch(...) {WARN("get settings str - fail",add_squo(key),object->dump());}
         }
         else INFO("get settings",add_squo(key),object->dump());
-        return (Type)(*object);
+        return (Ty)(*object);
     }
 }
 using Settings::get_settings_object;
@@ -139,26 +141,25 @@ using Settings::get_settings;
 const unsigned max_process_num=get_settings<unsigned>("/max_process_num");
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
-const std::string exe_suf=get_settings<std::string>("/exe_suf");
 const fil compiler_command=get_settings<std::string>("/compiler/command");
 const arg compile_argu=[]()
 {
     json object=get_settings_merge("/compiler/argu");
     arg argu;
-    for(auto i:object) if(i.is_string()) argu+=(std::string)i;
+    for(auto i:object) if(i.is_string()) argu+=replace_env((std::string)i);
     return argu;
 }();
 const arg data_compile_argu=[]()
 {
     json object=get_settings_merge("/data/compile_argu");
     arg argu;
-    for(auto i:object) if(i.is_string()) argu+=(std::string)i;
+    for(auto i:object) if(i.is_string()) argu+=replace_env((std::string)i);
     return argu;
 }();
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
 namespace Settings
 {
-    std::string get_file(std::string key)
+    std::string get_file(const std::string &key)
     {
         try {return ::get_file(get_settings<std::string>(key),get_settings_path<std::string>(key)).path();} catch(...) {}
         return "";
@@ -170,6 +171,15 @@ fil default_ansfile=Settings::get_file("/data/ansfile");
 fil default_chkfile=Settings::get_file("/data/chkfile");
 fil default_data_dir=Settings::get_file("/data/data_dir");
 const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/data/chk_exit_code");
+const std::string exefile_str=Settings::get_settings<std::string>("/exefile");
+pat get_exefile(const pat &file)
+{
+    return replace_env(exefile_str,running_path,env_args::filenosuf(file));
+}
+pat get_exefile(const fil &file)
+{
+    return get_exefile((pat)file.path());
+}
 namespace Settings
 {
     void change_time_limit(const tim time)

@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_APP
-#define _FILE_APP _FILE_APP
+#define _FILE_APP
 #include"init.hpp"
 class App: public Poco::Util::Application
 {
@@ -57,15 +57,15 @@ class App: public Poco::Util::Application
             stopOptionsProcessing();
         }
     }
-    bool check_option(const std::string &name)
+    bool check_option(const std::string &name) const
     {
         return config().hasOption(name);
     }
-    std::string get_option(const std::string &name)
+    std::string get_option(const std::string &name) const
     {
         return config().getString(name,"");
     }
-    std::string get_option(const std::string &name,const std::string &default_value)
+    std::string get_option(const std::string &name,const std::string &default_value) const
     {
         return config().getString(name,default_value);
     }

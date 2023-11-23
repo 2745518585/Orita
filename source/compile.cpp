@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _COMMAND_COMPILE
-#define _COMMAND_COMPILE _COMMAND_COMPILE
+#define _COMMAND_COMPILE
 #include"orita.hpp"
 class Command_compile: public App
 {
@@ -43,7 +43,7 @@ class Command_compile: public App
             }
             show_cursor();
             timer run_timer;run_timer.init();
-            int exit_code=ssystem(replace_extension(file,exe_suf).toString()+" "+run_argu)>>sys_exit_code;
+            int exit_code=ssystem(get_exefile(file).toString()+" "+run_argu)>>sys_exit_code;
             tim time=run_timer.get_time();
             hide_cursor();
             scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
@@ -53,7 +53,7 @@ class Command_compile: public App
             fil file=get_file((pat)args[0]);
             show_cursor();
             timer run_timer;run_timer.init();
-            int exit_code=ssystem(replace_extension(file,exe_suf).toString()+" "+run_argu)>>sys_exit_code;
+            int exit_code=ssystem(get_exefile(file).toString()+" "+run_argu)>>sys_exit_code;
             tim time=run_timer.get_time();
             hide_cursor();
             scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";

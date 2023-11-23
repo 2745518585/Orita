@@ -1,6 +1,6 @@
 #pragma once
 #ifndef _FILE_PROCESS
-#define _FILE_PROCESS _FILE_PROCESS
+#define _FILE_PROCESS
 #include"init.hpp"
 #include"settings.hpp"
 namespace process

@@ -8,10 +8,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
 
-project(orita VERSION 0.2.1)
+project(orita VERSION 0.2.2)
 configure_file(Oritaconfig.hpp.in Oritaconfig.hpp)
 
 file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+configure_file("orita.hpp" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} COPYONLY)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(os_name "windows")
