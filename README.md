@@ -173,7 +173,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 ### orita
 
-`orita [[/help] | [/reset] | [/clear]]`
+`orita [[/help] | [/reset] | [/clear] | [/path]]`
 
 命令行工具的入口命令。
 
@@ -182,6 +182,8 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 `/reset`: 重置配置。
 
 `/clear`: 清空配置。
+
+`/path`: 获取文件路径。
 
 ### run
 

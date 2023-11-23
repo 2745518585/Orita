@@ -302,6 +302,7 @@ Orita 第一个正式版本。
 
 - Add args in enviroment variables replace.
 - Add `orita.hpp`.
+- Add `orita /path`.
 
 #### Fixes
 
