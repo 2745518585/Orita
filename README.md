@@ -4,7 +4,7 @@ zh-CN | [en-CN](./README_en-CN.md)
 
 [Orita](https://github.com/2745518585/Orita)
 
-Orita 是一款由 [赵悦岑](https://github.com/2745518585/) 开发的 OI 工具，主要使用 C++ 编写，包含评测、压力测试、数据生成等功能。
+Orita 是一款由 [赵悦岑](https://github.com/2745518585/) 开发的 OI 工具，主要使用 C++ 编写，包含评测、对拍、数据生成等功能。
 
 [vscode-Orita](https://github.com/2745518585/vscode-Orita)
 
@@ -257,7 +257,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 ### compile
 
-`orita compile [file] /help [[/run] | [/trun]] [/carg=args] [/arg=args]`
+`orita compile [file] [/help] [[/run] | [/trun]] [/carg=args] [/arg=args]`
 
 编译指定的源文件和编译参数。
 
@@ -297,7 +297,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 `/merge=key`: 将名为 `key` 的设置文件合并（覆盖不匹配）至当前目录的局部设置。
 
-`/files`: 如果未提供 `num`，则输出 `file.json` 文件。如果提供 `num` 但未提供 `value`，则输出编号为 `num` 的文件的值。如果在 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值将从 `%{FILE_PATH}%/files/%{OS_NAME}%/file.json` 中读取。如果在 `num` 后追加 `value`，则将该文件的值设置为 `value`。
+`/files`: 如果未提供 `num`，则输出 `file.json` 文件。如果提供 `num` 但未提供 `value`，则输出编号为 `num` 的文件的值。如果在 `num` 后追加 `%{RESET}%`，则将该文件重置为默认值，默认值将从 `%{FILE_PATH}%/files/file.json` 中读取。如果在 `num` 后追加 `value`，则将该文件的值设置为 `value`。
 
 ### command
 
