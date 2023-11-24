@@ -296,7 +296,7 @@ Orita 第一个正式版本。
 
 - Use `Poco::Process`.
 
-### Dev0.2.2
+### Dev 0.2.2
 
 #### Features
 
@@ -315,3 +315,9 @@ Orita 第一个正式版本。
 - Add `thread_mgr`.
 - Flush input and output when connected to console.
 - Save configs before running.
+
+### Dev 0.2.3
+
+#### Changes
+
+Change `Time Limit Error` into `Time Limit Exceed`.
