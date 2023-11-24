@@ -107,7 +107,7 @@ namespace Print
             for(unsigned j=0;j<str_back.size();++j)
             {
                 if(j<i.size()) str+=str_back[j]+i[j]+std::string(" ")*(lens[j]-i[j].size());
-                else str+=str_back[j]+std::string("")*lens[j];
+                else str+=str_back[j]+std::string(" ")*lens[j];
             }
         }
         return str;
