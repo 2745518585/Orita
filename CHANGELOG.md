@@ -318,10 +318,14 @@ Orita 第一个正式版本。
 
 ### Dev 0.2.3
 
+#### Features
+
+- New functions and classes in `orita.hpp`.
+
 #### Fixes
 
 - Wrong output format in `print_type`.
 
 #### Changes
 
-Change `Time Limit Error` into `Time Limit Exceed`.
+- Change `Time Limit Error` into `Time Limit Exceed`.

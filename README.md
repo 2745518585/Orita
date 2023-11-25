@@ -374,17 +374,30 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
   - `ulim`: 随机数的上限。
 - **返回值**: 生成的随机数。
 
+
+#### `template<class lTy, class uTy> class rdl<lTy, uTy>`
+
+指定上限和下限，生成随机数。
+
+- **成员**
+  - `lTy llim`: 随机数下限。
+  - `uTy ulim`: 随机数上限。
+  - `auto rdl<lTy, uTy>::operator()() const`: 返回 `rnd(llim,ulim)` 的结果。
+- **构造函数**
+  - `rdl()`: 默认构造函数。
+  - `rdl<lTy, uTy>::rdl(const uTy &lim)`: 指定上限。
+  - `rdl(const lTy &llim, const uTy &ulim)`: 指定下限和上限。
+
 #### `template<class Ty1, class Ty2> class pair<Ty1, Ty2>`
 
 带分隔符的键值对。
 
+- **基类**: `std::pair<Ty1,Ty2>`。
 - **成员**: 
-  - `first`: 键值对中的第一个元素。
-  - `second`: 键值对中的第二个元素。
-  - `sep`: 分隔符。
-- **方法**: 
-  - `pair(const Ty1 &first, const Ty2 &second, const std::string &_sep = " ")`: 构造函数，用于初始化键值对和分隔符。
-  - `pair(const std::pair<Ty1, Ty2> &_pair, const std::string &_sep = " ")`: 构造函数，从现有键值对和分隔符初始化。
+  - `std::string sep`: 分隔符。
+- **构造函数**: 
+  - `pair(const Ty1 &first, const Ty2 &second, const std::string &_sep = " ")`: 用于初始化键值对和分隔符。
+  - `pair(const std::pair<Ty1, Ty2> &_pair, const std::string &_sep = " ")`: 从现有键值对和分隔符初始化。
 
 #### `template<class Ty1, class Ty2> std::ostream &operator<<(std::ostream &out, const pair<Ty1, Ty2> &pr)`
 
@@ -395,61 +408,34 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
   - `pr`: 键值对。
 - **返回值**: 生成的随机数。
 
-#### `template<class lTy, class uTy, class chk_Ty> auto rnd_pair(const lTy &llim, const uTy &ulim, const chk_Ty &checker, const std::string &sep = " ")`
+#### `template<class Ty1, class Ty2> struct _NEQ<Ty1, Ty2>`
+#### `template<class Ty1, class Ty2> struct _LES<Ty1, Ty2>`
+#### `template<class Ty1, class Ty2> struct _GRE<Ty1, Ty2>`
+#### `template<class Ty1, class Ty2> struct _LOE<Ty1, Ty2>`
+#### `template<class Ty1, class Ty2> struct _GOE<Ty1, Ty2>`
+
+- **成员**: 
+  - `bool operator()(const Ty1 &s1,const Ty2 &s2) const `: 返回两数的比较结果，分别为不等于、小于、大于、小于等于、大于等于。
+
+#### `rnd_pair(...,const std::string &seq)`
 
 生成满足比较函数的随机数对。
 
+比较函数可以是函数作为参数传入，也可以是类或结构体作为模板传入。类或结构体支持无模板、一种模板（两个数类型相同时）或两种模板（分别为两个数的类型），需可以调用 `operator()` 并将两数作为参数传入，返类型为 `bool`。
+
+对于生成随机数对的生成器，可以直接指定上限和下限，也可以指定一个或两个生成器。生成器为类或结构体的实例或 lambda 表达式，需可以无参数调用 `operator()`，返类型为 `bool`。当指定了两个参数时，依据能否调用 `operator()` 判断作为生成器还是作为随机数范围使用。
+
 - **参数**: 
-  - `llim`: 随机数的下限。
-  - `ulim`: 随机数的上限。
-  - `checker`: 比较函数。
   - `seq`: 分隔符。
 - **返回值**: 生成的随机数对。
 
-#### `auto _NEQ(auto s1, auto s2)`
-
-不等于比较函数。
-
-- **参数**: 
-  - `s1`: 第一个值。
-  - `s2`: 第二个值。
-- **返回值**: 比较的结果。
-
-#### `auto _LES(auto s1, auto s2)`
-
-小于比较函数。
-
-- **参数**: 
-  - `s1`: 第一个值。
-  - `s2`: 第二个值。
-- **返回值**: 比较的结果。
-
-#### `auto _GRE(auto s1, auto s2)`
-
-大于比较函数。
-
-- **参数**: 
-  - `s1`: 第一个值。
-  - `s2`: 第二个值。
-- **返回值**: 比较的结果。
-
-#### `auto _LOE(auto s1, auto s2)`
-
-小于等于比较函数。
-
-- **参数**: 
-  - `s1`: 第一个值。
-  - `s2`: 第二个值。
-- **返回值**: 比较的结果。
-
-#### `auto _GOE(auto s1, auto s2)`
-
-大于等于比较函数。
-
-- **参数**: 
-  - `s1`: 第一个值。
-  - `s2`: 第二个值。
-- **返回值**: 比较的结果。
+**用法示例**: 
+- `rnd_pair<_LES>(1,10);`
+- `rnd_pair<std::less>(1,1e5);`
+- `rnd_pair<std::less<int>>(1,1e5);`
+- `rnd_pair<_LES>(rdl(1,10));`
+- `rnd_pair<_LES>([&](){return rnd(1,10);});`
+- `rnd_pair<_LES>(rdl(1,10),rdl(1,1e5));`
 
 #### `std::vector<unsigned int> rnd_range(unsigned int tot)`
 

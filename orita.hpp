@@ -42,14 +42,14 @@ namespace orita
         {
             return (std::uniform_int_distribution<ll>(llim,ulim))(rd);
         }
-        template<typename Ty1,typename Ty2> class rdl
+        template<typename lTy,typename uTy> class rdl
         {
           public:
-            Ty1 llim;
-            Ty2 ulim;
+            lTy llim;
+            uTy ulim;
             rdl() {}
-            rdl(const Ty2 &lim):llim(0),ulim(lim-1) {}
-            rdl(const Ty1 &llim,const Ty2 &ulim):llim(llim),ulim(ulim) {}
+            rdl(const uTy &lim):llim(0),ulim(lim-1) {}
+            rdl(const lTy &llim,const uTy &ulim):llim(llim),ulim(ulim) {}
             auto operator()() const {return rnd(llim,ulim);}
         };
         template<typename Ty1,typename Ty2> class pair: public std::pair<Ty1,Ty2>
@@ -63,6 +63,16 @@ namespace orita
         {
             return out<<pr.first<<pr.sep<<pr.second;
         }
+
+        namespace cmp
+        {
+            template<typename Ty1,typename Ty2> struct _NEQ {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1!=s2;}};
+            template<typename Ty1,typename Ty2> struct _LES {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<s2;}};
+            template<typename Ty1,typename Ty2> struct _GRE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>s2;}};
+            template<typename Ty1,typename Ty2> struct _LOE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<=s2;}};
+            template<typename Ty1,typename Ty2> struct _GOE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>=s2;}};
+        }
+        using namespace cmp;
 
         template<typename Ty,typename=void>
         struct has_call_operator: std::false_type {};
@@ -145,16 +155,6 @@ namespace orita
             while(!(*new chk_Ty<decltype(s1),decltype(s2)>)(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
             return pair(s1,s2,sep);
         }
-
-        namespace cmp
-        {
-            template<typename Ty1,typename Ty2> struct _NEQ {bool operator()(const Ty1 s1,const Ty2 &s2) const {return s1!=s2;}};
-            template<typename Ty1,typename Ty2> struct _LES {bool operator()(const Ty1 s1,const Ty2 &s2) const {return s1<s2;}};
-            template<typename Ty1,typename Ty2> struct _GRE {bool operator()(const Ty1 s1,const Ty2 &s2) const {return s1>s2;}};
-            template<typename Ty1,typename Ty2> struct _LOE {bool operator()(const Ty1 s1,const Ty2 &s2) const {return s1<=s2;}};
-            template<typename Ty1,typename Ty2> struct _GOE {bool operator()(const Ty1 s1,const Ty2 &s2) const {return s1>=s2;}};
-        }
-        using namespace cmp;
 
         std::vector<unsigned> rnd_range(unsigned tot)
         {
