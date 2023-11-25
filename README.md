@@ -374,7 +374,6 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
   - `ulim`: 随机数的上限。
 - **返回值**: 生成的随机数。
 
-
 #### `template<class lTy, class uTy> class rdl<lTy, uTy>`
 
 指定上限和下限，生成随机数。
