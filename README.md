@@ -311,7 +311,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 ## 头文件
 
-头文件默认位于 `${FILE_PATH}%/orita.hpp`，此目录默认添加至编译选项包含路径中，可通过 `#include"orita.hpp"` 直接引用。
+头文件默认位于 `${FILE_PATH}%/orita.hpp`，此目录默认添加至编译选项包含路径中，可通过 `#include"orita.hpp"` 直接引用。需要 C++14 及以上标准才可通过编译。
 
 所有函数、变量、类均位于 `namespace orita` 中。
 
@@ -378,6 +378,8 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 指定上限和下限，生成随机数。
 
+注意，C++14 及以下无法推导类模板，需显式定义模板。
+
 - **成员**
   - `lTy llim`: 随机数下限。
   - `uTy ulim`: 随机数上限。
@@ -429,12 +431,15 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 - **返回值**: 生成的随机数对。
 
 **用法示例**: 
+- `rnd_pair(1,10,[&](auto x1,auto x2){return x1<x2;});`
 - `rnd_pair<_LES>(1,10);`
 - `rnd_pair<std::less>(1,1e5);`
 - `rnd_pair<std::less<int>>(1,1e5);`
-- `rnd_pair<_LES>(rdl(1,10));`
 - `rnd_pair<_LES>([&](){return rnd(1,10);});`
-- `rnd_pair<_LES>(rdl(1,10),rdl(1,1e5));`
+- `rnd_pair<_LES>(rdl<int,int>(1,10));`
+- `rnd_pair<_LES>(rdl<int,int>(1,10),rdl<int,int>(1,1e5));`
+- `rnd_pair<_LES>(rdl(1,10));` (C++17 及以上)
+- `rnd_pair<_LES>(rdl(1,10),rdl(1,1e5));` (C++17 及以上)
 
 #### `std::vector<unsigned int> rnd_range(unsigned int tot)`
 
