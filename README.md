@@ -479,7 +479,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 该项目使用了以下第三方库：
 
-- Lohmann, N. (2022). JSON for Modern C++ (Version 3.11.2) [Computer software]. https://github.com/nlohmann
+- Lohmann, N. (2023). JSON for Modern C++ (Version 3.11.3) [Computer software]. https://github.com/nlohmann
 - [gabime/spdlog](https://github.com/gabime/spdlog)
 - [ikalnytskyi/termcolor](https://github.com/ikalnytskyi/termcolor)
 - [pocoproject/poco](https://github.com/pocoproject/poco)
