@@ -26,22 +26,18 @@ namespace orita
         {
             return (std::uniform_int_distribution<ull>(0,-1))(rd);
         }
-        #if __cplusplus >= 201703L
-        template<typename Ty> std::enable_if_t<std::is_integral_v<Ty>,Ty> rnd(const Ty &lim)
+        template<typename Ty> std::enable_if_t<std::is_integral<Ty>::value,Ty> rnd(const Ty &lim)
         {
             return (std::uniform_int_distribution<Ty>(0,lim-1))(rd);
         }
-        #endif
         ll rnd(const ll &lim)
         {
             return (std::uniform_int_distribution<ll>(0,lim-1))(rd);
         }
-        #if __cplusplus >= 201703L
-        template<typename Ty> std::enable_if_t<std::is_integral_v<Ty>,Ty> rnd(const Ty &llim,const Ty &ulim)
+        template<typename Ty> std::enable_if_t<std::is_integral<Ty>::value,Ty> rnd(const Ty &llim,const Ty &ulim)
         {
             return (std::uniform_int_distribution<Ty>(llim,ulim))(rd);
         }
-        #endif
         ll rnd(const ll &llim,const ll &ulim)
         {
             return (std::uniform_int_distribution<ll>(llim,ulim))(rd);

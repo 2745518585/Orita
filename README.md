@@ -340,7 +340,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 - **返回值**: 生成的随机数。
 
-#### `template<class Ty> std::enable_if<std::is_integral_v<Ty>, Ty>::type rnd(const Ty &lim)`
+#### `template<class Ty> std::enable_if<std::is_integral<Ty>::value, Ty>::type rnd(const Ty &lim)`
 
 当传入参数类型为整数时，生成一个范围在 `[0, lim)` 之间的随机数。
 
@@ -356,7 +356,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
   - `lim`: 随机数的上限。
 - **返回值**: 生成的随机数。
 
-#### `template<class Ty> std::enable_if<std::is_integral_v<Ty>, Ty>::type rnd(const Ty &llim,const Ty &ulim)`
+#### `template<class Ty> std::enable_if<std::is_integral<Ty>::value, Ty>::type rnd(const Ty &llim,const Ty &ulim)`
 
 当传入参数类型为整数时，生成一个范围在 `[llim, ulim]` 之间的随机数。
 
