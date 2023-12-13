@@ -157,6 +157,7 @@ const arg data_compile_argu=[]()
     return argu;
 }();
 const bool if_skip_compiled=get_settings<bool>("/compiler/skip_compiled");
+const unsigned compile_try_times=get_settings<unsigned>("/compiler/try_times");
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
 namespace Settings
 {

@@ -16,7 +16,8 @@
         ],
         "command": "g++",
         "skip_compiled": true,
-        "time_limit": 5000
+        "time_limit": 5000,
+        "try_times": 5
     },
     "data": {
         "ansfile": "%*12%",

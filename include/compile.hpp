@@ -12,6 +12,7 @@ class compiler
   public:
     const fil file;
     const arg argu;
+    unsigned try_times=compile_try_times;
     int exit_code;
     Poco::Pipe in,out,err;
     process_handle *ph=NULL;
@@ -36,15 +37,18 @@ class compiler
         }())
         {
             INFO("compile - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
-            ph=new process_handle(Poco::Process::launch(compiler_command.path(),(arg)file+"-o"+get_exefile(file)+argu,&in,&out,&err));
-            std::future<void> run_future(std::async(std::launch::async,[&](){ph->wait();}));
-            if(run_future.wait_for(compile_time_limit)!=std::future_status::ready)
+            while(try_times--)
             {
-                Poco::Process::kill(*ph);
-                run_future.wait();
-                WARN("compile - timeout","id: "+to_string_hex(this));
-                add();
-                return;
+                ph=new process_handle(Poco::Process::launch(compiler_command.path(),(arg)file+"-o"+get_exefile(file)+argu,&in,&out,&err));
+                std::future<void> run_future(std::async(std::launch::async,[&](){ph->wait();}));
+                if(run_future.wait_for(compile_time_limit)!=std::future_status::ready)
+                {
+                    Poco::Process::kill(*ph);
+                    run_future.wait();
+                    WARN("compile - timeout","id: "+to_string_hex(this));
+                    continue;
+                }
+                break;
             }
             if(exit_code=ph->wait()) WARN("compile - fail","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
             else INFO("compile - success","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
