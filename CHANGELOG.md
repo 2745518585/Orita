@@ -321,6 +321,7 @@ Orita 第一个正式版本。
 #### Features
 
 - New functions and classes in `orita.hpp`.
+- Skip compilation when the source file last modified time is not later than the execute file.
 
 #### Fixes
 

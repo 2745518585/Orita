@@ -30,7 +30,6 @@ class runner
     runner *set_out(std::ostream *stream) {out_stream=stream;return this;}
     runner *set_err(const fil &file) {err_file=file;return this;}
     runner *set_err(std::ostream *stream) {err_stream=stream;return this;}
-    void wait_for() {ph->wait();}
     void start()
     {
         INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time_limit: "+std::to_string(time_limit.count())+"ms");
@@ -42,7 +41,7 @@ class runner
         std::future<void> out_future(std::async(std::launch::async,[&](){if(out_stream!=NULL) *out_stream<<out<<std::flush;}));
         std::future<void> err_future(std::async(std::launch::async,[&](){if(err_stream!=NULL) *err_stream<<err<<std::flush;}));
         ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
-        std::future<void> run_future(std::async(std::launch::async,&runner::wait_for,this));
+        std::future<void> run_future(std::async(std::launch::async,[&](){ph->wait();}));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
             Poco::Process::kill(*ph);
@@ -72,8 +71,7 @@ class runner
         }
         catch(...)
         {
-            if(ph!=NULL) Poco::Process::kill(*ph);
-            wait_for();
+            if(ph!=NULL) Poco::Process::kill(*ph),ph->wait();
             return 1;
         }
     }
@@ -100,6 +98,14 @@ class judger
     }
     judger *set_in(const fil &file) {in=file;return this;}
     judger *set_out(const fil &file) {out=file;return this;}
+    void wait_for()
+    {
+        {
+            std::mutex wait_end_lock;
+            std::unique_lock<std::mutex> lock(wait_end_lock);
+            wait_end.wait(lock,[&](){return (bool)if_end;});
+        }
+    }
     void judge()
     {
         [&]()

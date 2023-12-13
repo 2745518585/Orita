@@ -19,11 +19,7 @@ template<typename run_t> class thread_mgr
     void monitor(const std::string &name)
     {
         run_t *target=list[name];
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end.wait(lock,[&](){return (bool)target->if_end;});
-        }
+        target->wait_for();
         read_lock.lock();
         new_que.push(name);
         --running_sum;
@@ -55,11 +51,7 @@ template<typename run_t> class thread_mgr
         if(!list.count(name)) throw exception("empty name");
         run_t *target=list[name];
         read_lock.unlock();
-        {
-            std::mutex wait_end_lock;
-            std::unique_lock<std::mutex> lock(wait_end_lock);
-            target->wait_end->wait(lock,[&](){return (bool)target->if_end;});
-        }
+        target->wait_for();
     }
     void wait(const std::initializer_list<std::string> name)
     {

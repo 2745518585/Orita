@@ -15,6 +15,7 @@
             "%{FILE_PATH}%"
         ],
         "command": "g++",
+        "skip_compiled": true,
         "time_limit": 5000
     },
     "data": {
