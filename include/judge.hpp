@@ -40,7 +40,7 @@ class runner
         std::future<void> in_future(std::async(std::launch::async,[&](){if(in_stream!=NULL) *in_stream>>in; in.close(Poco::Pipe::CLOSE_WRITE);}));
         std::future<void> out_future(std::async(std::launch::async,[&](){if(out_stream!=NULL) *out_stream<<out<<std::flush;}));
         std::future<void> err_future(std::async(std::launch::async,[&](){if(err_stream!=NULL) *err_stream<<err<<std::flush;}));
-        ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
+        ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err,sub_env));
         std::future<void> run_future(std::async(std::launch::async,[&](){ph->wait();}));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {
@@ -134,7 +134,7 @@ class judger
                 if(ans_runner->exit_code) {result=res::type::RE;return;}
             }
             {
-                (chk_runner=new runner(chk,(arg)in_file+out_file+ans_file))->set_out(chk_file);
+                (chk_runner=new runner(chk,replace_env(chk_args,running_path,env_args::chkfiles(in_file,out_file,ans_file))))->set_out(chk_file);
                 if((*chk_runner)()) {chk_result=res::type::TO;return;}
                 if(chk_runner->exit_code!=0&&!std::regex_match(std::to_string(chk_runner->exit_code),chk_correct_exit_code)) {chk_result=res::type::RE;return;}
             }

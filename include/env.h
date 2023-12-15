@@ -18,5 +18,9 @@ namespace env_args
     {
         return filenosuf((pat)file.path());
     }
+    json chkfiles(const fil &in_file,const fil &out_file,const fil &ans_file)
+    {
+        return {{"infile",in_file.path()},{"outfile",out_file.path()},{"ansfile",ans_file.path()}};
+    }
 }
 #endif

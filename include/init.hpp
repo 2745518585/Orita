@@ -322,6 +322,11 @@ class arg: public Poco::Process::Args
     arg(const std::string &str) {push_back(str);}
     arg(const pat &str) {push_back(str.toString());}
     arg(const fil &str) {push_back(str.path());}
+    arg(const json &str)
+    {
+        if(!str.is_array()) throw exception("wrong arg format: json object that is not an array");
+        for(auto i:str) push_back((std::string)i);
+    }
 };
 arg get_arg(const std::string &str)
 {
@@ -577,6 +582,9 @@ unsigned rnd()
     static std::mt19937 gen(rd());
     return gen();
 }
+
+// env
+Poco::Process::Env sub_env;
 
 //init
 namespace Init

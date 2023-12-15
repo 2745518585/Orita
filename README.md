@@ -123,7 +123,9 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `try_times`: 编译超时后重试次数。
 - `data`: 评测相关。
   - `ansfile`: 默认答案数据文件。
+  - `chk_args`: 传入 `checker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
   - `chk_exit_code`: `checker` 在遇到答案错误时的返回值，在十进制下使用正则表达式匹配。
+  - `chk_outputs`: 值为 `"on"` 时启用 `checker` 向控制台输出信息，由 `.data.chk_args` 设置传入 `checker`。
   - `chkfile`: 默认比较信息文件。
   - `compile_argu`: 评测编译选项。
   - `data_dir`: 数据文件存放目录。

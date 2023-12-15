@@ -21,7 +21,14 @@
     },
     "data": {
         "ansfile": "%*12%",
+        "chk_args": [
+            "%#infile%",
+            "%#outfile%",
+            "%#ansfile%",
+            "%.data.chk_outputs%"
+        ],
         "chk_exit_code": "1",
+        "chk_outputs": "on",
         "chkfile": "%*13%",
         "compile_argu": [
             "-std=c++14",

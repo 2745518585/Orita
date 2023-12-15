@@ -38,4 +38,18 @@ std::string replace_env(const std::string &str,const pat &dir,const json &args)
     INFO("replace env","str: "+add_squo(str),"result: "+add_squo(resstr));
     return resstr;
 }
+template<typename ...others_type> json replace_env(json a,const others_type &...others)
+{
+    if(a.is_null()) return a;
+    if(a.is_string()) return replace_env((std::string)a,others...);
+    if(a.is_object())
+    {
+        for(auto &i:a.items()) a[i.key()]=replace_env(i.value(),others...);
+    }
+    if(a.is_array())
+    {
+        for(auto i=0;i<a.size();++i) a[i]=replace_env(a[i],others...);
+    }
+    return a;
+}
 #endif
