@@ -15,6 +15,7 @@ class Command_check: public App
         options.addOption(Poco::Util::Option("num","n","specify check num").argument("num",true));
         options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
         options.addOption(Poco::Util::Option("multithread","mul","turn on multithreading").noArgument());
+        options.addOption(Poco::Util::Option("fcompile","fc","force recompile").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
@@ -62,8 +63,9 @@ class Command_check: public App
             add_file(_check_chk,chk_str);
             return add_namesuf(get_file(chk_str),"cpp");
         }();
-        // init time
+        // init config
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
+        if(check_option("fcompile")) if_skip_compiled=false;
         // init total sum
         if(!check_option("num"))
         {

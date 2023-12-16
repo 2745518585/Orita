@@ -156,7 +156,7 @@ const arg data_compile_argu=[]()
     for(auto i:object) if(i.is_string()) argu+=replace_env((std::string)i);
     return argu;
 }();
-const bool if_skip_compiled=get_settings<bool>("/compiler/skip_compiled");
+bool if_skip_compiled=get_settings<bool>("/compiler/skip_compiled");
 const unsigned compile_try_times=get_settings<unsigned>("/compiler/try_times");
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
 namespace Settings
