@@ -52,4 +52,26 @@ template<typename ...others_type> json replace_env(json a,const others_type &...
     }
     return a;
 }
+namespace Env
+{
+    class Init
+    {
+      public:
+        Init()
+        {
+            for(auto ev:enviroment_variable.items())
+            {
+                if(!ev.value().is_null()) ssetenv(ev.key(),ev.value());
+            }
+            for(int i=0;i<=_max_file_num;++i)
+            {
+                if(find_filestr(i)) ssetenv(((file_number)i).str(),get_file((file_number)i).path());
+            }
+            traverse_json(get_settings_merge(""),[](const std::string &key,const json &value){
+                ssetenv(std::regex_replace(key,std::regex("\\/"),"."),value.dump());
+            });
+        }
+        ~Init() {}
+    }_Init;
+}
 #endif

@@ -325,6 +325,7 @@ Orita 第一个正式版本。
 - Add try times in compile.
 - Customize the arguments passed into the checker.
 - Checker outputs more info.
+- Pass environment variables to child processes. 
 
 #### Fixes
 
@@ -333,3 +334,4 @@ Orita 第一个正式版本。
 #### Changes
 
 - Change `Time Limit Error` into `Time Limit Exceed`.
+- Use `putenv` to add new environment variables.

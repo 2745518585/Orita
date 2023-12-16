@@ -24,8 +24,7 @@
         "chk_args": [
             "%#infile%",
             "%#outfile%",
-            "%#ansfile%",
-            "%.data.chk_outputs%"
+            "%#ansfile%"
         ],
         "chk_exit_code": "1",
         "chk_outputs": "on",

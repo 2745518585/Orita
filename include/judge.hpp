@@ -40,7 +40,7 @@ class runner
         std::future<void> in_future(std::async(std::launch::async,[&](){if(in_stream!=NULL) *in_stream>>in; in.close(Poco::Pipe::CLOSE_WRITE);}));
         std::future<void> out_future(std::async(std::launch::async,[&](){if(out_stream!=NULL) *out_stream<<out<<std::flush;}));
         std::future<void> err_future(std::async(std::launch::async,[&](){if(err_stream!=NULL) *err_stream<<err<<std::flush;}));
-        ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err,sub_env));
+        ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
         std::future<void> run_future(std::async(std::launch::async,[&](){ph->wait();}));
         if(run_future.wait_for(time_limit)!=std::future_status::ready)
         {

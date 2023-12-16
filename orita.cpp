@@ -79,6 +79,11 @@ std::vector<std::string> init_file(int argc,char **argv)
     return args;
 }
 
+void ssetenv(const std::string &key,const std::string &value)
+{
+    putenv((key+"="+value).c_str());
+}
+
 int main(int argc,char **argv)
 {
     std::string path;
@@ -91,15 +96,6 @@ int main(int argc,char **argv)
     path=makepath(path,"main");
     #endif
     std::string command=add_quo(path);
-    auto ssetenv=[&](const std::string &key,const std::string &value)
-    {
-        #ifdef _WIN32
-        SetEnvironmentVariable(key.c_str(),value.c_str());
-        #endif
-        #ifdef __linux__
-        command="export "+key+"="+value+" && "+command;
-        #endif
-    };
     ssetenv("ORITA_ARGS",std::to_string(args.size()));
     for(int i=0;i<args.size();++i)
     {

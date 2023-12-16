@@ -2,11 +2,19 @@
 #include<fstream>
 #include<string>
 #include<algorithm>
+#include<cstdlib>
 bool outputs=false;
+size_t terminal_width=0;
+std::string sgetenv(const std::string &str)
+{
+    try {return getenv(str.c_str());} catch(...) {return "";}
+}
 int main(int argc,char **argv)
 {
+    if(sgetenv(".data.chk_outputs")=="\"on\"") outputs=true;
+    terminal_width=std::stoul(sgetenv("{TERMINAL_WIDTH}"));
+
     std::ios_base::sync_with_stdio(false);
-    if(std::string(argv[4])=="on") outputs=true;
     std::ifstream infile1(argv[2]),infile2(argv[3]);
     std::string str1,str2;
     bool empty1=0,empty2=0;
@@ -27,8 +35,8 @@ int main(int argc,char **argv)
             std::cout<<"on line "<<lines<<"\n*****\n"<<str1<<"\n*****\n"<<str2<<"\n*****\n";
             size_t pos=std::distance(str1.begin(),std::mismatch(str1.begin(),str1.end(),str2.begin()).first)+1;
             std::cout<<argv[2]<<":"<<lines<<":"<<pos<<"\n"<<argv[3]<<":"<<lines<<":"<<pos<<"\r";
-            std::string out=std::string()+argv[2]+":"+std::to_string(lines)+":"+std::to_string(pos)+" <==> "+argv[3]+":"+std::to_string(lines)+":"+std::to_string(pos);
-            if(outputs) std::cerr<<"                    "<<"\033[90m"<<out<<"\033[00m\r";
+            std::string out=std::string()+argv[2]+":"+std::to_string(lines)+":"+std::to_string(pos)+" <==> "+argv[3]+":"+std::to_string(lines)+":"+std::to_string(pos)+" ";
+            if(outputs&&out.size()+20<=terminal_width) std::cerr<<"                    "<<"\033[90m"<<out<<"\033[00m\r";
             return 1;
         }
     }
