@@ -12,7 +12,7 @@ class Command_compile: public App
         options.addOption(Poco::Util::Option("trun","t","only run").noArgument());
         options.addOption(Poco::Util::Option("carg","c","compile args").argument("args",true));
         options.addOption(Poco::Util::Option("arg","a","run args").argument("args",true));
-        options.addOption(Poco::Util::Option("fcompile","fc","force recompile").noArgument());
+        options.addOption(Poco::Util::Option("dorecompile","dore","force recompile").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)

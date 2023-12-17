@@ -212,7 +212,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 `/time=time`: 修改默认的运行时间限制（单位：毫秒）。
 
-`/fcompile`: 强制重新编译。
+`/dorecompile`: 强制重新编译。
 
 ### chdata
 
@@ -250,7 +250,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 `/multithread`: 启用多线程。启用多线程会导致单个测试得到的程序运行时间增加数倍，并和运行的进程数及计算机并行性能相关，因此得到的 `TLE` 结果不一定准确。
 
-`/fcompile`: 强制重新编译。
+`/dorecompile`: 强制重新编译。
 
 ### judge
 
@@ -274,7 +274,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 `/multithread`: 启用多线程。启用多线程会导致单个测试得到的程序运行时间增加数倍，并和运行的进程数及计算机并行性能相关，因此得到的 `TLE` 结果不一定准确。
 
-`/fcompile`: 强制重新编译。
+`/dorecompile`: 强制重新编译。
 
 ### compile
 
@@ -294,7 +294,7 @@ $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thre
 
 `/arg=args`: 指定运行参数。
 
-`/fcompile`: 强制重新编译。
+`/dorecompile`: 强制重新编译。
 
 ### config
 

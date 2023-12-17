@@ -15,7 +15,7 @@ class Command_check: public App
         options.addOption(Poco::Util::Option("num","n","specify check num").argument("num",true));
         options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
         options.addOption(Poco::Util::Option("multithread","mul","turn on multithreading").noArgument());
-        options.addOption(Poco::Util::Option("fcompile","fc","force recompile").noArgument());
+        options.addOption(Poco::Util::Option("dorecompile","dore","force recompile").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)

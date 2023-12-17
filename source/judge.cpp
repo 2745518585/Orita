@@ -14,7 +14,7 @@ class Command_judge: public App
         options.addOption(Poco::Util::Option("isuf","is","specify input file suf").argument("suf",true));
         options.addOption(Poco::Util::Option("osuf","os","specify output file suf").argument("suf",true));
         options.addOption(Poco::Util::Option("multithread","mul","turn on multithreading").noArgument());
-        options.addOption(Poco::Util::Option("fcompile","fc","force recompile").noArgument());
+        options.addOption(Poco::Util::Option("dorecompile","dore","force recompile").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)

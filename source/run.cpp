@@ -11,7 +11,7 @@ class Command_run: public App
         options.addOption(Poco::Util::Option("file","f","specify ans").argument("file",true));
         options.addOption(Poco::Util::Option("checker","c","specify checker").argument("file",true));
         options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
-        options.addOption(Poco::Util::Option("fcompile","fc","force recompile").noArgument());
+        options.addOption(Poco::Util::Option("dorecompile","dore","force recompile").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
