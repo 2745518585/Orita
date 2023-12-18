@@ -81,7 +81,12 @@ std::vector<std::string> init_file(int argc,char **argv)
 
 void ssetenv(const std::string &key,const std::string &value)
 {
+    #ifdef _WIN32
     putenv((key+"="+value).c_str());
+    #endif
+    #ifdef __linux__    
+    setenv(key.c_str(),value.c_str(),true);
+    #endif
 }
 
 int main(int argc,char **argv)

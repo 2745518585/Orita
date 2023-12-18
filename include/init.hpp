@@ -308,7 +308,12 @@ std::string sgetenv(const std::string &str)
 }
 void ssetenv(const std::string &key,const std::string &value)
 {
+    #ifdef _WIN32
     putenv((key+"="+value).c_str());
+    #endif
+    #ifdef __linux__    
+    setenv(key.c_str(),value.c_str(),true);
+    #endif
 }
 const pat running_path=[]()
 {
