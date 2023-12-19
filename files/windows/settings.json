@@ -20,6 +20,7 @@
         "try_times": 5
     },
     "data": {
+        "ans_args": [],
         "ansfile": "%*12%",
         "chk_args": [
             "%#infile%",
@@ -35,7 +36,12 @@
             "-D JUDGING"
         ],
         "data_dir": "%{RUNNING_PATH}%/.data",
+        "in_args": [
+            "%#seed%",
+            "%#testcase_name%"
+        ],
         "infile": "%*10%",
+        "out_args": [],
         "outfile": "%*11%",
         "time": 1000
     },

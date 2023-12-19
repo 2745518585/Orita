@@ -177,7 +177,7 @@ class Command_check: public App
                 fil run_dir=default_data_dir/"datas"/std::to_string(i);
                 run_dir.createDirectory();
                 fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
-                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_in(in)->set_out(out);
+                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_in(in)->set_out(out)->set_name(std::to_string(i));
                 run_judger.judge();
                 run_judger.print_result(_in_name,_out_name,"",_chk_name);
                 sofstream output_chk_file(chk_file,std::ios::app);

@@ -80,6 +80,7 @@ class judger
 {
   public:
     fil in,out,ans,chk,in_file,out_file,ans_file,chk_file;
+    std::string testcase_name;
     const tim time_limit;
     unsigned seed=rnd();
     runner *in_runner=NULL,*out_runner=NULL,*ans_runner=NULL,*chk_runner=NULL;
@@ -98,6 +99,7 @@ class judger
     }
     judger *set_in(const fil &file) {in=file;return this;}
     judger *set_out(const fil &file) {out=file;return this;}
+    judger *set_name(const std::string &str) {testcase_name=str;return this;}
     void wait_for()
     {
         {
@@ -116,25 +118,25 @@ class judger
             (chk_runner=new runner(chk,(arg)in_file+out_file+ans_file))->set_out(chk_file);
             if(in_runner!=NULL)
             {
-                (in_runner=new runner(in,std::to_string(seed)))->set_out(in_file);
+                (in_runner=new runner(in,replace_env(in_args,running_path,env_args::in_args(in_file,out_file,ans_file,testcase_name,seed))))->set_out(in_file);
                 if((*in_runner)()) {in_result=res::type::TO;return;}
                 if(in_runner->exit_code) {in_result=res::type::RE;return;}
             }
             if(out_runner!=NULL)
             {
-                (out_runner=new runner(out))->set_in(in_file)->set_out(out_file);
+                (out_runner=new runner(out,replace_env(out_args,running_path,env_args::out_args(in_file,out_file,ans_file))))->set_in(in_file)->set_out(out_file);
                 if((*out_runner)()) {out_result=res::type::TO;return;}
                 if(out_runner->exit_code) {out_result=res::type::RE;return;}
             }
             {
-                (ans_runner=new runner(ans,arg(),time_limit*2))->set_in(in_file)->set_out(ans_file);
+                (ans_runner=new runner(ans,replace_env(ans_args,running_path,env_args::ans_args(in_file,out_file,ans_file)),time_limit*2))->set_in(in_file)->set_out(ans_file);
                 if((*ans_runner)()) {time=ans_runner->time;exit_code=ans_runner->exit_code;result=res::type::TLE_O;return;}
                 time=ans_runner->time;
                 exit_code=ans_runner->exit_code;
                 if(ans_runner->exit_code) {result=res::type::RE;return;}
             }
             {
-                (chk_runner=new runner(chk,replace_env(chk_args,running_path,env_args::chkfiles(in_file,out_file,ans_file))))->set_out(chk_file);
+                (chk_runner=new runner(chk,replace_env(chk_args,running_path,env_args::chk_args(in_file,out_file,ans_file))))->set_out(chk_file);
                 if((*chk_runner)()) {chk_result=res::type::TO;return;}
                 if(chk_runner->exit_code!=0&&!std::regex_match(std::to_string(chk_runner->exit_code),chk_correct_exit_code)) {chk_result=res::type::RE;return;}
             }

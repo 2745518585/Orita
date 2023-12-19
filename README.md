@@ -123,6 +123,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `time_limit`: 编译时限。
   - `try_times`: 编译超时后重试次数。
 - `data`: 评测相关。
+  - `ans_args`: 传入 `ans` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
   - `ansfile`: 默认答案数据文件。
   - `chk_args`: 传入 `checker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
   - `chk_exit_code`: `checker` 在遇到答案错误时的返回值，在十进制下使用正则表达式匹配。
@@ -130,7 +131,9 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `chkfile`: 默认比较信息文件。
   - `compile_argu`: 评测编译选项。
   - `data_dir`: 数据文件存放目录。
+  - `in_args`: 传入 `data_maker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径，参数 `seed` 为该测试点随机数种子，参数 `testcase_name` 为测试点名称。
   - `infile`: 默认输入数据文件。
+  - `out_args`: 传入 `std` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
   - `outfile`: 默认输出数据文件。
   - `time`: 评测时间限制。
 - `exefile`: 可执行文件路径。提供参数 `file` 为源文件路径去除后缀，`filename` 为源文件名去除后缀，`filepath` 为源文件所在目录。
@@ -233,7 +236,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `orita check [/help] [/ifile=file] [/ofile=file] [/afile=file] [/checker=file] [/num=num [/multithread]] [/time=time]`
 
-使用数据生成器、标准代码和源代码进行对拍。
+使用数据生成器、标准代码和源代码进行对拍。测试点名称在一般情况下为编号，开启多线程后为空。
 
 `/help`: 显示帮助信息。
 
@@ -257,7 +260,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `orita judge [data] [/help] [/file=file] [/checker=file] [/time=time] [/isuf=suf] [/osuf=suf] [/multithread]`
 
-对于给定的数据文件和源代码，从数据文件中找到具有指定后缀名的输入输出文件并生成数据点，然后获取源代码的所有结果。
+对于给定的数据文件和源代码，从数据文件中找到具有指定后缀名的输入输出文件并生成数据点，然后获取源代码的所有结果。测试点名称在一般情况下为输入输出文件名，开启多线程后为空。
 
 `data`: 指定数据文件。如果没有此参数，将不会开始评测，仅作为设置参数。
 

@@ -323,7 +323,7 @@ Orita 第一个正式版本。
 - New functions and classes in `orita.hpp`.
 - Skip compilation when the source file last modified time is not later than the execute file.
 - Add try times in compile.
-- Customize the arguments passed into the checker.
+- Customize the arguments passed into the data_maker, std, ans and checker.
 - Checker outputs more info.
 - Pass environment variables to child processes. 
 

@@ -196,7 +196,7 @@ class Command_judge: public App
                 if(!i.value()["in"].is_null()) ((fil)(std::string)i.value()["in"]).copyTo((in_file=run_dir/"data.in").path());
                 if(!i.value()["out"].is_null()) ((fil)(std::string)i.value()["out"]).copyTo((out_file=run_dir/"data.out").path());
                 // judge
-                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);
+                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_name(data_name);
                 run_judger.judge();
                 run_judger.print_result("",_chk_name);
                 // print result

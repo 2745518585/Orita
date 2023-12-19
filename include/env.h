@@ -18,7 +18,19 @@ namespace env_args
     {
         return filenosuf((pat)file.path());
     }
-    json chkfiles(const fil &in_file,const fil &out_file,const fil &ans_file)
+    json in_args(const fil &in_file,const fil &out_file,const fil &ans_file,const std::string &testcase_name,const unsigned &seed)
+    {
+        return {{"infile",in_file.path()},{"outfile",out_file.path()},{"ansfile",ans_file.path()},{"testcase_name",testcase_name},{"seed",std::to_string(seed)}};
+    }
+    json out_args(const fil &in_file,const fil &out_file,const fil &ans_file)
+    {
+        return {{"infile",in_file.path()},{"outfile",out_file.path()},{"ansfile",ans_file.path()}};
+    }
+    json ans_args(const fil &in_file,const fil &out_file,const fil &ans_file)
+    {
+        return {{"infile",in_file.path()},{"outfile",out_file.path()},{"ansfile",ans_file.path()}};
+    }
+    json chk_args(const fil &in_file,const fil &out_file,const fil &ans_file)
     {
         return {{"infile",in_file.path()},{"outfile",out_file.path()},{"ansfile",ans_file.path()}};
     }
