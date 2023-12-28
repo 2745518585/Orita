@@ -335,3 +335,4 @@ Orita 第一个正式版本。
 
 - Change `Time Limit Error` into `Time Limit Exceed`.
 - Use `putenv` to add new environment variables.
+- Add `LOCAL` definition.
