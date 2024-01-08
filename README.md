@@ -84,7 +84,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 * 文件名中的 `%...%` 替换为环境变量 `...`。程序将依次匹配以下环境变量：
   - 形如 `%*[0-999]%` 的表达式，将会替换为 `file.json` 中对应编号的文件名，例如 `%*1%` 表示编号为 $1$ 的文件名。
-  - 形如 `%....%` 的表达式，将会替换为设置系统中对应值，例如 `%.data.data_dir%` 表示设置中 `/data/data_dir` 的值。
+  - 形如 `%....%` 的表达式，将会替换为设置系统中对应值，例如 `%.data.data_dir%` 表示设置中 `/data/data_dir` 的值。如值为 `string` 类型则直接替换，否则序列化后替换。
   - 形如 `%#...%` 的表达式，将会替换为传入参数中对应值，例如 `%#file%` 表示参数中 `file` 的值。
   - `{APPDATA_PATH}`: Windows 下为 `%APPDATA%/Orita`，Linux 下为 `%HOME%/.Orita`。
   - `{FILE_PATH}`: 可执行文件所在目录。
@@ -131,6 +131,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `chkfile`: 默认比较信息文件。
   - `compile_argu`: 评测编译选项。
   - `data_dir`: 数据文件存放目录。
+  - `data_file`: 批量评测或对拍后输出数据文件位置，分别添加 `.in`、`.out`、`.ans`、`.txt` 后缀。提供参数 `testcase_name` 数据点名称、`result` 评测结果、`short_result` 评测结果缩写、`runned_sum` 已评测数量、`outputed_sum` 已输出数量。
   - `in_args`: 传入 `data_maker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径，参数 `seed` 为该测试点随机数种子，参数 `testcase_name` 为测试点名称。
   - `infile`: 默认输入数据文件。
   - `out_args`: 传入 `std` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
@@ -150,6 +151,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 - 文件环境变量，键名形如 `file[0-999]`。
 - 设置环境变量，键名形如 `....`。
 - 内置环境变量。
+- 批量评测且未启用多线程时，`runned_sum` 已评测数量，`outputed_sum` 已输出数量。
 
 ### 命令匹配
 

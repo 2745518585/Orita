@@ -176,6 +176,7 @@ const arg in_args=get_settings<arg>("/data/in_args");
 const arg out_args=get_settings<arg>("/data/out_args");
 const arg ans_args=get_settings<arg>("/data/ans_args");
 const arg chk_args=get_settings<arg>("/data/chk_args");
+std::string data_file_str=get_settings<std::string>("/data/data_file");
 const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/data/chk_exit_code");
 const std::string exefile_str=get_settings<std::string>("/exefile");
 pat get_exefile(const pat &file)

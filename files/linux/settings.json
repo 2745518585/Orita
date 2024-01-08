@@ -37,6 +37,7 @@
             "-DJUDGING"
         ],
         "data_dir": "%{RUNNING_PATH}%/.data",
+        "data_file": "%.data.data_dir%/%#testcase_name% - %#short_result%/data",
         "in_args": [
             "%#seed%",
             "%#testcase_name%"

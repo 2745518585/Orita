@@ -114,7 +114,8 @@ class Command_judge: public App
         // judge
         if(check_option("multithread"))
         {
-            unsigned ac_sum=0,runned_sum=0,add_sum=0,get_sum=0;
+            ssetenv(".data.chk_outputs","\"off\"");
+            unsigned ac_sum=0,runned_sum=0,add_sum=0,output_sum=0;
             th_judger run_judger;
             std::vector<std::string> judge_list;
             std::map<std::string,unsigned> num_list;
@@ -164,7 +165,13 @@ class Command_judge: public App
                 if(target->result.istrue()) ++ac_sum;
                 if(target->result.isfalse())
                 {
-                    run_dir.copyTo((default_data_dir/(data_name+" - "+get_short_resultname(target->result))).path());
+                    ++output_sum;
+                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(data_name,target->result,runned_sum,output_sum))).path();
+                    ((fil)target_dir.parent()).createDirectories();
+                    (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
+                    (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
+                    (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
+                    (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
                 }
                 #undef run_dir
             }
@@ -172,9 +179,11 @@ class Command_judge: public App
         }
         else
         {
-            unsigned runned_sum=0,ac_sum=0;
+            unsigned runned_sum=0,ac_sum=0,output_sum=0;
             for(auto i:datas.items())
             {
+                ssetenv("runned_sum",std::to_string(runned_sum));
+                ssetenv("outputed_sum",std::to_string(output_sum));
                 // init file
                 if(i.value()["in"].is_null()&&i.value()["out"].is_null()) continue;
                 const std::string data_name=[&]()
@@ -215,9 +224,16 @@ class Command_judge: public App
                 if(run_judger.result.istrue()) ++ac_sum;
                 if(run_judger.result.isfalse())
                 {
-                    run_dir.copyTo((default_data_dir/(data_name+" - "+get_short_resultname(run_judger.result))).path());
+                    ++output_sum;
+                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(data_name,run_judger.result,runned_sum,output_sum))).path();
+                    ((fil)target_dir.parent()).createDirectories();
+                    (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
+                    (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
+                    (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
+                    (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
                 }
-                #undef run_dir
+                ssetenv("runned_sum","");
+                ssetenv("outputed_sum","");
             }
             scout<<ac_sum<<" / "<<runned_sum;
         }

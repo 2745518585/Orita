@@ -2,6 +2,7 @@
 #ifndef _FILE_ENV_PRE
 #define _FILE_ENV_PRE
 #include"init.hpp"
+#include"print.hpp"
 std::string get_env(const std::string &str,const pat &dir=running_path,const json &args=json());
 std::string replace_env(const std::string &str,const pat &dir=running_path,const json &args=json());
 namespace env_args
@@ -33,6 +34,10 @@ namespace env_args
     json chk_args(const fil &in_file,const fil &out_file,const fil &ans_file)
     {
         return {{"infile",in_file.path()},{"outfile",out_file.path()},{"ansfile",ans_file.path()}};
+    }
+    json data(const std::string &testcase_name,const res &result,const unsigned &runned_sum,const unsigned &outputed_sum)
+    {
+        return {{"testcase_name",testcase_name},{"result",get_resultname(result)},{"short_result",get_short_resultname(result)},{"runned_sum",std::to_string(runned_sum)},{"outputed_sum",std::to_string(outputed_sum)}};
     }
 }
 #endif

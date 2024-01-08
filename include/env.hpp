@@ -9,7 +9,12 @@ std::string get_env(const std::string &str,const pat &dir,const json &args)
     INFO("get env","str: "+add_squo(str),"dir: "+add_squo(dir),"args: "+args.dump());
     if(!enviroment_variable[str].is_null()) return (std::string)enviroment_variable[str];
     if(std::regex_match(str,std::regex("^\\*.*$"))) return get_file((file_number)str,dir).path();
-    if(std::regex_match(str,std::regex("^\\..*$"))) return get_settings<json>(std::regex_replace(str,std::regex("\\."),"/")).dump();
+    if(std::regex_match(str,std::regex("^\\..*$")))
+    {
+        json res=get_settings<json>(std::regex_replace(str,std::regex("\\."),"/"));
+        if(res.is_string()) return (std::string)res;
+        else return res.dump();
+    }
     if(std::regex_match(str,std::regex("^#.*$")))
     {
         try {return args[str.substr(1)];}
