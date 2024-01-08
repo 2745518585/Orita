@@ -21,6 +21,7 @@ namespace Files
     }
     void save()
     {
+        remove_null(files_json);
         (sofstream(appdata_path/"file.json"))<<files_json.dump(4,' ',true,json::error_handler_t::ignore);
     }
     class Init
