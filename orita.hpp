@@ -14,9 +14,9 @@ namespace orita
         std::mt19937 rd(std::random_device{}());
         using ll=long long;
         using ull=unsigned long long;
-        void register_rnd(int argc,char **argv)
+        void register_rnd(int argc,char **argv,unsigned pos=1)
         {
-            if(argc>=2) rd.seed(std::stoul(argv[1]));
+            if(argc>=2) rd.seed(std::stoul(argv[pos]));
         }
         void register_rnd(unsigned seed)
         {
