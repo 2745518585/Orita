@@ -514,10 +514,10 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 ## 致谢
 
-本项目由 [Sukwants](https://github.com/Sukwants)、[Pond Ink](https://pond.ink/) 团队和 [syysongyuyang](https://github.com/syysongyuyang) 提供技术支持。
+本项目由 [Sukwants](https://github.com/Sukwants)、[Pond Ink](https://github.com/Pond-Ink) 团队和 [syysongyuyang](https://github.com/syysongyuyang) 提供技术支持。
 
 [![0](https://avatars.githubusercontent.com/u/95968907?s=64&v=4)](https://github.com/Sukwants)
-[<img src="https://pond.ink/images/avatar.png" height=64x width=64x alt>](https://pond.ink/)
+[![0](https://avatars.githubusercontent.com/u/145256515?s=64&v=4)](https://github.com/Pond-Ink)
 [<img src="https://avatars.githubusercontent.com/u/123732645" height=64x width=64x alt>](https://github.com/syysongyuyang)
 
 相关项目：
