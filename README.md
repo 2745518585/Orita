@@ -477,7 +477,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `tot`: 排列长度。
 - **返回值**: 随机排列。
 
-#### `std::vector<std::pair<unsigned int, unsigned int>> orita::Data_maker::rnd_tree(unsigned int tot)`
+#### `std::vector<std::pair<unsigned int, unsigned int>> rnd_tree(unsigned int tot)`
 
 生成随机树。
 
