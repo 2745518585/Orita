@@ -168,10 +168,10 @@ class Command_judge: public App
                     ++output_sum;
                     pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(data_name,target->result,runned_sum,output_sum))).path();
                     ((fil)target_dir.parent()).createDirectories();
-                    (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
-                    (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
-                    (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
-                    (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
+                    if((run_dir/"data.in").exists()) (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
+                    if((run_dir/"data.out").exists()) (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
+                    if((run_dir/"data.ans").exists()) (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
+                    if((run_dir/"data.txt").exists()) (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
                 }
                 #undef run_dir
             }
@@ -227,10 +227,10 @@ class Command_judge: public App
                     ++output_sum;
                     pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(data_name,run_judger.result,runned_sum,output_sum))).path();
                     ((fil)target_dir.parent()).createDirectories();
-                    (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
-                    (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
-                    (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
-                    (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
+                    if((run_dir/"data.in").exists()) (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
+                    if((run_dir/"data.out").exists()) (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
+                    if((run_dir/"data.ans").exists()) (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
+                    if((run_dir/"data.txt").exists()) (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
                 }
                 ssetenv("runned_sum","");
                 ssetenv("outputed_sum","");
