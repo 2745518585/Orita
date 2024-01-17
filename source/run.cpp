@@ -51,7 +51,7 @@ class Command_run: public App
         }();
         // init config
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
-        if(check_option("fcompile")) if_skip_compiled=false;
+        if(check_option("dorecompile")) if_skip_compiled=false;
         // save config
         save_config();
         // find file

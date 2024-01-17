@@ -33,7 +33,7 @@ class Command_compile: public App
         
         arg compile_argu=get_arg(get_option("carg"));
         std::string run_argu=get_option("arg");
-        if(check_option("fcompile")) if_skip_compiled=false;
+        if(check_option("dorecompile")) if_skip_compiled=false;
         if(args.size()==1&&check_option("run"))
         {
             fil file=add_namesuf(get_file((pat)args[0]),"cpp");
