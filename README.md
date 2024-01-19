@@ -417,7 +417,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `rdl<lTy, uTy>::rdl(const uTy &lim)`: 指定上限。
   - `rdl(const lTy &llim, const uTy &ulim)`: 指定下限和上限。
 
-#### `template<class Ty1, class Ty2> class pair<Ty1, Ty2>`
+#### `template<class Ty1, class Ty2> class pr<Ty1, Ty2>`
 
 带分隔符的键值对。
 
@@ -425,10 +425,10 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 - **成员**: 
   - `std::string sep`: 分隔符。
 - **构造函数**: 
-  - `pair(const Ty1 &first, const Ty2 &second, const std::string &_sep = " ")`: 用于初始化键值对和分隔符。
-  - `pair(const std::pair<Ty1, Ty2> &_pair, const std::string &_sep = " ")`: 从现有键值对和分隔符初始化。
+  - `pr(const Ty1 &first, const Ty2 &second, const std::string &_sep = " ")`: 用于初始化键值对和分隔符。
+  - `pr(const std::pair<Ty1, Ty2> &_pair, const std::string &_sep = " ")`: 从现有键值对和分隔符初始化。
 
-#### `template<class Ty1, class Ty2> std::ostream &operator<<(std::ostream &out, const pair<Ty1, Ty2> &pr)`
+#### `template<class Ty1, class Ty2> std::ostream &operator<<(std::ostream &out, const pr<Ty1, Ty2> &pr)`
 
 输出键值对。
 
