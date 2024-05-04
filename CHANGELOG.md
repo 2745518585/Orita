@@ -326,6 +326,7 @@ Orita 第一个正式版本。
 - Customize the arguments passed into the data_maker, std, ans and checker.
 - Checker outputs more info.
 - Pass environment variables to child processes. 
+- Add `%{SETTINGS_PATH}%`.
 
 #### Fixes
 

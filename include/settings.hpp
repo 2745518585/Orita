@@ -52,6 +52,40 @@ namespace Settings
         Init() {read();}
         ~Init() {save();}
     }_Init;
+    std::string replace_settings_path(const std::string &str,const pat &dir)
+    {
+        if(std::regex_match(str,std::regex("^[^%]*(%[^%]*%[^%]*)*%[^%]*$"))) throw exception("inviald environment string");
+        size_t laspos=0;
+        std::string resstr;
+        for(auto it=std::sregex_iterator(str.begin(),str.end(),*new std::regex(std::regex("%[^%]*%")));it!=std::sregex_iterator();++it)
+        {
+            std::string substr=std::smatch(*it).str();
+            resstr+=str.substr(laspos,std::smatch(*it).position()-laspos);
+            laspos=std::smatch(*it).position()+std::smatch(*it).length();
+            if(substr=="%{SETTINGS_PATH}%") resstr+=dir.toString();
+            else resstr+=substr;
+        }
+        resstr+=str.substr(laspos,str.size()-laspos);
+        INFO("replace settings path","str: "+add_squo(str),"result: "+add_squo(resstr));
+        return resstr;
+    }
+    json replace_settings_path(const json &object,const pat &dir)
+    {
+        if(object.is_object())
+        {
+            json res=json::parse("{}");
+            for(auto i:object.items()) res[i.key()]=replace_settings_path(i.value(),dir);
+            return res;
+        }
+        if(object.is_array())
+        {
+            json res=json::parse("[]");
+            for(int i=0;i<object.size();++i) res[i]=replace_settings_path(object[i],dir);
+            return res;
+        }
+        if(object.is_string()) return replace_settings_path((std::string)object,dir);
+        else return object;
+    }
     json *get_settings_object(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
@@ -94,6 +128,7 @@ namespace Settings
     }
     template<typename Ty> pat get_settings_path(const std::string &key)
     {
+        if(std::is_same_v<Ty,json>) return get_settings_path(key);
         const json::json_pointer pointer=(json::json_pointer)key;
         pat path=running_path;
         for(auto &i:all_settings.items())
@@ -106,9 +141,9 @@ namespace Settings
     json get_settings_merge(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
-        json object=default_settings[pointer];
-        merge(object,global_settings[pointer]);
-        for(auto i:all_settings) merge(object,i[pointer]);
+        json object=replace_settings_path(default_settings[pointer],file_path);
+        merge(object,replace_settings_path(global_settings[pointer],appdata_path));
+        for(auto i:all_settings.items()) merge(object,replace_settings_path(i.value()[pointer],i.key()));
         INFO("get settings merge",add_squo(key),object.dump());
         return object;
     }
@@ -116,6 +151,7 @@ namespace Settings
     {
         const json::json_pointer pointer=(json::json_pointer)key;
         json *object=get_settings_object<Ty>(key);
+        pat path=get_settings_path<Ty>(key);
         if(!object)
         {
             WARN("get settings - null",add_squo(key));
@@ -125,13 +161,13 @@ namespace Settings
         {
             try
             {
-                std::string str=replace_env((std::string)*object);
+                std::string str=replace_env(replace_settings_path((std::string)*object,path));
                 INFO("get settings str",add_squo(key),add_squo(str));
                 return (Ty)str;
             } catch(...) {WARN("get settings str - fail",add_squo(key),object->dump());}
         }
         else INFO("get settings",add_squo(key),object->dump());
-        return (Ty)(*object);
+        return (Ty)(replace_settings_path(*object,path));
     }
 }
 using Settings::get_settings_object;
@@ -159,19 +195,11 @@ const arg data_compile_argu=[]()
 bool if_skip_compiled=get_settings<bool>("/compiler/skip_compiled");
 const unsigned compile_try_times=get_settings<unsigned>("/compiler/try_times");
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
-namespace Settings
-{
-    std::string get_file(const std::string &key)
-    {
-        try {return ::get_file(get_settings<std::string>(key),get_settings_path<std::string>(key)).path();} catch(...) {}
-        return "";
-    }
-}
-fil default_infile=Settings::get_file("/data/infile");
-fil default_outfile=Settings::get_file("/data/outfile");
-fil default_ansfile=Settings::get_file("/data/ansfile");
-fil default_chkfile=Settings::get_file("/data/chkfile");
-fil default_data_dir=Settings::get_file("/data/data_dir");
+fil default_infile=get_file(Settings::get_settings<std::string>("/data/infile"));
+fil default_outfile=get_file(Settings::get_settings<std::string>("/data/outfile"));
+fil default_ansfile=get_file(Settings::get_settings<std::string>("/data/ansfile"));
+fil default_chkfile=get_file(Settings::get_settings<std::string>("/data/chkfile"));
+fil default_data_dir=get_file(Settings::get_settings<std::string>("/data/data_dir"));
 const arg in_args=get_settings<arg>("/data/in_args");
 const arg out_args=get_settings<arg>("/data/out_args");
 const arg ans_args=get_settings<arg>("/data/ans_args");
