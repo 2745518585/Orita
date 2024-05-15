@@ -52,6 +52,7 @@ namespace orita
             rdl(const lTy &llim,const uTy &ulim):llim(llim),ulim(ulim) {}
             auto operator()() const {return rnd(llim,ulim);}
         };
+        
         template<typename Ty1,typename Ty2> class pr: public std::pair<Ty1,Ty2>
         {
           public:
@@ -66,11 +67,25 @@ namespace orita
 
         namespace cmp
         {
+            #if __cplusplus >= 201703L
+            template<typename Ty1=void,typename Ty2=void> struct _NEQ {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1!=s2;}};
+            template<typename Ty1=void,typename Ty2=void> struct _LES {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<s2;}};
+            template<typename Ty1=void,typename Ty2=void> struct _GRE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>s2;}};
+            template<typename Ty1=void,typename Ty2=void> struct _LOE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<=s2;}};
+            template<typename Ty1=void,typename Ty2=void> struct _GOE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>=s2;}};
+
+            template<> struct _NEQ<void,void> {template<typename Ty1,typename Ty2> bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1!=s2;}};
+            template<> struct _LES<void,void> {template<typename Ty1,typename Ty2> bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<s2;}};
+            template<> struct _GRE<void,void> {template<typename Ty1,typename Ty2> bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>s2;}};
+            template<> struct _LOE<void,void> {template<typename Ty1,typename Ty2> bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<=s2;}};
+            template<> struct _GOE<void,void> {template<typename Ty1,typename Ty2> bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>=s2;}};
+            #else
             template<typename Ty1,typename Ty2> struct _NEQ {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1!=s2;}};
             template<typename Ty1,typename Ty2> struct _LES {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<s2;}};
             template<typename Ty1,typename Ty2> struct _GRE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>s2;}};
             template<typename Ty1,typename Ty2> struct _LOE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1<=s2;}};
             template<typename Ty1,typename Ty2> struct _GOE {bool operator()(const Ty1 &s1,const Ty2 &s2) const {return s1>=s2;}};
+            #endif
         }
         using namespace cmp;
 
@@ -78,8 +93,9 @@ namespace orita
 
         template<typename Ty,typename=void>
         struct has_call_operator: std::false_type {};
-        template<typename Ty>
-        struct has_call_operator<Ty,void_t<decltype(&Ty::operator())>>: std::true_type {};
+        template<typename Ty> struct has_call_operator<Ty,void_t<decltype(&Ty::operator())>>: std::true_type {};
+        template<typename Ty1,typename Ty2> using chk_has_call_operator=std::enable_if_t<has_call_operator<Ty1>::value&&has_call_operator<Ty2>::value,pr<decltype((*new Ty1)()),decltype((*new Ty2)())>>;
+        template<typename Ty1,typename Ty2> using chk_without_call_operator=std::enable_if_t<!has_call_operator<Ty1>::value&&!has_call_operator<Ty2>::value,pr<decltype(rnd(Ty1(),Ty2())),decltype(rnd(Ty1(),Ty2()))>>;
 
         template<typename chk_Ty,typename mk_Ty> auto rnd_pair(const mk_Ty &maker,const chk_Ty &checker,const std::string &sep=" ")
         {
@@ -87,6 +103,38 @@ namespace orita
             while(!checker(s1,s2)) s1=maker(),s2=maker();
             return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
         }
+        template<typename chk_Ty,typename mk_Ty1,typename mk_Ty2> chk_has_call_operator<mk_Ty1,mk_Ty2> rnd_pair(const mk_Ty1 &maker1,const mk_Ty2 &maker2,const chk_Ty &checker,const std::string &sep=" ")
+        {
+            auto s1=maker1(),s2=maker2();
+            while(!checker(s1,s2)) s1=maker1(),s2=maker2();
+            return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
+        }
+        template<typename chk_Ty,typename lTy,typename uTy> chk_without_call_operator<lTy,uTy> rnd_pair(const lTy &llim,const uTy &ulim,const chk_Ty &checker,const std::string &sep=" ")
+        {
+            auto s1=rnd(llim,ulim),s2=rnd(llim,ulim);
+            while(!checker(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
+            return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
+        }
+        #if __cplusplus >= 201703L
+        template<template<typename...> typename chk_Ty,typename mk_Ty> auto rnd_pair(const mk_Ty &maker,const std::string &sep=" ")
+        {
+            auto s1=maker(),s2=maker();
+            while(!chk_Ty()(s1,s2)) s1=maker(),s2=maker();
+            return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
+        }
+        template<template<typename...> typename chk_Ty,typename mk_Ty1,typename mk_Ty2> chk_has_call_operator<mk_Ty1,mk_Ty2> rnd_pair(const mk_Ty1 &maker1,const mk_Ty2 &maker2,const std::string &sep=" ")
+        {
+            auto s1=maker1(),s2=maker2();
+            while(!chk_Ty()(s1,s2)) s1=maker1(),s2=maker2();
+            return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
+        }
+        template<template<typename...> typename chk_Ty,typename lTy,typename uTy> chk_without_call_operator<lTy,uTy> rnd_pair(const lTy &llim,const uTy &ulim,const std::string &sep=" ")
+        {
+            auto s1=rnd(llim,ulim),s2=rnd(llim,ulim);
+            while(!chk_Ty()(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
+            return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
+        }
+        #else
         template<typename chk_Ty,typename mk_Ty> auto rnd_pair(const mk_Ty &maker,const std::string &sep=" ")
         {
             auto s1=maker(),s2=maker();
@@ -104,14 +152,6 @@ namespace orita
             auto s1=maker(),s2=maker();
             static_assert(std::is_same<decltype(s1),decltype(s2)>::value);
             while(!(*new chk_Ty<decltype(s1),decltype(s2)>)(s1,s2)) s1=maker(),s2=maker();
-            return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
-        }
-
-        template<typename Ty1,typename Ty2> using chk_has_call_operator=std::enable_if_t<has_call_operator<Ty1>::value&&has_call_operator<Ty2>::value,pr<decltype((*new Ty1)()),decltype((*new Ty2)())>>;
-        template<typename chk_Ty,typename mk_Ty1,typename mk_Ty2> chk_has_call_operator<mk_Ty1,mk_Ty2> rnd_pair(const mk_Ty1 &maker1,const mk_Ty2 &maker2,const chk_Ty &checker,const std::string &sep=" ")
-        {
-            auto s1=maker1(),s2=maker2();
-            while(!checker(s1,s2)) s1=maker1(),s2=maker2();
             return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
         }
         template<typename chk_Ty,typename mk_Ty1,typename mk_Ty2> chk_has_call_operator<mk_Ty1,mk_Ty2> rnd_pair(const mk_Ty1 &maker1,const mk_Ty2 &maker2,const std::string &sep=" ")
@@ -133,14 +173,6 @@ namespace orita
             while(!(*new chk_Ty<decltype(s1),decltype(s2)>)(s1,s2)) s1=maker1(),s2=maker2();
             return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
         }
-
-        template<typename Ty1,typename Ty2> using chk_without_call_operator=std::enable_if_t<!has_call_operator<Ty1>::value&&!has_call_operator<Ty2>::value,pr<decltype(rnd(Ty1(),Ty2())),decltype(rnd(Ty1(),Ty2()))>>;
-        template<typename chk_Ty,typename lTy,typename uTy> chk_without_call_operator<lTy,uTy> rnd_pair(const lTy &llim,const uTy &ulim,const chk_Ty &checker,const std::string &sep=" ")
-        {
-            auto s1=rnd(llim,ulim),s2=rnd(llim,ulim);
-            while(!checker(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
-            return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
-        }
         template<typename chk_Ty,typename lTy,typename uTy> chk_without_call_operator<lTy,uTy> rnd_pair(const lTy &llim,const uTy &ulim,const std::string &sep=" ")
         {
             auto s1=rnd(llim,ulim),s2=rnd(llim,ulim);
@@ -160,6 +192,7 @@ namespace orita
             while(!(*new chk_Ty<decltype(s1),decltype(s2)>)(s1,s2)) s1=rnd(llim,ulim),s2=rnd(llim,ulim);
             return pr<decltype(s1),decltype(s2)>(s1,s2,sep);
         }
+        #endif
 
         std::vector<unsigned> rnd_range(unsigned tot)
         {
@@ -213,5 +246,15 @@ namespace orita
         setvbuf(stdout,NULL,_IONBF,0);
         setvbuf(stderr,NULL,_IONBF,0);
     }
+}
+template<typename Ty1,typename Ty2> struct std::tuple_size<orita::pr<Ty1,Ty2>>: std::tuple_size<std::pair<Ty1,Ty2>> {};
+template<std::size_t N,typename Ty1,typename Ty2> struct std::tuple_element<N,orita::pr<Ty1,Ty2>>: std::tuple_element<N,std::pair<Ty1,Ty2>> {};
+template<std::size_t N,typename Ty1,typename Ty2> decltype(auto) get(orita::pr<Ty1,Ty2> &p)
+{
+    return std::get<N>(static_cast<std::pair<Ty1,Ty2>&>(p));
+}
+template<std::size_t N,typename Ty1,typename Ty2> decltype(auto) get(const orita::pr<Ty1,Ty2> &p)
+{
+    return std::get<N>(static_cast<const std::pair<Ty1,Ty2>&>(p));
 }
 #endif
