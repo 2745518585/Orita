@@ -13,6 +13,7 @@ class Command_judge: public App
         options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
         options.addOption(Poco::Util::Option("isuf","is","specify input file suf").argument("suf",true));
         options.addOption(Poco::Util::Option("osuf","os","specify output file suf").argument("suf",true));
+        options.addOption(Poco::Util::Option("ofile","of","specify std").argument("file",true));
         options.addOption(Poco::Util::Option("multithread","mul","turn on multithreading").noArgument());
         options.addOption(Poco::Util::Option("dorecompile","dore","force recompile").noArgument());
         App::defineOptions(options);
@@ -35,6 +36,7 @@ class Command_judge: public App
         
         const std::string _ans_name="ans";
         const std::string _chk_name="checker";
+        const std::string _out_name="std";
         // init name
         fil ans=[&]()
         {
@@ -48,6 +50,7 @@ class Command_judge: public App
             add_file(_run_chk,chk_str);
             return add_namesuf(get_file(chk_str),"cpp");
         }();
+        fil out=check_option("ofile")?add_namesuf(get_file(get_option("ofile")),"cpp"):fil();
         // init config
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
         if(check_option("dorecompile")) if_skip_compiled=false;
@@ -62,6 +65,7 @@ class Command_judge: public App
         // find file
         if(ans==fil()||!ans.exists()) {print_result(_ans_name,res::type::NF);return EXIT_NOINPUT;}
         if(chk==fil()||!chk.exists()) {print_result(_chk_name,res::type::NF);return EXIT_NOINPUT;}
+        if(out!=fil()&&!out.exists()) {print_result(_out_name,res::type::NF);return EXIT_NOINPUT;}
         if(show_file_info) scout<<termcolor::bright_grey<<print_type({"","","\n"},{{_ans_name+": ",ans},{_chk_name+": ",chk}},true)<<ANSI::move_up*2<<termcolor::reset;
         // compile file
         printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
@@ -125,10 +129,11 @@ class Command_judge: public App
                 if(datas[name]["in"].is_null()&&datas[name]["out"].is_null()) return;
                 fil run_dir=default_data_dir/"tmp_data"/std::to_string(num_list[name]);
                 run_dir.createDirectory();
-                fil in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+                fil in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt",tmp_out=fil();
                 if(!datas[name]["in"].is_null()) ((fil)(std::string)datas[name]["in"]).copyTo((in_file=run_dir/"data.in").path());
                 if(!datas[name]["out"].is_null()) ((fil)(std::string)datas[name]["out"]).copyTo((out_file=run_dir/"data.out").path());
-                run_judger.add(name,(new judger(ans,chk,in_file,out_file,ans_file,chk_file)));
+                else if(out!=fil()) out_file=run_dir/"data.out",tmp_out=out;
+                run_judger.add(name,(new judger(ans,chk,in_file,out_file,ans_file,chk_file))->set_out(tmp_out));
             };
             while(add_sum<max_thread_num&&add_sum<judge_list.size()) add(judge_list[add_sum++]);
             std::string name;
@@ -156,10 +161,12 @@ class Command_judge: public App
                 output_chk_file
                 <<"    infile: "<<add_squo(get_file(!datas[name]["in"].is_null()?(std::string)datas[name]["in"]:system_nul))
                 <<", outfile: "<<add_squo(get_file(!datas[name]["out"].is_null()?(std::string)datas[name]["out"]:system_nul))<<"\n";
+                if(target->out!=fil()) output_chk_file<<"    "+_out_name+": "<<target->out<<"\n";
                 output_chk_file<<"    result: "<<target->result<<"\n";
                 output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
                     {_ans_name+":",target->time,target->exit_code},
-                    {_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code}});
+                    {_chk_name+":",target->chk_runner->time,target->chk_runner->exit_code},
+                    {_out_name+":",target->out_runner?target->out_runner->time:(tim)-1,target->out_runner?target->out_runner->exit_code:-1}});
                 output_chk_file<<std::string("*")*50;
                 output_chk_file.close();
                 if(target->result.istrue()) ++ac_sum;
@@ -201,11 +208,12 @@ class Command_judge: public App
                 ++runned_sum;
                 fil run_dir=default_data_dir/"datas"/data_name;
                 run_dir.createDirectory();
-                fil in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
+                fil in_file=system_nul,out_file=system_nul,ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt",tmp_out=fil();
                 if(!i.value()["in"].is_null()) ((fil)(std::string)i.value()["in"]).copyTo((in_file=run_dir/"data.in").path());
                 if(!i.value()["out"].is_null()) ((fil)(std::string)i.value()["out"]).copyTo((out_file=run_dir/"data.out").path());
+                else if(out!=fil()) out_file=run_dir/"data.out",tmp_out=out;
                 // judge
-                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_name(data_name);
+                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_name(data_name)->set_out(tmp_out);
                 run_judger.judge();
                 run_judger.print_result("",_chk_name);
                 // print result
@@ -214,10 +222,12 @@ class Command_judge: public App
                 output_chk_file
                 <<"    infile: "<<add_squo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul))
                 <<", outfile: "<<add_squo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul))<<"\n";
+                if(run_judger.out!=fil()) output_chk_file<<"    "+_out_name+": "<<run_judger.out<<"\n";
                 output_chk_file<<"    result: "<<run_judger.result<<"\n";
                 output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
                     {_ans_name+":",run_judger.time,run_judger.exit_code},
-                    {_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code}});
+                    {_chk_name+":",run_judger.chk_runner->time,run_judger.chk_runner->exit_code},
+                    {_out_name+":",run_judger.out_runner?run_judger.out_runner->time:(tim)-1,run_judger.out_runner?run_judger.out_runner->exit_code:-1}});
                 output_chk_file<<std::string("*")*50;
                 output_chk_file.close();
                 // copy result

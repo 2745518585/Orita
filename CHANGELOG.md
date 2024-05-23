@@ -327,6 +327,7 @@ Orita 第一个正式版本。
 - Checker outputs more info.
 - Pass environment variables to child processes. 
 - Add `%{SETTINGS_PATH}%`.
+- Std can be specified in `judge`.
 
 #### Fixes
 
