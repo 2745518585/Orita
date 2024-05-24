@@ -161,7 +161,7 @@ class Command_judge: public App
                 output_chk_file
                 <<"    infile: "<<add_squo(get_file(!datas[name]["in"].is_null()?(std::string)datas[name]["in"]:system_nul))
                 <<", outfile: "<<add_squo(get_file(!datas[name]["out"].is_null()?(std::string)datas[name]["out"]:system_nul))<<"\n";
-                if(target->out!=fil()) output_chk_file<<"    "+_out_name+": "<<target->out<<"\n";
+                if(target->out!=fil()) output_chk_file<<"    "+_out_name+": "<<add_squo(target->out)<<"\n";
                 output_chk_file<<"    result: "<<target->result<<"\n";
                 output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
                     {_ans_name+":",target->time,target->exit_code},
@@ -222,7 +222,7 @@ class Command_judge: public App
                 output_chk_file
                 <<"    infile: "<<add_squo(get_file(!i.value()["in"].is_null()?(std::string)i.value()["in"]:system_nul))
                 <<", outfile: "<<add_squo(get_file(!i.value()["out"].is_null()?(std::string)i.value()["out"]:system_nul))<<"\n";
-                if(run_judger.out!=fil()) output_chk_file<<"    "+_out_name+": "<<run_judger.out<<"\n";
+                if(run_judger.out!=fil()) output_chk_file<<"    "+_out_name+": "<<add_squo(run_judger.out)<<"\n";
                 output_chk_file<<"    result: "<<run_judger.result<<"\n";
                 output_chk_file<<print_type({"    "," time: "," exit_code: ","\n"},{
                     {_ans_name+":",run_judger.time,run_judger.exit_code},
