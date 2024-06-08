@@ -71,6 +71,7 @@ class Command_judge: public App
         printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
         th_compiler *run_compiler=new th_compiler();
         run_compiler->add({{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
+        if(out!=fil()) run_compiler->add(_out_name,out,data_compile_argu);
         run_compiler->wait_all();
         {
             std::string name=run_compiler->get_all();
