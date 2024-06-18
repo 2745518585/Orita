@@ -503,9 +503,9 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `argv`: 命令行参数的数组。
   - `pos`: 文件所在的参数位置。
 
-#### `template<class Ty> void print_info(const Ty &info, const std::string &pre = "***** info: ")`
+#### `template<class Ty> void print_info(const Ty &info, const std::string &pre = default_pre)`
 
-输出测试点信息。
+输出测试点信息。其中 `default_pre` 为从环境变量 `.data.info_pre` 的值，默认为 `***** info: `。
 
 - **参数**: 
   - `info`: 需输出的测试点信息。

@@ -245,11 +245,20 @@ namespace orita
     namespace Info
     {
         std::ofstream *out=NULL;
+        std::string default_pre=[]()
+        {
+            if(getenv(".data.info_pre")!=nullptr)
+            {
+                std::string tmp=getenv(".data.info_pre");
+                return tmp.substr(1,tmp.size()-2);
+            }
+            else return std::string("***** info: ");
+        }();
         void register_info(int argc,char **argv,unsigned pos=3)
         {
             if(argc>pos) out=new std::ofstream(argv[pos],std::ios::app);
         }
-        template<typename Ty> void print_info(const Ty &info,const std::string &pre="***** info: ")
+        template<typename Ty> void print_info(const Ty &info,const std::string &pre=default_pre)
         {
             if(out!=NULL) (*out)<<pre<<info<<"\n"<<std::endl;
         }
