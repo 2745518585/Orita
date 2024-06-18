@@ -123,18 +123,18 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `time_limit`: 编译时限。
   - `try_times`: 编译超时后重试次数。
 - `data`: 评测相关。
-  - `ans_args`: 传入 `ans` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
+  - `ans_args`: 传入 `ans` 的参数列表。提供参数 `infile`,`outfile`,`ansfile`,`chkfile` 分别为输入、输出、答案、比较信息文件路径。
   - `ansfile`: 默认答案数据文件。
-  - `chk_args`: 传入 `checker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
+  - `chk_args`: 传入 `checker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile`,`chkfile` 分别为输入、输出、答案、比较信息文件路径。
   - `chk_exit_code`: `checker` 在遇到答案错误时的返回值，在十进制下使用正则表达式匹配。
   - `chk_outputs`: 值为 `"on"` 时启用 `%*1%` 默认比较器向控制台输出信息。
   - `chkfile`: 默认比较信息文件。
   - `compile_argu`: 评测编译选项。
   - `data_dir`: 数据文件存放目录。
-  - `data_file`: 批量评测或对拍后输出数据文件位置，分别添加 `.in`、`.out`、`.ans`、`.txt` 后缀。提供参数 `testcase_name` 数据点名称、`result` 评测结果、`short_result` 评测结果缩写、`runned_sum` 已评测数量、`outputed_sum` 已输出数量。
-  - `in_args`: 传入 `data_maker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径，参数 `seed` 为该测试点随机数种子，参数 `testcase_name` 为测试点名称。
+  - `data_file`: 批量评测或对拍后输出数据文件位置，分别添加 `.in`、`.out`、`.ans`、`.txt` 后缀。提供参数 `testcase_name` 数据点名称、`result` 评测结果、`short_result` 评测结果缩写、`info` 测试点信息（解释见*程序评测*）、`runned_sum` 已评测数量、`outputed_sum` 已输出数量。
+  - `in_args`: 传入 `data_maker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile`,`chkfile` 分别为输入、输出、答案、比较信息文件路径，参数 `seed` 为该测试点随机数种子，参数 `testcase_name` 为测试点名称。
   - `infile`: 默认输入数据文件。
-  - `out_args`: 传入 `std` 的参数列表。提供参数 `infile`,`outfile`,`ansfile` 分别为输入、输出、答案文件路径。
+  - `out_args`: 传入 `std` 的参数列表。提供参数 `infile`,`outfile`,`ansfile`,`chkfile` 分别为输入、输出、答案、比较信息文件路径。
   - `outfile`: 默认输出数据文件。
   - `time`: 评测时间限制。
 - `exefile`: 可执行文件路径。提供参数 `file` 为源文件路径去除后缀，`filename` 为源文件名去除后缀，`filepath` 为源文件所在目录。
@@ -174,13 +174,13 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 > [!WARNING]
 > $\color{red}{\text{注意}}$：设置中的 `%.max_process_num%` 和 `%.max_thread_num%` 分别表示最大进程数和最大线程数的量级，请根据 CPU 并行性能、内存及磁盘读写速率调整参数，否则可能因为 CPU 占用过高导致系统崩溃，或磁盘读写延迟过高导致程序异常。
 
-所有运行的程序单次运行用时之和不建议小于 $5\text{ms}$，否则可能造成程序异常。
-
 ### 程序评测
 
 评测时同时使用 `%.compiler.argu%` 和 `%.data.compile_argu%` 编译选项，默认含有宏 `JUDGING`。
 
 评测时标准输入输出、标准错误输出（`stderr` 指向控制台）均需要 `flush` 操作才会进行推送，建议使用 `iostream` 或使用 `orita::auto_flush()` 自动推送输出，从文件读入自动在文件结束后关闭管道写入端，从控制台读入建议在结束时键入 `EOF`。如需在程序非正常退出时依然保留已有输出（包括输出到文件和控制台），也需要进行 `flush` 操作。
+
+评测时任意程序可以向比较信息文件输出首行输出形如 `***** info: {...}` 的字符串，评测结束后将会读取 `{...}` 中的内容作为测试点信息。
 
 评测后得到的数据文件会存放至 `%.data.data_dir%` 下。
 
@@ -348,7 +348,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 `std::mt19937` 类型随机数生成器。
 
-#### `void register_rnd(int argc, char **argv, unsigned int pos = 1U)`
+#### `void `register_rnd`(int argc, char **argv, unsigned int pos = 1U)`
 
 用于注册随机数生成器的种子。
 
@@ -497,9 +497,33 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `tot`: 图的大小。
 - **返回值**: 随机无向连通图的边集。
 
+#### `void register_info(int argc, char **argv, unsigned int pos = 3U)`
+
+用于注册测试点信息输出文件。
+
+- **参数**: 
+  - `argc`: 命令行参数的数量。
+  - `argv`: 命令行参数的数组。
+  - `pos`: 文件所在的参数位置。
+
+#### `template<class Ty> void print_info(const Ty &info)`
+
+输出测试点信息。
+
+- **参数**: 
+  - `info`: 需输出的测试点信息。
+
 #### `void auto_flush()`
 
 自动刷新标准输出、标准错误输出缓冲区。
+
+#### `void register_all(int argc, char **argv)`
+
+以默认参数位置注册所有需注册信息。
+
+- **参数**: 
+  - `argc`: 命令行参数的数量。
+  - `argv`: 命令行参数的数组。
 
 ## 卸载
 

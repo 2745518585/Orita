@@ -22,20 +22,21 @@ class runner
     std::istream *in_stream=NULL;
     std::ostream *out_stream=&std::cout,*err_stream=&std::cerr;
     fil in_file,out_file,err_file;
+    std::ios_base::openmode in_stream_mode=std::ios::binary,out_stream_mode=std::ios::binary,err_stream_mode=std::ios::binary;
     runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(get_exefile(_file)),argu(_argu),time_limit(_time_limit) {}
     ~runner() {if(ph!=NULL) delete ph;}
-    runner *set_in(const fil &file) {in_file=file;return this;}
+    runner *set_in(const fil &file,const std::ios_base::openmode &mode=0) {in_file=file;in_stream_mode|=mode;return this;}
     runner *set_in(std::istream *stream) {in_stream=stream;return this;}
-    runner *set_out(const fil &file) {out_file=file;return this;}
+    runner *set_out(const fil &file,const std::ios_base::openmode &mode=0) {out_file=file;out_stream_mode|=mode;return this;}
     runner *set_out(std::ostream *stream) {out_stream=stream;return this;}
-    runner *set_err(const fil &file) {err_file=file;return this;}
+    runner *set_err(const fil &file,const std::ios_base::openmode &mode=0) {err_file=file;err_stream_mode|=mode;return this;}
     runner *set_err(std::ostream *stream) {err_stream=stream;return this;}
     void start()
     {
         INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time_limit: "+std::to_string(time_limit.count())+"ms");
-        if(in_file!=fil()) in_stream=new sifstream(in_file,std::ios::binary);
-        if(out_file!=fil()) out_stream=new sofstream(out_file,std::ios::binary);
-        if(err_file!=fil()) err_stream=new sofstream(err_file,std::ios::binary);
+        if(in_file!=fil()) in_stream=new sifstream(in_file,in_stream_mode);
+        if(out_file!=fil()) out_stream=new sofstream(out_file,out_stream_mode);
+        if(err_file!=fil()) err_stream=new sofstream(err_file,err_stream_mode);
         run_timer.init();
         std::future<void> in_future(std::async(std::launch::async,[&](){if(in_stream!=NULL) *in_stream>>in; in.close(Poco::Pipe::CLOSE_WRITE);}));
         std::future<void> out_future(std::async(std::launch::async,[&](){if(out_stream!=NULL) *out_stream<<out<<std::flush;}));
@@ -80,7 +81,7 @@ class judger
 {
   public:
     fil in,out,ans,chk,in_file,out_file,ans_file,chk_file;
-    std::string testcase_name;
+    std::string testcase_name="NULL";
     const tim time_limit;
     unsigned seed=rnd();
     runner *in_runner=NULL,*out_runner=NULL,*ans_runner=NULL,*chk_runner=NULL;
@@ -110,33 +111,30 @@ class judger
     }
     void judge()
     {
+        {auto p=new sofstream(chk_file);p->close();delete p;}
         [&]()
         {
-            if(in!=fil()) (in_runner=new runner(in,std::to_string(seed)))->set_out(in_file);
-            if(out!=fil()) (out_runner=new runner(out))->set_in(in_file)->set_out(out_file);
-            (ans_runner=new runner(ans,arg(),time_limit*2))->set_in(in_file)->set_out(ans_file);
-            (chk_runner=new runner(chk,(arg)in_file+out_file+ans_file))->set_out(chk_file);
-            if(in_runner!=NULL)
+            if(in!=fil()) (in_runner=new runner(in,replace_env(in_args,running_path,env_args::in_args(in_file,out_file,ans_file,chk_file,testcase_name,seed))))->set_out(in_file);
+            if(out!=fil()) (out_runner=new runner(out,replace_env(out_args,running_path,env_args::out_args(in_file,out_file,ans_file,chk_file))))->set_in(in_file)->set_out(out_file);
+            (ans_runner=new runner(ans,replace_env(ans_args,running_path,env_args::ans_args(in_file,out_file,ans_file,chk_file)),time_limit*2))->set_in(in_file)->set_out(ans_file);
+            (chk_runner=new runner(chk,replace_env(chk_args,running_path,env_args::chk_args(in_file,out_file,ans_file,chk_file))))->set_out(chk_file,std::ios::app);
+            if(in!=fil())
             {
-                (in_runner=new runner(in,replace_env(in_args,running_path,env_args::in_args(in_file,out_file,ans_file,testcase_name,seed))))->set_out(in_file);
                 if((*in_runner)()) {in_result=res::type::TO;return;}
                 if(in_runner->exit_code) {in_result=res::type::RE;return;}
             }
-            if(out_runner!=NULL)
+            if(out!=fil())
             {
-                (out_runner=new runner(out,replace_env(out_args,running_path,env_args::out_args(in_file,out_file,ans_file))))->set_in(in_file)->set_out(out_file);
                 if((*out_runner)()) {out_result=res::type::TO;return;}
                 if(out_runner->exit_code) {out_result=res::type::RE;return;}
             }
             {
-                (ans_runner=new runner(ans,replace_env(ans_args,running_path,env_args::ans_args(in_file,out_file,ans_file)),time_limit*2))->set_in(in_file)->set_out(ans_file);
                 if((*ans_runner)()) {time=ans_runner->time;exit_code=ans_runner->exit_code;result=res::type::TLE_O;return;}
                 time=ans_runner->time;
                 exit_code=ans_runner->exit_code;
                 if(ans_runner->exit_code) {result=res::type::RE;return;}
             }
             {
-                (chk_runner=new runner(chk,replace_env(chk_args,running_path,env_args::chk_args(in_file,out_file,ans_file))))->set_out(chk_file);
                 if((*chk_runner)()) {chk_result=res::type::TO;return;}
                 if(chk_runner->exit_code!=0&&!std::regex_match(std::to_string(chk_runner->exit_code),chk_correct_exit_code)) {chk_result=res::type::RE;return;}
             }
@@ -169,6 +167,13 @@ class judger
         else if(!out_result.isnull()) Print::print_result(out_name,out_result,out_runner->time,out_runner->exit_code);
         else if(!chk_result.isnull()) Print::print_result(chk_name,chk_result,chk_runner->time,chk_runner->exit_code);
         else Print::print_result(ans_name,result,ans_runner->time,ans_runner->exit_code);
+    }
+    std::string get_info()
+    {
+        std::string str;
+        std::getline(sifstream(chk_file),str);
+        if(str.substr(0,12)=="***** info: ") return str.substr(12);
+        return "";
     }
 };
 class th_judger: public thread_mgr<judger>

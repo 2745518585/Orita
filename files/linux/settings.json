@@ -21,7 +21,11 @@
         "try_times": 5
     },
     "data": {
-        "ans_args": [],
+        "ans_args": [
+            "NULL",
+            "NULL",
+            "%#chkfile%"
+        ],
         "ansfile": "%*12%",
         "chk_args": [
             "%#infile%",
@@ -37,13 +41,18 @@
             "-DJUDGING"
         ],
         "data_dir": "%{RUNNING_PATH}%/.data",
-        "data_file": "%.data.data_dir%/%#testcase_name% - %#short_result%/data",
+        "data_file": "%.data.data_dir%/%#testcase_name% - [%#short_result%]%#info%/data",
         "in_args": [
             "%#seed%",
-            "%#testcase_name%"
+            "%#testcase_name%",
+            "%#chkfile%"
         ],
         "infile": "%*10%",
-        "out_args": [],
+        "out_args": [
+            "NULL",
+            "NULL",
+            "%#chkfile%"
+        ],
         "outfile": "%*11%",
         "time": 1000
     },

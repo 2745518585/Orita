@@ -158,7 +158,7 @@ class Command_check: public App
                 if(target->result.isfalse())
                 {
                     ++output_sum;
-                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(std::to_string(get_sum),target->result,runned_sum,output_sum))).path();
+                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(std::to_string(get_sum),target->result,target->get_info(),runned_sum,output_sum))).path();
                     ((fil)target_dir.parent()).createDirectories();
                     if((run_dir/"data.in").exists()) (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
                     if((run_dir/"data.out").exists()) (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
@@ -205,7 +205,7 @@ class Command_check: public App
                 if(run_judger.result.isfalse())
                 {
                     ++output_sum;
-                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(std::to_string(i),run_judger.result,runned_sum,output_sum))).path();
+                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(std::to_string(i),run_judger.result,run_judger.get_info(),runned_sum,output_sum))).path();
                     ((fil)target_dir.parent()).createDirectories();
                     if((run_dir/"data.in").exists()) (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
                     if((run_dir/"data.out").exists()) (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());

@@ -328,6 +328,7 @@ Orita 第一个正式版本。
 - Pass environment variables to child processes. 
 - Add `%{SETTINGS_PATH}%`.
 - Std can be specified in `judge`.
+- Add testcase info.
 
 #### Fixes
 

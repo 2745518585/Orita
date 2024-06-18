@@ -7,6 +7,7 @@
 #include<vector>
 #include<utility>
 #include<map>
+#include<fstream>
 namespace orita
 {
     namespace Data_maker
@@ -16,7 +17,7 @@ namespace orita
         using ull=unsigned long long;
         void register_rnd(int argc,char **argv,unsigned pos=1)
         {
-            if(argc>=2) rd.seed(std::stoul(argv[pos]));
+            try {rd.seed(std::stoul(argv[pos]));} catch(...) {}
         }
         void register_rnd(unsigned seed)
         {
@@ -241,10 +242,31 @@ namespace orita
     using Data_maker::rnd_tree;
     using Data_maker::rnd_ucgraph;
 
+    namespace Info
+    {
+        std::ofstream *out=NULL;
+        void register_info(int argc,char **argv,unsigned pos=3)
+        {
+            if(argc>pos) out=new std::ofstream(argv[pos],std::ios::app);
+        }
+        template<typename Ty> void print_info(const Ty &info)
+        {
+            if(out!=NULL) (*out)<<"***** info: "<<info<<"\n"<<std::endl;
+        }
+    }
+    using Info::register_info;
+    using Info::print_info;
+
     void auto_flush()
     {
         setvbuf(stdout,NULL,_IONBF,0);
         setvbuf(stderr,NULL,_IONBF,0);
+    }
+
+    void register_all(int argc,char **argv)
+    {
+        Data_maker::register_rnd(argc,argv);
+        Info::register_info(argc,argv);
     }
 }
 template<typename Ty1,typename Ty2> struct std::tuple_size<orita::pr<Ty1,Ty2>>: std::tuple_size<std::pair<Ty1,Ty2>> {};
