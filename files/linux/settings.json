@@ -48,6 +48,7 @@
             "%#chkfile%"
         ],
         "infile": "%*10%",
+        "info_pre": "***** info: ",
         "out_args": [
             "NULL",
             "NULL",

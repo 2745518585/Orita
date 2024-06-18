@@ -134,6 +134,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `data_file`: 批量评测或对拍后输出数据文件位置，分别添加 `.in`、`.out`、`.ans`、`.txt` 后缀。提供参数 `testcase_name` 数据点名称、`result` 评测结果、`short_result` 评测结果缩写、`info` 测试点信息（解释见*程序评测*）、`runned_sum` 已评测数量、`outputed_sum` 已输出数量。
   - `in_args`: 传入 `data_maker` 的参数列表。提供参数 `infile`,`outfile`,`ansfile`,`chkfile` 分别为输入、输出、答案、比较信息文件路径，参数 `seed` 为该测试点随机数种子，参数 `testcase_name` 为测试点名称。
   - `infile`: 默认输入数据文件。
+  - `info_pre`: 测试点信息前缀。
   - `out_args`: 传入 `std` 的参数列表。提供参数 `infile`,`outfile`,`ansfile`,`chkfile` 分别为输入、输出、答案、比较信息文件路径。
   - `outfile`: 默认输出数据文件。
   - `time`: 评测时间限制。
@@ -180,7 +181,7 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 
 评测时标准输入输出、标准错误输出（`stderr` 指向控制台）均需要 `flush` 操作才会进行推送，建议使用 `iostream` 或使用 `orita::auto_flush()` 自动推送输出，从文件读入自动在文件结束后关闭管道写入端，从控制台读入建议在结束时键入 `EOF`。如需在程序非正常退出时依然保留已有输出（包括输出到文件和控制台），也需要进行 `flush` 操作。
 
-评测时任意程序可以向比较信息文件输出首行输出形如 `***** info: {...}` 的字符串，评测结束后将会读取 `{...}` 中的内容作为测试点信息。
+评测时任意程序可以向比较信息文件输出首行输出形如 `%.data.info_pre%{...}` 的字符串，评测结束后将会读取 `{...}` 中的内容作为测试点信息。
 
 评测后得到的数据文件会存放至 `%.data.data_dir%` 下。
 
@@ -506,12 +507,13 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
   - `argv`: 命令行参数的数组。
   - `pos`: 文件所在的参数位置。
 
-#### `template<class Ty> void print_info(const Ty &info)`
+#### `template<class Ty> void print_info(const Ty &info, const std::string &pre = "***** info: ")`
 
 输出测试点信息。
 
 - **参数**: 
   - `info`: 需输出的测试点信息。
+  - `pre`: 测试点信息前缀。
 
 #### `void auto_flush()`
 

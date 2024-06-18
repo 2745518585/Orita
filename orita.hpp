@@ -249,9 +249,9 @@ namespace orita
         {
             if(argc>pos) out=new std::ofstream(argv[pos],std::ios::app);
         }
-        template<typename Ty> void print_info(const Ty &info)
+        template<typename Ty> void print_info(const Ty &info,const std::string &pre="***** info: ")
         {
-            if(out!=NULL) (*out)<<"***** info: "<<info<<"\n"<<std::endl;
+            if(out!=NULL) (*out)<<pre<<info<<"\n"<<std::endl;
         }
     }
     using Info::register_info;

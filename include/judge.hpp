@@ -172,7 +172,7 @@ class judger
     {
         std::string str;
         std::getline(sifstream(chk_file),str);
-        if(str.substr(0,12)=="***** info: ") return str.substr(12);
+        if(str.substr(0,data_info_pre.size())==data_info_pre) return str.substr(data_info_pre.size());
         return "";
     }
 };
