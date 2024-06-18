@@ -25,11 +25,11 @@ class runner
     std::ios_base::openmode in_stream_mode=std::ios::binary,out_stream_mode=std::ios::binary,err_stream_mode=std::ios::binary;
     runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(get_exefile(_file)),argu(_argu),time_limit(_time_limit) {}
     ~runner() {if(ph!=NULL) delete ph;}
-    runner *set_in(const fil &file,const std::ios_base::openmode &mode=0) {in_file=file;in_stream_mode|=mode;return this;}
+    runner *set_in(const fil &file,const std::ios_base::openmode &mode=std::ios_base::openmode()) {in_file=file;in_stream_mode|=mode;return this;}
     runner *set_in(std::istream *stream) {in_stream=stream;return this;}
-    runner *set_out(const fil &file,const std::ios_base::openmode &mode=0) {out_file=file;out_stream_mode|=mode;return this;}
+    runner *set_out(const fil &file,const std::ios_base::openmode &mode=std::ios_base::openmode()) {out_file=file;out_stream_mode|=mode;return this;}
     runner *set_out(std::ostream *stream) {out_stream=stream;return this;}
-    runner *set_err(const fil &file,const std::ios_base::openmode &mode=0) {err_file=file;err_stream_mode|=mode;return this;}
+    runner *set_err(const fil &file,const std::ios_base::openmode &mode=std::ios_base::openmode()) {err_file=file;err_stream_mode|=mode;return this;}
     runner *set_err(std::ostream *stream) {err_stream=stream;return this;}
     void start()
     {
