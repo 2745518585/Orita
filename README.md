@@ -6,10 +6,6 @@ zh-CN | [en-CN](./README_en-CN.md)
 
 Orita 是一款由 [赵悦岑](https://github.com/2745518585/) 开发的 OI 工具，主要使用 C++ 编写，包含评测、对拍、数据生成等功能。
 
-[vscode-Orita](https://github.com/2745518585/vscode-Orita)
-
-Orita 的配套 VSCode 扩展。
-
 ## 安装
 
 ### 构建
