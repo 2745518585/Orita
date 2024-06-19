@@ -9,7 +9,12 @@ std::string get_env(const std::string &str,const pat &dir,const json &args)
     INFO("get env","str: "+add_squo(str),"dir: "+add_squo(dir),"args: "+args.dump());
     if(!enviroment_variable[str].is_null()) return (std::string)enviroment_variable[str];
     if(std::regex_match(str,std::regex("^\\*.*$"))) return get_file((file_number)str,dir).path();
-    if(std::regex_match(str,std::regex("^\\..*$"))) return get_settings<json>(std::regex_replace(str,std::regex("\\."),"/")).dump();
+    if(std::regex_match(str,std::regex("^\\..*$")))
+    {
+        json res=get_settings<json>(std::regex_replace(str,std::regex("\\."),"/"));
+        if(res.is_string()) return (std::string)res;
+        else return res.dump();
+    }
     if(std::regex_match(str,std::regex("^#.*$")))
     {
         try {return args[str.substr(1)];}
@@ -37,5 +42,41 @@ std::string replace_env(const std::string &str,const pat &dir,const json &args)
     resstr+=str.substr(laspos,str.size()-laspos);
     INFO("replace env","str: "+add_squo(str),"result: "+add_squo(resstr));
     return resstr;
+}
+template<typename ...others_type> json replace_env(json a,const others_type &...others)
+{
+    if(a.is_null()) return a;
+    if(a.is_string()) return replace_env((std::string)a,others...);
+    if(a.is_object())
+    {
+        for(auto &i:a.items()) a[i.key()]=replace_env(i.value(),others...);
+    }
+    if(a.is_array())
+    {
+        for(auto i=0;i<a.size();++i) a[i]=replace_env(a[i],others...);
+    }
+    return a;
+}
+namespace Env
+{
+    class Init
+    {
+      public:
+        Init()
+        {
+            for(auto ev:enviroment_variable.items())
+            {
+                if(!ev.value().is_null()) ssetenv(ev.key(),ev.value());
+            }
+            for(int i=0;i<=_max_file_num;++i)
+            {
+                if(find_filestr(i)) ssetenv(((file_number)i).str(),get_file((file_number)i).path());
+            }
+            traverse_json(get_settings_merge(""),[](const std::string &key,const json &value){
+                ssetenv(std::regex_replace(key,std::regex("\\/"),"."),value.dump());
+            });
+        }
+        ~Init() {}
+    }_Init;
 }
 #endif

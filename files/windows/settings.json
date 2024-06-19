@@ -11,23 +11,49 @@
     "compiler": {
         "argu": [
             "-O2",
+            "-DLOCAL",
             "-I",
             "%{FILE_PATH}%"
         ],
         "command": "g++.exe",
-        "time_limit": 5000
+        "skip_compiled": true,
+        "time_limit": 5000,
+        "try_times": 5
     },
     "data": {
+        "ans_args": [
+            "NULL",
+            "NULL",
+            "%#chkfile%"
+        ],
         "ansfile": "%*12%",
+        "chk_args": [
+            "%#infile%",
+            "%#outfile%",
+            "%#ansfile%"
+        ],
         "chk_exit_code": "1",
+        "chk_outputs": "on",
         "chkfile": "%*13%",
         "compile_argu": [
             "-std=c++14",
             "-O2",
-            "-D JUDGING"
+            "-DJUDGING"
         ],
         "data_dir": "%{RUNNING_PATH}%/.data",
+        "data_file": "%.data.data_dir%/%#testcase_name% - [%#short_result%]%#info%/data",
+        "in_args": [
+            "%#seed%",
+            "%#testcase_name%",
+            "%#chkfile%"
+        ],
         "infile": "%*10%",
+        "info_pre": "***** info: ",
+        "out_args": [
+            "NULL",
+            "NULL",
+            "%#chkfile%"
+        ],
         "outfile": "%*11%",
         "time": 1000
     },
@@ -39,7 +65,7 @@
     "~list": {
         "localdata": {
             "data": {
-                "data_dir": "./.data"
+                "data_dir": "%{SETTINGS_PATH}%/.data"
             }
         },
         "stack": {
@@ -48,7 +74,7 @@
                     "-std=c++14",
                     "-O2",
                     "-Wl,--stack=2147483648",
-                    "-D JUDGING"
+                    "-DJUDGING"
                 ]
             }
         }

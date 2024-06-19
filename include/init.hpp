@@ -137,6 +137,17 @@ void remove_null(json &a)
         }
     }
 }
+template<typename Type> void traverse_json(json a,const Type &func,const std::string &pt="")
+{
+    if(a.is_object()||a.is_array())
+    {
+        for(auto i:a.items())
+        {
+            traverse_json(i.value(),func,pt+"/"+i.key());
+        }
+    }
+    else func(pt,a);
+}
 
 // exception
 using exception=Poco::Exception;
@@ -205,6 +216,30 @@ template<typename Ty> std::enable_if_t<std::is_convertible_v<Ty,size_t>,std::str
     return str;
 }
 
+// command
+int ssystem(const std::string &command)
+{
+    #ifdef _WIN32
+    return system(UTF8tosys("cmd /C "+add_quo(command)).c_str());
+    #endif
+    #ifdef __linux__
+    return system(UTF8tosys(command).c_str());
+    #endif
+}
+size_t get_terminal_width()
+{
+    #ifdef _WIN32
+    HANDLE console=GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    if(GetConsoleScreenBufferInfo(console,&csbi)) return csbi.srWindow.Right-csbi.srWindow.Left+1;
+    #endif
+    #ifdef __linux__
+    struct winsize w;
+    if(ioctl(0,TIOCGWINSZ,&w)==0) return w.ws_col;
+    #endif
+    return 0;
+}
+
 // path
 using pat=Poco::Path;
 using fil=Poco::File;
@@ -271,6 +306,15 @@ std::string sgetenv(const std::string &str)
     if(!Poco::Environment::has(str)) throw exception("empty environment variable");
     return Poco::Environment::get(str);
 }
+void ssetenv(const std::string &key,const std::string &value)
+{
+    #ifdef _WIN32
+    putenv((key+"="+value).c_str());
+    #endif
+    #ifdef __linux__    
+    setenv(key.c_str(),value.c_str(),true);
+    #endif
+}
 const pat running_path=[]()
 {
     return (pat)(pat::current());
@@ -301,6 +345,7 @@ json enviroment_variable={
     {"{FILE_PATH}",file_path.toString()},
     {"{APPDATA_PATH}",appdata_path.toString()},
     {"{OS_NAME}",os_name},
+    {"{TERMINAL_WIDTH}",std::to_string(get_terminal_width())}
 };
 std::ostream &operator<<(std::ostream &output,pat val)
 {
@@ -322,6 +367,11 @@ class arg: public Poco::Process::Args
     arg(const std::string &str) {push_back(str);}
     arg(const pat &str) {push_back(str.toString());}
     arg(const fil &str) {push_back(str.path());}
+    arg(const json &str)
+    {
+        if(!str.is_array()) throw exception("wrong arg format: json object that is not an array");
+        for(auto i:str) push_back((std::string)i);
+    }
 };
 arg get_arg(const std::string &str)
 {
@@ -546,30 +596,6 @@ namespace ANSI
 void hide_cursor() {scout<<ANSI::hide_cursor<<std::flush;}
 void show_cursor() {scout<<ANSI::show_cursor<<std::flush;}
 
-// command
-int ssystem(const std::string &command)
-{
-    #ifdef _WIN32
-    return system(UTF8tosys("cmd /C "+add_quo(command)).c_str());
-    #endif
-    #ifdef __linux__
-    return system(UTF8tosys(command).c_str());
-    #endif
-}
-size_t get_terminal_width()
-{
-    #ifdef _WIN32
-    HANDLE console=GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    if(GetConsoleScreenBufferInfo(console,&csbi)) return csbi.srWindow.Right-csbi.srWindow.Left+1;
-    #endif
-    #ifdef __linux__
-    struct winsize w;
-    if(ioctl(0,TIOCGWINSZ,&w)==0) return w.ws_col;
-    #endif
-    return 0;
-}
-
 // random
 unsigned rnd()
 {
@@ -578,7 +604,7 @@ unsigned rnd()
     return gen();
 }
 
-//init
+// init
 namespace Init
 {
     class Init

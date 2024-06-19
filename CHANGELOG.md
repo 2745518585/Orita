@@ -296,7 +296,7 @@ Orita 第一个正式版本。
 
 - Use `Poco::Process`.
 
-### Dev0.2.2
+### Dev 0.2.2
 
 #### Features
 
@@ -315,3 +315,27 @@ Orita 第一个正式版本。
 - Add `thread_mgr`.
 - Flush input and output when connected to console.
 - Save configs before running.
+
+### Dev 0.2.3
+
+#### Features
+
+- New functions and classes in `orita.hpp`.
+- Skip compilation when the source file last modified time is not later than the execute file.
+- Add try times in compile.
+- Customize the arguments passed into the data_maker, std, ans and checker.
+- Checker outputs more info.
+- Pass environment variables to child processes. 
+- Add `%{SETTINGS_PATH}%`.
+- Std can be specified in `judge`.
+- Add testcase info.
+
+#### Fixes
+
+- Wrong output format in `print_type`.
+
+#### Changes
+
+- Change `Time Limit Error` into `Time Limit Exceed`.
+- Use `putenv` to add new environment variables.
+- Add `LOCAL` definition.

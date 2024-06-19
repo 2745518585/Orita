@@ -11,9 +11,9 @@ namespace Print
         {res::type::AC,"Accepted"},
         {res::type::WA,"Wrong Answer"},
         {res::type::RE,"Runtime Error"},
-        {res::type::TLE_CA,"Time Limit Error with Correct Answer"},
-        {res::type::TLE_WA,"Time Limit Error with Wrong Answer"},
-        {res::type::TLE_O,"Time Limit Error"},
+        {res::type::TLE_CA,"Time Limit Exceed with Correct Answer"},
+        {res::type::TLE_WA,"Time Limit Exceed with Wrong Answer"},
+        {res::type::TLE_O,"Time Limit Exceed"},
         {res::type::CE,"Compile Error"},
         {res::type::SA,"Same Answer"},
         {res::type::DA,"Different Answer"},
@@ -107,7 +107,7 @@ namespace Print
             for(unsigned j=0;j<str_back.size();++j)
             {
                 if(j<i.size()) str+=str_back[j]+i[j]+std::string(" ")*(lens[j]-i[j].size());
-                else str+=str_back[j]+std::string("")*lens[j];
+                else str+=str_back[j]+std::string(" ")*lens[j];
             }
         }
         return str;

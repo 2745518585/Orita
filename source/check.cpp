@@ -15,6 +15,7 @@ class Command_check: public App
         options.addOption(Poco::Util::Option("num","n","specify check num").argument("num",true));
         options.addOption(Poco::Util::Option("time","t","change time limit").argument("time",true));
         options.addOption(Poco::Util::Option("multithread","mul","turn on multithreading").noArgument());
+        options.addOption(Poco::Util::Option("dorecompile","dore","force recompile").noArgument());
         App::defineOptions(options);
     }
     void displayHelp(Poco::Util::HelpFormatter *helpFormatter)
@@ -62,8 +63,9 @@ class Command_check: public App
             add_file(_check_chk,chk_str);
             return add_namesuf(get_file(chk_str),"cpp");
         }();
-        // init time
+        // init config
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
+        if(check_option("dorecompile")) if_skip_compiled=false;
         // init total sum
         if(!check_option("num"))
         {
@@ -115,7 +117,8 @@ class Command_check: public App
         // check
         if(check_option("multithread"))
         {
-            unsigned ac_sum=0,runned_sum=0,add_sum=0,get_sum=0;
+            ssetenv(".data.chk_outputs","\"off\"");
+            unsigned ac_sum=0,runned_sum=0,add_sum=0,get_sum=0,output_sum=0;
             th_judger run_judger;
             auto add=[&](unsigned i)
             {
@@ -154,7 +157,13 @@ class Command_check: public App
                 if(target->result.istrue()) ++ac_sum;
                 if(target->result.isfalse())
                 {
-                    run_dir.copyTo((default_data_dir/(std::to_string(get_sum)+" - "+get_short_resultname(target->result))).path());
+                    ++output_sum;
+                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(std::to_string(get_sum),target->result,target->get_info(),runned_sum,output_sum))).path();
+                    ((fil)target_dir.parent()).createDirectories();
+                    if((run_dir/"data.in").exists()) (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
+                    if((run_dir/"data.out").exists()) (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
+                    if((run_dir/"data.ans").exists()) (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
+                    if((run_dir/"data.txt").exists()) (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
                 }
                 run_judger.remove(name);
                 if(add_sum<total_sum) add(++add_sum);
@@ -163,9 +172,11 @@ class Command_check: public App
         }
         else
         {
-            unsigned ac_sum=0,runned_sum=0;
+            unsigned ac_sum=0,runned_sum=0,output_sum=0;
             for(unsigned i=1;i<=total_sum;++i)
             {
+                ssetenv("runned_sum",std::to_string(runned_sum));
+                ssetenv("outputed_sum",std::to_string(output_sum));
                 scout<<std::string("-")*50<<"\r#"<<i;
                 if(runned_sum!=ac_sum)
                 {
@@ -175,7 +186,7 @@ class Command_check: public App
                 fil run_dir=default_data_dir/"datas"/std::to_string(i);
                 run_dir.createDirectory();
                 fil in_file=run_dir/"data.in",out_file=run_dir/"data.out",ans_file=run_dir/"data.ans",chk_file=run_dir/"data.txt";
-                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_in(in)->set_out(out);
+                judger run_judger(ans,chk,in_file,out_file,ans_file,chk_file);(&run_judger)->set_in(in)->set_out(out)->set_name(std::to_string(i));
                 run_judger.judge();
                 run_judger.print_result(_in_name,_out_name,"",_chk_name);
                 sofstream output_chk_file(chk_file,std::ios::app);
@@ -193,8 +204,16 @@ class Command_check: public App
                 if(run_judger.result.istrue()) ++ac_sum;
                 if(run_judger.result.isfalse())
                 {
-                    run_dir.copyTo((default_data_dir/(std::to_string(i)+" - "+get_short_resultname(run_judger.result))).path());
+                    ++output_sum;
+                    pat target_dir=get_file(replace_env(data_file_str,running_path,env_args::data(std::to_string(i),run_judger.result,run_judger.get_info(),runned_sum,output_sum))).path();
+                    ((fil)target_dir.parent()).createDirectories();
+                    if((run_dir/"data.in").exists()) (run_dir/"data.in").copyTo(replace_extension(target_dir,"in").toString());
+                    if((run_dir/"data.out").exists()) (run_dir/"data.out").copyTo(replace_extension(target_dir,"out").toString());
+                    if((run_dir/"data.ans").exists()) (run_dir/"data.ans").copyTo(replace_extension(target_dir,"ans").toString());
+                    if((run_dir/"data.txt").exists()) (run_dir/"data.txt").copyTo(replace_extension(target_dir,"txt").toString());
                 }
+                ssetenv("runned_sum","");
+                ssetenv("outputed_sum","");
             }
             scout<<"\n"<<ac_sum<<" / "<<runned_sum<<"\n\n";
         }
