@@ -538,6 +538,10 @@ Orita 预置了一些文件以方便使用，这些文件在初始化后位于�
 - [ikalnytskyi/termcolor](https://github.com/ikalnytskyi/termcolor)
 - [pocoproject/poco](https://github.com/pocoproject/poco)
 
+## 开源协议
+
+[MIT](LICENSE) LICENSE
+
 ## 致谢
 
 本项目由 [Sukwants](https://github.com/Sukwants)、[Pond Ink](https://github.com/Pond-Ink) 团队和 [syysongyuyang](https://github.com/syysongyuyang) 提供技术支持。
