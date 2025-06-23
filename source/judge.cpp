@@ -42,15 +42,15 @@ class Command_judge: public App
         {
             pat ans_str=check_file(get_option("file"),_run_ans);
             add_file(_run_ans,ans_str);
-            return add_namesuf(get_file(ans_str),"cpp");
+            return get_file(ans_str);
         }();
         fil chk=[&]()
         {
             pat chk_str=check_file(get_option("checker"),_run_chk);
             add_file(_run_chk,chk_str);
-            return add_namesuf(get_file(chk_str),"cpp");
+            return get_file(chk_str);
         }();
-        fil out=check_option("ofile")?add_namesuf(get_file(get_option("ofile")),"cpp"):fil();
+        fil out=check_option("ofile")?get_file(get_option("ofile")):fil();
         // init config
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
         if(check_option("dorecompile")) if_skip_compiled=false;
@@ -70,8 +70,8 @@ class Command_judge: public App
         // compile file
         printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
         th_compiler *run_compiler=new th_compiler();
-        run_compiler->add({{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
-        if(out!=fil()) run_compiler->add(_out_name,out,data_compile_argu);
+        run_compiler->add({{_ans_name,ans},{_chk_name,chk}},arg(),true);
+        if(out!=fil()) run_compiler->add(_out_name,out,arg(),true);
         run_compiler->wait_all();
         {
             std::string name=run_compiler->get_all();

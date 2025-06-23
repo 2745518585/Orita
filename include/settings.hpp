@@ -109,7 +109,7 @@ namespace Settings
         try {(Ty)global_settings[pointer];object=&global_settings[pointer];} catch(...) {}
         for(auto &i:all_settings)
         {
-            try {(Ty)i[pointer];object=&i[pointer];} catch(...) {}
+            if(!i[pointer].is_null()) try {(Ty)i[pointer];object=&i[pointer];} catch(...) {}
         }
         if(object) INFO("get settings object",add_squo(key),object->dump());
         else INFO("get settings object",add_squo(key),"NULL");
@@ -150,6 +150,7 @@ namespace Settings
     template<typename Ty> Ty get_settings(const std::string &key)
     {
         const json::json_pointer pointer=(json::json_pointer)key;
+        DEBUG("debug",key);
         json *object=get_settings_object<Ty>(key);
         pat path=get_settings_path<Ty>(key);
         if(!object)
@@ -177,21 +178,62 @@ using Settings::get_settings;
 const unsigned max_process_num=get_settings<unsigned>("/max_process_num");
 const unsigned max_thread_num=get_settings<unsigned>("/max_thread_num");
 const tim runtime_limit=(tim)get_settings<unsigned>("/runtime_limit");
-const fil compiler_command=get_settings<std::string>("/compiler/command");
-const arg compile_argu=[]()
+struct language_settings
 {
-    json object=get_settings_merge("/compiler/argu");
-    arg argu;
-    for(auto i:object) if(i.is_string()) argu+=replace_env((std::string)i);
-    return argu;
-}();
-const arg data_compile_argu=[]()
+    const bool need_compile;
+    const std::string compile_command_str;
+    const arg compile_argu_str;
+    const arg data_compile_argu_str;
+    const std::string run_command_str;
+    const arg run_argu_str;
+    language_settings(const std::string _lan_type):
+    need_compile(get_settings_object("/language/"+_lan_type+"/compiler")!=NULL),
+    compile_command_str([&]()
+    {
+        if(!need_compile) return std::string("");
+        return get_settings<std::string>("/language/"+_lan_type+"/compiler/command");
+    }()),
+    compile_argu_str([&]()
+    {
+        if(!need_compile) return arg("");
+        return (arg)get_settings_merge("/language/"+_lan_type+"/compiler/argu");
+    }()),
+    data_compile_argu_str([&]()
+    {
+        if(!need_compile) return arg("");
+        return (arg)get_settings_merge("/language/"+_lan_type+"/compiler/data_argu");
+    }()),
+    run_command_str([&]()
+    {
+        return get_settings<std::string>("/language/"+_lan_type+"/runner/command");
+    }()),
+    run_argu_str([&]()
+    {
+        return (arg)get_settings_merge("/language/"+_lan_type+"/runner/argu");
+    }())
+    {}
+};
+const std::map<std::string,language_settings> language_list=[]()
 {
-    json object=get_settings_merge("/data/compile_argu");
-    arg argu;
-    for(auto i:object) if(i.is_string()) argu+=replace_env((std::string)i);
-    return argu;
+    std::map<std::string,language_settings> language_list;
+    for(auto &i:get_settings_object("/language")->items())
+    {
+        language_list.emplace(i.key(),std::move(language_settings(i.key())));
+    }
+    return std::move(language_list);
 }();
+const language_settings &get_language_settings(const fil &file)
+{
+    std::string _lan_type=pat(file.path()).getExtension();
+    INFO("get language settings",add_squo(file.path()),add_squo(_lan_type));
+    auto target=language_list.find(_lan_type);
+    if(target==language_list.end())
+    {
+        ERROR("get language settings - language not found",add_squo(_lan_type));
+        throw exception("language not found: "+_lan_type);
+    }
+    return target->second;
+}
 bool if_skip_compiled=get_settings<bool>("/compiler/skip_compiled");
 const unsigned compile_try_times=get_settings<unsigned>("/compiler/try_times");
 const tim compile_time_limit=get_settings<tim>("/compiler/time_limit");
@@ -207,15 +249,6 @@ const arg chk_args=get_settings<arg>("/data/chk_args");
 std::string data_file_str=get_settings<std::string>("/data/data_file");
 const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/data/chk_exit_code");
 const std::string data_info_pre=get_settings<std::string>("/data/info_pre");
-const std::string exefile_str=get_settings<std::string>("/exefile");
-pat get_exefile(const pat &file)
-{
-    return replace_env(exefile_str,running_path,env_args::filenosuf(file));
-}
-pat get_exefile(const fil &file)
-{
-    return get_exefile((pat)file.path());
-}
 namespace Settings
 {
     void change_time_limit(const tim time)

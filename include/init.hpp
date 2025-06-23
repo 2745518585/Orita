@@ -369,8 +369,15 @@ class arg: public Poco::Process::Args
     arg(const fil &str) {push_back(str.path());}
     arg(const json &str)
     {
+        if(str.is_null()) {return;}
         if(!str.is_array()) throw exception("wrong arg format: json object that is not an array");
         for(auto i:str) push_back((std::string)i);
+    }
+    const std::string dump() const
+    {
+        std::string str;
+        for(auto i:*this) str+=i+" ";
+        return str;
     }
 };
 arg get_arg(const std::string &str)

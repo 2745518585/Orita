@@ -9,13 +9,6 @@
         "r": "run"
     },
     "compiler": {
-        "argu": [
-            "-O2",
-            "-DLOCAL",
-            "-I",
-            "%{FILE_PATH}%"
-        ],
-        "command": "g++.exe",
         "skip_compiled": true,
         "time_limit": 5000,
         "try_times": 5
@@ -35,11 +28,6 @@
         "chk_exit_code": "1",
         "chk_outputs": "on",
         "chkfile": "%*13%",
-        "compile_argu": [
-            "-std=c++14",
-            "-O2",
-            "-DJUDGING"
-        ],
         "data_dir": "%{RUNNING_PATH}%/.data",
         "data_file": "%.data.data_dir%/%#testcase_name% - [%#short_result%]%#info%/data",
         "in_args": [
@@ -57,7 +45,46 @@
         "outfile": "%*11%",
         "time": 1000
     },
-    "exefile": "%#file%.exe",
+    "language": {
+        "cpp": {
+            "compiler": {
+                "argu": [
+                    "%#file%",
+                    "-o",
+                    "%#filepath%%#filebase%.exe",
+                    "-O2",
+                    "-DLOCAL",
+                    "-I",
+                    "%{FILE_PATH}%"
+                ],
+                "command": "g++.exe",
+                "data_argu": [
+                    "-std=c++14",
+                    "-O2",
+                    "-DJUDGING"
+                ]
+            },
+            "runner": {
+                "command": "%#filepath%%#filebase%.exe"
+            }
+        },
+        "js": {
+            "runner": {
+                "argu": [
+                    "%#file%"
+                ],
+                "command": "node.exe"
+            }
+        },
+        "py": {
+            "runner": {
+                "argu": [
+                    "%#file%"
+                ],
+                "command": "python.exe"
+            }
+        }
+    },
     "max_process_num": 10,
     "max_thread_num": 100,
     "runtime_limit": 5000,

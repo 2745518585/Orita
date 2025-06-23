@@ -7,17 +7,17 @@ std::string get_env(const std::string &str,const pat &dir=running_path,const jso
 std::string replace_env(const std::string &str,const pat &dir=running_path,const json &args=json());
 namespace env_args
 {
-    json filenosuf(const pat &file)
+    json files(const pat &file)
     {
-        return {{"file",replace_extension(file,"").toString()},{"filename",replace_extension((pat)file.getFileName(),"").toString()},{"filepath",replace_extension(file.parent(),"").toString()}};
+        return {{"file",file.toString()},{"filename",replace_extension((pat)file.getFileName(),"").toString()},{"filebase",replace_extension((pat)file.getBaseName(),"").toString()},{"filesuf",replace_extension((pat)file.getExtension(),"").toString()},{"filepath",replace_extension(file.parent(),"").toString()}};
     }
-    json filenosuf(const std::string &file)
+    json files(const std::string &file)
     {
-        return filenosuf((pat)file);
+        return files((pat)file);
     }
-    json filenosuf(const fil &file)
+    json files(const fil &file)
     {
-        return filenosuf((pat)file.path());
+        return files((pat)file.path());
     }
     json in_args(const fil &in_file,const fil &out_file,const fil &ans_file,const fil &chk_file,const std::string &testcase_name,const unsigned &seed)
     {

@@ -43,25 +43,25 @@ class Command_check: public App
         {
             pat in_str=check_file(get_option("ifile"),_check_in);
             add_file(_check_in,in_str);
-            return add_namesuf(get_file(in_str),"cpp");
+            return get_file(in_str);
         }();
         fil out=[&]()
         {
             pat out_str=check_file(get_option("ofile"),_check_out);
             add_file(_check_out,out_str);
-            return add_namesuf(get_file(out_str),"cpp");
+            return get_file(out_str);
         }();
         fil ans=[&]()
         {
             pat ans_str=check_file(get_option("afile"),_check_ans);
             add_file(_check_ans,ans_str);
-            return add_namesuf(get_file(ans_str),"cpp");
+            return get_file(ans_str);
         }();
         fil chk=[&]()
         {
             pat chk_str=check_file(get_option("checker"),_check_chk);
             add_file(_check_chk,chk_str);
-            return add_namesuf(get_file(chk_str),"cpp");
+            return get_file(chk_str);
         }();
         // init config
         if(check_option("time")) change_time_limit((tim)std::stoi(get_option("time")));
@@ -84,7 +84,7 @@ class Command_check: public App
         // compile file
         printer *print=new printer({"Compiling.","Compiling..","Compiling..."},(tim)150);print->start();
         th_compiler *run_compiler=new th_compiler();
-        run_compiler->add({{_in_name,in},{_out_name,out},{_ans_name,ans},{_chk_name,chk}},data_compile_argu);
+        run_compiler->add({{_in_name,in},{_out_name,out},{_ans_name,ans},{_chk_name,chk}},arg(),true);
         run_compiler->wait_all();
         {
             std::string name=run_compiler->get_all();

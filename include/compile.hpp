@@ -18,7 +18,9 @@ class compiler
     process_handle *ph=NULL;
     bool if_end=false;
     std::condition_variable wait_end;
-    compiler(const fil &_file,const arg &_argu=arg()):file(_file),argu(compile_argu+_argu) {}
+    compiler(const fil &_file,const arg &_argu=arg(),const bool _if_judge=false):
+    file(replace_env(get_language_settings(_file).compile_command_str,running_path,env_args::files(_file))),
+    argu(replace_env(get_language_settings(_file).compile_argu_str+(_if_judge?get_language_settings(_file).data_compile_argu_str:arg()),running_path,env_args::files(_file))+_argu) {}
     ~compiler() {delete ph;}
     void wait_for()
     {
@@ -31,15 +33,14 @@ class compiler
     void start()
     {
         if([&](){
-            if(!if_skip_compiled) return true;
-            try {return file.getLastModified()>fil(get_exefile(file)).getLastModified();}
-            catch(...) {return true;}
+            if(file=="") return false;
+            return true;
         }())
         {
             INFO("compile - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu));
             while(try_times--)
             {
-                ph=new process_handle(Poco::Process::launch(compiler_command.path(),(arg)file+"-o"+get_exefile(file)+argu,&in,&out,&err));
+                ph=new process_handle(Poco::Process::launch(file.path(),argu,&in,&out,&err));
                 std::future<void> run_future(std::async(std::launch::async,[&](){ph->wait();}));
                 if(run_future.wait_for(compile_time_limit)!=std::future_status::ready)
                 {
@@ -80,13 +81,13 @@ class th_compiler: public thread_mgr<compiler>
     {
         return "th_compiler";
     }
-    void add(const std::string &name,const fil &file,const arg &argu=arg())
+    void add(const std::string &name,const fil &file,const arg &argu=arg(),const bool if_judge=false)
     {
-        thread_mgr::add(name,new compiler(file,argu));
+        thread_mgr::add(name,new compiler(file,argu,if_judge));
     }
-    void add(const std::initializer_list<std::pair<std::string,fil>> file,const arg &argu=arg())
+    void add(const std::initializer_list<std::pair<std::string,fil>> file,const arg &argu=arg(),const bool if_judge=false)
     {
-        for(auto i:file) add(i.first,i.second,argu);
+        for(auto i:file) add(i.first,i.second,argu,if_judge);
     }
     th_compiler():thread_mgr()
     {

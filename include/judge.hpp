@@ -23,7 +23,9 @@ class runner
     std::ostream *out_stream=&std::cout,*err_stream=&std::cerr;
     fil in_file,out_file,err_file;
     std::ios_base::openmode in_stream_mode=std::ios::binary,out_stream_mode=std::ios::binary,err_stream_mode=std::ios::binary;
-    runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):file(get_exefile(_file)),argu(_argu),time_limit(_time_limit) {}
+    runner(const fil &_file,const arg &_argu=arg(),const tim _time_limit=runtime_limit):
+    file(replace_env(get_language_settings(_file).run_command_str,running_path,env_args::files(_file))),
+    argu(replace_env(get_language_settings(_file).run_argu_str,running_path,env_args::files(_file))+_argu),time_limit(_time_limit) {}
     ~runner() {if(ph!=NULL) delete ph;}
     runner *set_in(const fil &file,const std::ios_base::openmode &mode=std::ios_base::openmode()) {in_file=file;in_stream_mode|=mode;return this;}
     runner *set_in(std::istream *stream) {in_stream=stream;return this;}

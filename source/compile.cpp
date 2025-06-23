@@ -31,13 +31,14 @@ class Command_compile: public App
         INFO("args",add_squo(args));
 
         
-        arg compile_argu=get_arg(get_option("carg"));
-        std::string run_argu=get_option("arg");
+        const arg compile_argu=get_arg(get_option("carg"));
+        const arg run_argu=get_arg(get_option("arg"));
         if(check_option("dorecompile")) if_skip_compiled=false;
         if(args.size()==1&&check_option("run"))
         {
-            fil file=add_namesuf(get_file((pat)args[0]),"cpp");
+            fil file=get_file((pat)args[0]);
             compiler comp(file,compile_argu);
+            DEBUG("0");
             if(comp())
             {
                 scerr<<comp.err;
@@ -45,7 +46,7 @@ class Command_compile: public App
             }
             show_cursor();
             timer run_timer;run_timer.init();
-            int exit_code=ssystem(get_exefile(file).toString()+" "+run_argu)>>sys_exit_code;
+            int exit_code=ssystem(replace_env(get_language_settings(file).run_command_str,running_path,env_args::files(file))+" "+replace_env(get_language_settings(file).run_argu_str+run_argu,running_path,env_args::files(file)).dump())>>sys_exit_code;
             tim time=run_timer.get_time();
             hide_cursor();
             scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
@@ -55,7 +56,7 @@ class Command_compile: public App
             fil file=get_file((pat)args[0]);
             show_cursor();
             timer run_timer;run_timer.init();
-            int exit_code=ssystem(get_exefile(file).toString()+" "+run_argu)>>sys_exit_code;
+            int exit_code=ssystem(replace_env(get_language_settings(file).run_command_str,running_path,env_args::files(file))+" "+replace_env(get_language_settings(file).run_argu_str+run_argu,running_path,env_args::files(file)).dump())>>sys_exit_code;
             tim time=run_timer.get_time();
             hide_cursor();
             scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
@@ -66,7 +67,7 @@ class Command_compile: public App
             th_compiler comp;
             auto add=[&](unsigned i)
             {
-                fil file=get_file(add_namesuf((pat)args[i-1],"cpp"));
+                fil file=get_file((pat)args[i-1]);
                 comp.add(file.path(),file,compile_argu);
             };
             while(add_sum<max_thread_num&&add_sum<args.size()) add(++add_sum);

@@ -18,7 +18,11 @@ std::string get_env(const std::string &str,const pat &dir,const json &args)
     if(std::regex_match(str,std::regex("^#.*$")))
     {
         try {return args[str.substr(1)];}
-        catch(...) {throw exception("empty environment variable args");}
+        catch(...) 
+        {
+            WARN("get env - empty argument","str: "+add_squo(str),"args: "+args.dump());
+            return "%"+str+"%";
+        }
     }
     if(!Poco::Environment::has(str)) throw exception("empty environment variable");
     return Poco::Environment::get(str);
@@ -42,6 +46,11 @@ std::string replace_env(const std::string &str,const pat &dir,const json &args)
     resstr+=str.substr(laspos,str.size()-laspos);
     INFO("replace env","str: "+add_squo(str),"result: "+add_squo(resstr));
     return resstr;
+}
+template<typename ...others_type> arg replace_env(arg str,const others_type &...others)
+{
+    for(auto &i:str) i=replace_env(i,others...);
+    return str;
 }
 template<typename ...others_type> json replace_env(json a,const others_type &...others)
 {
