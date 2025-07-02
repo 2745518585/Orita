@@ -35,7 +35,7 @@ class runner
     runner *set_err(std::ostream *stream) {err_stream=stream;return this;}
     void start()
     {
-        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time_limit: "+std::to_string(time_limit.count())+"ms");
+        INFO("run - start","id: "+to_string_hex(this),"file: "+add_squo(file),"argu: "+add_squo(argu),"time_limit: "+get_print_style(time_limit));
         if(in_file!=fil()) in_stream=new sifstream(in_file,in_stream_mode);
         if(out_file!=fil()) out_stream=new sofstream(out_file,out_stream_mode);
         if(err_file!=fil()) err_stream=new sofstream(err_file,err_stream_mode);
@@ -57,7 +57,7 @@ class runner
             time=run_timer.get_time();
             exit_code=ph->wait();
             if_success=true;
-            INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(file),"time: "+std::to_string(time.count())+"ms","exit_code: "+std::to_string(exit_code));
+            INFO("run - success","id: "+to_string_hex(this),"file: "+add_squo(file),"time: "+get_print_style(time),"exit_code: "+get_print_style(exit_code));
         }
         in_future.wait();out_future.wait();err_future.wait();
         in.close();out.close();err.close();

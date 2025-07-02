@@ -87,6 +87,10 @@
     },
     "max_process_num": 10,
     "max_thread_num": 100,
+    "print": {
+        "run_success_info": "%@bright_grey%===== time: %@bright_cyan%%#time%%@bright_grey%, exit code: %@bright_green%%#exit_code%%@bright_grey% =====%@reset%",
+        "run_fail_info": "%@bright_grey%===== time: %@bright_cyan%%#time%%@bright_grey%, exit code: %@magenta%%#exit_code%%@bright_grey% =====%@reset%"
+    },
     "runtime_limit": 5000,
     "show_file_info": true,
     "~list": {

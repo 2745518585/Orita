@@ -81,7 +81,7 @@ namespace Print
         {
             for(auto i:_list)
             {
-                list.push_back(get_any(i));
+                list.push_back(get_print_style(i));
             }
         }
         const std::string operator[](size_t pos) const {return list[pos];}
@@ -157,7 +157,7 @@ class printer
     void start()
     {
         print_future=new std::future(std::async(std::launch::async,&printer::print,this));
-        INFO("printer - start","id: "+to_string_hex(this),"str: "+add_squo(str),"interval time: "+std::to_string(interval_time.count()));
+        INFO("printer - start","id: "+to_string_hex(this),"str: "+add_squo(str),"interval time: "+get_print_style(interval_time));
     }
     void stop()
     {

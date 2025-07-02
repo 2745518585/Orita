@@ -24,6 +24,7 @@ std::string get_env(const std::string &str,const pat &dir,const json &args)
             return "%"+str+"%";
         }
     }
+    if(std::regex_match(str,std::regex("^@.*$"))) return "%"+str+"%";
     if(!Poco::Environment::has(str)) throw exception("empty environment variable");
     return Poco::Environment::get(str);
 }

@@ -497,6 +497,25 @@ std::ostream &operator<<(std::ostream &output,tim str)
 }
 
 // print
+std::map<std::string,std::function<std::ostream &(std::ostream &)>> color_list={
+    {"grey",termcolor::grey<char>},
+    {"red",termcolor::red<char>},
+    {"green",termcolor::green<char>},
+    {"yellow",termcolor::yellow<char>},
+    {"blue",termcolor::blue<char>},
+    {"magenta",termcolor::magenta<char>},
+    {"cyan",termcolor::cyan<char>},
+    {"white",termcolor::white<char>},
+    {"bright_grey",termcolor::bright_grey<char>},
+    {"bright_red",termcolor::bright_red<char>},
+    {"bright_green",termcolor::bright_green<char>},
+    {"bright_yellow",termcolor::bright_yellow<char>},
+    {"bright_blue",termcolor::bright_blue<char>},
+    {"bright_magenta",termcolor::bright_magenta<char>},
+    {"bright_cyan",termcolor::bright_cyan<char>},
+    {"bright_white",termcolor::bright_white<char>},
+    {"reset",termcolor::reset<char>}
+};
 std::ostream &operator<<(std::ostream &output,std::any any)
 {
     #define out(Ty) else if(any.type()==typeid(Ty)) output<<std::any_cast<Ty>(any);\
@@ -515,10 +534,10 @@ std::ostream &operator<<(std::ostream &output,std::any any)
     else if(any.type()==typeid(std::ostream &(*)(std::ostream&))) output<<std::any_cast<std::ostream &(*)(std::ostream&)>(any);
     return output;
 }
-std::string get_any(std::any any)
+template<typename Ty> std::string get_print_style(const Ty &str)
 {
     std::stringstream stream;
-    stream<<any;
+    stream<<str;
     return stream.str();
 }
 class sistream
@@ -539,7 +558,20 @@ class sostream
     template<typename Ty> sostream(Ty &_stream):stream(_stream) {}
     sostream &operator<<(const std::string &val)
     {
-        stream<<UTF8tosys(val);
+        std::string str=UTF8tosys(val);
+        size_t laspos=0;
+        for(auto it=std::sregex_iterator(str.begin(),str.end(),*new std::regex(std::regex("%@[^%]*%")));it!=std::sregex_iterator();++it)
+        {
+            std::string substr=std::smatch(*it).str();
+            stream<<str.substr(laspos,std::smatch(*it).position()-laspos);
+            laspos=std::smatch(*it).position()+std::smatch(*it).length();
+            if(!color_list.count(substr.substr(2,substr.size()-3)))
+            {
+                throw exception("unknown color: "+substr.substr(2,substr.size()-3));
+            }
+            color_list[substr.substr(2,substr.size()-3)](stream);
+        }
+        stream<<str.substr(laspos,str.size()-laspos);
         return *this;
     }
     template<typename Ty> sostream &operator<<(Ty &val)

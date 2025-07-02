@@ -19,6 +19,10 @@ namespace env_args
     {
         return files((pat)file.path());
     }
+    json result(const tim &time,const int &exit_code)
+    {
+        return {{"time",get_print_style(time)},{"exit_code",get_print_style(exit_code)}};
+    }
     json in_args(const fil &in_file,const fil &out_file,const fil &ans_file,const fil &chk_file,const std::string &testcase_name,const unsigned &seed)
     {
         return {{"infile",in_file.path()},{"outfile",out_file.path()},{"ansfile",ans_file.path()},{"chkfile",chk_file.path()},{"testcase_name",testcase_name},{"seed",std::to_string(seed)}};

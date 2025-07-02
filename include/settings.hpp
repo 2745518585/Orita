@@ -249,6 +249,7 @@ const arg chk_args=get_settings<arg>("/data/chk_args");
 std::string data_file_str=get_settings<std::string>("/data/data_file");
 const std::regex chk_correct_exit_code=(std::regex)get_settings<std::string>("/data/chk_exit_code");
 const std::string data_info_pre=get_settings<std::string>("/data/info_pre");
+const json print_str=*get_settings_object("/print");
 namespace Settings
 {
     void change_time_limit(const tim time)

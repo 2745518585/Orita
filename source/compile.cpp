@@ -49,7 +49,7 @@ class Command_compile: public App
             int exit_code=ssystem(replace_env(get_language_settings(file).run_command_str,running_path,env_args::files(file))+" "+replace_env(get_language_settings(file).run_argu_str+run_argu,running_path,env_args::files(file)).dump())>>sys_exit_code;
             tim time=run_timer.get_time();
             hide_cursor();
-            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
+            scout<<"\n"<<(std::string)replace_env(print_str[exit_code?"run_fail_info":"run_success_info"],running_path,env_args::result(time,exit_code))<<"\n";
         }
         else if(args.size()==1&&check_option("trun"))
         {
@@ -59,7 +59,7 @@ class Command_compile: public App
             int exit_code=ssystem(replace_env(get_language_settings(file).run_command_str,running_path,env_args::files(file))+" "+replace_env(get_language_settings(file).run_argu_str+run_argu,running_path,env_args::files(file)).dump())>>sys_exit_code;
             tim time=run_timer.get_time();
             hide_cursor();
-            scout<<"\n"<<termcolor::bright_grey<<"===== time: "<<termcolor::bright_cyan<<time<<termcolor::bright_grey<<", exit code: "<<(exit_code?termcolor::magenta<char>:termcolor::bright_green<char>)<<exit_code<<termcolor::bright_grey<<" ====="<<termcolor::reset<<"\n";
+            scout<<"\n"<<(std::string)replace_env(print_str[exit_code?"run_fail_info":"run_success_info"],running_path,env_args::result(time,exit_code))<<"\n";
         }
         else
         {
