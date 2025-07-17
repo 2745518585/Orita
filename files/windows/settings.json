@@ -98,16 +98,6 @@
             "data": {
                 "data_dir": "%{SETTINGS_PATH}%/.data"
             }
-        },
-        "stack": {
-            "data": {
-                "compile_argu": [
-                    "-std=c++14",
-                    "-O2",
-                    "-Wl,--stack=2147483648",
-                    "-DJUDGING"
-                ]
-            }
         }
     }
 }
